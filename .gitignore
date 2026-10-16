@@ -1,9 +1,9 @@
 # ==========================================
 # Herramientas de IA y Asistentes
 # ==========================================
-.agents/
-.claude/
-skills-lock.json
+#.agents/
+#.claude/
+#skills-lock.json
 
 # ==========================================
 # Archivos del Sistema Operativo e IDEs

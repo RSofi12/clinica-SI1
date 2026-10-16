@@ -1,4 +1,4 @@
-# Centro Médico La Cruz - Sistema Web de Gestión Clínica 🏥
+# Centro Médico La Cruz - Sistema Web de Gestión Clínica
 
 Sistema web integral para la administración hospitalaria y clínica del **Centro Médico La Cruz**. Proyecto académico desarrollado con arquitectura desacoplada en monorepo: API REST en **Laravel (PHP)**, base de datos relacional en **PostgreSQL**, y frontend moderno en **React + TypeScript** estilizado con **Tailwind CSS**.
 
@@ -152,13 +152,6 @@ cd frontend
   * Resumen de pacientes registrados, citas de hoy y médicos en atención.
   * Tabla de agenda del día con badges de estado (`Confirmada`, `En Espera`, `Pendiente`).
   * Buscador interactivo por paciente o especialidad médica.
-
----
-
-## 🔒 Variables de Entorno y Seguridad
-
-* El archivo `backend/.env` se encuentra explícitamente ignorado por `.gitignore` para no exponer credenciales de base de datos ni llaves criptográficas.
-* Para producción o despliegue en la nube (AWS / Azure / GCP / Render / Railway), las variables deben configurarse en el panel de control del proveedor respectivo.
 
 ---
 
