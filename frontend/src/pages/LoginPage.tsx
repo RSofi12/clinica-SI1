@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Shield, LayoutGrid, Activity, Mail, Lock, Eye, EyeOff, ChevronLeft } from 'lucide-react';
-import logoColor from '../assets/logo-clinica-color.png';
+import { Shield, LayoutGrid, Activity, Mail, Lock, Eye, EyeOff, ChevronLeft, Stethoscope, UserCheck } from 'lucide-react';
+import logoColorSvg from '../assets/logo-color.svg';
+import logoFullWhiteSvg from '../assets/logo-full-white.svg';
 import { BackgroundGlow } from '../components/BackgroundGlow';
 
 interface LoginPageProps {
@@ -14,6 +15,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateHome, onLoginSuc
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<'personal' | 'paciente'>('personal');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,94 +26,158 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateHome, onLoginSuc
       if (onLoginSuccess) {
         onLoginSuccess();
       }
-    }, 800);
+    }, 700);
   };
 
   return (
-    <div className="relative min-h-screen text-white flex items-center justify-center p-4 sm:p-6 lg:p-10 selection:bg-[#70cbff] selection:text-[#01171d]">
+    <div className="relative min-h-screen text-white flex items-center justify-center p-4 sm:p-6 lg:p-10 selection:bg-[#70cbff] selection:text-[#01171d] font-montserrat">
       <BackgroundGlow />
 
       {/* Contenedor Principal Centrado (2 columnas) */}
       <div className="relative z-10 max-w-5xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         
-        {/* Columna Izquierda: Logo, Marca y Características de Seguridad */}
+        {/* ─────────────────────────────────────────────────────────────
+            Columna Izquierda (1era mitad de la página):
+            - Logo SVG con el Título de la clínica a su derecha
+            - Subtítulo y acreditación institucional
+            - Tarjetas de seguridad y gestión por roles
+        ───────────────────────────────────────────────────────────── */}
         <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left">
           
-          {/* Esfera / Contenedor Circular con Logo */}
-          <div className="relative mb-6">
-            {/* Glow de la esfera */}
-            <div className="absolute inset-0 rounded-full bg-[#00687a]/50 blur-2xl pointer-events-none" />
-
-            <div className="relative w-44 h-44 sm:w-56 sm:h-56 rounded-full p-2 border border-cyan-400/25 bg-gradient-to-br from-[#003844]/70 via-[#00222a]/80 to-[#00171d]/90 backdrop-blur-xl shadow-2xl shadow-black/60 flex items-center justify-center group">
-              {/* Anillos interiores */}
-              <div className="absolute inset-3 rounded-full border border-[#70cbff]/15" />
-              <div className="w-28 h-28 sm:w-36 sm:h-36 flex items-center justify-center p-2">
+          {/* Logo SVG a la izquierda con el título de la clínica a su derecha */}
+          <div className="flex items-center gap-4 sm:gap-5 mb-8">
+            <div className="relative group shrink-0">
+              {/* Resplandor sutil del logo */}
+              <div className="absolute inset-0 rounded-2xl bg-[#70cbff]/30 blur-xl pointer-events-none" />
+              
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl p-2.5 border border-[#70cbff]/40 bg-gradient-to-br from-[#003844]/80 via-[#00222a]/90 to-[#00171d] backdrop-blur-xl shadow-2xl flex items-center justify-center">
                 <img
-                  src={logoColor}
+                  src={logoColorSvg}
                   alt="Centro Médico La Cruz"
-                  className="w-full h-full object-contain filter drop-shadow-[0_0_20px_rgba(112,203,255,0.45)] transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(112,203,255,0.4)]"
                 />
               </div>
+            </div>
 
-              {/* Punto de destello superior */}
-              <div className="absolute top-6 right-8 w-2.5 h-2.5 rounded-full bg-[#70cbff] blur-[0.5px] shadow-[0_0_10px_#70cbff]" />
+            <div className="text-left">
+              <h1 className="font-montserrat font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+                Centro Médico <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-[#70cbff]">
+                  La Cruz
+                </span>
+              </h1>
+              <p className="text-xs sm:text-sm text-[#70cbff] font-medium tracking-wide mt-0.5">
+                Clínica de Atención Primaria
+              </p>
             </div>
           </div>
 
-          {/* Nombre de la Clínica */}
-          <h2 className="font-montserrat font-bold text-2xl sm:text-3xl text-white mb-8 tracking-tight">
-            Centro Médico La Cruz
-          </h2>
+          {/* Subtítulo descriptivo institucional */}
+          <p className="text-cyan-100/75 text-xs sm:text-sm leading-relaxed mb-6 max-w-md">
+            Plataforma unificada para personal médico, especialistas, recepción, administración y pacientes.
+          </p>
 
           {/* Lista de Seguridad / Rol con Iconos */}
-          <div className="flex flex-col gap-3 w-full max-w-sm">
+          <div className="flex flex-col gap-3 w-full max-w-md">
             <div className="flex items-center gap-3.5 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md shadow-sm">
-              <div className="p-2 rounded-xl bg-[#00687a]/30 text-[#70cbff] border border-[#70cbff]/20">
+              <div className="p-2 rounded-xl bg-[#00687a]/30 text-[#70cbff] border border-[#70cbff]/20 shrink-0">
                 <Shield className="w-4 h-4" />
               </div>
-              <span className="text-xs sm:text-sm font-medium text-cyan-100/85">
-                Acceso seguro y controlado
-              </span>
+              <div className="text-left">
+                <div className="text-xs sm:text-sm font-semibold text-white">
+                  Acceso seguro y controlado
+                </div>
+                <div className="text-[11px] text-cyan-200/70">
+                  Protección de historias clínicas y confidencialidad médica
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center gap-3.5 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md shadow-sm">
-              <div className="p-2 rounded-xl bg-[#00687a]/30 text-[#70cbff] border border-[#70cbff]/20">
+              <div className="p-2 rounded-xl bg-[#00687a]/30 text-[#70cbff] border border-[#70cbff]/20 shrink-0">
                 <LayoutGrid className="w-4 h-4" />
               </div>
-              <span className="text-xs sm:text-sm font-medium text-cyan-100/85">
-                Gestión de equipo y responsabilidades
-              </span>
+              <div className="text-left">
+                <div className="text-xs sm:text-sm font-semibold text-white">
+                  Gestión integral por roles
+                </div>
+                <div className="text-[11px] text-cyan-200/70">
+                  Médicos, especialistas, recepción, admin y pacientes
+                </div>
+              </div>
             </div>
 
             <div className="flex items-center gap-3.5 px-4 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md shadow-sm">
-              <div className="p-2 rounded-xl bg-[#00687a]/30 text-[#70cbff] border border-[#70cbff]/20">
+              <div className="p-2 rounded-xl bg-[#00687a]/30 text-[#70cbff] border border-[#70cbff]/20 shrink-0">
                 <Activity className="w-4 h-4" />
               </div>
-              <span className="text-xs sm:text-sm font-medium text-cyan-100/85">
-                Registro de actividad relevante
-              </span>
+              <div className="text-left">
+                <div className="text-xs sm:text-sm font-semibold text-white">
+                  Historiales y consultas en vivo
+                </div>
+                <div className="text-[11px] text-cyan-200/70">
+                  Citas, recetas electrónicas y resultados de laboratorio
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Columna Derecha: Tarjeta de Iniciar Sesión */}
+        {/* ─────────────────────────────────────────────────────────────
+            Columna Derecha: Tarjeta de Iniciar Sesión (Blanca, nítida)
+        ───────────────────────────────────────────────────────────── */}
         <div className="lg:col-span-6 flex justify-center w-full">
           <div className="bg-white text-slate-800 rounded-[28px] sm:rounded-[32px] p-7 sm:p-10 shadow-2xl shadow-cyan-950/50 w-full max-w-md border border-white/90">
             
-            {/* Título de la tarjeta */}
-            <h3 className="font-montserrat font-bold text-2xl text-slate-900 tracking-tight">
-              Iniciar Sesión
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 mb-6">
-              Ingresa tus credenciales para acceder al sistema
-            </p>
+            {/* Cabecera de la tarjeta */}
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="font-montserrat font-bold text-2xl text-[#003844] tracking-tight">
+                  Iniciar Sesión
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Ingresa tus credenciales para acceder al sistema
+                </p>
+              </div>
+              <div className="w-9 h-9 rounded-xl bg-[#00687a]/10 p-1.5 flex items-center justify-center border border-[#00687a]/15">
+                <img src={logoColorSvg} alt="Logo" className="w-full h-full object-contain" />
+              </div>
+            </div>
+
+            {/* Selector de tipo de acceso (Personal / Paciente) */}
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 rounded-xl mb-5 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => setSelectedRole('personal')}
+                className={`py-2 px-3 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                  selectedRole === 'personal'
+                    ? 'bg-white text-[#00687a] shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <Stethoscope className="w-3.5 h-3.5" />
+                <span>Personal Clínico</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedRole('paciente')}
+                className={`py-2 px-3 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                  selectedRole === 'paciente'
+                    ? 'bg-white text-[#00687a] shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                <UserCheck className="w-3.5 h-3.5" />
+                <span>Paciente</span>
+              </button>
+            </div>
 
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Campo: Usuario o correo */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Usuario o correo
+                  {selectedRole === 'personal' ? 'Usuario o correo institucional' : 'Cédula de Identidad o Correo'}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -122,7 +188,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateHome, onLoginSuc
                     required
                     value={emailOrUser}
                     onChange={(e) => setEmailOrUser(e.target.value)}
-                    placeholder="admin o correo@dominio.com"
+                    placeholder={
+                      selectedRole === 'personal'
+                        ? 'admin o doctor@clinicalacruz.bo'
+                        : 'Ej. 7654321 o paciente@correo.com'
+                    }
                     className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00687a] focus:bg-white focus:border-transparent transition"
                   />
                 </div>
@@ -170,7 +240,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateHome, onLoginSuc
                   href="#recuperar"
                   onClick={(e) => {
                     e.preventDefault();
-                    alert('Función de recuperación: conectaremos este flujo al backend.');
+                    alert('Función de recuperación: se enviará un enlace seguro a tu correo registrado.');
                   }}
                   className="text-xs font-semibold text-[#00687a] hover:text-[#004e5b] hover:underline transition"
                 >
@@ -187,10 +257,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateHome, onLoginSuc
                 {isLoading ? (
                   <>
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Verificando...</span>
+                    <span>Verificando credenciales...</span>
                   </>
                 ) : (
-                  <span>Iniciar Sesión</span>
+                  <span>
+                    {selectedRole === 'personal' ? 'Ingresar al Sistema Clínico' : 'Acceder al Portal del Paciente'}
+                  </span>
                 )}
               </button>
             </form>
@@ -203,7 +275,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateHome, onLoginSuc
                 className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-slate-500 hover:text-[#00687a] transition group cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-                <span>Volver al inicio</span>
+                <span>Volver a la página de inicio</span>
               </button>
             </div>
 

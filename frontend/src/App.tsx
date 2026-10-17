@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { Stethoscope, Calendar, Users, Activity, Clock, Plus, Search, CheckCircle2, LogOut } from 'lucide-react';
-import logoColor from './assets/logo-clinica-color.png';
+import logoColor from './assets/logo-color.svg';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'login' | 'dashboard'>('home');
