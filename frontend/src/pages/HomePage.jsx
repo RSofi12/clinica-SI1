@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Calendar,
   FileText,
@@ -22,12 +22,8 @@ import pediatriaImg from '../assets/clinica-pediatria.png';
 import geriatricImg from '../assets/doctor-geriatric.jpg';
 import sesionesImg from '../assets/sesiones-clinicas.jpg';
 
-interface HomePageProps {
-  onNavigateLogin: () => void;
-}
-
-export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
-  const [activeTab, setActiveTab] = useState<'todos' | 'pacientes' | 'profesionales'>('todos');
+export const HomePage = ({ onNavigateLogin }) => {
+  const [activeTab, setActiveTab] = useState('todos');
 
   return (
     <div className="min-h-screen bg-white text-[#1a3a3f] flex flex-col font-montserrat">
@@ -66,9 +62,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
 
       {/* ─────────────────────────────────────────────────────────────
           2. HEADER / NAVBAR PRINCIPAL
-          - Logo a la izquierda con logo-color.svg
-          - Navegación central (Servicios, Especialidades, Pacientes)
-          - Botón de Iniciar Sesión a la derecha (en lugar de search)
       ───────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
@@ -110,7 +103,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
             </a>
           </nav>
 
-          {/* Botón de Login (reemplaza la barra de búsqueda de las referencias) */}
+          {/* Botón de Login */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={onNavigateLogin}
@@ -124,11 +117,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
       </header>
 
       {/* ─────────────────────────────────────────────────────────────
-          3. SECCIÓN HERO PRINCIPAL (Inspirado en Referencias 1 y 2)
-          - Fondo blanco luminoso
-          - Título contundente en Montserrat Bold
-          - Dos botones de acción rápida
-          - Composición fotográfica real (médicos, pediatría, sesión clínica)
+          3. SECCIÓN HERO PRINCIPAL
       ───────────────────────────────────────────────────────────── */}
       <section id="inicio" className="relative bg-white pt-8 pb-14 sm:pt-12 sm:pb-20 overflow-hidden">
         {/* Sutiles acentos geométricos en tonos turquesa claro */}
@@ -137,7 +126,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Columna Izquierda: Copywriting y Llamados a la Acción */}
+            {/* Columna Izquierda */}
             <div className="lg:col-span-6 flex flex-col items-start z-10">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e8f7f9] border border-[#70cbff]/40 text-xs font-semibold text-[#00687a] mb-5">
                 <span className="w-2 h-2 rounded-full bg-[#00687a]"></span>
@@ -158,7 +147,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
                 laboratorio o ingresa al panel médico con un solo clic.
               </p>
 
-              {/* Botones de acción (Estilo de la Referencia 1: Book now / Read More) */}
+              {/* Botones de acción */}
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
                 <a
                   href="#portal-pacientes"
@@ -177,7 +166,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
                 </button>
               </div>
 
-              {/* Métricas destacadas (Referencia 2: +30 Especialidades / +100 Especialistas) */}
+              {/* Métricas destacadas */}
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 w-full max-w-lg">
                 <div>
                   <div className="font-montserrat font-bold text-2xl sm:text-3xl text-[#00687a]">
@@ -206,10 +195,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
               </div>
             </div>
 
-            {/* Columna Derecha: Composición de Imágenes (Inspirada en Referencia 1) */}
+            {/* Columna Derecha: Composición de Imágenes */}
             <div className="lg:col-span-6 relative">
               <div className="grid grid-cols-2 gap-3 sm:gap-4 items-center">
-                {/* Imagen 1: Equipo Médico (destacada alta) */}
+                {/* Imagen 1: Equipo Médico */}
                 <div className="relative group overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg border border-slate-100 bg-white">
                   <div className="absolute inset-0 bg-gradient-to-t from-[#003844]/60 via-transparent to-transparent z-10 opacity-70 group-hover:opacity-50 transition"></div>
                   <img
@@ -267,9 +256,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          4. TARJETAS DE ACCESO RÁPIDO PARA PACIENTES (Referencia 2)
-          - "Agenda tu consulta"
-          - "Revisa tus resultados clínicos"
+          4. TARJETAS DE ACCESO RÁPIDO PARA PACIENTES
       ───────────────────────────────────────────────────────────── */}
       <section id="portal-pacientes" className="bg-[#f3fafb] py-8 sm:py-10 border-y border-[#d8f0f3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -296,7 +283,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
                   Elige la especialidad, el médico de tu preferencia y la fecha más cómoda para tu atención.
                 </p>
                 <button
-                  onClick={() => alert('Módulo de Citas Online: Se conectará con el backend de Laravel.')}
+                  onClick={() => alert('Módulo de Citas Online: Próximamente disponible.')}
                   className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#00687a] hover:text-[#004d5a] transition group-hover:translate-x-1"
                 >
                   <span>Reservar turno ahora</span>
@@ -318,7 +305,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
                   Descarga tus órdenes médicas, análisis de laboratorio e informes clínicos de forma segura.
                 </p>
                 <button
-                  onClick={() => alert('Módulo de Resultados: Se conectará con el historial clínico en Laravel.')}
+                  onClick={() => alert('Módulo de Resultados: Próximamente disponible.')}
                   className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#00687a] hover:text-[#004d5a] transition group-hover:translate-x-1"
                 >
                   <span>Consultar con mi cédula</span>
@@ -331,12 +318,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          5. SECCIÓN DE GESTIÓN INTERNA (Para médicos, admin, recepcionistas)
+          5. SECCIÓN DE GESTIÓN INTERNA
       ───────────────────────────────────────────────────────────── */}
       <section id="gestion" className="py-14 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Foto de sesiones clínicas / trabajo en equipo */}
+            {/* Foto de sesiones clínicas */}
             <div className="lg:col-span-5 order-2 lg:order-1">
               <div className="relative rounded-3xl overflow-hidden shadow-xl border border-slate-100">
                 <img
@@ -425,9 +412,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigateLogin }) => {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────
-          6. BARRA INFERIOR / FRANJA DE VALORES (Inspirada en Referencia 1)
-          - Degradado turquesa
-          - "Our skills", "Our values", "Best technologies"
+          6. BARRA INFERIOR / FRANJA DE VALORES
       ───────────────────────────────────────────────────────────── */}
       <section className="bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] text-white py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-6">

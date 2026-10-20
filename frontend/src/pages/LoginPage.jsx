@@ -1,23 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Shield, LayoutGrid, Activity, Mail, Lock, Eye, EyeOff, ChevronLeft, Stethoscope, UserCheck } from 'lucide-react';
 import logoColorSvg from '../assets/logo-color.svg';
-import logoFullWhiteSvg from '../assets/logo-full-white.svg';
 import { BackgroundGlow } from '../components/BackgroundGlow';
 
-interface LoginPageProps {
-  onNavigateHome: () => void;
-  onLoginSuccess?: () => void;
-}
-
-export const LoginPage: React.FC<LoginPageProps> = ({ onNavigateHome, onLoginSuccess }) => {
+export const LoginPage = ({ onNavigateHome, onLoginSuccess }) => {
   const [emailOrUser, setEmailOrUser] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<'personal' | 'paciente'>('personal');
+  const [selectedRole, setSelectedRole] = useState('personal');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
     // Simulación temporal para feedback visual del botón

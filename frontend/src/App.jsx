@@ -5,7 +5,7 @@ import { Stethoscope, Calendar, Users, Activity, Clock, Plus, Search, CheckCircl
 import logoColor from './assets/logo-color.svg';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'login' | 'dashboard'>('home');
+  const [currentView, setCurrentView] = useState('home');
 
   if (currentView === 'home') {
     return <HomePage onNavigateLogin={() => setCurrentView('login')} />;

@@ -1,6 +1,6 @@
 # Centro Médico La Cruz - Sistema Web de Gestión Clínica
 
-Sistema web integral para la administración hospitalaria y clínica del **Centro Médico La Cruz**. Proyecto académico desarrollado con arquitectura desacoplada en monorepo: API REST en **Laravel (PHP)**, base de datos relacional en **PostgreSQL**, y frontend moderno en **React + TypeScript** estilizado con **Tailwind CSS**.
+Sistema web integral para la administración hospitalaria y clínica del **Centro Médico La Cruz**. Proyecto académico desarrollado con arquitectura desacoplada en monorepo: API REST en **Laravel (PHP)**, base de datos relacional en **PostgreSQL**, y frontend interactivo en **React (JavaScript puro)** estilizado con **Tailwind CSS**.
 
 ---
 
@@ -8,12 +8,12 @@ Sistema web integral para la administración hospitalaria y clínica del **Centr
 
 | Capa | Tecnología | Descripción |
 | :--- | :--- | :--- |
-| **Frontend** | [React 19](https://react.dev/) + [Vite](https://vite.dev/) | SPA rápida, reactiva y modular |
-| **Lenguaje Frontend** | [TypeScript](https://www.typescriptlang.org/) | Tipado estático y seguridad de datos clínicos |
-| **Estilos & UI** | [Tailwind CSS v4](https://tailwindcss.com/) + [Lucide Icons](https://lucide.dev/) | Diseño responsive, moderno con paleta turquesa institucional |
+| **Frontend** | [React 19](https://react.dev/) + [Vite](https://vite.dev/) | SPA reactiva y modular con arquitectura por dominios |
+| **Lenguaje Frontend** | JavaScript (ES6+ / JSX) | Desarrollo ágil en JavaScript puro sin sobrecarga de tipos |
+| **Estilos & UI** | [Tailwind CSS v4](https://tailwindcss.com/) + [Lucide Icons](https://lucide.dev/) | Diseño responsive con paleta turquesa institucional |
 | **Tipografía** | Montserrat (Bold & Regular) | Identidad visual corporativa |
-| **Backend** | [PHP 8.5+](https://www.php.net/) + [Laravel 13](https://laravel.com/) | API REST robusta, arquitectura MVC, validaciones y seguridad |
-| **Base de Datos** | [PostgreSQL 16+](https://www.postgresql.org/) | Base de datos relacional transaccional y escalable |
+| **Backend** | [PHP 8.2+](https://www.php.net/) + [Laravel](https://laravel.com/) | API REST robusta, arquitectura MVC, validaciones y seguridad |
+| **Base de Datos** | [PostgreSQL 16+](https://www.postgresql.org/) | Base de datos relacional transaccional y normalizada |
 | **Control de Versiones** | Git & GitHub | Monorepo estructurado (`/backend` y `/frontend`) |
 
 ---
@@ -27,18 +27,20 @@ clinica-SI1/
 │   ├── config/               # Configuraciones (CORS, BD, sesión, etc.)
 │   ├── database/             # Migraciones y Seeders PostgreSQL
 │   ├── routes/               # Rutas web y api
-│   ├── .env.example          # Plantilla de variables de entorno (preconfigurada)
+│   ├── .env.example          # Plantilla de variables de entorno
 │   └── composer.json         # Dependencias de PHP
-├── frontend/                 # Aplicación Web React (SPA)
+├── frontend/                 # Aplicación Web React (JavaScript / JSX)
 │   ├── src/
-│   │   ├── assets/           # Logotipos institucionales y fuentes Montserrat
+│   │   ├── assets/           # Logotipos institucionales, imágenes y fuentes Montserrat
 │   │   ├── components/       # Componentes reutilizables (BackgroundGlow, etc.)
-│   │   ├── pages/            # Vistas (HomePage, LoginPage, Dashboard)
-│   │   ├── App.tsx           # Enrutamiento y control de vistas principales
+│   │   ├── pages/            # Vistas (HomePage.jsx, LoginPage.jsx)
+│   │   ├── App.jsx           # Enrutamiento condicional y vista previa del Dashboard
+│   │   ├── main.jsx          # Punto de entrada de la aplicación React
 │   │   └── index.css         # Importación de Tailwind CSS y fuentes
-│   ├── package.json          # Dependencias de Node.js
-│   └── vite.config.ts        # Configuración de Vite y Tailwind
-├── .gitignore                # Exclusiones de Git (seguridad y dependencias)
+│   ├── package.json          # Dependencias (react, lucide-react, tailwindcss)
+│   └── vite.config.js        # Configuración de Vite con plugins React y Tailwind
+├── docs/                     # Documentación y requisitos del proyecto
+├── .gitignore                # Exclusiones de Git (node_modules, vendor, etc.)
 └── README.md                 # Guía de instalación y documentación
 ```
 
@@ -117,7 +119,7 @@ cd backend
 
 ---
 
-### 3. Configuración y Levantamiento del Frontend (React + Vite)
+### 3. Configuración y Levantamiento del Frontend (React + JavaScript + Vite)
 
 Abre una **segunda terminal** en la carpeta `frontend`:
 
@@ -136,26 +138,10 @@ cd frontend
    ```
    *El sistema web estará disponible en:* **`http://localhost:5173`**
 
----
-
-## 🎨 Pantallas y Funcionalidades Disponibles
-
-* **Página de Inicio (`/`):**
-  * Presentación institucional del Centro Médico La Cruz.
-  * Efecto de orbe luminoso médico con el isotipo de la clínica.
-  * Botones de acceso rápido al portal de gestión clínica.
-* **Página de Autenticación (`/login`):**
-  * Formulario seguro para personal de la clínica.
-  * Selector para mostrar u ocultar contraseña.
-  * Puntos clave de seguridad institucional y navegación de retorno.
-* **Panel de Control Clínico (Dashboard):**
-  * Resumen de pacientes registrados, citas de hoy y médicos en atención.
-  * Tabla de agenda del día con badges de estado (`Confirmada`, `En Espera`, `Pendiente`).
-  * Buscador interactivo por paciente o especialidad médica.
 
 ---
 
 ## 👥 Equipo y Créditos
 
-Proyecto Académico desarrollado para la materia de **Sistemas de Información (SI1)**.  
+Proyecto Académico desarrollado para la materia de **Sistemas de Información 1 (SI1)**.  
 *Institución:* **Centro Médico La Cruz**
