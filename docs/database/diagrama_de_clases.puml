@@ -1,0 +1,441 @@
+@startuml DiagramaClases_ClinicaPrivada_Metodos
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam shadowing false
+skinparam roundcorner 3
+skinparam class {
+  BackgroundColor<<seg>>   #DAE8FC
+  BackgroundColor<<mae>>   #D5E8D4
+  BackgroundColor<<pac>>   #FFF2CC
+  BackgroundColor<<cit>>   #FFE6CC
+  BackgroundColor<<cli>>   #E1D5E7
+  BackgroundColor<<ext>>   #F8CECC
+  BorderColor #555555
+  FontName Helvetica
+  FontSize 11
+}
+hide circle
+
+' =============================================================================
+' 1. SEGURIDAD Y AUDITORÍA (AZUL PASTEL - #DAE8FC)
+' =============================================================================
+class Usuarios <<seg>> {
+  + id_usuario: Long [PK]
+  + username: String [UNIQUE]
+  + email: String [UNIQUE]
+  + password_hash: String
+  + tipo_usuario: String
+  + estado: String
+  + intentos_fallidos: Int
+  + ultimo_acceso: DateTime
+  + fecha_creacion: DateTime
+  + fecha_actualizacion: DateTime
+  --
+  + autenticar(password: String): Boolean
+  + recuperarPassword(token: String): Boolean
+  + bloquearAcceso(): Void
+  + actualizarUltimoAcceso(): Void
+}
+
+class Roles <<seg>> {
+  + id_rol: Long [PK]
+  + nombre: String [UNIQUE]
+  --
+  + asignarPermiso(id_p: Long): Void
+}
+
+class Permisos <<seg>> {
+  + id_permiso: Long [PK]
+  + nombre: String [UNIQUE]
+  --
+  + verificarPermiso(cod: String): Boolean
+}
+
+class UsuarioRol <<seg>> {
+  + id_usuario: Long [PK, FK]
+  + id_rol: Long [PK, FK]
+}
+
+class RolPermiso <<seg>> {
+  + id_rol: Long [PK, FK]
+  + id_permiso: Long [PK, FK]
+}
+
+class TokensRecuperacion <<seg>> {
+  + id_token: Long [PK]
+  + id_usuario: Long [FK]
+  + token_hash: String
+  + tipo_token: String
+  + fecha_creacion: DateTime
+  + fecha_expiracion: DateTime
+  + usado: Boolean
+  --
+  + validarToken(token: String): Boolean
+  + marcarComoUsado(): Void
+}
+
+class Bitacora <<seg>> {
+  + id_bitacora: Long [PK]
+  + id_usuario: Long [FK]
+  + modulo: String
+  + accion: String
+  + tabla_afectada: String
+  + id_registro: Long
+  + descripcion: Text
+  + ip_origen: String
+  + fecha_registro: DateTime
+  --
+  + registrarEvento(u: Long, acc: String): Void
+  + filtrarPorModulo(mod: String): List
+}
+
+' =============================================================================
+' 2. DATOS MAESTROS Y RECURSOS CLÍNICOS (VERDE PASTEL - #D5E8D4)
+' =============================================================================
+class Especialidades <<mae>> {
+  + id_especialidad: Long [PK]
+  + nombre: String
+  + nombre_normalizado: String [UNIQUE]
+  + descripcion: Text [0..1]
+  + edad_min_anios: Int [0..1]
+  + edad_max_anios: Int [0..1]
+  + precio_consulta: Decimal
+  + estado: String
+  --
+  + validarRangoEdad(edad: Int): Boolean
+  + cambiarEstado(est: String): Void
+}
+
+class Medicos <<mae>> {
+  + id_medico: Long [PK]
+  + id_usuario: Long [FK, UNIQUE]
+  + codigo_profesional: String [UNIQUE]
+  + nombres: String
+  + apellidos: String
+  + telefono_contacto: String
+  + correo_profesional: String
+  + estado_activo: Boolean
+  --
+  + asignarEspecialidad(id_esp: Long): Void
+  + obtenerAgenda(fecha: Date): List
+  + cambiarEstado(activo: Boolean): Void
+}
+
+class MedicoEspecialidad <<mae>> {
+  + id_medico: Long [PK, FK]
+  + id_especialidad: Long [PK, FK]
+  + es_principal: Boolean
+}
+
+class Disponibilidades <<mae>> {
+  + id_disponibilidad: Long [PK]
+  + id_medico: Long [FK]
+  + dia_semana: Int (1-7)
+  + hora_inicio: Time
+  + hora_fin: Time
+  + duracion_cita_minutos: Int
+  + activo: Boolean
+  --
+  + generarSlots(fecha: Date): List
+  + verificarHorario(hora: Time): Boolean
+}
+
+class BloqueosHorario <<mae>> {
+  + id_bloqueo: Long [PK]
+  + id_medico: Long [FK] [0..1]
+  + fecha: Date
+  + hora_inicio: Time [0..1]
+  + hora_fin: Time [0..1]
+  + motivo: String
+  --
+  + esFeriadoGeneral(): Boolean
+  + solapaConHorario(h: Time): Boolean
+}
+
+' =============================================================================
+' 3. PACIENTES (AMARILLO PASTEL - #FFF2CC)
+' =============================================================================
+class Pacientes <<pac>> {
+  + id_paciente: Long [PK]
+  + id_usuario: Long [FK, UNIQUE, 0..1]
+  + numero_historia: String [UNIQUE]
+  + numero_documento: String [UNIQUE]
+  + nombres: String
+  + apellidos: String
+  + fecha_nacimiento: Date
+  + sexo: String
+  + tipo_sangre: String [0..1]
+  + telefono: String
+  + correo: String [0..1]
+  + direccion: Text [0..1]
+  + notificaciones_activas: Boolean
+  + estado_paciente: String
+  + fecha_registro: DateTime
+  --
+  + calcularEdad(): Int
+  + vincularUsuario(id_u: Long): Void
+  + actualizarContacto(): Void
+}
+
+class ContactosEmergencia <<pac>> {
+  + id_contacto: Long [PK]
+  + id_paciente: Long [FK]
+  + nombre: String
+  + parentesco: String
+  + telefono: String
+  --
+  + actualizarTelefono(tel: String): Void
+}
+
+' =============================================================================
+' 4. GESTIÓN DE CITAS MÉDICAS (NARANJA PASTEL - #FFE6CC)
+' =============================================================================
+class TiposCita <<cit>> {
+  + id_tipo_cita: Long [PK]
+  + nombre: String [UNIQUE]
+  --
+  + obtenerNombre(): String
+}
+
+class Citas <<cit>> {
+  + id_cita: Long [PK]
+  + codigo_cita: String [UNIQUE]
+  + id_paciente: Long [FK]
+  + id_medico: Long [FK]
+  + id_especialidad: Long [FK]
+  + id_tipo_cita: Long [FK]
+  + id_cita_origen: Long [FK, 0..1]
+  + fecha_hora_inicio: DateTime
+  + fecha_hora_fin: DateTime
+  + motivo_breve: String [0..1]
+  + modalidad: String
+  + estado: String
+  + motivo_cancelacion: String [0..1]
+  + cancelada_en: DateTime [0..1]
+  + creada_por: Long [FK]
+  + fecha_creacion: DateTime
+  + fecha_actualizacion: DateTime
+  --
+  + programar(id_p, id_m, f, h): Cita
+  + reprogramar(nf, nh): Boolean
+  + cancelar(motivo: String): Boolean
+  + cambiarEstado(est: String): Void
+  + validarSolapamiento(): Boolean
+}
+
+class CitaEstadoHistorial <<cit>> {
+  + id_cambio: Long [PK]
+  + id_cita: Long [FK]
+  + estado_anterior: String
+  + estado_nuevo: String
+  + id_usuario: Long [FK]
+  + observacion: String [0..1]
+  + fecha_cambio: DateTime
+  --
+  + registrarCambio(ant, nuev): Void
+}
+
+' =============================================================================
+' 5. HISTORIAL CLÍNICO Y CONSULTAS (MORADO PASTEL - #E1D5E7)
+' =============================================================================
+class HistoriasClinicas <<cli>> {
+  + id_historia_clinica: Long [PK]
+  + id_paciente: Long [FK, UNIQUE]
+  + fecha_apertura: Date
+  + estado: String
+  --
+  + aperturar(id_pac: Long): Void
+  + archivar(motivo: String): Void
+}
+
+class ConsultasMedicas <<cli>> {
+  + id_consulta: Long [PK]
+  + id_cita: Long [FK, UNIQUE]
+  + id_historia_clinica: Long [FK]
+  + id_medico: Long [FK]
+  + motivo_consulta: Text
+  + peso_kg: Decimal [0..1]
+  + talla_cm: Decimal [0..1]
+  + temperatura_c: Decimal [0..1]
+  + presion_arterial: String [0..1]
+  + frecuencia_cardiaca: Int [0..1]
+  + observaciones: Text [0..1]
+  + plan_tratamiento: Text
+  + fecha_consulta: DateTime
+  --
+  + registrarTriaje(p, t, pa): Void
+  + emitirDiagnostico(cie, pl): Void
+  + finalizarConsulta(): Void
+}
+
+class Antecedentes <<cli>> {
+  + id_antecedente: Long [PK]
+  + id_historia_clinica: Long [FK]
+  + tipo_antecedente: String
+  + descripcion: Text
+  + registrado_por: Long [FK]
+  + fecha_registro: DateTime
+  + estado: String
+  --
+  + clasificarPorTipo(t: String): Void
+}
+
+class Diagnosticos <<cli>> {
+  + id_diagnostico: Long [PK]
+  + id_historia_clinica: Long [FK]
+  + id_consulta: Long [FK]
+  + descripcion: Text
+  + codigo_cie10: String [0..1]
+  + tipo: String
+  + fecha_registro: DateTime
+  --
+  + asignarCIE10(cod: String): Void
+  + cambiarATipoDefinitivo(): Void
+}
+
+class Evoluciones <<cli>> {
+  + id_evolucion: Long [PK]
+  + id_historia_clinica: Long [FK]
+  + id_medico: Long [FK]
+  + nota: Text
+  + fecha_registro: DateTime
+  --
+  + agregarNota(n: Text): Void
+}
+
+class Recetas <<cli>> {
+  + id_receta: Long [PK]
+  + id_historia_clinica: Long [FK]
+  + id_consulta: Long [FK]
+  + id_medico: Long [FK]
+  + indicaciones_generales: Text [0..1]
+  + fecha_emision: DateTime
+  + estado: String
+  --
+  + agregarDetalle(d: Detalle): Void
+  + anularReceta(): Void
+}
+
+class RecetaDetalles <<cli>> {
+  + id_detalle: Long [PK]
+  + id_receta: Long [FK]
+  + medicamento: String
+  + dosis: String
+  + frecuencia: String
+  + duracion: String
+  + indicaciones: Text [0..1]
+  --
+  + validarPosologia(): Boolean
+}
+
+class AnalisisClinicos <<cli>> {
+  + id_analisis: Long [PK]
+  + id_historia_clinica: Long [FK]
+  + id_medico: Long [FK]
+  + resumen: Text
+  + alertas: JSON
+  + modelo_ia: String
+  + fecha_generacion: DateTime
+  --
+  + generarResumenIA(h: Text): Void
+  + detectarAlertas(): JSON
+}
+
+' =============================================================================
+' 6. PAGOS, NOTIFICACIONES Y REPORTES IA (ROSA PASTEL - #F8CECC)
+' =============================================================================
+class Pagos <<ext>> {
+  + id_pago: Long [PK]
+  + id_cita: Long [FK]
+  + id_paciente: Long [FK]
+  + monto: Decimal
+  + moneda: String
+  + estado: String
+  + stripe_payment_intent_id: String [UNIQUE]
+  + fecha_pago: DateTime
+  --
+  + procesarStripe(token: String): Boolean
+  + confirmarPago(): Void
+}
+
+class Notificaciones <<ext>> {
+  + id_notificacion: Long [PK]
+  + id_usuario: Long [FK]
+  + id_cita: Long [FK] [0..1]
+  + tipo: String
+  + titulo: String
+  + mensaje: Text
+  + estado: String
+  + fecha_programada: DateTime
+  + fecha_envio: DateTime [0..1]
+  --
+  + enviarRecordatorio(): Boolean
+  + programarAviso(f: DateTime): Void
+}
+
+class PushSuscripciones <<ext>> {
+  + id_suscripcion: Long [PK]
+  + id_usuario: Long [FK]
+  + endpoint: Text
+  + clave_p256dh: String
+  + clave_auth: String
+  + activa: Boolean
+  --
+  + activarSuscripcion(): Void
+}
+
+class ReportesIA <<ext>> {
+  + id_reporte: Long [PK]
+  + id_usuario: Long [FK]
+  + comando_texto: Text
+  + filtros_json: JSON
+  + tipo_reporte: String
+  + fecha_generacion: DateTime
+  --
+  + procesarComandoVoz(aud: Text): Void
+  + ejecutarFiltros(f: JSON): List
+}
+
+' =============================================================================
+' RELACIONES (LÍNEAS SIN FLECHAS + CARDINALIDADES)
+' =============================================================================
+Usuarios "1" -- "0..*" UsuarioRol : tiene
+Roles "1" -- "0..*" UsuarioRol : asigna
+Roles "1" -- "0..*" RolPermiso : tiene
+Permisos "1" -- "0..*" RolPermiso : otorga
+Usuarios "1" -- "0..*" TokensRecuperacion : solicita
+Usuarios "1" -- "0..*" Bitacora : registra
+Usuarios "1" -- "0..1" Medicos : es
+Usuarios "1" -- "0..1" Pacientes : cuenta de
+
+Medicos "1" -- "1..*" MedicoEspecialidad : ejerce
+Especialidades "1" -- "0..*" MedicoEspecialidad : agrupa
+Medicos "1" -- "0..*" Disponibilidades : atiende en
+Medicos "0..1" -- "0..*" BloqueosHorario : bloquea
+
+Pacientes "1" -- "0..*" ContactosEmergencia : tiene
+Pacientes "1" -- "0..*" Citas : asiste
+Medicos "1" -- "0..*" Citas : atiende
+Especialidades "1" -- "0..*" Citas : pertenece
+TiposCita "1" -- "0..*" Citas : clasifica
+Citas "0..1" -- "0..1" Citas : reprograma
+Citas "1" -- "0..*" CitaEstadoHistorial : cambia
+Citas "1" -- "0..1" Pagos : se paga
+Pacientes "1" -- "0..*" Pagos : realiza
+
+Pacientes "1" -- "1" HistoriasClinicas : posee
+Citas "1" -- "0..1" ConsultasMedicas : genera
+HistoriasClinicas "1" -- "0..*" ConsultasMedicas : registra
+HistoriasClinicas "1" -- "0..*" Antecedentes : contiene
+HistoriasClinicas "1" -- "0..*" Diagnosticos : contiene
+ConsultasMedicas "1" -- "0..*" Diagnosticos : produce
+HistoriasClinicas "1" -- "0..*" Evoluciones : contiene
+HistoriasClinicas "1" -- "0..*" Recetas : contiene
+ConsultasMedicas "1" -- "0..*" Recetas : emite
+Recetas "1" -- "1..*" RecetaDetalles : especifica
+HistoriasClinicas "1" -- "0..*" AnalisisClinicos : analiza
+
+Usuarios "1" -- "0..*" Notificaciones : recibe
+Usuarios "1" -- "0..*" PushSuscripciones : registra
+Usuarios "1" -- "0..*" ReportesIA : solicita
+@enduml

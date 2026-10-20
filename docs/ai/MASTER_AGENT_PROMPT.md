@@ -16,6 +16,11 @@
 * **Proyecto:** Sistema Web de Gestión de Citas Médicas para la Clínica Privada Vida Salud / Centro Médico La Cruz.
 * **Metodología Oficial:** PUDS (Proceso Unificado de Desarrollo de Software) / RUP.
 * **Alcance Académico:** 23 Casos de Uso oficiales (Ciclo 1: 13 CU; Ciclo 2: 10 CU) + 1 caso condicional en reserva (`CU24-OPC`).
+* **Fuente de Verdad para Base de Datos y Clases:**
+  - La estructura de tablas relacionales, nombres de campos, tipos y modelos debe guiarse obligatoriamente de:
+    - [`docs/database/diagrama_de_clases.puml`](file:///c:/Users/PERSONAL/clinica-SI1/docs/database/diagrama_de_clases.puml)
+    - [`docs/database/DDL_Database_Clinica_LaCruz.sql`](file:///c:/Users/PERSONAL/clinica-SI1/docs/database/DDL_Database_Clinica_LaCruz.sql)
+  - *(Modificaciones solo permitidas si optimizan la implementación o si lo exige el examen RF01-RF13).*
 * **Stack Tecnológico:**
   - **Backend:** Laravel 13 (PHP 8.3) con arquitectura de servicios, transacciones (`DB::transaction`) y políticas (*Policies*).
   - **Base de Datos:** PostgreSQL con integridad referencial estricta y restricciones de unicidad/exclusión.

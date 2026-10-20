@@ -24,6 +24,11 @@ Antes de responder, planificar o generar código, consulta estos documentos en o
 * **Stack Oficial:**
   - **Backend:** Laravel 13 (PHP 8.3) con servicios transaccionales y PostgreSQL.
   - **Frontend:** React + JavaScript (`.jsx` / ES6+) con Tailwind CSS. **NO usar TypeScript** en el código frontend (mantenerlo ágil y simple).
+* **Guía de Base de Datos y Clases:**
+  - Toda la implementación de modelos, tablas relacionales, llaves foráneas y tipos de datos **debe guiarse estrictamente de:**
+    - [`docs/database/diagrama_de_clases.puml`](file:///c:/Users/PERSONAL/clinica-SI1/docs/database/diagrama_de_clases.puml)
+    - [`docs/database/DDL_Database_Clinica_LaCruz.sql`](file:///c:/Users/PERSONAL/clinica-SI1/docs/database/DDL_Database_Clinica_LaCruz.sql)
+  - *(Nota: Si surge alguna necesidad de mejora técnica o requerimiento puntual del examen RF01-RF13, se pueden realizar modificaciones justificadas).*
 * **Actor Médico Unificado:**  
   Existe un solo rol y actor `Médico` (`MEDICO`). Los especialistas (pediatra, geriatra, cardiólogo) son médicos con especialidades vinculadas desde el catálogo. **Nunca crear un rol separado `ESPECIALISTA`**.
 * **Pacientes:**  
