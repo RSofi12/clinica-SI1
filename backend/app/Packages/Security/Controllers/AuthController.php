@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Packages\Security\Models\User;
 use App\Packages\Security\Models\PasswordResetToken;
 use App\Packages\Security\Models\AuditLog;
+use App\Packages\Security\Models\SecurityConfig;
 use App\Packages\Security\Requests\LoginRequest;
 use App\Packages\Security\Requests\ResetPasswordRequest;
 use Illuminate\Http\Request;
@@ -42,10 +43,38 @@ class AuthController extends Controller
             ], 401);
         }
 
-        if ($user->estado === 'BLOQUEADO') {
-            AuditLog::registrar($user->id_usuario, 'Seguridad', 'LOGIN_BLOQUEADO', 'usuarios', $user->id_usuario, 'Intento de acceso a cuenta bloqueada por intentos fallidos.', $ip);
+        $policy = SecurityConfig::obtenerPoliticaActiva();
+
+        // Verificación de bloqueo (Temporal o Administrativo)
+        if ($user->estaBloqueadoTemporalmente()) {
+            $segundosRestantes = $user->segundosRestantesBloqueo();
+
+            if ($segundosRestantes > 0) {
+                $minutos = ceil($segundosRestantes / 60);
+                AuditLog::registrar(
+                    $user->id_usuario,
+                    'Seguridad',
+                    'LOGIN_BLOQUEADO',
+                    'usuarios',
+                    $user->id_usuario,
+                    "Intento de acceso durante bloqueo temporal ({$segundosRestantes}s restantes).",
+                    $ip
+                );
+
+                return response()->json([
+                    'success' => false,
+                    'is_temporarily_locked' => true,
+                    'seconds_remaining' => $segundosRestantes,
+                    'locked_until' => $user->bloqueado_hasta ? $user->bloqueado_hasta->toISOString() : null,
+                    'message' => "Su cuenta se encuentra bloqueada temporalmente por seguridad. Podrá volver a intentar en {$minutos} minuto(s).",
+                ], 423);
+            }
+
+            // Bloqueo manual permanente sin fecha límite
+            AuditLog::registrar($user->id_usuario, 'Seguridad', 'LOGIN_BLOQUEADO', 'usuarios', $user->id_usuario, 'Intento de acceso a cuenta con bloqueo administrativo permanente.', $ip);
             return response()->json([
                 'success' => false,
+                'is_temporarily_locked' => false,
                 'message' => 'Su cuenta ha sido bloqueada debido a reiterados intentos fallidos. Contacte al administrador.',
             ], 403);
         }
@@ -58,12 +87,46 @@ class AuthController extends Controller
         }
 
         if (!$user->autenticar($password)) {
-            $user->registrarIntentoFallido();
-            AuditLog::registrar($user->id_usuario, 'Seguridad', 'LOGIN_FALLIDO', 'usuarios', $user->id_usuario, "Contraseña incorrecta. Intento fallido #{$user->intentos_fallidos}", $ip);
+            $maxIntentos = $policy->max_intentos_fallidos;
+            $minutosBloqueo = $policy->minutos_bloqueo;
+
+            $user->registrarIntentoFallido($maxIntentos, $minutosBloqueo);
+
+            if ($user->estado === 'BLOQUEADO') {
+                AuditLog::registrar(
+                    $user->id_usuario,
+                    'Seguridad',
+                    'LOGIN_BLOQUEADO',
+                    'usuarios',
+                    $user->id_usuario,
+                    "Cuenta bloqueada por {$minutosBloqueo} minutos tras {$user->intentos_fallidos} intentos fallidos.",
+                    $ip
+                );
+
+                return response()->json([
+                    'success' => false,
+                    'is_temporarily_locked' => true,
+                    'seconds_remaining' => $user->segundosRestantesBloqueo(),
+                    'locked_until' => $user->bloqueado_hasta ? $user->bloqueado_hasta->toISOString() : null,
+                    'message' => "Ha alcanzado el límite de {$maxIntentos} intentos fallidos. Su cuenta ha sido bloqueada temporalmente durante {$minutosBloqueo} minutos.",
+                ], 423);
+            }
+
+            $intentosRestantes = max(0, $maxIntentos - $user->intentos_fallidos);
+            AuditLog::registrar(
+                $user->id_usuario,
+                'Seguridad',
+                'LOGIN_FALLIDO',
+                'usuarios',
+                $user->id_usuario,
+                "Contraseña incorrecta. Intento fallido #{$user->intentos_fallidos} de {$maxIntentos}.",
+                $ip
+            );
 
             return response()->json([
                 'success' => false,
-                'message' => 'Las credenciales proporcionadas son incorrectas.',
+                'message' => "Las credenciales son incorrectas. Le quedan {$intentosRestantes} intento(s) antes del bloqueo temporal.",
+                'attempts_left' => $intentosRestantes,
             ], 401);
         }
 

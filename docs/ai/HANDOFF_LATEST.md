@@ -3,11 +3,14 @@
 ## Estado de Relevo al 20/10/2026
 
 ### 1. Avances Consolidados en esta Sesión
-1. **CU01 (Autenticar y Recuperar Contraseña) 100% Funcional:**
+1. **CU01 (Autenticar y Recuperar Contraseña) y Políticas de Bloqueo 100% Funcional:**
    - Endpoints `/api/auth/login`, `/api/auth/forgot-password`, `/api/auth/reset-password`, `/api/auth/me`, `/api/auth/logout`.
    - Recuperación de contraseña por código de 6 dígitos con expiración de 15 minutos en `tokens_recuperacion`.
    - Política de contraseña segura verificada con `StrongPasswordRule.php`.
-   - Vistas completas en frontend (`LoginPage.jsx`, `ForgotPasswordPage.jsx`, `LoginForm.jsx`).
+   - **Mecanismo Anti Fuerza Bruta Configurable:** Bloqueo automático al fallar $N$ intentos consecutivos (por defecto 3) durante $M$ minutos (por defecto 5).
+   - **Autodesbloqueo Temporal:** Si el tiempo de castigo expira, la cuenta se restablece a `ACTIVO` automáticamente sin requerir intervención manual.
+   - **Gestión de Políticas por el Administrador:** Endpoints `GET /api/security/policy` y `PUT /api/security/policy` gestionados en la tabla `configuracion_seguridad` y auditados en bitácora.
+   - **Frontend:** `LoginForm.jsx` con cuenta regresiva en vivo (`⏳ Desbloqueo en: Xm Ys`), aviso de intentos restantes y botón de acceso a la configuración de bloqueo (`SecurityPolicyModal.jsx`) tanto en la tarjeta de CU01 como en el panel de usuarios.
 
 2. **CU02 (Gestionar Usuarios, Roles y Permisos — RF01) 100% Implementado:**
    - **Backend (`app/Packages/Security/`):**

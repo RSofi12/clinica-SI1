@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { usersService } from '../services/usersService';
 import { UserFormModal } from './UserFormModal';
+import { SecurityPolicyModal } from './SecurityPolicyModal';
 import {
   Users,
   Search,
   Plus,
   Filter,
   Shield,
+  ShieldAlert,
   CheckCircle,
   XCircle,
   AlertTriangle,
@@ -30,9 +32,10 @@ export function UsersManager() {
   const [roleFilter, setRoleFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
-  // Modal
+  // Modales
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false);
 
   // Acción en proceso (id_usuario de la fila afectada)
   const [actionLoadingId, setActionLoadingId] = useState(null);
@@ -202,13 +205,24 @@ export function UsersManager() {
           </div>
         </div>
 
-        <button
-          onClick={handleOpenCreateModal}
-          className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#00687a] hover:bg-[#004d5a] rounded-xl shadow-xs hover:shadow-md transition cursor-pointer shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Nuevo Operador</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsPolicyModalOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl transition cursor-pointer shrink-0"
+            title="Configurar política de intentos y minutos de bloqueo de seguridad"
+          >
+            <ShieldAlert className="w-4 h-4 text-[#00687a]" />
+            <span>Políticas de Bloqueo</span>
+          </button>
+
+          <button
+            onClick={handleOpenCreateModal}
+            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#00687a] hover:bg-[#004d5a] rounded-xl shadow-xs hover:shadow-md transition cursor-pointer shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Nuevo Operador</span>
+          </button>
+        </div>
       </div>
 
       {/* Filtros y Búsqueda */}
@@ -391,6 +405,13 @@ export function UsersManager() {
         onClose={() => setIsModalOpen(false)}
         onSaved={handleSaveUser}
         initialUser={selectedUser}
+      />
+
+      {/* Modal de Políticas de Bloqueo (RF01 - Seguridad) */}
+      <SecurityPolicyModal
+        isOpen={isPolicyModalOpen}
+        onClose={() => setIsPolicyModalOpen(false)}
+        onSaved={() => showSuccess('Políticas de bloqueo de seguridad actualizadas con éxito.')}
       />
     </div>
   );

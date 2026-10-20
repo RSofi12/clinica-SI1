@@ -5,6 +5,7 @@ use App\Packages\Security\Controllers\AuthController;
 use App\Packages\Security\Controllers\UsersController;
 use App\Packages\Security\Controllers\RolesController;
 use App\Packages\Security\Controllers\AuditController;
+use App\Packages\Security\Controllers\SecurityPolicyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +46,10 @@ Route::prefix('audit')->middleware('web')->group(function () {
     Route::get('/', [AuditController::class, 'index']);
     Route::get('/filters-data', [AuditController::class, 'filtersData']);
     Route::get('/stats', [AuditController::class, 'stats']);
+});
+
+// Políticas de Seguridad y Bloqueo Temporal (CU01 / CU02)
+Route::prefix('security')->middleware('web')->group(function () {
+    Route::get('/policy', [SecurityPolicyController::class, 'getPolicy']);
+    Route::put('/policy', [SecurityPolicyController::class, 'updatePolicy']);
 });

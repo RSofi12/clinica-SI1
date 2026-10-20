@@ -17,6 +17,7 @@ CREATE TABLE usuarios (
   tipo_usuario varchar(30) NOT NULL CHECK (tipo_usuario IN ('ADMIN', 'RECEPCIONISTA', 'MEDICO', 'PACIENTE')),
   estado varchar(20) NOT NULL DEFAULT 'ACTIVO' CHECK (estado IN ('ACTIVO', 'INACTIVO', 'BLOQUEADO')),
   intentos_fallidos smallint NOT NULL DEFAULT 0,
+  bloqueado_hasta timestamptz, -- Fecha/hora hasta la cual la cuenta queda bloqueada temporalmente por intentos fallidos (CU01 / Seguridad)
   ultimo_acceso timestamptz,
   fecha_creacion timestamptz NOT NULL DEFAULT now(),
   fecha_actualizacion timestamptz NOT NULL DEFAULT now()
@@ -64,6 +65,18 @@ CREATE TABLE bitacora (
   descripcion text,
   ip_origen varchar(45),
   fecha_registro timestamptz NOT NULL DEFAULT now()
+);
+
+-- =============================================================================
+-- TABLA: configuracion_seguridad
+-- Nueva tabla: Parámetros editables por el Administrador para bloqueo temporal (CU01 / Seguridad)
+-- =============================================================================
+CREATE TABLE configuracion_seguridad (
+  id_configuracion serial PRIMARY KEY,
+  max_intentos_fallidos integer NOT NULL DEFAULT 3,
+  minutos_bloqueo integer NOT NULL DEFAULT 5,
+  actualizado_por bigint REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
+  fecha_actualizacion timestamptz NOT NULL DEFAULT now()
 );
 
 -- =============================================================================
@@ -145,6 +158,18 @@ CREATE TABLE pacientes (
   notificaciones_activas boolean NOT NULL DEFAULT true,
   estado_paciente varchar(20) NOT NULL DEFAULT 'ACTIVO' CHECK (estado_paciente IN ('ACTIVO', 'INACTIVO')),
   fecha_registro timestamptz NOT NULL DEFAULT now()
+);
+
+-- =============================================================================
+-- TABLA: configuracion_seguridad
+-- Nueva tabla: Parámetros editables por el Administrador para bloqueo temporal (CU01 / Seguridad)
+-- =============================================================================
+CREATE TABLE configuracion_seguridad (
+  id_configuracion serial PRIMARY KEY,
+  max_intentos_fallidos integer NOT NULL DEFAULT 3,
+  minutos_bloqueo integer NOT NULL DEFAULT 5,
+  actualizado_por bigint REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
+  fecha_actualizacion timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE TABLE contactos_emergencia (
@@ -254,12 +279,36 @@ CREATE TABLE diagnosticos (
   fecha_registro timestamptz NOT NULL DEFAULT now()
 );
 
+-- =============================================================================
+-- TABLA: configuracion_seguridad
+-- Nueva tabla: Parámetros editables por el Administrador para bloqueo temporal (CU01 / Seguridad)
+-- =============================================================================
+CREATE TABLE configuracion_seguridad (
+  id_configuracion serial PRIMARY KEY,
+  max_intentos_fallidos integer NOT NULL DEFAULT 3,
+  minutos_bloqueo integer NOT NULL DEFAULT 5,
+  actualizado_por bigint REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
+  fecha_actualizacion timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TABLE evoluciones (
   id_evolucion bigserial PRIMARY KEY,
   id_historia_clinica bigint NOT NULL,
   id_medico bigint NOT NULL,
   nota text NOT NULL,
   fecha_registro timestamptz NOT NULL DEFAULT now()
+);
+
+-- =============================================================================
+-- TABLA: configuracion_seguridad
+-- Nueva tabla: Parámetros editables por el Administrador para bloqueo temporal (CU01 / Seguridad)
+-- =============================================================================
+CREATE TABLE configuracion_seguridad (
+  id_configuracion serial PRIMARY KEY,
+  max_intentos_fallidos integer NOT NULL DEFAULT 3,
+  minutos_bloqueo integer NOT NULL DEFAULT 5,
+  actualizado_por bigint REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
+  fecha_actualizacion timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE TABLE recetas (

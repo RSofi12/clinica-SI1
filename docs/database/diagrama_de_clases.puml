@@ -27,11 +27,13 @@ class Usuarios <<seg>> {
   + tipo_usuario: String
   + estado: String
   + intentos_fallidos: Int
+  + bloqueado_hasta: DateTime
   + ultimo_acceso: DateTime
   + fecha_creacion: DateTime
   + fecha_actualizacion: DateTime
   --
   + autenticar(password: String): Boolean
+  + estaBloqueadoTemporalmente(): Boolean
   + recuperarPassword(token: String): Boolean
   + bloquearAcceso(): Void
   + actualizarUltimoAcceso(): Void
@@ -72,6 +74,18 @@ class TokensRecuperacion <<seg>> {
   --
   + validarToken(token: String): Boolean
   + marcarComoUsado(): Void
+}
+
+' Nueva clase para configurar intentos y minutos de bloqueo temporal (CU01 / Seguridad)
+class ConfiguracionSeguridad <<seg>> {
+  + id_configuracion: Int [PK]
+  + max_intentos_fallidos: Int
+  + minutos_bloqueo: Int
+  + actualizado_por: Long [FK]
+  + fecha_actualizacion: DateTime
+  --
+  + obtenerPoliticaActiva(): ConfiguracionSeguridad
+  + actualizarPolitica(maxIntentos: Int, minutos: Int): Void
 }
 
 class Bitacora <<seg>> {

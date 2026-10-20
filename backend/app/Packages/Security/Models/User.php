@@ -27,6 +27,7 @@ class User extends Authenticatable
         'tipo_usuario',
         'estado',
         'intentos_fallidos',
+        'bloqueado_hasta',
         'ultimo_acceso',
         'fecha_creacion',
         'fecha_actualizacion',
@@ -41,6 +42,7 @@ class User extends Authenticatable
     {
         return [
             'ultimo_acceso' => 'datetime',
+            'bloqueado_hasta' => 'datetime',
             'fecha_creacion' => 'datetime',
             'fecha_actualizacion' => 'datetime',
             'intentos_fallidos' => 'integer',
@@ -68,6 +70,47 @@ class User extends Authenticatable
     }
 
     /**
+     * + estaBloqueadoTemporalmente(): Boolean
+     * Evalúa si el usuario se encuentra penalizado temporalmente.
+     * Si el tiempo ya transcurrió, se auto-desbloquea de forma transparente.
+     */
+    public function estaBloqueadoTemporalmente(): bool
+    {
+        if ($this->estado !== 'BLOQUEADO') {
+            return false;
+        }
+
+        if ($this->bloqueado_hasta) {
+            if (now()->lessThan($this->bloqueado_hasta)) {
+                return true; // Sigue bloqueado
+            }
+
+            // Expiró el tiempo de penalización: auto-desbloqueo transparente
+            $this->estado = 'ACTIVO';
+            $this->intentos_fallidos = 0;
+            $this->bloqueado_hasta = null;
+            $this->fecha_actualizacion = now();
+            $this->save();
+
+            return false;
+        }
+
+        // Si no tiene bloqueado_hasta pero el estado es BLOQUEADO, es bloqueo manual
+        return true;
+    }
+
+    /**
+     * Obtiene los segundos restantes de penalización
+     */
+    public function segundosRestantesBloqueo(): int
+    {
+        if ($this->bloqueado_hasta && now()->lessThan($this->bloqueado_hasta)) {
+            return (int) now()->diffInSeconds($this->bloqueado_hasta, false);
+        }
+        return 0;
+    }
+
+    /**
      * + recuperarPassword(token: String): Boolean
      */
     public function recuperarPassword(string $nuevoPassword): void
@@ -80,9 +123,10 @@ class User extends Authenticatable
     /**
      * + bloquearAcceso(): Void
      */
-    public function bloquearAcceso(): void
+    public function bloquearAcceso(?int $minutos = null): void
     {
         $this->estado = 'BLOQUEADO';
+        $this->bloqueado_hasta = $minutos ? now()->addMinutes($minutos) : null;
         $this->fecha_actualizacion = now();
         $this->save();
     }
@@ -94,18 +138,19 @@ class User extends Authenticatable
     {
         $this->ultimo_acceso = now();
         $this->intentos_fallidos = 0;
+        $this->bloqueado_hasta = null;
         $this->fecha_actualizacion = now();
         $this->save();
     }
 
     /**
-     * Incrementa intentos fallidos y bloquea si llega a 5.
+     * Incrementa intentos fallidos y bloquea temporalmente si alcanza el límite
      */
-    public function registrarIntentoFallido(): void
+    public function registrarIntentoFallido(int $maxIntentos = 3, int $minutosBloqueo = 5): void
     {
         $this->intentos_fallidos += 1;
-        if ($this->intentos_fallidos >= 5) {
-            $this->bloquearAcceso();
+        if ($this->intentos_fallidos >= $maxIntentos) {
+            $this->bloquearAcceso($minutosBloqueo);
         } else {
             $this->fecha_actualizacion = now();
             $this->save();

@@ -72,4 +72,21 @@ export const usersService = {
   async fetchRoles() {
     return await apiFetch('/roles');
   },
+
+  /**
+   * Obtiene la política de seguridad y bloqueo temporal
+   */
+  async fetchSecurityPolicy() {
+    return await apiFetch('/security/policy');
+  },
+
+  /**
+   * Actualiza los parámetros de intentos y minutos de bloqueo
+   */
+  async updateSecurityPolicy(policyData) {
+    return await apiFetch('/security/policy', {
+      method: 'PUT',
+      body: JSON.stringify(policyData),
+    });
+  },
 };

@@ -5,6 +5,7 @@ import { LoginPage } from './pages/LoginPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { UsersManager } from './apps/security/components/UsersManager';
 import { AuditLogViewer } from './apps/security/components/AuditLogViewer';
+import { SecurityPolicyModal } from './apps/security/components/SecurityPolicyModal';
 import { Sidebar } from './components/Sidebar';
 import {
   Stethoscope,
@@ -17,6 +18,7 @@ import {
   CheckCircle2,
   LogOut,
   Shield,
+  ShieldAlert,
   LayoutDashboard,
   UserCog,
   Menu,
@@ -30,6 +32,7 @@ export default function App() {
   const [dashboardTab, setDashboardTab] = useState('overview'); // 'overview' | 'users'
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false);
 
   // Si no está autenticado y pide dashboard, fuerza ir a login
   if (!isAuthenticated && currentView === 'dashboard') {
@@ -195,9 +198,25 @@ export default function App() {
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-                    <span className="text-xs font-bold text-[#00687a] uppercase">CU01: Autenticación</span>
-                    <p className="text-xs text-slate-600 mt-1">Sesión activa con hash seguro y registro en bitácora.</p>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#00687a] uppercase">CU01: Autenticación</span>
+                        {role === 'ADMIN' && (
+                          <button
+                            onClick={() => setIsPolicyModalOpen(true)}
+                            className="text-[10px] font-semibold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 px-2 py-0.5 rounded-md transition cursor-pointer flex items-center gap-1"
+                            title="Editar intentos fallidos y minutos de bloqueo de seguridad"
+                          >
+                            <ShieldAlert className="w-3 h-3" />
+                            <span>Configurar Bloqueo →</span>
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-600 mt-1">
+                        Sesión activa con hash seguro, bloqueo tras 3 intentos y registro en bitácora.
+                      </p>
+                    </div>
                   </div>
 
                   <div
@@ -247,6 +266,12 @@ export default function App() {
           )}
         </main>
       </div>
+
+      {/* Modal de Políticas de Bloqueo (Acceso rápido Administrador) */}
+      <SecurityPolicyModal
+        isOpen={isPolicyModalOpen}
+        onClose={() => setIsPolicyModalOpen(false)}
+      />
     </div>
   );
 }
