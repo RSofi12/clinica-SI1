@@ -14,6 +14,7 @@
      - [`UsersController.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/Security/Controllers/UsersController.php): Gestión integral de operadores con listado paginado, filtros (`q`, `tipo_usuario`, `estado`), creación transaccional, edición, baja lógica (`toggle-status` - RN11) y desbloqueo de cuentas bloqueadas por fuerza bruta (`unlock`).
      - [`RolesController.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/Security/Controllers/RolesController.php): Exposición del catálogo de roles y permisos.
      - [`UserCreateRequest.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/Security/Requests/UserCreateRequest.php) y [`UserUpdateRequest.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/Security/Requests/UserUpdateRequest.php): Validaciones estrictas con reglas de unicidad y regex de caracteres permitidos.
+     - Seeder actualizado: 4 pacientes (2 hombres, 2 mujeres) y 3 médicos (Medicina General, Cardiología [H], Pediatría [M]).
      - Registro pasivo y transparente en `bitacora` (CU03) para todas las operaciones administrativas.
      - Rutas registradas en `routes/api.php`.
    - **Frontend (`src/apps/security/` y `src/components/`):**
@@ -23,7 +24,16 @@
      - [`UsersManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/components/UsersManager.jsx): Tabla de gestión con buscador, selector de rol, filtro de estado, badges de actividad y acciones rápidas.
      - [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx): Header superior simplificado con breadcrumbs y botón hamburguesa, delegando la navegación a la nueva barra lateral.
 
+3. **CU03 (Gestionar Bitácora de Auditoría — Inmutable) 100% Implementado:**
+   - **Backend (`app/Packages/Security/`):**
+     - [`AuditController.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/Security/Controllers/AuditController.php): Endpoints `/api/audit`, `/api/audit/filters-data` y `/api/audit/stats` con orden cronológico descendente inmutable, filtros por módulo, acción, usuario, IP y rango de fechas.
+   - **Frontend (`src/apps/security/`):**
+     - [`auditService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/services/auditService.js): Capa de servicio conectada a endpoints de auditoría.
+     - [`AuditLogViewer.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/components/AuditLogViewer.jsx): Pantalla principal con 4 KPIs diarios, barra de filtros avanzados, tabla interactiva con badges de severidad (verde/ámbar/rojo) y paginación.
+     - [`AuditDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/components/AuditDetailModal.jsx): Inspección a detalle de cualquier registro.
+     - Activado en [`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx).
+
 ### 2. Próxima Tarea Inmediata
-- **CU03 (Visualizar Bitácora del Sistema — RF01/Auditoría):**
-  - Implementar visualizador de eventos de bitácora para que el Administrador audite los cambios de estado, inicios de sesión y modificaciones de registros.
-- O avanzar hacia el **Paquete 2: Gestión de Pacientes (CU04 / RF02)**.
+- **Paquete 2: Gestión de Recursos Clínicos y Pacientes (CU04: Gestionar Pacientes — RF02):**
+  - Crear migración para las tablas del Paquete 2 (`pacientes`, `contactos_emergencia`, `especialidades`, `medicos`, `medico_especialidad`, `disponibilidades`, `bloqueos_horario`).
+  - Implementar modelo `Patient.php` y servicio de búsqueda por CI y datos demográficos.

@@ -29,6 +29,7 @@
   - ✅ `RolesController.php`: Endpoint `GET /api/roles` para listar roles y permisos para selectores dinámicos.
   - ✅ `UserCreateRequest.php`: Validador de unicidad de username y email, rol y contraseña segura.
   - ✅ `UserUpdateRequest.php`: Validador de edición con regla de unicidad ignorando el ID actual.
+  - ✅ Seeder actualizado: 4 pacientes (2 hombres, 2 mujeres) y 3 médicos (Medicina General, Cardiología [H], Pediatría [M]).
   - ✅ Trazabilidad en `bitacora` (CU03) para altas, modificaciones, bajas lógicas y desbloqueos.
   - ✅ Rutas registradas en `backend/routes/api.php` bajo middleware `web`.
 - **Frontend (`frontend/src/apps/security/` y `frontend/src/components/`):**
@@ -38,5 +39,18 @@
   - ✅ `UsersManager.jsx`: Panel de administración con buscador en vivo, filtros por rol y estado, badges colorizados, baja lógica y desbloqueo.
   - ✅ `App.jsx`: Header superior limpio con breadcrumb dinámico y toggle rápido, integrando la barra lateral para navegación fluida.
 
-### 4. Siguiente Bloque Inmediato de Trabajo
-- Iniciar CU03 (Visualizar Bitácora del Sistema) o avanzar al Paquete 2: Registro de Pacientes (CU04 / RF02).
+### 4. Implementación de CU03 (Gestionar Bitácora de Auditoría — Inmutable)
+- **Backend (`backend/app/Packages/Security/`):**
+  - ✅ `AuditController.php`:
+    - `GET /api/audit`: Consulta paginada con filtros por término textual (`q`), módulo, acción, operador responsable y rango de fechas (`fecha_inicio` y `fecha_fin`).
+    - `GET /api/audit/filters-data`: Catálogo dinámico de módulos, acciones y operadores para selectores.
+    - `GET /api/audit/stats`: KPIs en tiempo real (eventos hoy, logins exitosos, intentos fallidos/bloqueos, operaciones admin).
+    - Rutas registradas en `routes/api.php` bajo middleware `web`.
+- **Frontend (`frontend/src/apps/security/`):**
+  - ✅ `auditService.js`: Cliente API para consumo de `/api/audit`.
+  - ✅ `AuditLogViewer.jsx`: Vista de auditoría con 4 tarjetas KPI, panel de filtros avanzados, tabla con badges de severidad (verde/ámbar/rojo) y paginador.
+  - ✅ `AuditDetailModal.jsx`: Modal para inspección forense de IP, usuario, timestamps y descripción del suceso.
+  - ✅ Habilitado en `Sidebar.jsx` y `App.jsx` para acceso directo del Administrador.
+
+### 5. Siguiente Bloque Inmediato de Trabajo
+- Iniciar el **Paquete 2: Gestión de Recursos Clínicos y Pacientes (CU04: Gestionar Pacientes — RF02)**.
