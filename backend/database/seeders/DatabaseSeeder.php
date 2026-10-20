@@ -10,7 +10,11 @@ use App\Packages\Security\Models\Permission;
 
 /**
  * Seeder del Paquete 1: Seguridad y Auditoría (CU01, CU02)
- * Crea los 4 roles del sistema y 1 usuario de prueba por cada actor.
+ * Crea los 4 roles del sistema y usuarios demo:
+ * - 1 Administrador
+ * - 1 Recepcionista
+ * - 3 Médicos (General, Cardiología [H], Pediatría [M])
+ * - 4 Pacientes (2 hombres, 2 mujeres)
  * Contraseña estándar para todos: Admin123@
  */
 class DatabaseSeeder extends Seeder
@@ -58,9 +62,11 @@ class DatabaseSeeder extends Seeder
         // Contraseña segura solicitada para todos los usuarios demo (1 mayús, 1 minús, 1 num, 1 especial)
         $passwordHash = Hash::make('Admin123@');
 
-        // 3. Crear 1 usuario de prueba por cada uno de los 4 actores humanos
+        // =====================================================================
+        // 3. USUARIOS BASE Y DEMOSTRACIÓN
+        // =====================================================================
 
-        // Actor 1: Administrador
+        // A. Administrador
         $admin = User::firstOrCreate(
             ['username' => 'admin'],
             [
@@ -77,7 +83,7 @@ class DatabaseSeeder extends Seeder
         $admin->save();
         $admin->roles()->syncWithoutDetaching([$roles['ADMIN']->id_rol]);
 
-        // Actor 2: Recepcionista
+        // B. Recepcionista
         $recepcionista = User::firstOrCreate(
             ['username' => 'recepcion'],
             [
@@ -94,38 +100,83 @@ class DatabaseSeeder extends Seeder
         $recepcionista->save();
         $recepcionista->roles()->syncWithoutDetaching([$roles['RECEPCIONISTA']->id_rol]);
 
-        // Actor 3: Médico
-        $medico = User::firstOrCreate(
-            ['username' => 'doctor.perez'],
+        // C. Médicos (Rol único MEDICO según AGENTS.md, con especialidades)
+        $medicos = [
             [
+                'username' => 'doctor.perez',
                 'email' => 'juan.perez@clinicalacruz.com',
-                'password_hash' => $passwordHash,
-                'tipo_usuario' => 'MEDICO',
-                'estado' => 'ACTIVO',
-                'intentos_fallidos' => 0,
-                'fecha_creacion' => now(),
-                'fecha_actualizacion' => now(),
-            ]
-        );
-        $medico->password_hash = $passwordHash;
-        $medico->save();
-        $medico->roles()->syncWithoutDetaching([$roles['MEDICO']->id_rol]);
-
-        // Actor 4: Paciente (Autoservicio)
-        $paciente = User::firstOrCreate(
-            ['username' => 'paciente.carlos'],
+                'descripcion' => 'Dr. Juan Pérez (Medicina General)',
+            ],
             [
+                'username' => 'doctor.alejandro',
+                'email' => 'alejandro.cardiologia@clinicalacruz.com',
+                'descripcion' => 'Dr. Alejandro Morales (Cardiología - Hombre)',
+            ],
+            [
+                'username' => 'doctora.elena',
+                'email' => 'elena.pediatria@clinicalacruz.com',
+                'descripcion' => 'Dra. Elena Paredes (Pediatría - Mujer)',
+            ],
+        ];
+
+        foreach ($medicos as $m) {
+            $doc = User::firstOrCreate(
+                ['username' => $m['username']],
+                [
+                    'email' => $m['email'],
+                    'password_hash' => $passwordHash,
+                    'tipo_usuario' => 'MEDICO',
+                    'estado' => 'ACTIVO',
+                    'intentos_fallidos' => 0,
+                    'fecha_creacion' => now(),
+                    'fecha_actualizacion' => now(),
+                ]
+            );
+            $doc->password_hash = $passwordHash;
+            $doc->save();
+            $doc->roles()->syncWithoutDetaching([$roles['MEDICO']->id_rol]);
+        }
+
+        // D. Pacientes (Autoservicio)
+        $pacientes = [
+            [
+                'username' => 'paciente.carlos',
                 'email' => 'carlos.mendez@gmail.com',
-                'password_hash' => $passwordHash,
-                'tipo_usuario' => 'PACIENTE',
-                'estado' => 'ACTIVO',
-                'intentos_fallidos' => 0,
-                'fecha_creacion' => now(),
-                'fecha_actualizacion' => now(),
-            ]
-        );
-        $paciente->password_hash = $passwordHash;
-        $paciente->save();
-        $paciente->roles()->syncWithoutDetaching([$roles['PACIENTE']->id_rol]);
+                'genero' => 'Hombre',
+            ],
+            [
+                'username' => 'paciente.mateo',
+                'email' => 'mateo.rodriguez@gmail.com',
+                'genero' => 'Hombre',
+            ],
+            [
+                'username' => 'paciente.sofia',
+                'email' => 'sofia.vargas@gmail.com',
+                'genero' => 'Mujer',
+            ],
+            [
+                'username' => 'paciente.valeria',
+                'email' => 'valeria.castro@gmail.com',
+                'genero' => 'Mujer',
+            ],
+        ];
+
+        foreach ($pacientes as $pac) {
+            $pacienteUser = User::firstOrCreate(
+                ['username' => $pac['username']],
+                [
+                    'email' => $pac['email'],
+                    'password_hash' => $passwordHash,
+                    'tipo_usuario' => 'PACIENTE',
+                    'estado' => 'ACTIVO',
+                    'intentos_fallidos' => 0,
+                    'fecha_creacion' => now(),
+                    'fecha_actualizacion' => now(),
+                ]
+            );
+            $pacienteUser->password_hash = $passwordHash;
+            $pacienteUser->save();
+            $pacienteUser->roles()->syncWithoutDetaching([$roles['PACIENTE']->id_rol]);
+        }
     }
 }
