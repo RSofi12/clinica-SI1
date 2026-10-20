@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Packages\Security\Controllers\AuthController;
 use App\Packages\Security\Controllers\UsersController;
 use App\Packages\Security\Controllers\RolesController;
+use App\Packages\Security\Controllers\AuditController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,4 +38,11 @@ Route::prefix('users')->middleware('web')->group(function () {
 // Catálogo de Roles y Permisos para selectores
 Route::prefix('roles')->middleware('web')->group(function () {
     Route::get('/', [RolesController::class, 'index']);
+});
+
+// CU03: Gestión de Bitácora de Auditoría
+Route::prefix('audit')->middleware('web')->group(function () {
+    Route::get('/', [AuditController::class, 'index']);
+    Route::get('/filters-data', [AuditController::class, 'filtersData']);
+    Route::get('/stats', [AuditController::class, 'stats']);
 });

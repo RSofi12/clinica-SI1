@@ -58,8 +58,6 @@ export function Sidebar({
           tag: 'CU03 / RF01',
           icon: History,
           requiredRole: 'ADMIN',
-          disabled: true,
-          badge: 'Próximo',
         },
       ],
     },

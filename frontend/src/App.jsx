@@ -4,6 +4,7 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { UsersManager } from './apps/security/components/UsersManager';
+import { AuditLogViewer } from './apps/security/components/AuditLogViewer';
 import { Sidebar } from './components/Sidebar';
 import {
   Stethoscope,
@@ -67,6 +68,8 @@ export default function App() {
     switch (dashboardTab) {
       case 'users':
         return 'Gestión de Usuarios y Roles (CU02)';
+      case 'audit':
+        return 'Bitácora de Auditoría del Sistema (CU03)';
       case 'overview':
       default:
         return 'Panel General';
@@ -161,6 +164,8 @@ export default function App() {
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
           {dashboardTab === 'users' && role === 'ADMIN' ? (
             <UsersManager />
+          ) : dashboardTab === 'audit' && role === 'ADMIN' ? (
+            <AuditLogViewer />
           ) : (
             <div className="space-y-8">
               {/* Banner de Bienvenida */}
@@ -216,9 +221,25 @@ export default function App() {
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-                    <span className="text-xs font-bold text-cyan-700 uppercase">CU03: Bitácora Activa</span>
-                    <p className="text-xs text-slate-600 mt-1">Trazabilidad de accesos con IP, usuario y fecha.</p>
+                  <div
+                    onClick={() => role === 'ADMIN' && setDashboardTab('audit')}
+                    className={`p-4 rounded-xl border transition ${
+                      role === 'ADMIN'
+                        ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
+                        : 'bg-slate-50 border-slate-200/80'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-cyan-800 uppercase">CU03: Bitácora Activa</span>
+                      {role === 'ADMIN' && (
+                        <span className="text-[10px] font-semibold text-cyan-700 bg-cyan-100/60 px-1.5 py-0.5 rounded-md">
+                          Consultar →
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Trazabilidad inmutable de accesos con IP, usuario, acción y fecha.
+                    </p>
                   </div>
                 </div>
               </div>
