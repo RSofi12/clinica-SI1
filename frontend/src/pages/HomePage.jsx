@@ -25,7 +25,7 @@ import pediatriaImg from '../assets/clinica-pediatria.png';
 import geriatricImg from '../assets/doctor-geriatric.jpg';
 import sesionesImg from '../assets/sesiones-clinicas.jpg';
 
-export const HomePage = ({ onNavigateLogin }) => {
+export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
   const [selectedRoleTab, setSelectedRoleTab] = useState('medicos'); // 'medicos' | 'recepcion' | 'admin'
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -116,6 +116,16 @@ export const HomePage = ({ onNavigateLogin }) => {
 
           {/* Botón de Login & Hamburger Móvil */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {onOpenActivatePatient && (
+              <button
+                onClick={onOpenActivatePatient}
+                className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 px-3.5 py-2 rounded-full transition cursor-pointer"
+                title="Activar cuenta digital con Cédula de Identidad"
+              >
+                <span>Activar Cuenta CI</span>
+              </button>
+            )}
+
             <button
               onClick={onNavigateLogin}
               className="group flex items-center gap-2 bg-[#00687a] hover:bg-[#004d5a] text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-full transition-all duration-200 shadow-sm shadow-[#00687a]/20 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"

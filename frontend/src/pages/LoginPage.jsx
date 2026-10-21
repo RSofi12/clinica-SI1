@@ -12,41 +12,52 @@ import {
   UserCheck,
   CheckCircle2,
   Sparkles,
+  AlertCircle,
 } from 'lucide-react';
 import logoColorSvg from '../assets/logo-color.svg';
 import { BackgroundGlow } from '../components/BackgroundGlow';
+import { useAuth } from '../context/AuthContext';
 
-export const LoginPage = ({ onNavigateHome, onLoginSuccess }) => {
+export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPassword, onOpenActivatePatient }) => {
+  const { login } = useAuth();
   const [emailOrUser, setEmailOrUser] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [selectedRole, setSelectedRole] = useState('personal'); // 'personal' | 'paciente'
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!emailOrUser || !password) return;
+    setErrorMsg('');
+    if (!emailOrUser || !password) {
+      setErrorMsg('Por favor ingresa usuario y contraseña.');
+      return;
+    }
 
     setIsLoading(true);
-    // Simulación con micro-interacción de éxito y transición suave
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await login(emailOrUser, password);
       setIsSuccess(true);
       setTimeout(() => {
         if (onLoginSuccess) {
           onLoginSuccess();
         }
       }, 500);
-    }, 700);
+    } catch (err) {
+      setErrorMsg(err.message || 'No se pudo conectar con el servidor.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="relative min-h-screen text-white flex items-center justify-center p-4 sm:p-6 lg:p-10 selection:bg-[#70cbff] selection:text-[#01171d] font-montserrat overflow-hidden">
       <BackgroundGlow />
 
-      {/* Botón flotante para volver en esquina superior en móviles/escritorio */}
+      {/* Botón flotante para volver en esquina superior */}
       <div className="absolute top-4 left-4 sm:top-6 sm:left-8 z-20">
         <button
           type="button"
@@ -61,15 +72,9 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess }) => {
       {/* Contenedor Principal Centrado (2 columnas) */}
       <div className="relative z-10 max-w-5xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center animate-fade-up pt-12 lg:pt-0">
         
-        {/* ─────────────────────────────────────────────────────────────
-            Columna Izquierda (1era mitad de la página):
-            - Logo con resplandor fluido
-            - Identidad y propuesta de valor
-            - Pilares de seguridad y gestión clínica
-        ───────────────────────────────────────────────────────────── */}
+        {/* Columna Izquierda: Logo con resplandor turquesa e identidad de la clínica */}
         <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left">
           
-          {/* Logo SVG con animación suave de resplandor */}
           <div className="flex items-center gap-4 sm:gap-5 mb-6 sm:mb-8">
             <div className="relative group shrink-0">
               <div className="absolute inset-0 rounded-2xl bg-[#70cbff]/35 blur-xl pointer-events-none animate-pulse-glow" />
@@ -101,110 +106,104 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess }) => {
             Acceso seguro y centralizado para personal médico, recepción, administración y pacientes.
           </p>
 
-          {/* Tarjetas informativas con hover interactivo sutil */}
-          <div className="flex flex-col gap-3 w-full max-w-md">
-            <div className="group flex items-center gap-3.5 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#70cbff]/40 backdrop-blur-md shadow-xs transition-all duration-300 hover:translate-x-1">
-              <div className="p-2.5 rounded-xl bg-[#00687a]/40 text-[#70cbff] border border-[#70cbff]/25 shrink-0 group-hover:scale-110 transition-transform">
-                <Shield className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs sm:text-sm font-semibold text-white">
-                  Acceso seguro y verificado
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-md mb-8">
+            <div className="group p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md hover:bg-white/[0.07] hover:border-[#70cbff]/40 transition-all duration-300 text-left">
+              <div className="flex items-center gap-2.5 text-xs font-semibold text-white mb-1">
+                <div className="p-1.5 rounded-lg bg-[#00687a]/40 text-[#70cbff] border border-[#70cbff]/20">
+                  <Activity className="w-3.5 h-3.5" />
                 </div>
-                <div className="text-[11px] text-cyan-200/70">
-                  Protección estricta de historias clínicas y confidencialidad médica
-                </div>
+                <span>Agenda en Tiempo Real</span>
               </div>
+              <p className="text-[11px] text-cyan-100/70 leading-normal pl-8">
+                Visualización de citas, turnos y disponibilidad médica inmediata.
+              </p>
             </div>
 
-            <div className="group flex items-center gap-3.5 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#70cbff]/40 backdrop-blur-md shadow-xs transition-all duration-300 hover:translate-x-1">
-              <div className="p-2.5 rounded-xl bg-[#00687a]/40 text-[#70cbff] border border-[#70cbff]/25 shrink-0 group-hover:scale-110 transition-transform">
-                <LayoutGrid className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs sm:text-sm font-semibold text-white">
-                  Gestión integral por roles
+            <div className="group p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md hover:bg-white/[0.07] hover:border-[#70cbff]/40 transition-all duration-300 text-left">
+              <div className="flex items-center gap-2.5 text-xs font-semibold text-white mb-1">
+                <div className="p-1.5 rounded-lg bg-[#00687a]/40 text-[#70cbff] border border-[#70cbff]/20">
+                  <Shield className="w-3.5 h-3.5" />
                 </div>
-                <div className="text-[11px] text-cyan-200/70">
-                  Módulos específicos para doctores, recepción, admisiones y pacientes
-                </div>
+                <span>Historial Protegido</span>
               </div>
+              <p className="text-[11px] text-cyan-100/70 leading-normal pl-8">
+                Expedientes y datos de salud resguardados con cifrado seguro.
+              </p>
             </div>
+          </div>
 
-            <div className="group flex items-center gap-3.5 px-4 py-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#70cbff]/40 backdrop-blur-md shadow-xs transition-all duration-300 hover:translate-x-1">
-              <div className="p-2.5 rounded-xl bg-[#00687a]/40 text-[#70cbff] border border-[#70cbff]/25 shrink-0 group-hover:scale-110 transition-transform">
-                <Activity className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <div className="text-xs sm:text-sm font-semibold text-white">
-                  Monitoreo de agenda en tiempo real
-                </div>
-                <div className="text-[11px] text-cyan-200/70">
-                  Control de citas, salas de espera y reportes administrativos
-                </div>
-              </div>
-            </div>
+          {/* Tarjeta de estado de conectividad */}
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/25 backdrop-blur-md text-emerald-300 text-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-medium">Servidor Clínico Operativo (Laravel + Postgres)</span>
           </div>
         </div>
 
-        {/* ─────────────────────────────────────────────────────────────
-            Columna Derecha: Tarjeta de Iniciar Sesión (Blanca, nítida)
-        ───────────────────────────────────────────────────────────── */}
-        <div className="lg:col-span-6 flex justify-center w-full">
-          <div className="bg-white text-slate-800 rounded-3xl sm:rounded-[32px] p-6 sm:p-10 shadow-2xl shadow-cyan-950/60 w-full max-w-md border border-white/90 relative">
+        {/* Columna Derecha: Tarjeta de Login Flotante */}
+        <div className="lg:col-span-6 w-full max-w-md mx-auto">
+          <div className="relative bg-white/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-8 border border-white/40 shadow-2xl shadow-cyan-950/40 text-slate-800">
             
-            {/* Cabecera de la tarjeta con badge dinámico */}
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h2 className="font-montserrat font-bold text-2xl text-[#003844] tracking-tight">
-                  Iniciar Sesión
-                </h2>
-                <p className="text-xs text-slate-500 mt-1">
-                  {selectedRole === 'personal'
-                    ? 'Acceso a la plataforma administrativa y médica'
-                    : 'Acceso para consulta y reserva de citas'}
-                </p>
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-[#00687a]/10 p-2 flex items-center justify-center border border-[#00687a]/15 shadow-xs">
-                <img src={logoColorSvg} alt="Logo" className="w-full h-full object-contain" />
-              </div>
-            </div>
-
-            {/* Selector de rol con pestaña deslizante */}
-            <div className="relative p-1 bg-slate-100/90 rounded-2xl mb-6 text-xs font-semibold grid grid-cols-2 gap-1 border border-slate-200/60">
+            {/* Selector de Pestañas: Personal de la Clínica vs Paciente */}
+            <div className="flex rounded-xl bg-slate-100 p-1 mb-6 border border-slate-200/60">
               <button
                 type="button"
-                onClick={() => setSelectedRole('personal')}
-                className={`relative z-10 py-2.5 px-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+                onClick={() => {
+                  setSelectedRole('personal');
+                  setEmailOrUser('admin');
+                  setPassword('Admin123@');
+                }}
+                className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
                   selectedRole === 'personal'
-                    ? 'bg-white text-[#00687a] shadow-sm font-bold'
-                    : 'text-slate-500 hover:text-slate-900'
+                    ? 'bg-white text-[#00687a] shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                <Stethoscope className={`w-4 h-4 transition-transform ${selectedRole === 'personal' ? 'scale-110 text-[#00687a]' : 'text-slate-400'}`} />
-                <span>Personal Clínico</span>
+                <Stethoscope className="w-3.5 h-3.5" />
+                <span>Personal Médico</span>
               </button>
-
               <button
                 type="button"
-                onClick={() => setSelectedRole('paciente')}
-                className={`relative z-10 py-2.5 px-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+                onClick={() => {
+                  setSelectedRole('paciente');
+                  setEmailOrUser('paciente.carlos');
+                  setPassword('Admin123@');
+                }}
+                className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
                   selectedRole === 'paciente'
-                    ? 'bg-white text-[#00687a] shadow-sm font-bold'
-                    : 'text-slate-500 hover:text-slate-900'
+                    ? 'bg-white text-[#00687a] shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                <UserCheck className={`w-4 h-4 transition-transform ${selectedRole === 'paciente' ? 'scale-110 text-[#00687a]' : 'text-slate-400'}`} />
+                <UserCheck className="w-3.5 h-3.5" />
                 <span>Portal Paciente</span>
               </button>
             </div>
 
+            <div className="mb-5">
+              <h2 className="font-montserrat font-bold text-xl text-slate-900 tracking-tight">
+                Iniciar Sesión
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                {selectedRole === 'personal'
+                  ? 'Ingresa tus credenciales de funcionario médico o administrativo.'
+                  : 'Ingresa con tu documento de identidad (CI) y contraseña.'}
+              </p>
+            </div>
+
+            {/* Mensaje de Error */}
+            {errorMsg && (
+              <div className="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
+                <span className="leading-snug">{errorMsg}</span>
+              </div>
+            )}
+
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Campo: Usuario o correo */}
+              {/* Campo: Usuario / CI / Correo */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  {selectedRole === 'personal' ? 'Usuario o correo institucional' : 'Cédula de Identidad o Correo'}
+                  {selectedRole === 'personal' ? 'Usuario o Correo Institucional' : 'Carnet de Identidad (CI) o Correo'}
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-[#00687a] transition-colors">
@@ -217,8 +216,8 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess }) => {
                     onChange={(e) => setEmailOrUser(e.target.value)}
                     placeholder={
                       selectedRole === 'personal'
-                        ? 'admin o doctor@clinicalacruz.bo'
-                        : 'Ej. 7654321 o paciente@correo.com'
+                        ? 'Ej. admin o doctor@clinicalacruz.com'
+                        : 'Ej. paciente.carlos o correo@gmail.com'
                     }
                     className="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00687a]/40 focus:border-[#00687a] focus:bg-white transition-all duration-200"
                   />
@@ -264,19 +263,16 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess }) => {
                   />
                   <span className="text-xs text-slate-600 font-medium">Recordarme</span>
                 </label>
-                <a
-                  href="#recuperar"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    alert('Función de recuperación: se enviará un enlace de verificación a tu correo registrado.');
-                  }}
-                  className="text-xs font-semibold text-[#00687a] hover:text-[#004d5a] hover:underline transition"
+                <button
+                  type="button"
+                  onClick={onNavigateForgotPassword}
+                  className="text-xs font-semibold text-[#00687a] hover:text-[#004d5a] hover:underline transition cursor-pointer"
                 >
                   ¿Olvidaste tu contraseña?
-                </a>
+                </button>
               </div>
 
-              {/* Botón de Enviar con micro-estados */}
+              {/* Botón de Enviar */}
               <button
                 type="submit"
                 disabled={isLoading || isSuccess}
@@ -300,10 +296,29 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess }) => {
               </button>
             </form>
 
+            {/* Acceso para Pacientes sin Cuenta Web (CU05) */}
+            <div className="mt-4 pt-3 border-t border-slate-100 text-center">
+              <button
+                type="button"
+                onClick={onOpenActivatePatient}
+                className="text-xs font-semibold text-[#00687a] hover:text-[#004d5a] hover:underline transition cursor-pointer flex items-center justify-center gap-1 mx-auto"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>¿Es paciente y aún no tiene acceso? Activar con CI →</span>
+              </button>
+            </div>
+
             {/* Aviso de seguridad institucional al pie */}
-            <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-center gap-2 text-slate-400 text-[11px]">
+            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-slate-400 text-[11px]">
               <Shield className="w-3.5 h-3.5 text-slate-400" />
               <span>Conexión cifrada de nivel hospitalario</span>
+            </div>
+
+            {/* Guía rápida de credenciales de prueba */}
+            <div className="mt-3 text-center">
+              <span className="text-[11px] text-slate-400">
+                Clave demo para todos los roles: <strong className="text-slate-600">Admin123@</strong>
+              </span>
             </div>
 
           </div>
