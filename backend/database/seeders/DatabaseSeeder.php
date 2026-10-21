@@ -137,27 +137,27 @@ class DatabaseSeeder extends Seeder
             $doc->roles()->syncWithoutDetaching([$roles['MEDICO']->id_rol]);
         }
 
-        // D. Pacientes (Autoservicio)
+        // D. Pacientes (Autoservicio CU05)
         $pacientes = [
             [
                 'username' => 'paciente.carlos',
-                'email' => 'carlos.mendez@gmail.com',
+                'email' => 'carlos.silva.v@gmail.com',
                 'genero' => 'Hombre',
             ],
             [
-                'username' => 'paciente.mateo',
-                'email' => 'mateo.rodriguez@gmail.com',
-                'genero' => 'Hombre',
-            ],
-            [
-                'username' => 'paciente.sofia',
-                'email' => 'sofia.vargas@gmail.com',
+                'username' => 'paciente.mariana',
+                'email' => 'mariana.torrico@gmail.com',
                 'genero' => 'Mujer',
             ],
             [
                 'username' => 'paciente.valeria',
-                'email' => 'valeria.castro@gmail.com',
+                'email' => 'valeria.escalante@gmail.com',
                 'genero' => 'Mujer',
+            ],
+            [
+                'username' => 'paciente.fernando',
+                'email' => 'fer.justiniano@estudiante.edu',
+                'genero' => 'Hombre',
             ],
         ];
 
@@ -174,6 +174,7 @@ class DatabaseSeeder extends Seeder
                     'fecha_actualizacion' => now(),
                 ]
             );
+            $pacienteUser->email = $pac['email'];
             $pacienteUser->password_hash = $passwordHash;
             $pacienteUser->save();
             $pacienteUser->roles()->syncWithoutDetaching([$roles['PACIENTE']->id_rol]);
@@ -181,5 +182,11 @@ class DatabaseSeeder extends Seeder
 
         // 6. Poblar catálogo de 15 pacientes con datos demográficos y contactos (CU04 / RF02)
         $this->call(PatientSeeder::class);
+
+        // 7. Poblar catálogo de especialidades médicas (CU07 / RF04)
+        $this->call(SpecialtySeeder::class);
+
+        // 8. Poblar plantel de médicos institucionales con especialidades (CU06 / RF03)
+        $this->call(DoctorSeeder::class);
     }
 }

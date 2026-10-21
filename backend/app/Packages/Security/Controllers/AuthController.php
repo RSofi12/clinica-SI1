@@ -33,6 +33,16 @@ class AuthController extends Controller
             ->orWhere('email', $login)
             ->first();
 
+        // Soporte de inicio de sesión con Carnet de Identidad (CI) para Pacientes (CU05)
+        if (!$user) {
+            $paciente = \App\Packages\ClinicalResources\Models\Patient::where('numero_documento', $login)
+                ->whereNotNull('id_usuario')
+                ->first();
+            if ($paciente) {
+                $user = User::find($paciente->id_usuario);
+            }
+        }
+
         $ip = $request->ip();
 
         if (!$user) {

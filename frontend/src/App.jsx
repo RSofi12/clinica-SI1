@@ -7,6 +7,7 @@ import { UsersManager } from './apps/security/components/UsersManager';
 import { AuditLogViewer } from './apps/security/components/AuditLogViewer';
 import { SecurityPolicyModal } from './apps/security/components/SecurityPolicyModal';
 import { PatientsManager } from './apps/clinical-resources/components/PatientsManager';
+import { DoctorsManager } from './apps/clinical-resources/components/DoctorsManager';
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
@@ -71,6 +72,13 @@ export default function App() {
     }
   }, [isAuthenticated, currentView]);
 
+  // Si no está autenticado y se ingresa a dashboard, sincronizar URL a login
+  useEffect(() => {
+    if (!loading && !isAuthenticated && currentView === 'dashboard') {
+      navigateTo('login');
+    }
+  }, [loading, isAuthenticated, currentView]);
+
   // Pantalla de carga mientras se verifica sesión inicial
   if (loading) {
     return (
@@ -90,6 +98,7 @@ export default function App() {
         <LoginPage
           onNavigateHome={() => navigateTo('home')}
           onLoginSuccess={() => navigateTo('dashboard')}
+          onNavigateForgotPassword={() => navigateTo('forgot-password')}
           onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
         />
         <ActivatePatientModal
@@ -155,6 +164,8 @@ export default function App() {
         return 'Bitácora de Auditoría del Sistema (CU03)';
       case 'patients':
         return 'Gestión de Pacientes (CU04)';
+      case 'doctors':
+        return 'Plantel Médico y Especialidades (CU06 / CU07)';
       case 'patient-profile':
         return 'Mi Perfil de Paciente (CU05)';
       case 'overview':
@@ -255,6 +266,8 @@ export default function App() {
             <AuditLogViewer />
           ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
             <PatientsManager />
+          ) : dashboardTab === 'doctors' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
+            <DoctorsManager />
           ) : dashboardTab === 'patient-profile' ? (
             <PatientProfileView />
           ) : (
@@ -387,6 +400,27 @@ export default function App() {
                     </div>
                     <p className="text-xs text-slate-600 mt-1">
                       Admisión clínica, correlativo HC, grupos etarios y bajas lógicas (RF02).
+                    </p>
+                  </div>
+
+                  <div
+                    onClick={() => ['ADMIN', 'RECEPCIONISTA'].includes(role) && setDashboardTab('doctors')}
+                    className={`p-4 rounded-xl border transition ${
+                      ['ADMIN', 'RECEPCIONISTA'].includes(role)
+                        ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
+                        : 'bg-slate-50 border-slate-200/80'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-[#00687a] uppercase">CU06: Médicos</span>
+                      {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                        <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
+                          Plantel →
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Plantel institucional, especialidades asignadas, matrículas y bajas lógicas (RF03).
                     </p>
                   </div>
                 </div>

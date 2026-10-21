@@ -57,13 +57,30 @@ backend/app/Packages/Security/
 │   ├── Permission.php                # Tabla 'permisos'
 │   ├── PasswordResetToken.php        # Tabla 'tokens_recuperacion'
 │   ├── SecurityConfig.php            # Tabla 'configuracion_seguridad' (políticas dinámicas)
-│   └── Bitacora.php                  # Tabla 'bitacora' (AuditLog como alias puente)
+│   └── Bitacora.php                  # Tabla 'bitacora' (Modelo oficial inmutable)
 ├── Middleware/
 │   ├── EnsureSessionValid.php        # Rechaza accesos sin sesión (Prueba 9 del examen)
 │   └── CheckRole.php                 # Control RBAC por tipo_usuario
 └── Services/
     ├── AuthService.php               # Lógica de verificación, intentos y sesiones
     └── AuditService.php              # Registro pasivo y desacoplado en bitácora
+
+backend/app/Packages/ClinicalResources/
+├── Controllers/
+│   ├── PatientsController.php        # CU04: CRUD pacientes y habilitación web
+│   ├── PatientProfileController.php  # CU05: Autoservicio y perfil del paciente
+│   ├── DoctorsController.php         # CU06: Gestión de médicos y especialidades
+│   └── SpecialtiesController.php     # CU07: Catálogo de especialidades médicas
+├── Requests/
+│   ├── PatientCreateRequest.php      # Validación de admisión
+│   ├── PatientUpdateRequest.php
+│   ├── DoctorCreateRequest.php       # Matrícula única y especialidades
+│   └── DoctorUpdateRequest.php
+└── Models/
+    ├── Paciente.php                  # Tabla 'pacientes' (con alias Patient.php)
+    ├── EmergencyContact.php          # Tabla 'contactos_emergencia'
+    ├── Medico.php                    # Tabla 'medicos' (Modelo oficial en español)
+    └── Especialidad.php              # Tabla 'especialidades' (Modelo oficial en español)
 ```
 
 ### Reglas Sagradas para el Backend:
