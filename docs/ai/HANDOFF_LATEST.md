@@ -23,7 +23,7 @@
 
 4. **Herramientas de Planificación y Calidad:**
    - [`docs/informes/implementation_prompt.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/informes/implementation_prompt.md): Prompt estándar para revisiones previas a cualquier CU.
-   - [`docs/IMPLEMENTATION_PHASES.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/IMPLEMENTATION_PHASES.md): Checklist de Casos de Uso y Fases de Prueba (7 de 23 completados = 30.4%).
+   - [`docs/IMPLEMENTATION_PHASES.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/IMPLEMENTATION_PHASES.md): Checklist de Casos de Uso y Fases de Prueba: **Ciclo 1 con 13 CUs (7 de 13 completados = 53.8%)** cubriendo el 100% de las 10 pruebas mínimas del examen, y Ciclo 2 con 10 CUs (+1 opcional). Progreso global del sistema: 7 de 23 completados = 30.4%.
    - [`docs/informes/poblacion_database_clinica.sql`](file:///c:/Users/PERSONAL/clinica-SI1/docs/informes/poblacion_database_clinica.sql): Población SQL con Usuarios, Pacientes, Especialidades y Médicos.
 
 ### 2. Próxima Tarea Inmediata

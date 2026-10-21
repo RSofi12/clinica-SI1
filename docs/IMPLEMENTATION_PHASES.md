@@ -10,8 +10,8 @@
 
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
-| **Ciclo 1: Cita de Punta a Punta** | 13 | 5 | 8 | 🟡 En Desarrollo (Meta: Domingo 25/10/2026) |
-| **Ciclo 2: Clínico, Pagos y Analítica** | 10 (+1) | 2 | 8 (+1) | ⚪ Planificado (Meta: Domingo 08/11/2026) |
+| **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 7 | 6 | 🟡 En Desarrollo (Meta: Domingo 25/10/2026 — 53.8%) |
+| **Ciclo 2: Clínico, Pagos y Analítica** | 10 (+1) | 0 | 10 (+1) | ⚪ Planificado (Meta: Domingo 08/11/2026) |
 | **TOTAL GENERAL** | **23 (+1)** | **7** | **16 (+1)** | **Progreso Global: 30.4%** |
 
 ---
@@ -74,6 +74,17 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
   - [x] **P2.2:** Desactivación de usuario (no puede iniciar sesión).
   - [x] **P2.3:** Desbloqueo manual por el Administrador.
 
+#### ✅ CU03: Gestionar Bitácora de Auditoría (Inmutable)
+- [x] **Backend:**
+  - [x] Tabla `bitacora` inmutable con triggers/observers pasivos.
+  - [x] Endpoint paginado con filtros (`q`, `modulo`, `accion`, `operador`, `fechas`).
+  - [x] KPIs diarios de seguridad y operaciones.
+- [x] **Frontend:**
+  - [x] `AuditLogViewer.jsx` con 4 KPIs, filtros avanzados y `AuditDetailModal.jsx`.
+- [x] **Fase de Pruebas:**
+  - [x] **P3.1:** Verificación de inmutabilidad (no existe endpoint DELETE ni UPDATE en bitácora).
+  - [x] **P3.2:** Registro automático ante altas de pacientes y cambios de estado.
+
 ---
 
 ### 📦 Paquete 2: Gestión de Recursos Clínicos y Pacientes (P2)
@@ -95,6 +106,22 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
   - [x] **P4.2 (Prueba #2):** Registrar paciente con CI duplicado (rechazo con HTTP 422).
   - [x] **P4.3:** Cálculo correcto de edad y asignación del grupo etario.
   - [x] **P4.4:** Desactivación lógica sin borrado de base de datos.
+
+#### ✅ CU05: Gestionar Cuenta y Perfil del Paciente (§3.4 / Autoservicio)
+- [x] **Backend:**
+  - [x] Verificación de CI en padrón clínico (`/check-ci`).
+  - [x] Activación transaccional con asignación de rol `PACIENTE` y bcrypt.
+  - [x] Consulta y actualización de datos de contacto y contacto de emergencia.
+  - [x] Cambio de contraseña con `StrongPasswordRule`.
+  - [x] Habilitación asistida desde recepción (`/enable-web-account`).
+- [x] **Frontend:**
+  - [x] `ActivatePatientModal.jsx` de autoservicio en 3 pasos accesible desde Login y Home.
+  - [x] `PatientWebAccountModal.jsx` para asignación de credenciales por Recepción.
+  - [x] `PatientProfileView.jsx` con datos clínicos oficiales protegidos y edición de contacto.
+- [x] **Fase de Pruebas:**
+  - [x] **P5.1:** Activación con CI existente (éxito y asignación de contraseña segura).
+  - [x] **P5.2:** Intento de activación con CI inexistente (rechazo con mensaje claro).
+  - [x] **P5.3:** Paciente solo puede editar sus canales de contacto, nunca su CI o historia clínica legal.
 
 #### ✅ CU06: Gestionar Médicos (RF03)
 - [x] **Backend:**
@@ -169,17 +196,6 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
   - [ ] **P10.3 (Prueba #5):** Intentar forzar cita fuera del horario de atención del médico (rechazo).
   - [ ] **P10.4:** Advertencia o restricción de rango etario.
 
-#### ⏳ CU11: Reprogramar Cita Médica (RF08)
-- [ ] **Backend:**
-  - [ ] Verificación de disponibilidad del nuevo horario bajo transacción.
-  - [ ] Regla: Solo citas *Programada* o *Confirmada* pueden reprogramarse.
-  - [ ] Citas *Atendidas* o *Canceladas* rechazan reprogramación.
-- [ ] **Frontend:**
-  - [ ] Modal de reprogramación con nuevo calendario y liberación inmediata del cupo anterior.
-- [ ] **Fase de Pruebas:**
-  - [ ] **P11.1:** Reprogramar cita a fecha libre futura (éxito y cupo previo liberado).
-  - [ ] **P11.2:** Intentar reprogramar una cita ya atendida (bloqueado por regla de negocio).
-
 #### ⏳ CU12: Cancelar Cita Médica (RF09)
 - [ ] **Backend:**
   - [ ] Transición a estado *Cancelada* con registro obligatorio del motivo.
@@ -189,17 +205,6 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 - [ ] **Fase de Pruebas:**
   - [ ] **P12.1 (Prueba #6):** Cancelar cita (cupo queda libre para nuevo paciente y cita permanece en base de datos).
   - [ ] **P12.2:** Intento de cancelación sin motivo (rechazado por validación).
-
-#### ⏳ CU13: Registrar Asistencia y Estado de Cita (RF10)
-- [ ] **Backend:**
-  - [ ] Máquina de estados: *Programada* → *Confirmada* → *Atendida* / *Inasistencia*.
-  - [ ] Restricción de saltos ilegales (ej. de *Cancelada* a *Atendida* rechazada).
-- [ ] **Frontend:**
-  - [ ] Botones de cambio de estado rápido en el mostrador de recepción.
-- [ ] **Fase de Pruebas:**
-  - [ ] **P13.1:** Marcar asistencia presencial (*Confirmada*).
-  - [ ] **P13.2:** Marcar *Inasistencia* al finalizar el turno.
-  - [ ] **P13.3:** Rechazar transición ilegal.
 
 #### ⏳ CU14: Consultar Agenda Médica Diaria (RF11)
 - [ ] **Backend:**
@@ -225,38 +230,29 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 > **Objetivo:** Completar funcionalidades avanzadas, expediente clínico, reportes gerenciales (RF13) e integraciones.  
 > **Fecha Límite:** Domingo 08 de Noviembre de 2026.
 
-### 📦 Paquete 1: Seguridad y Auditoría (P1)
-#### ✅ CU03: Gestionar Bitácora de Auditoría (Inmutable)
-- [x] **Backend:**
-  - [x] Tabla `bitacora` inmutable con triggers/observers pasivos.
-  - [x] Endpoint paginado con filtros (`q`, `modulo`, `accion`, `operador`, `fechas`).
-  - [x] KPIs diarios de seguridad y operaciones.
-- [x] **Frontend:**
-  - [x] `AuditLogViewer.jsx` con 4 KPIs, filtros avanzados y `AuditDetailModal.jsx`.
-- [x] **Fase de Pruebas:**
-  - [x] **P3.1:** Verificación de inmutabilidad (no existe endpoint DELETE ni UPDATE en bitácora).
-  - [x] **P3.2:** Registro automático ante altas de pacientes y cambios de estado.
+### 📦 Paquete 3: Gestión de Citas Médicas (Avanzado)
 
----
+#### ⏳ CU11: Reprogramar Cita Médica (RF08)
+- [ ] **Backend:**
+  - [ ] Verificación de disponibilidad del nuevo horario bajo transacción.
+  - [ ] Regla: Solo citas *Programada* o *Confirmada* pueden reprogramarse.
+  - [ ] Citas *Atendidas* o *Canceladas* rechazan reprogramación.
+- [ ] **Frontend:**
+  - [ ] Modal de reprogramación con nuevo calendario y liberación inmediata del cupo anterior.
+- [ ] **Fase de Pruebas:**
+  - [ ] **P11.1:** Reprogramar cita a fecha libre futura (éxito y cupo previo liberado).
+  - [ ] **P11.2:** Intentar reprogramar una cita ya atendida (bloqueado por regla de negocio).
 
-### 📦 Paquete 2: Recursos Clínicos y Pacientes (P2)
-#### ✅ CU05: Gestionar Cuenta y Perfil del Paciente (§3.4 / Autoservicio)
-- [x] **Backend:**
-  - [x] Verificación de CI en padrón clínico (`/check-ci`).
-  - [x] Activación transaccional con asignación de rol `PACIENTE` y bcrypt.
-  - [x] Consulta y actualización de datos de contacto y contacto de emergencia.
-  - [x] Cambio de contraseña con `StrongPasswordRule`.
-  - [x] Habilitación asistida desde recepción (`/enable-web-account`).
-- [x] **Frontend:**
-  - [x] `ActivatePatientModal.jsx` de autoservicio en 3 pasos accesible desde Login y Home.
-  - [x] `PatientWebAccountModal.jsx` para asignación de credenciales por Recepción.
-  - [x] `PatientProfileView.jsx` con datos clínicos oficiales protegidos y edición de contacto.
-- [x] **Fase de Pruebas:**
-  - [x] **P5.1:** Activación con CI existente (éxito y asignación de contraseña segura).
-  - [x] **P5.2:** Intento de activación con CI inexistente (rechazo con mensaje claro).
-  - [x] **P5.3:** Paciente solo puede editar sus canales de contacto, nunca su CI o historia clínica legal.
-
----
+#### ⏳ CU13: Registrar Asistencia y Estado de Cita (RF10)
+- [ ] **Backend:**
+  - [ ] Máquina de estados: *Programada* → *Confirmada* → *Atendida* / *Inasistencia*.
+  - [ ] Restricción de saltos ilegales (ej. de *Cancelada* a *Atendida* rechazada).
+- [ ] **Frontend:**
+  - [ ] Botones de cambio de estado rápido en el mostrador de recepción.
+- [ ] **Fase de Pruebas:**
+  - [ ] **P13.1:** Marcar asistencia presencial (*Confirmada*).
+  - [ ] **P13.2:** Marcar *Inasistencia* al finalizar el turno.
+  - [ ] **P13.3:** Rechazar transición ilegal.
 
 ### 📦 Paquete 4: Historial Clínico y Consultas (P4)
 
