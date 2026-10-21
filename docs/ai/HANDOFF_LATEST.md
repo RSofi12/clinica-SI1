@@ -19,6 +19,7 @@
    - Habilitado inicio de sesión directo con Cédula de Identidad (CI) en `AuthController.php`.
    - Implementado fallback de auto-vinculación resiliente en `PatientProfileController.php`.
    - Cuentas demo de pacientes (`paciente.carlos`, `paciente.mariana`, `paciente.valeria`, `paciente.fernando` con password `Admin123@`) vinculadas y verificadas.
+   - Corregida la navegación hacia "¿Olvidaste tu contraseña?" (`ForgotPasswordPage`) desde cualquier ruta de acceso.
 
 4. **Herramientas de Planificación y Calidad:**
    - [`docs/informes/implementation_prompt.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/informes/implementation_prompt.md): Prompt estándar para revisiones previas a cualquier CU.

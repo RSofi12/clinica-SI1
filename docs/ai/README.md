@@ -22,10 +22,14 @@ Antes de proponer soluciones, generar código o modificar la base de datos, debe
 
 ---
 
-## 🛡️ Regla Obligatoria al Finalizar Cualquier Sesión
+## 🛡️ Regla Obligatoria al Finalizar Cualquier Sesión de Código
 
 > [!IMPORTANT]
-> **Jamás des por terminada una tarea o indiques al operador "TAREA FINALIZADA" sin antes:**
+> **Criterio estricto de registro:**
+> - **SÍ se crea session y se actualiza contexto:** Cuando se modifica código fuente, se agregan/optimizan funcionalidades, se alteran tablas o se cambia lógica de negocio.
+> - **NO se crea session ni se registra contexto:** Cuando la tarea consista únicamente en crear o editar diagramas (UML, clases, comunicación, .drawio, etc.) basados en el código existente.
+>
+> **Jamás des por terminada una tarea de modificación de código sin antes:**
 > 1. Actualizar [`CURRENT_STATE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/CURRENT_STATE.md) con lo implementado.
 > 2. Documentar el pase de relevo en [`HANDOFF_LATEST.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/HANDOFF_LATEST.md).
 > 3. Ajustar [`NEXT_STEPS.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/NEXT_STEPS.md).

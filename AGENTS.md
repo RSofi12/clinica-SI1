@@ -62,7 +62,10 @@ Inspirado en el flujo de continuidad multi-agente de referencia:
 - **Antes de hacer cambios:** Lee la memoria viva del proyecto (`CURRENT_STATE.md`, `HANDOFF_LATEST.md`, `NEXT_STEPS.md`).
 
 ### Regla Obligatoria de Salida:
-- **Después de hacer cambios:** Jamás cierres tu turno ni respondas "Tarea Finalizada" sin haber actualizado:
+- **Criterio Estricto para Crear Sessions y Registrar Contexto:**
+  - **SÍ registrar session y contexto:** Únicamente cuando **se modifique código fuente**, se agreguen o perfeccionen funcionalidades, se creen/modifiquen migraciones o modelos de base de datos, o se apliquen cambios de lógica de negocio (Backend o Frontend).
+  - **NO registrar session ni contexto:** **Jamás** se debe crear una bitácora en `docs/ai/sessions/` ni modificar los documentos de memoria (`CURRENT_STATE.md`, `HANDOFF_LATEST.md`, etc.) cuando la tarea consista exclusivamente en **crear, ajustar o documentar diagramas** basados en el código (diagramas UML, casos de uso, análisis, clases o comunicación en `.drawio`, `.puml`, imágenes, etc.).
+- **Al haber modificado código o lógica:** Jamás cierres tu turno ni respondas "Tarea Finalizada" sin haber actualizado:
   1. [`docs/ai/CURRENT_STATE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/CURRENT_STATE.md) (Estado consolidado del proyecto).
   2. [`docs/ai/HANDOFF_LATEST.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/HANDOFF_LATEST.md) (Pase de posta operativo inmediato).
   3. [`docs/ai/NEXT_STEPS.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/NEXT_STEPS.md) (Próxima tarea a ejecutar).
