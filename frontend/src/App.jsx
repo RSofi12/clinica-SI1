@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
@@ -6,6 +6,9 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { UsersManager } from './apps/security/components/UsersManager';
 import { AuditLogViewer } from './apps/security/components/AuditLogViewer';
 import { SecurityPolicyModal } from './apps/security/components/SecurityPolicyModal';
+import { PatientsManager } from './apps/clinical-resources/components/PatientsManager';
+import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
+import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
 import {
   Stethoscope,
@@ -19,6 +22,7 @@ import {
   LogOut,
   Shield,
   ShieldAlert,
+  HeartPulse,
   LayoutDashboard,
   UserCog,
   Menu,
@@ -26,42 +30,118 @@ import {
   ChevronLeft,
 } from 'lucide-react';
 
+function getInitialView() {
+  const path = window.location.pathname.toLowerCase();
+  if (path === '/login') return 'login';
+  if (path === '/forgot-password') return 'forgot-password';
+  if (path === '/dashboard') return 'dashboard';
+  return 'home';
+}
+
 export default function App() {
-  const { user, role, isAuthenticated, logout } = useAuth();
-  const [currentView, setCurrentView] = useState('home');
+  const { user, role, isAuthenticated, loading, logout } = useAuth();
+  const [currentView, setCurrentView] = useState(getInitialView);
   const [dashboardTab, setDashboardTab] = useState('overview'); // 'overview' | 'users'
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false);
+  const [isActivatePatientOpen, setIsActivatePatientOpen] = useState(false);
+
+  // Sincronizar cambios de URL con el estado interno
+  const navigateTo = (view) => {
+    setCurrentView(view);
+    const targetPath = view === 'home' ? '/' : `/${view}`;
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({}, '', targetPath);
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentView(getInitialView());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Si se detecta autenticación activa y estaba en login, ir a dashboard
+  useEffect(() => {
+    if (isAuthenticated && currentView === 'login') {
+      navigateTo('dashboard');
+    }
+  }, [isAuthenticated, currentView]);
+
+  // Pantalla de carga mientras se verifica sesión inicial
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-4 text-cyan-200 font-sans">
+        <div className="w-10 h-10 border-4 border-[#00687a]/40 border-t-[#70cbff] rounded-full animate-spin" />
+        <span className="text-xs font-medium tracking-wider text-slate-300">
+          Cargando Centro Médico La Cruz...
+        </span>
+      </div>
+    );
+  }
 
   // Si no está autenticado y pide dashboard, fuerza ir a login
   if (!isAuthenticated && currentView === 'dashboard') {
     return (
-      <LoginPage
-        onNavigateHome={() => setCurrentView('home')}
-        onLoginSuccess={() => setCurrentView('dashboard')}
-      />
+      <>
+        <LoginPage
+          onNavigateHome={() => navigateTo('home')}
+          onLoginSuccess={() => navigateTo('dashboard')}
+          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+        />
+        <ActivatePatientModal
+          isOpen={isActivatePatientOpen}
+          onClose={() => setIsActivatePatientOpen(false)}
+          onActivated={() => setIsActivatePatientOpen(false)}
+        />
+      </>
     );
   }
 
   if (currentView === 'home' && !isAuthenticated) {
-    return <HomePage onNavigateLogin={() => setCurrentView('login')} />;
+    return (
+      <>
+        <HomePage
+          onNavigateLogin={() => navigateTo('login')}
+          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+        />
+        <ActivatePatientModal
+          isOpen={isActivatePatientOpen}
+          onClose={() => setIsActivatePatientOpen(false)}
+          onActivated={() => {
+            setIsActivatePatientOpen(false);
+            navigateTo('login');
+          }}
+        />
+      </>
+    );
   }
 
   if (currentView === 'login' && !isAuthenticated) {
     return (
-      <LoginPage
-        onNavigateHome={() => setCurrentView('home')}
-        onLoginSuccess={() => setCurrentView('dashboard')}
-        onNavigateForgotPassword={() => setCurrentView('forgot-password')}
-      />
+      <>
+        <LoginPage
+          onNavigateHome={() => navigateTo('home')}
+          onLoginSuccess={() => navigateTo('dashboard')}
+          onNavigateForgotPassword={() => navigateTo('forgot-password')}
+          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+        />
+        <ActivatePatientModal
+          isOpen={isActivatePatientOpen}
+          onClose={() => setIsActivatePatientOpen(false)}
+          onActivated={() => setIsActivatePatientOpen(false)}
+        />
+      </>
     );
   }
 
   if (currentView === 'forgot-password' && !isAuthenticated) {
     return (
       <ForgotPasswordPage
-        onNavigateLogin={() => setCurrentView('login')}
+        onNavigateLogin={() => navigateTo('login')}
       />
     );
   }
@@ -73,16 +153,20 @@ export default function App() {
         return 'Gestión de Usuarios y Roles (CU02)';
       case 'audit':
         return 'Bitácora de Auditoría del Sistema (CU03)';
+      case 'patients':
+        return 'Gestión de Pacientes (CU04)';
+      case 'patient-profile':
+        return 'Mi Perfil de Paciente (CU05)';
       case 'overview':
       default:
         return 'Panel General';
     }
   };
 
-  // Vista de Dashboard Clínico con Barra Lateral Izquierda Responsiva y Colapsable
+  // Vista de Dashboard Clínico con Barra Lateral Fija y Contenido con Scroll Independiente a la Derecha
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-800 font-sans overflow-x-hidden">
-      {/* 1. Barra Lateral a la Izquierda (Sidebar) */}
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800 font-sans">
+      {/* 1. Barra Lateral a la Izquierda (Sidebar fija con su propio scroll) */}
       <Sidebar
         activeTab={dashboardTab}
         onSelectTab={setDashboardTab}
@@ -94,14 +178,14 @@ export default function App() {
         role={role}
         onLogout={async () => {
           await logout();
-          setCurrentView('home');
+          navigateTo('home');
         }}
       />
 
-      {/* 2. Área de Contenido Principal a la Derecha */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        {/* Barra Superior Limpia (Header) */}
-        <header className="border-b border-slate-200 bg-white sticky top-0 z-30 shadow-xs h-16">
+      {/* 2. Área de Contenido Principal a la Derecha (con scroll vertical independiente) */}
+      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
+        {/* Barra Superior Limpia (Header fijo) */}
+        <header className="border-b border-slate-200 bg-white shrink-0 z-30 shadow-xs h-16">
           <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             {/* Izquierda: Botón Hamburguesa Móvil + Botón Colapso Desktop + Breadcrumb */}
             <div className="flex items-center gap-3">
@@ -163,12 +247,16 @@ export default function App() {
           </div>
         </header>
 
-        {/* 3. Contenedor de la Vista Activa */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        {/* 3. Contenedor de la Vista Activa con Scroll Independiente a la Derecha */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-transparent">
           {dashboardTab === 'users' && role === 'ADMIN' ? (
             <UsersManager />
           ) : dashboardTab === 'audit' && role === 'ADMIN' ? (
             <AuditLogViewer />
+          ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
+            <PatientsManager />
+          ) : dashboardTab === 'patient-profile' ? (
+            <PatientProfileView />
           ) : (
             <div className="space-y-8">
               {/* Banner de Bienvenida */}
@@ -194,10 +282,30 @@ export default function App() {
                   Módulos autorizados para su rol:
                 </h3>
                 <p className="text-xs text-slate-500 mb-4">
-                  El sistema de permisos RBAC del Paquete 1 valida las acciones permitidas según su perfil institucional.
+                  El sistema de permisos RBAC valida las acciones permitidas según su perfil institucional.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Tarjeta especial para Paciente Autenticado */}
+                  {role === 'PACIENTE' && (
+                    <div
+                      onClick={() => setDashboardTab('patient-profile')}
+                      className="p-4 rounded-xl border bg-emerald-50/70 border-emerald-300 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-emerald-800 uppercase">CU05: Mi Perfil</span>
+                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-md">
+                            Gestionar →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Consulte su historial, actualice sus canales de contacto y contacto de emergencia (§3.4).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between">
@@ -258,6 +366,27 @@ export default function App() {
                     </div>
                     <p className="text-xs text-slate-600 mt-1">
                       Trazabilidad inmutable de accesos con IP, usuario, acción y fecha.
+                    </p>
+                  </div>
+
+                  <div
+                    onClick={() => ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && setDashboardTab('patients')}
+                    className={`p-4 rounded-xl border transition ${
+                      ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+                        ? 'bg-amber-50/50 border-amber-200/80 hover:bg-amber-50 hover:shadow-xs cursor-pointer'
+                        : 'bg-slate-50 border-slate-200/80'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-amber-800 uppercase">CU04: Pacientes</span>
+                      {['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && (
+                        <span className="text-[10px] font-semibold text-amber-700 bg-amber-100/60 px-1.5 py-0.5 rounded-md">
+                          Gestionar →
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Admisión clínica, correlativo HC, grupos etarios y bajas lógicas (RF02).
                     </p>
                   </div>
                 </div>

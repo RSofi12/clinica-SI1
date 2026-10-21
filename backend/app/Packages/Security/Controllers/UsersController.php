@@ -5,7 +5,7 @@ namespace App\Packages\Security\Controllers;
 use App\Http\Controllers\Controller;
 use App\Packages\Security\Models\User;
 use App\Packages\Security\Models\Role;
-use App\Packages\Security\Models\AuditLog;
+use App\Packages\Security\Models\Bitacora;
 use App\Packages\Security\Requests\UserCreateRequest;
 use App\Packages\Security\Requests\UserUpdateRequest;
 use Illuminate\Http\Request;
@@ -86,7 +86,7 @@ class UsersController extends Controller
 
             // Auditoría CU03
             $authId = Auth::id();
-            AuditLog::registrar(
+            Bitacora::registrar(
                 $authId,
                 'Seguridad',
                 'CREAR_USUARIO',
@@ -158,7 +158,7 @@ class UsersController extends Controller
 
             // Auditoría CU03
             $authId = Auth::id();
-            AuditLog::registrar(
+            Bitacora::registrar(
                 $authId,
                 'Seguridad',
                 'MODIFICAR_USUARIO',
@@ -206,7 +206,7 @@ class UsersController extends Controller
 
         // Auditoría CU03
         $authId = Auth::id();
-        AuditLog::registrar(
+        Bitacora::registrar(
             $authId,
             'Seguridad',
             'CAMBIO_ESTADO',
@@ -244,7 +244,7 @@ class UsersController extends Controller
 
         // Auditoría CU03
         $authId = Auth::id();
-        AuditLog::registrar(
+        Bitacora::registrar(
             $authId,
             'Seguridad',
             'DESBLOQUEO_USUARIO',

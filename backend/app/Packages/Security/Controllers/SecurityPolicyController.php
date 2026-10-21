@@ -4,7 +4,7 @@ namespace App\Packages\Security\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Packages\Security\Models\SecurityConfig;
-use App\Packages\Security\Models\AuditLog;
+use App\Packages\Security\Models\Bitacora;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -52,7 +52,7 @@ class SecurityPolicyController extends Controller
         $policy->actualizarPolitica($maxIntentos, $minutosBloqueo, Auth::id());
 
         // Auditoría CU03
-        AuditLog::registrar(
+        Bitacora::registrar(
             Auth::id(),
             'Seguridad',
             'ACTUALIZAR_POLITICA_SEGURIDAD',

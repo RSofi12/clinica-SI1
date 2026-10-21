@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  User,
   UserCog,
   ShieldCheck,
   History,
@@ -62,16 +63,23 @@ export function Sidebar({
       ],
     },
     {
-      group: 'Gestión Clínica (P2 - P4)',
+      group: 'Recursos Clínicos (P2)',
       items: [
+        {
+          id: 'patient-profile',
+          label: 'Mi Perfil de Paciente',
+          subtitle: 'Autoservicio y contacto',
+          tag: 'CU05 / §3.4',
+          icon: User,
+          requiredRoles: ['PACIENTE'],
+        },
         {
           id: 'patients',
           label: 'Pacientes y Fichas',
-          subtitle: 'Admisión y registro',
+          subtitle: 'Padrón clínico y admisiones',
           tag: 'CU04 / RF02',
           icon: UserPlus,
-          disabled: true,
-          badge: 'Ciclo 2',
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO'],
         },
         {
           id: 'doctors',
@@ -108,9 +116,9 @@ export function Sidebar({
 
       {/* Barra Lateral / Sidebar */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200/90 shadow-xs transition-all duration-300 ease-in-out md:static ${
+        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200/90 shadow-xs transition-all duration-300 ease-in-out md:sticky md:top-0 h-screen max-h-screen shrink-0 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        } ${isCollapsed ? 'md:w-20' : 'md:w-64'} w-72 h-screen`}
+        } ${isCollapsed ? 'md:w-20' : 'md:w-64'} w-72`}
       >
         {/* Cabecera del Sidebar (Logo + Toggle) */}
         <div className="h-16 px-4 border-b border-slate-100 flex items-center justify-between shrink-0">
@@ -143,13 +151,16 @@ export function Sidebar({
           </button>
         </div>
 
-        {/* Lista de Navegación por Grupos */}
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 scrollbar-thin scrollbar-thumb-slate-200">
+        {/* Lista de Navegación por Grupos (con scroll independiente cuando se añadan más CU) */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-transparent">
           {navItems.map((group, groupIdx) => {
             // Filtrar items por rol
-            const visibleItems = group.items.filter(
-              (item) => !item.requiredRole || item.requiredRole === role
-            );
+            const visibleItems = group.items.filter((item) => {
+              if (item.requiredRoles) {
+                return item.requiredRoles.includes(role);
+              }
+              return !item.requiredRole || item.requiredRole === role;
+            });
 
             if (visibleItems.length === 0) return null;
 

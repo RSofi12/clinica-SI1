@@ -14,7 +14,7 @@
 - **Backend (`backend/app/Packages/Security/`):**
   - ✅ Migración creada: `2026_10_20_000001_create_paquete1_seguridad_tables.php` conteniendo las 7 tablas del Paquete 1 (`usuarios`, `roles`, `permisos`, `usuario_rol`, `rol_permiso`, `tokens_recuperacion`, `bitacora`).
   - ✅ Migración `2026_10_20_000002_add_bloqueado_hasta_and_configuracion_seguridad_table.php`: agrega `bloqueado_hasta` a `usuarios` y la tabla editable `configuracion_seguridad`.
-  - ✅ Modelos de dominio: `User.php`, `Role.php`, `Permission.php`, `PasswordResetToken.php`, `AuditLog.php`, `SecurityConfig.php`.
+  - ✅ Modelos de dominio: `User.php`, `Role.php`, `Permission.php`, `PasswordResetToken.php`, `Bitacora.php` (con alias retroactivo `AuditLog`), `SecurityConfig.php`.
   - ✅ Modelo `User.php`: métodos `estaBloqueadoTemporalmente()`, `segundosRestantesBloqueo()`, `bloquearAcceso($minutos)`, y autodesbloqueo al expirar el tiempo sin requerir acción manual.
   - ✅ Modelo `SecurityConfig.php`: persistencia y lectura de parámetros globales `max_intentos_login` (def: 3) y `minutos_bloqueo` (def: 5).
   - ✅ Request de validación: `LoginRequest.php`, `ResetPasswordRequest.php`.
@@ -57,5 +57,56 @@
   - ✅ `AuditDetailModal.jsx`: Modal para inspección forense de IP, usuario, timestamps y descripción del suceso.
   - ✅ Habilitado en `Sidebar.jsx` y `App.jsx` para acceso directo del Administrador.
 
-### 5. Siguiente Bloque Inmediato de Trabajo
-- Iniciar el **Paquete 2: Gestión de Recursos Clínicos y Pacientes (CU04: Gestionar Pacientes — RF02)**.
+### 5. Implementación de CU04 (Gestionar Pacientes — RF02)
+- **Backend (`backend/app/Packages/ClinicalResources/`):**
+  - ✅ Migración creada: `2026_10_20_000003_create_paquete2_pacientes_tables.php` (`pacientes` y `contactos_emergencia`).
+  - ✅ Modelos de dominio: `Patient.php` (cálculo dinámico de edad, grupo etario, sugerencia de especialidad según RF04, correlativo único `HC-XXXX` y scopes de búsqueda) y `EmergencyContact.php`.
+  - ✅ Requests de validación: `PatientCreateRequest.php` (CI único obligatorio, fecha no futura) y `PatientUpdateRequest.php` (ignora ID actual para unicidad).
+  - ✅ Controlador de pacientes: `PatientsController.php` (CRUD completo, `stats` con conteo de grupos etarios, búsqueda rápida `searchByCi`, baja lógica `toggleStatus` con preservación histórica RN11 y auditoría en bitácora inmutable CU03).
+  - ✅ Rutas registradas en `routes/api.php` bajo `/api/patients`.
+  - ✅ Población de datos: `docs/informes/poblacion_database_clinica.sql` y `PatientSeeder.php` con 15 pacientes reales con diversidad etaria (pediátricos, adultos, geriátricos) y sus contactos de emergencia vinculados.
+- **Frontend (`frontend/src/apps/clinical-resources/`):**
+  - ✅ Servicio API: `patientService.js`.
+  - ✅ `PatientsManager.jsx`: Panel clínico diseñado según la skill `frontend-design` con 4 KPIs interactivos (Total, Activos, Pediátricos, Geriátricos), barra de filtros por grupo etario, sexo y estado, tabla con badges funcionales, avatar y acciones rápidas.
+  - ✅ `PatientFormModal.jsx`: Formulario accesible con cálculo de edad en tiempo real, asistente de especialidad sugerida y sección de contacto de emergencia.
+  - ✅ `PatientDetailModal.jsx`: Ficha clínica rápida con criterio institucional de atención médica y datos de contacto.
+  - ✅ Habilitado en `Sidebar.jsx` (Recursos Clínicos) y en la tarjeta interactiva de `App.jsx` para roles `ADMIN`, `RECEPCIONISTA` y `MEDICO`.
+
+### 6. Implementación de CU05 (Gestionar Cuenta y Perfil del Paciente — §3.4 / Autoservicio)
+- **Backend (`backend/app/Packages/ClinicalResources/`):**
+  - ✅ Requests: `ActivatePatientAccountRequest.php`, `UpdatePatientProfileRequest.php`, `ChangePatientPasswordRequest.php`.
+  - ✅ Controlador `PatientProfileController.php`:
+    - `POST /api/patient/check-ci`: Verificación de CI en el padrón para habilitar autoservicio.
+    - `POST /api/patient/activate-account`: Creación transaccional de usuario con rol `PACIENTE`, hash bcrypt y vinculación con `pacientes.id_usuario`.
+    - `GET /api/patient-profile/me`: Consulta de perfil completo con datos clínicos protegidos.
+    - `PUT /api/patient-profile/me`: Edición de teléfono, correo, dirección, contacto de emergencia y preferencias de notificación.
+    - `PUT /api/patient-profile/change-password`: Modificación segura de credenciales con validación de contraseña actual y reglas de complejidad.
+  - ✅ Controlador `PatientsController.php`:
+    - `POST /api/patients/{id}/enable-web-account`: Habilitación de acceso web al paciente desde ventanilla de recepción.
+  - ✅ Trazabilidad inmutable en `Bitacora.php` (CU03) para todas las activaciones y actualizaciones.
+  - ✅ Rutas registradas en `routes/api.php`.
+- **Frontend (`frontend/src/apps/clinical-resources/` y Shell de Navegación):**
+  - ✅ Servicio API: `patientProfileService.js`.
+  - ✅ `ActivatePatientModal.jsx`: Modal de autoservicio de 3 pasos (verificación de CI, configuración de credenciales con checklist en vivo y confirmación) accesible desde `LoginPage.jsx` y `HomePage.jsx`.
+  - ✅ `PatientWebAccountModal.jsx`: Modal asistido para que Recepción asigne acceso web a un paciente desde `PatientsManager.jsx`.
+  - ✅ `PatientProfileView.jsx`: Pantalla de perfil del paciente con separación estricta entre datos legales protegidos (solo lectura) y canales de contacto / contacto de emergencia editables, más formulario de seguridad.
+  - ✅ Layout y Navegación Responsiva:
+    - Sidebar fija a la altura de la pantalla (`h-screen max-h-screen sticky top-0`) con scrollbar independiente interna para soportar el crecimiento de nuevos Casos de Uso.
+    - Contenedor de contenido derecho con su propia barra de deslizamiento vertical independiente en la parte lateral derecha, permitiendo desplazarse libremente hacia abajo cuando existan múltiples datos o formularios extensos, sin distorsionar la sidebar.
+    - Integración de "Mi Perfil de Paciente (CU05)" en `Sidebar.jsx` para rol `PACIENTE` y acceso directo desde el Overview de `App.jsx`.
+
+### 7. Corrección de Pantalla Blanca y Resiliencia en Frontend
+- ✅ **Resolución de pantalla en blanco al acceder a `/login` o recargar:**
+  - **Causa Raíz Identificada:**
+    1. En `Sidebar.jsx`, el icono `User` no había sido importado desde `lucide-react`, provocando una excepción no capturada `ReferenceError: User is not defined` al renderizar el menú lateral cuando existía una sesión en `localStorage`.
+    2. En `App.jsx`, el estado inicial de vista estaba hardcodeado en `'home'` ignorando `window.location.pathname`, lo que impedía resolver la ruta `/login` al refrescar o escribir la URL directamente.
+    3. Ausencia de control del estado `loading` de `useAuth()`, provocando renders prematuros antes de validar la sesión con Laravel.
+  - **Acciones Realizadas:**
+    1. Se corrigió la importación de `User` en `frontend/src/components/Sidebar.jsx`.
+    2. Se implementó `getInitialView()`, sincronización con la URL vía `window.history.pushState` y escucha del evento `popstate` en `App.jsx`.
+    3. Se implementó pantalla de carga limpia con spinner turquesa mientras se verifica la sesión.
+    4. Se creó e implementó `frontend/src/components/ErrorBoundary.jsx` envolviendo `<App />` en `main.jsx` para capturar cualquier anomalía futura con interfaz hospitalaria informativa y botón de recuperación.
+    5. Verificación de compilación exitosa con Vite (`built in 11.35s`, 0 errores).
+
+### 8. Siguiente Bloque Inmediato de Trabajo
+- Iniciar **CU06 (Gestionar Médicos — RF03)** y **CU07 (Gestionar Especialidades Médicas — RF04)**.

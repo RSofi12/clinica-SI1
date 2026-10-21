@@ -56,7 +56,8 @@ backend/app/Packages/Security/
 │   ├── Role.php                      # Tabla 'roles'
 │   ├── Permission.php                # Tabla 'permisos'
 │   ├── PasswordResetToken.php        # Tabla 'tokens_recuperacion'
-│   └── AuditLog.php                  # Tabla 'bitacora'
+│   ├── SecurityConfig.php            # Tabla 'configuracion_seguridad' (políticas dinámicas)
+│   └── Bitacora.php                  # Tabla 'bitacora' (AuditLog como alias puente)
 ├── Middleware/
 │   ├── EnsureSessionValid.php        # Rechaza accesos sin sesión (Prueba 9 del examen)
 │   └── CheckRole.php                 # Control RBAC por tipo_usuario

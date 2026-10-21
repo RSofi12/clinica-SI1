@@ -6,6 +6,8 @@ use App\Packages\Security\Controllers\UsersController;
 use App\Packages\Security\Controllers\RolesController;
 use App\Packages\Security\Controllers\AuditController;
 use App\Packages\Security\Controllers\SecurityPolicyController;
+use App\Packages\ClinicalResources\Controllers\PatientsController;
+use App\Packages\ClinicalResources\Controllers\PatientProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +54,29 @@ Route::prefix('audit')->middleware('web')->group(function () {
 Route::prefix('security')->middleware('web')->group(function () {
     Route::get('/policy', [SecurityPolicyController::class, 'getPolicy']);
     Route::put('/policy', [SecurityPolicyController::class, 'updatePolicy']);
+});
+
+// CU04: Gestión de Pacientes (RF02) — Paquete 2: Recursos Clínicos
+Route::prefix('patients')->middleware('web')->group(function () {
+    Route::get('/', [PatientsController::class, 'index']);
+    Route::get('/stats', [PatientsController::class, 'stats']);
+    Route::get('/search-ci/{ci}', [PatientsController::class, 'searchByCi']);
+    Route::get('/{id}', [PatientsController::class, 'show']);
+    Route::post('/', [PatientsController::class, 'store']);
+    Route::put('/{id}', [PatientsController::class, 'update']);
+    Route::patch('/{id}/toggle-status', [PatientsController::class, 'toggleStatus']);
+    Route::post('/{id}/enable-web-account', [PatientsController::class, 'enableWebAccount']);
+});
+
+// CU05: Gestión de Cuenta y Perfil del Paciente (§3.4 / Autoservicio)
+Route::prefix('patient')->group(function () {
+    // Activación pública de cuenta web con CI
+    Route::post('/check-ci', [PatientProfileController::class, 'checkCi']);
+    Route::post('/activate-account', [PatientProfileController::class, 'activateAccount']);
+});
+
+Route::prefix('patient-profile')->middleware('web')->group(function () {
+    Route::get('/me', [PatientProfileController::class, 'me']);
+    Route::put('/me', [PatientProfileController::class, 'updateProfile']);
+    Route::put('/change-password', [PatientProfileController::class, 'changePassword']);
 });

@@ -36,7 +36,44 @@
      - [`AuditDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/components/AuditDetailModal.jsx): Inspección a detalle de cualquier registro.
      - Activado en [`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx).
 
+4. **CU04 (Gestionar Pacientes — RF02) 100% Implementado:**
+   - **Backend (`app/Packages/ClinicalResources/`):**
+     - [`Patient.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/ClinicalResources/Models/Patient.php) y [`EmergencyContact.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/ClinicalResources/Models/EmergencyContact.php).
+     - Correlativo institucional `HC-XXXX` auto-generado, cálculo de edad en Carbon, sugerencia de especialidad según RF04 (`Pediatría`, `Medicina General`, `Geriatría`).
+     - [`PatientsController.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/ClinicalResources/Controllers/PatientsController.php) con listado paginado, filtros (`q`, `estado`, `sexo`, `grupo_etario`), endpoints `stats`, `searchByCi` y `toggleStatus` con preservación histórica (RN11) y auditoría en bitácora inmutable.
+     - Población de 15 pacientes reales con variedad etaria y contactos en [`docs/informes/poblacion_database_clinica.sql`](file:///c:/Users/PERSONAL/clinica-SI1/docs/informes/poblacion_database_clinica.sql) y [`PatientSeeder.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/database/seeders/PatientSeeder.php).
+   - **Frontend (`src/apps/clinical-resources/`):**
+     - Aplicación de directrices de diseño de la skill `frontend-design`: tipografía jerarquizada, códigos de color funcionales por grupo etario y sin templates genéricos.
+     - [`patientService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/services/patientService.js): Cliente HTTP completo.
+     - [`PatientsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientsManager.jsx): Panel médico con 4 KPIs filtrables al clic, buscador en vivo y tabla de admisiones.
+     - [`PatientFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientFormModal.jsx): Formulario con cálculo de edad en tiempo real y asistencia de especialidad médica sugerida.
+     - [`PatientDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientDetailModal.jsx): Ficha clínica resumida.
+     - Integrado en [`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx) para roles `ADMIN`, `RECEPCIONISTA` y `MEDICO`.
+
+5. **CU05 (Gestionar Cuenta y Perfil del Paciente — §3.4 / Autoservicio) 100% Implementado:**
+   - **Backend (`app/Packages/ClinicalResources/`):**
+     - [`PatientProfileController.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/ClinicalResources/Controllers/PatientProfileController.php): Endpoints de autoservicio (`/check-ci`, `/activate-account`, `/me`, `/change-password`) y método en `PatientsController.php` para habilitación asistida desde recepción (`/enable-web-account`).
+     - Requests con reglas de unicidad, hash `bcrypt` y validación de contraseña segura con [`StrongPasswordRule.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/Security/Rules/StrongPasswordRule.php).
+     - Auditoría inmutable en `Bitacora.php`.
+   - **Frontend (`src/apps/clinical-resources/` y Layout):**
+     - [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx): Flujo de autoservicio con CI accesible desde Login y Home.
+     - [`PatientWebAccountModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientWebAccountModal.jsx): Habilitación rápida de cuenta web para pacientes desde `PatientsManager.jsx`.
+     - [`PatientProfileView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientProfileView.jsx): Perfil de paciente con datos clínicos oficiales protegidos y edición de canales de contacto, notificaciones y contraseña.
+     - **Layout Responsivo y Scrollbars Independientes:**
+       - Sidebar fija (`md:sticky md:top-0 h-screen`) con su propia barra de deslizamiento vertical (`overflow-y-auto scrollbar-thin`) lista para albergar futuros Casos de Uso.
+       - Área principal de trabajo con scrollbar independiente en la parte lateral derecha (`overflow-y-auto scrollbar-thin`), permitiendo el deslizamiento suave hacia abajo sin desbordar ni modificar el ancho de la sidebar.
+       - Módulo habilitado en [`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx) para el rol `PACIENTE`.
+
+6. **Solución a Pantalla Blanca y Resiliencia en Frontend:**
+   - **Causa Raíz:**
+     1. Excepción no capturada en tiempo de ejecución: `ReferenceError: User is not defined` en `Sidebar.jsx:72` (el icono `User` no había sido importado desde `lucide-react`). Al montar la sesión persistida en `localStorage`, la excepción desmontaba el árbol completo de React mostrando la pantalla en blanco.
+     2. `App.jsx` inicializaba la vista con `useState('home')` en vez de leer `window.location.pathname`, dejando desfasada la URL directa `/login`.
+     3. No se controlaba el estado `loading` de `useAuth()`.
+   - **Correcciones:**
+     - Se importó `User` en [`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx).
+     - Se sincronizó la URL con [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx) (`getInitialView`, `navigateTo`, `popstate`).
+     - Se incorporó spinner de carga limpio mientras resuelve la sesión.
+     - Se añadió [`ErrorBoundary.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ErrorBoundary.jsx) en [`main.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/main.jsx) para salvaguardar de pantallas blancas y ofrecer recuperación en caso de cualquier error imprevisto.
+
 ### 2. Próxima Tarea Inmediata
-- **Paquete 2: Gestión de Recursos Clínicos y Pacientes (CU04: Gestionar Pacientes — RF02):**
-  - Crear migración para las tablas del Paquete 2 (`pacientes`, `contactos_emergencia`, `especialidades`, `medicos`, `medico_especialidad`, `disponibilidades`, `bloqueos_horario`).
-  - Implementar modelo `Patient.php` y servicio de búsqueda por CI y datos demográficos.
+- **CU06: Gestionar Médicos (RF03)** y **CU07: Gestionar Especialidades Médicas (RF04)** en el Paquete 2.

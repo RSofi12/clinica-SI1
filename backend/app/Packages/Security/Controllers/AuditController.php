@@ -3,7 +3,7 @@
 namespace App\Packages\Security\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Packages\Security\Models\AuditLog;
+use App\Packages\Security\Models\Bitacora;
 use App\Packages\Security\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +20,7 @@ class AuditController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = AuditLog::with(['usuario:id_usuario,username,email,tipo_usuario']);
+        $query = Bitacora::with(['usuario:id_usuario,username,email,tipo_usuario']);
 
         // 1. Filtro textual libre (q) sobre descripción o IP
         if ($request->filled('q')) {
@@ -84,8 +84,8 @@ class AuditController extends Controller
      */
     public function filtersData(): JsonResponse
     {
-        $modulos = AuditLog::select('modulo')->distinct()->pluck('modulo')->filter()->values();
-        $acciones = AuditLog::select('accion')->distinct()->pluck('accion')->filter()->values();
+        $modulos = Bitacora::select('modulo')->distinct()->pluck('modulo')->filter()->values();
+        $acciones = Bitacora::select('accion')->distinct()->pluck('accion')->filter()->values();
         $usuarios = User::select('id_usuario', 'username', 'email', 'tipo_usuario')
                         ->orderBy('username')
                         ->get();
@@ -107,14 +107,14 @@ class AuditController extends Controller
     {
         $hoy = now()->startOfDay();
 
-        $totalEventosHoy = AuditLog::where('fecha_registro', '>=', $hoy)->count();
-        $loginsExitososHoy = AuditLog::where('fecha_registro', '>=', $hoy)
+        $totalEventosHoy = Bitacora::where('fecha_registro', '>=', $hoy)->count();
+        $loginsExitososHoy = Bitacora::where('fecha_registro', '>=', $hoy)
                                     ->where('accion', 'LOGIN_EXITOSO')
                                     ->count();
-        $intentosFallidosHoy = AuditLog::where('fecha_registro', '>=', $hoy)
+        $intentosFallidosHoy = Bitacora::where('fecha_registro', '>=', $hoy)
                                       ->whereIn('accion', ['LOGIN_FALLIDO', 'LOGIN_BLOQUEADO'])
                                       ->count();
-        $operacionesAdminHoy = AuditLog::where('fecha_registro', '>=', $hoy)
+        $operacionesAdminHoy = Bitacora::where('fecha_registro', '>=', $hoy)
                                       ->whereIn('accion', ['CREAR_USUARIO', 'MODIFICAR_USUARIO', 'CAMBIO_ESTADO', 'DESBLOQUEO_USUARIO'])
                                       ->count();
 

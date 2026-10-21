@@ -5,7 +5,7 @@ namespace App\Packages\Security\Controllers;
 use App\Http\Controllers\Controller;
 use App\Packages\Security\Models\User;
 use App\Packages\Security\Models\PasswordResetToken;
-use App\Packages\Security\Models\AuditLog;
+use App\Packages\Security\Models\Bitacora;
 use App\Packages\Security\Models\SecurityConfig;
 use App\Packages\Security\Requests\LoginRequest;
 use App\Packages\Security\Requests\ResetPasswordRequest;
@@ -36,7 +36,7 @@ class AuthController extends Controller
         $ip = $request->ip();
 
         if (!$user) {
-            AuditLog::registrar(null, 'Seguridad', 'LOGIN_FALLIDO', 'usuarios', null, "Intento fallido con usuario/correo inexistente: {$login}", $ip);
+            Bitacora::registrar(null, 'Seguridad', 'LOGIN_FALLIDO', 'usuarios', null, "Intento fallido con usuario/correo inexistente: {$login}", $ip);
             return response()->json([
                 'success' => false,
                 'message' => 'Las credenciales proporcionadas son incorrectas.',
@@ -51,7 +51,7 @@ class AuthController extends Controller
 
             if ($segundosRestantes > 0) {
                 $minutos = ceil($segundosRestantes / 60);
-                AuditLog::registrar(
+                Bitacora::registrar(
                     $user->id_usuario,
                     'Seguridad',
                     'LOGIN_BLOQUEADO',
@@ -71,7 +71,7 @@ class AuthController extends Controller
             }
 
             // Bloqueo manual permanente sin fecha límite
-            AuditLog::registrar($user->id_usuario, 'Seguridad', 'LOGIN_BLOQUEADO', 'usuarios', $user->id_usuario, 'Intento de acceso a cuenta con bloqueo administrativo permanente.', $ip);
+            Bitacora::registrar($user->id_usuario, 'Seguridad', 'LOGIN_BLOQUEADO', 'usuarios', $user->id_usuario, 'Intento de acceso a cuenta con bloqueo administrativo permanente.', $ip);
             return response()->json([
                 'success' => false,
                 'is_temporarily_locked' => false,
@@ -93,7 +93,7 @@ class AuthController extends Controller
             $user->registrarIntentoFallido($maxIntentos, $minutosBloqueo);
 
             if ($user->estado === 'BLOQUEADO') {
-                AuditLog::registrar(
+                Bitacora::registrar(
                     $user->id_usuario,
                     'Seguridad',
                     'LOGIN_BLOQUEADO',
@@ -113,7 +113,7 @@ class AuthController extends Controller
             }
 
             $intentosRestantes = max(0, $maxIntentos - $user->intentos_fallidos);
-            AuditLog::registrar(
+            Bitacora::registrar(
                 $user->id_usuario,
                 'Seguridad',
                 'LOGIN_FALLIDO',
@@ -133,7 +133,7 @@ class AuthController extends Controller
         $user->actualizarUltimoAcceso();
         Auth::login($user);
 
-        AuditLog::registrar($user->id_usuario, 'Seguridad', 'LOGIN_EXITOSO', 'usuarios', $user->id_usuario, 'Inicio de sesión satisfactorio.', $ip);
+        Bitacora::registrar($user->id_usuario, 'Seguridad', 'LOGIN_EXITOSO', 'usuarios', $user->id_usuario, 'Inicio de sesión satisfactorio.', $ip);
 
         $user->load('roles.permisos');
 
@@ -193,7 +193,7 @@ class AuthController extends Controller
             'usado' => false,
         ]);
 
-        AuditLog::registrar($user->id_usuario, 'Seguridad', 'SOLICITUD_RESET_PASSWORD', 'tokens_recuperacion', null, "Solicitud de recuperación de contraseña para {$email}", $request->ip());
+        Bitacora::registrar($user->id_usuario, 'Seguridad', 'SOLICITUD_RESET_PASSWORD', 'tokens_recuperacion', null, "Solicitud de recuperación de contraseña para {$email}", $request->ip());
 
         // Intento de envío por email configurado en Laravel
         try {
@@ -253,7 +253,7 @@ class AuthController extends Controller
             $user->save();
         }
 
-        AuditLog::registrar($user->id_usuario, 'Seguridad', 'RESET_PASSWORD_EXITOSO', 'usuarios', $user->id_usuario, 'Contraseña restablecida exitosamente.', $request->ip());
+        Bitacora::registrar($user->id_usuario, 'Seguridad', 'RESET_PASSWORD_EXITOSO', 'usuarios', $user->id_usuario, 'Contraseña restablecida exitosamente.', $request->ip());
 
         return response()->json([
             'success' => true,
@@ -299,7 +299,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         if ($user) {
-            AuditLog::registrar($user->id_usuario, 'Seguridad', 'LOGOUT', 'usuarios', $user->id_usuario, 'Cierre de sesión seguro.', $request->ip());
+            Bitacora::registrar($user->id_usuario, 'Seguridad', 'LOGOUT', 'usuarios', $user->id_usuario, 'Cierre de sesión seguro.', $request->ip());
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();

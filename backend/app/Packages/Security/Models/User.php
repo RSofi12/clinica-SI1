@@ -173,6 +173,6 @@ class User extends Authenticatable
 
     public function bitacoras()
     {
-        return $this->hasMany(AuditLog::class, 'id_usuario', 'id_usuario');
+        return $this->hasMany(Bitacora::class, 'id_usuario', 'id_usuario');
     }
 }

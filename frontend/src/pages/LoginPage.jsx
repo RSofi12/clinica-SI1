@@ -18,7 +18,7 @@ import logoColorSvg from '../assets/logo-color.svg';
 import { BackgroundGlow } from '../components/BackgroundGlow';
 import { useAuth } from '../context/AuthContext';
 
-export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPassword }) => {
+export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPassword, onOpenActivatePatient }) => {
   const { login } = useAuth();
   const [emailOrUser, setEmailOrUser] = useState('');
   const [password, setPassword] = useState('');
@@ -295,6 +295,18 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
                 )}
               </button>
             </form>
+
+            {/* Acceso para Pacientes sin Cuenta Web (CU05) */}
+            <div className="mt-4 pt-3 border-t border-slate-100 text-center">
+              <button
+                type="button"
+                onClick={onOpenActivatePatient}
+                className="text-xs font-semibold text-[#00687a] hover:text-[#004d5a] hover:underline transition cursor-pointer flex items-center justify-center gap-1 mx-auto"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>¿Es paciente y aún no tiene acceso? Activar con CI →</span>
+              </button>
+            </div>
 
             {/* Aviso de seguridad institucional al pie */}
             <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-slate-400 text-[11px]">

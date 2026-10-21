@@ -4,6 +4,7 @@
 #.agents/
 #.claude/
 #skills-lock.json
+documentationDocs/
 
 # ==========================================
 # Archivos del Sistema Operativo e IDEs
