@@ -178,5 +178,8 @@ class DatabaseSeeder extends Seeder
             $pacienteUser->save();
             $pacienteUser->roles()->syncWithoutDetaching([$roles['PACIENTE']->id_rol]);
         }
+
+        // 6. Poblar catálogo de 15 pacientes con datos demográficos y contactos (CU04 / RF02)
+        $this->call(PatientSeeder::class);
     }
 }
