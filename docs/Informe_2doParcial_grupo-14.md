@@ -2437,9 +2437,15 @@ cu2
 
 **Usuario**
 
-| PK | UQ | UQ |   |   |   |   |   |   |   |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **id\_usuario** | username | email | password\_hash | tipo\_usuario | estado | intentos\_fallidos | ultimo\_acceso | fecha\_creacion | fecha\_actualizacion |
+| PK | UQ | UQ |   |   |   |   |   |   |   |   |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **id\_usuario** | username | email | password\_hash | tipo\_usuario | estado | intentos\_fallidos | bloqueado\_hasta | ultimo\_acceso | fecha\_creacion | fecha\_actualizacion |
+
+**Configuracion\_Seguridad**
+
+| PK |   |   | FK |   |
+| :---: | :---: | :---: | :---: | :---: |
+| **id\_configuracion** | max\_intentos\_fallidos | minutos\_bloqueo | actualizado\_por | fecha\_actualizacion |
 
 **Usuario\_Rol**
 
@@ -2690,6 +2696,7 @@ cu2
 | tipo\_usuario | VARCHAR(30) | 30 caracteres | NO | No | Tipo de usuario principal (ADMIN, RECEPCIONISTA, MEDICO, PACIENTE). |
 | estado | VARCHAR(20) | 20 caracteres | NO | No | Estado actual de la cuenta (ACTIVO, INACTIVO, BLOQUEADO). |
 | intentos\_fallidos | SMALLINT | 2 bytes | NO | No | Contador de intentos de acceso fallidos consecutivos. |
+| bloqueado\_hasta | TIMESTAMPTZ | 8 bytes | SÍ | No | Fecha y hora hasta la cual el usuario permanece bloqueado (CU01 / RF01). |
 | ultimo\_acceso | TIMESTAMPTZ | 8 bytes | SÍ | No | Fecha y hora del último acceso exitoso al sistema. |
 | fecha\_creacion | TIMESTAMPTZ | 8 bytes | NO | No | Fecha y hora en que se creó el registro del usuario. |
 | fecha\_actualizacion | TIMESTAMPTZ | 8 bytes | NO | No | Fecha y hora de la última modificación de los datos. |
@@ -2702,6 +2709,18 @@ cu2
 | :---- | :---- | :---- | ----- | ----- | :---- |
 | id\_usuario | BIGINT | 8 bytes | NO | PK, FK | Identificador del usuario. |
 | id\_rol | BIGINT | 8 bytes | NO | PK, FK | Identificador del rol asignado al usuario. |
+
+ 
+
+**CONFIGURACION\_SEGURIDAD**
+
+| NombreCol | TipoDato | Longitud | PermiteNulos | EsLlave | Descripción |
+| :---- | :---- | :---- | ----- | ----- | :---- |
+| id\_configuracion | BIGINT | 8 bytes | NO | PK | Identificador único de la configuración de seguridad. |
+| max\_intentos\_fallidos | SMALLINT | 2 bytes | NO | No | Número máximo de intentos fallidos permitidos (predeterminado: 3). |
+| minutos\_bloqueo | INT | 4 bytes | NO | No | Tiempo de bloqueo en minutos tras superar el límite (predeterminado: 5). |
+| actualizado\_por | BIGINT | 8 bytes | SÍ | FK | Usuario administrador que actualizó la regla. |
+| fecha\_actualizacion | TIMESTAMPTZ | 8 bytes | NO | No | Fecha y hora de la última modificación de los parámetros de seguridad. |
 
  
 
@@ -3072,54 +3091,63 @@ CREATE TABLE usuarios (
   password\_hash varchar(255) NOT NULL,  
   tipo\_usuario varchar(30) NOT NULL CHECK (tipo\_usuario IN ('ADMIN', 'RECEPCIONISTA', 'MEDICO', 'PACIENTE')),  
   estado varchar(20) NOT NULL DEFAULT 'ACTIVO' CHECK (estado IN ('ACTIVO', 'INACTIVO', 'BLOQUEADO')),  
-  intentos\_fallidos smallint NOT NULL DEFAULT 0,  
-  ultimo\_acceso timestamptz,  
-  fecha\_creacion timestamptz NOT NULL DEFAULT now(),  
-  fecha\_actualizacion timestamptz NOT NULL DEFAULT now()  
+  intentos_fallidos smallint NOT NULL DEFAULT 0,  
+  bloqueado_hasta timestamptz, -- Bloqueo temporal por fuerza bruta (RF01 / CU01)  
+  ultimo_acceso timestamptz,  
+  fecha_creacion timestamptz NOT NULL DEFAULT now(),  
+  fecha_actualizacion timestamptz NOT NULL DEFAULT now()  
 );
 
 CREATE TABLE roles (  
-  id\_rol bigserial PRIMARY KEY,  
+  id_rol bigserial PRIMARY KEY,  
   nombre varchar(50) NOT NULL UNIQUE  
 );
 
 CREATE TABLE permisos (  
-  id\_permiso bigserial PRIMARY KEY,  
+  id_permiso bigserial PRIMARY KEY,  
   nombre varchar(100) NOT NULL UNIQUE  
 );
 
-CREATE TABLE usuario\_rol (  
-  id\_usuario bigint NOT NULL,  
-  id\_rol bigint NOT NULL,  
-  PRIMARY KEY (id\_usuario, id\_rol)  
+CREATE TABLE usuario_rol (  
+  id_usuario bigint NOT NULL,  
+  id_rol bigint NOT NULL,  
+  PRIMARY KEY (id_usuario, id_rol)  
 );
 
-CREATE TABLE rol\_permiso (  
-  id\_rol bigint NOT NULL,  
-  id\_permiso bigint NOT NULL,  
-  PRIMARY KEY (id\_rol, id\_permiso)  
+CREATE TABLE rol_permiso (  
+  id_rol bigint NOT NULL,  
+  id_permiso bigint NOT NULL,  
+  PRIMARY KEY (id_rol, id_permiso)  
 );
 
-CREATE TABLE tokens\_recuperacion (  
-  id\_token bigserial PRIMARY KEY,  
-  id\_usuario bigint NOT NULL,  
-  token\_hash varchar(255) NOT NULL,  
-  tipo\_token varchar(50) NOT NULL DEFAULT 'RECUPERACION\_PASSWORD',  
-  fecha\_creacion timestamptz NOT NULL DEFAULT now(),  
-  fecha\_expiracion timestamptz NOT NULL,  
+CREATE TABLE tokens_recuperacion (  
+  id_token bigserial PRIMARY KEY,  
+  id_usuario bigint NOT NULL,  
+  token_hash varchar(255) NOT NULL,  
+  tipo_token varchar(50) NOT NULL DEFAULT 'RECUPERACION_PASSWORD',  
+  fecha_creacion timestamptz NOT NULL DEFAULT now(),  
+  fecha_expiracion timestamptz NOT NULL,  
   usado boolean NOT NULL DEFAULT false  
 );
 
+CREATE TABLE configuracion_seguridad (  
+  id_configuracion serial PRIMARY KEY,  
+  max_intentos_fallidos integer NOT NULL DEFAULT 3,  
+  minutos_bloqueo integer NOT NULL DEFAULT 5,  
+  actualizado_por bigint,  
+  fecha_actualizacion timestamptz NOT NULL DEFAULT now()  
+);
+
 CREATE TABLE bitacora (  
-  id\_bitacora bigserial PRIMARY KEY,  
-  id\_usuario bigint,  
+  id_bitacora bigserial PRIMARY KEY,  
+  id_usuario bigint,  
   modulo varchar(100) NOT NULL,  
   accion varchar(50) NOT NULL,  
-  tabla\_afectada varchar(100),  
-  id\_registro bigint,  
+  tabla_afectada varchar(100),  
+  id_registro bigint,  
   descripcion text,  
-  ip\_origen varchar(45),  
-  fecha\_registro timestamptz NOT NULL DEFAULT now()  
+  ip_origen varchar(45),  
+  fecha_registro timestamptz NOT NULL DEFAULT now()  
 );
 
 \-- \=============================================================================  
