@@ -58,4 +58,39 @@ export const appointmentService = {
   async fetchAppointmentById(id) {
     return await apiFetch(`/appointments/${id}`);
   },
+
+  /**
+   * Cancelar una cita médica con motivo obligatorio (CU12 / RF09 / Prueba #6)
+   */
+  async cancelAppointment(id, motivo_cancelacion) {
+    return await apiFetch(`/appointments/${id}/cancel`, {
+      method: 'POST',
+      body: JSON.stringify({ motivo_cancelacion }),
+    });
+  },
+
+  /**
+   * Consultar agenda diaria de un médico por fecha y estado (CU14 / RF11 / Prueba #8)
+   */
+  async fetchDoctorAgenda(params = {}) {
+    const query = new URLSearchParams();
+    if (params.medico_id) query.append('medico_id', params.medico_id);
+    if (params.fecha) query.append('fecha', params.fecha);
+    if (params.estado) query.append('estado', params.estado);
+
+    const queryString = query.toString();
+    return await apiFetch(`/appointments/doctor-agenda${queryString ? `?${queryString}` : ''}`);
+  },
+
+  /**
+   * Consultar historial cronológico completo de citas de un paciente (CU15 / RF12 / Prueba #7)
+   */
+  async fetchPatientHistory(patientId, params = {}) {
+    const query = new URLSearchParams();
+    if (params.estado) query.append('estado', params.estado);
+
+    const queryString = query.toString();
+    return await apiFetch(`/appointments/patient-history/${patientId}${queryString ? `?${queryString}` : ''}`);
+  },
 };
+

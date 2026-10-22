@@ -1,18 +1,18 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 21/10/2026
+## Estado de Relevo al 22/10/2026
 
 ### 1. Avances Consolidados en esta Sesión
 1. **Modelos en Español (PostgreSQL / DDL):**
    - Eliminados definitivamente los archivos residuales en inglés (`Doctor.php` y `Specialty.php`).
-   - Modelos de dominio oficiales implementados en español: [`Medico.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/ClinicalResources/Models/Medico.php) y [`Especialidad.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/ClinicalResources/Models/Especialidad.php).
+   - Modelos de dominio oficiales implementados en español: [`Medico.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/Medico.php) y [`Especialidad.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/Especialidad.php).
    - Todos los controladores, seeders y requests actualizados para importar directamente `Medico` y `Especialidad`.
 
 2. **CU06 (Gestionar Médicos — RF03) y CU07 (Especialidades — RF04) 100% Operativos:**
    - Backend: Migración de tablas `medicos`, `especialidades` y `medico_especialidad`.
    - Controladores `DoctorsController.php` y `SpecialtiesController.php`.
    - Seeders `DoctorSeeder.php` y `SpecialtySeeder.php`.
-   - Frontend: `DoctorsManager.jsx`, `DoctorFormModal.jsx` y `DoctorDetailModal.jsx` habilitados en `Sidebar.jsx`.
+   - Frontend: `DoctorsManager.jsx`, `DoctorFormModal.jsx` y `DoctorDetailModal.jsx` restringidos exclusivamente a `ADMIN` en `Sidebar.jsx` y `App.jsx`.
 
 3. **Perfeccionamiento de CU05 (Portal Paciente / Perfil de Pacientes):**
    - Resuelto el enlace de `id_usuario` en `PatientSeeder.php` y `DatabaseSeeder.php`.
@@ -25,9 +25,9 @@
    - Backend: Migración `2026_10_20_000005_create_paquete2_horarios_and_bloqueos_tables.php` (`disponibilidades` y `bloqueos_horario`).
    - Modelos Eloquent en español: [`Disponibilidad.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/Disponibilidad.php) y [`BloqueoHorario.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/BloqueoHorario.php), con relaciones en [`Medico.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/Medico.php).
    - FormRequests con validación P8.1 (`hora_fin > hora_inicio`): `ScheduleBatchRequest.php` y `BlockCreateRequest.php`.
-   - Controlador: `SchedulesController.php` con auditoría inmutable en `bitacora` (CU03).
+   - Controlador: `SchedulesController.php` con auditoría inmutable en `bitacora` (CU03) y protección de rol `ADMIN`.
    - Frontend: [`SchedulesManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/clinical-resources/components/SchedulesManager.jsx), [`BlockModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/clinical-resources/components/BlockModal.jsx) y `scheduleService.js`.
-   - Navegación: Habilitado en `Sidebar.jsx` (icono `Clock`) y panel de `App.jsx`.
+   - Navegación: Habilitado en `Sidebar.jsx` (icono `Clock`) y panel de `App.jsx` exclusivamente para rol `ADMIN`.
 
 5. **CU09 (Consultar Disponibilidad de Horarios libres — RF05, RF06) 100% Operativo:**
    - Backend: Migración `2026_10_20_000006_create_paquete3_citas_tables.php` (`tipos_cita`, `citas`, `cita_estado_historial`).
@@ -47,13 +47,44 @@
      - Panel Gestor: [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx) integrando citas programadas con visor de disponibilidad y modal de ticket.
      - Integración en `Sidebar.jsx` y `App.jsx` en pestaña `appointments`.
 
-7. **Métricas de Avance Consolidado tras el Lote de 3 CUs (`CU08`, `CU09`, `CU10`):**
-   - **Ciclo 1:** 10 de 13 Casos de Uso completados (**76.9%**).
-   - **Progreso Global:** 10 de 23 (+1) Casos de Uso completados (**43.5%**).
-   - Superadas las pruebas mínimas del examen: **#1, #2, #3, #4, #5, #9, #10** (7 de 10 pruebas oficiales superadas al 100%).
+7. **CU12 (Cancelar Cita Médica con Motivo Obligatorio — RF09 / Prueba #6) 100% Operativo:**
+   - Backend: `AppointmentCancelRequest.php` (min: 5 caracteres), `AppointmentsController::cancel()` con transacción atómica, método `$cita->cancelar()`, liberación inmediata del slot en `AppointmentAvailabilityService` sin borrado físico (RN09/RN11), registro inmutable en `bitacora` (CU03) y en `cita_estado_historial`.
+   - Frontend: `appointmentService.cancelAppointment()`, modal interactivo `AppointmentCancelModal.jsx` y botón "Cancelar" condicional en `AppointmentsManager.jsx`, `DoctorAgendaView.jsx` y `PatientAppointmentHistoryModal.jsx`.
 
-### 2. Próxima Tarea Inmediata (Segundo Lote de 3 CUs para Cierre del Ciclo 1)
-- **CU12:** Cancelar Cita Médica con motivo obligatorio y liberación de cupo (RF09 / Prueba #6).
-- **CU14:** Consultar Agenda de Citas Médicas por Médico y Fecha (RF11 / Prueba #8).
-- **CU15:** Consultar Historial de Citas Médicas del Paciente (RF12 / Prueba #7).
-- Con este lote final, el **Ciclo 1 alcanzará el 100% (13 de 13 CUs)** y todas las 10 pruebas mínimas del examen quedarán listas para la defensa.
+8. **CU14 (Consultar Agenda Médica Diaria — RF11 / Prueba #8) 100% Operativo:**
+   - Backend: `AppointmentsController::doctorAgenda()` con filtrado por médico y fecha (`fecha` en `YYYY-MM-DD`), cálculo de 4 KPIs diarios, resolución de franja semanal activa en `Disponibilidad` y scoping RBAC (médicos solo ven su agenda; rechazo tajante a pacientes con HTTP 403).
+   - Frontend: `DoctorAgendaView.jsx` con navegación rápida por fecha (día anterior, "Hoy", siguiente), selector de médico, tarjeta de franja horaria, 4 KPIs y timeline de citas con acciones (Ticket, Cancelar). Integrado como pestaña en `AppointmentsManager.jsx`.
+
+9. **CU15 (Consultar Historial Cronológico de Citas del Paciente — RF12 / Prueba #7) 100% Operativo:**
+   - Backend: `AppointmentsController::patientHistory()` con cronología descendente sin eliminación física (RN10/RN11), métricas globales (total, atendidas, canceladas, pendientes, tasa de asistencia % y fechas extremas) y scoping RBAC (pacientes solo leen su historia).
+   - Frontend: `PatientAppointmentHistoryModal.jsx` con ficha del paciente, 4 métricas, filtro por estado y listado cronológico. Enlazado mediante botón "Ver Historial" en la columna de paciente de `AppointmentsManager.jsx`.
+
+10. **Blindaje RBAC Global, Scoping Anti-IDOR y Homologación de Permisos (Auditoría Oficial):**
+    - **Middleware `EnsureUserRole`:** Protege todas las rutas de `routes/api.php` verificando autenticación, estado `ACTIVO` y lista de roles autorizados.
+    - **Anti-IDOR en CU10:** El backend fuerza la reserva al paciente autenticado (`$data['id_paciente'] = $miPaciente->id_paciente`), impidiendo la suplantación de identidades.
+    - **Protección Perimetral en CU04, CU14, CU15:** Bloqueo de acceso al padrón de pacientes y a agendas médicas para el rol `PACIENTE`.
+    - **Alineación de Permisos en UI:** Gestión de médicos (CU06) y horarios (CU08) restringidos exclusivamente a `ADMIN` en `Sidebar.jsx` y `App.jsx`.
+    - **Autoservicio Guiado en Frontend:** `AppointmentBookingModal.jsx` detecta sesión de paciente y fija automáticamente su titularidad, mostrando badge *"Tu Ficha Personal (Verificada)"*.
+
+11. **Métricas de Avance Consolidado (Cierre Histórico del Ciclo 1):**
+    - **Ciclo 1:** 13 de 13 Casos de Uso completados (**100% de ejecución de Ciclo 1 blindado y auditado**).
+    - **Progreso Global del Proyecto:** 13 de 23 (+1) Casos de Uso completados (**56.5%**).
+    - **10 Pruebas Mínimas del Examen Oficial Superadas:** **10 de 10 (100% de pruebas oficiales superadas)**:
+      - Prueba #1 (Registrar paciente / CU04) ✅
+      - Prueba #2 (CI duplicado / CU04) ✅
+      - Prueba #3 (Programar cita CM-XXXX / CU10) ✅
+      - Prueba #4 (Anti-colisión concurrente lockForUpdate / CU10) ✅
+      - Prueba #5 (Forzar fuera de horario rechazada / CU10) ✅
+      - Prueba #6 (Cancelar cita con motivo y liberación de cupo / CU12) ✅
+      - Prueba #7 (Historial cronológico de paciente / CU15) ✅
+      - Prueba #8 (Agenda médica por médico y fecha / CU14) ✅
+      - Prueba #9 (Página sin sesión HTTP 401 / CU01) ✅
+      - Prueba #10 (Operación inválida HTTP 422 tipado / Transversal) ✅
+
+### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
+- Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
+  - `CU11`: Reprogramar Cita Médica (RF08) con nueva fecha y liberación del horario anterior.
+  - `CU13`: Registrar Asistencia y Estado de Cita Médica (RF10).
+  - `CU16-CU19`: Expediente Clínico Digital, Consultas, Diagnósticos CIE y Recetas.
+  - `CU20-CU23`: Recordatorios, Pasarela de Pagos Stripe Sandbox y Reportes con Filtros Dinámicos (RF13).
+

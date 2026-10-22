@@ -73,3 +73,28 @@
   4. Mantener la trazabilidad en `cita_estado_historial` y `bitacora` inmutable (CU03).
   5. Ofrecer en el frontend una experiencia unificada que conecta el visor de turnos libres (CU09) y la gestión asistida con tickets imprimibles (CU10).
 * **Impacto:** Culminación del tercer Caso de Uso del lote, elevando el avance del **Ciclo 1 al 76.9%** (10 de 13 CUs) y **43.5% Global**.
+
+### Registro 12: 2026-10-22
+* **Decisión:** Implementación y cierre de **CU12 (Cancelar Cita Médica — RF09 / Prueba #6)**, **CU14 (Consultar Agenda Médica Diaria — RF11 / Prueba #8)** y **CU15 (Consultar Historial Cronológico del Paciente — RF12 / Prueba #7)**, alcanzando el **100% de ejecución del Ciclo 1** y superando las **10 pruebas mínimas del examen oficial**.
+* **Motivo:**
+  1. **CU12 (RF09):** Validación con `AppointmentCancelRequest` exigiendo `motivo_cancelacion` (mín. 5 caracteres). Al invocar `$cita->cancelar()`, el estado pasa a `CANCELADA` y, dado que `AppointmentAvailabilityService` filtra únicamente citas activas (`where('estado', '!=', 'CANCELADA')`), el cupo horario se libera instantáneamente en tiempo real sin requerir eliminación física (RN09 / RN11 / Prueba #6).
+  2. **CU14 (RF11):** Endpoint y componente `DoctorAgendaView.jsx` que combina el horario semanal configurado en `Disponibilidad` con las citas del día, 4 KPIs dinámicos en vivo y control RBAC (médicos solo ven su agenda; recepción y admin seleccionan cualquier médico).
+  3. **CU15 (RF12):** Endpoint e interfaz modal `PatientAppointmentHistoryModal.jsx` con métricas históricas completas (total, atendidas, canceladas, pendientes, tasa de asistencia %) y ordenación cronológica descendente con acceso protegido de solo lectura para el paciente autenticado (RN10 / RN11 / Prueba #7).
+* **Impacto:** Culminación formal del **Ciclo 1 con 13 de 13 Casos de Uso (100% de ejecución)** y superación formal de las **10 de 10 pruebas mínimas exigidas por el examen oficial**. Avance global del sistema: **56.5% (13 de 23 CUs)**.
+### Registro 13: 2026-10-22
+* **Decisión:** Blindaje de control de accesos RBAC en backend para la agenda médica diaria (`doctorAgenda`), homologación de relaciones bilingües con usuario en modelos (`Medico::usuario()` / `Patient::user()`), y estandarización dual de payload REST (`data` y `patient`) en `PatientProfileController`.
+* **Motivo:**
+  1. Garantizar la confidencialidad médica (Capítulo 2.1.3 y RN10): Impedir que solicitudes manuales o manipuladas de pacientes puedan acceder al endpoint de agenda médica (`doctorAgenda`), retornando HTTP 403 Forbidden.
+  2. Evitar futuras excepciones de Eloquent similares a `emergencyContacts`: Homologar alias bilingües en modelos de dominio `Medico.php` y `Patient.php` (`usuario` / `user`), protegiendo el código frente a cualquier llamada en inglés o español.
+  3. Consistencia de la API REST: Estandarizar respuestas en el perfil del paciente con la clave universal `data` manteniendo `patient` por retrocompatibilidad.
+* **Impacto:** Sistema 100% blindado contra accesos no autorizados en APIs de agenda, modelos de dominio completamente tolerantes y consistencia en el frontend.
+
+### Registro 14: 2026-10-22
+* **Decisión:** Implementación del middleware RBAC global `EnsureUserRole` a nivel de rutas en Laravel, protección anti-IDOR en CU10 (Reserva de Cita) / CU04 / CU15, y alineación estricta de permisos de CU06 (Médicos) y CU08 (Horarios) al rol exclusivo `ADMIN`.
+* **Motivo:**
+  1. Cumplir con la matriz de roles y permisos oficial del documento de especificación de Casos de Uso (PUDS): Los casos de uso CU02, CU03, CU06, CU07 y CU08 son de potestad exclusiva del **Administrador**. El frontend y las rutas permitían a roles como `RECEPCIONISTA` o `MEDICO` acceder a mutaciones de estos catálogos.
+  2. Subsanar la vulnerabilidad de referencia directa a objetos inseguros (IDOR) en CU10: Un paciente podía alterar el payload JSON enviando el `id_paciente` de otra persona. Ahora el backend fuerza en servidor `$data['id_paciente'] = $miPaciente->id_paciente` si el actor es `PACIENTE`.
+  3. Prevenir fugas de información masiva (CU04 / CU14 / CU15): El padrón general de pacientes (`/api/patients`) queda inaccesible para `PACIENTE` (HTTP 403), y la consulta individual de citas (`show`) e historiales (`patientHistory`) valida la titularidad del registro antes de devolver datos.
+  4. Robustecer la seguridad de la API: Las rutas ahora tienen una primera línea de defensa a nivel de middleware HTTP (`role:ADMIN`, etc.), devolviendo `HTTP 401 Unauthorized` si no hay sesión y `HTTP 403 Forbidden` si el rol no tiene privilegios.
+* **Impacto:** Eliminación de brechas de autorización horizontal y vertical en los 13 Casos de Uso del Ciclo 1. Total coherencia entre la interfaz de usuario, la API y la especificación oficial.
+

@@ -191,6 +191,7 @@ class PatientProfileController extends Controller
 
         return response()->json([
             'success' => true,
+            'data' => $patient,
             'patient' => $patient,
         ]);
     }
@@ -293,6 +294,7 @@ class PatientProfileController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Su información de contacto y preferencias se actualizaron correctamente.',
+                'data' => $patient,
                 'patient' => $patient,
             ]);
         });

@@ -191,5 +191,8 @@ class DatabaseSeeder extends Seeder
 
         // 9. Poblar catálogo oficial de tipos de cita (CU09, CU10 / RF06)
         $this->call(AppointmentTypeSeeder::class);
+
+        // 10. Poblar horarios de atención médica (CU08) y citas demostrativas (CU09-CU15)
+        $this->call(ScheduleAndAppointmentSeeder::class);
     }
 }

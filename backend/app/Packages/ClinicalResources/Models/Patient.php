@@ -60,11 +60,27 @@ class Patient extends Model
     }
 
     /**
+     * Alias de relación: user
+     */
+    public function user(): BelongsTo
+    {
+        return $this->usuario();
+    }
+
+    /**
      * Contactos de emergencia asociados
      */
     public function contactosEmergencia(): HasMany
     {
         return $this->hasMany(EmergencyContact::class, 'id_paciente', 'id_paciente');
+    }
+
+    /**
+     * Alias de retrocompatibilidad
+     */
+    public function emergencyContacts(): HasMany
+    {
+        return $this->contactosEmergencia();
     }
 
     /**

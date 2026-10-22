@@ -46,6 +46,14 @@ class Medico extends Model
     }
 
     /**
+     * Alias de relación en español: usuario
+     */
+    public function usuario(): BelongsTo
+    {
+        return $this->user();
+    }
+
+    /**
      * Especialidades médicas vinculadas (N:M con tabla 'medico_especialidad')
      */
     public function specialties(): BelongsToMany

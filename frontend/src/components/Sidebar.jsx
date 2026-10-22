@@ -88,7 +88,7 @@ export function Sidebar({
           subtitle: 'Plantel médico institucional',
           tag: 'CU06 / RF03',
           icon: Stethoscope,
-          requiredRoles: ['ADMIN', 'RECEPCIONISTA'],
+          requiredRoles: ['ADMIN'],
         },
         {
           id: 'schedules',
@@ -96,7 +96,7 @@ export function Sidebar({
           subtitle: 'Franjas semanales y feriados',
           tag: 'CU08 / RF05',
           icon: Clock,
-          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO'],
+          requiredRoles: ['ADMIN'],
         },
         {
           id: 'appointments',

@@ -23,15 +23,20 @@ import {
   Video,
   Shield,
   Layers,
+  Ban,
+  History,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { appointmentService } from '../services/appointmentService';
 import { doctorService } from '../../clinical-resources/services/doctorService';
 import { AppointmentAvailabilityViewer } from './AppointmentAvailabilityViewer';
 import { AppointmentBookingModal } from './AppointmentBookingModal';
+import { DoctorAgendaView } from './DoctorAgendaView';
+import { AppointmentCancelModal } from './AppointmentCancelModal';
+import { PatientAppointmentHistoryModal } from './PatientAppointmentHistoryModal';
 
 /**
- * Gestor Integral de Citas Médicas y Agenda (CU09 / CU10 / RF05, RF06, RF07)
+ * Gestor Integral de Citas Médicas y Agenda (CU09, CU10, CU12, CU14, CU15 / RF05-RF12)
  * Paquete 3: Gestión de Citas Médicas
  */
 export function AppointmentsManager() {
@@ -59,6 +64,8 @@ export function AppointmentsManager() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [bookingInitialData, setBookingInitialData] = useState(null);
   const [ticketModalAppointment, setTicketModalAppointment] = useState(null);
+  const [cancellingAppointment, setCancellingAppointment] = useState(null);
+  const [selectedPatientForHistory, setSelectedPatientForHistory] = useState(null);
 
   // Cargar lista de médicos para filtro
   useEffect(() => {
@@ -217,37 +224,48 @@ export function AppointmentsManager() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-bold font-montserrat text-slate-900 tracking-tight">
-                Gestión de Citas Médicas y Agenda
+                {role === 'PACIENTE' ? 'Mis Citas Médicas y Agenda' : 'Gestión de Citas Médicas y Agenda'}
               </h1>
               <span className="text-[11px] font-bold bg-[#00687a]/10 text-[#00687a] px-2 py-0.5 rounded-md uppercase tracking-wider">
-                CU09 / CU10
+                {role === 'PACIENTE' ? 'Portal Paciente' : 'CU09 / CU10 / CU12 / CU14 / CU15'}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Prevención anti-colisión transaccional (RF07), auditoría inmutable en bitácora y consulta de turnos libres.
+              {role === 'PACIENTE'
+                ? 'Consulta el estado de tus citas médicas, tickets de atención, turnos disponibles y tu historial de salud.'
+                : 'Prevención anti-colisión transaccional (RF07), auditoría inmutable en bitácora, agenda diaria y consulta de turnos libres.'}
             </p>
           </div>
         </div>
 
         {/* Acciones principales */}
         <div className="flex items-center gap-3 self-stretch md:self-auto justify-end">
-          {role !== 'PACIENTE' && (
+          {role === 'PACIENTE' && (
             <button
               type="button"
-              onClick={() => {
-                setBookingInitialData(null);
-                setIsBookingModalOpen(true);
-              }}
-              className="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#00687a] to-[#008b9e] hover:brightness-105 rounded-xl shadow-md shadow-[#00687a]/20 transition flex items-center gap-2 cursor-pointer shrink-0"
+              onClick={() => setSelectedPatientForHistory({ id_paciente: appointments[0]?.id_paciente, nombres: user?.username })}
+              className="px-4 py-2.5 text-xs sm:text-sm font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-xl transition flex items-center gap-2 cursor-pointer shrink-0"
             >
-              <Plus className="w-4 h-4" />
-              <span>Programar Cita (CU10)</span>
+              <History className="w-4 h-4" />
+              <span>Mi Historial (CU15)</span>
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => {
+              setBookingInitialData(null);
+              setIsBookingModalOpen(true);
+            }}
+            className="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#00687a] to-[#008b9e] hover:brightness-105 rounded-xl shadow-md shadow-[#00687a]/20 transition flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{role === 'PACIENTE' ? 'Reservar Mi Cita (CU10)' : 'Programar Cita (CU10)'}</span>
+          </button>
         </div>
       </div>
 
-      {/* Pestañas de Navegación: Citas vs Disponibilidad */}
+      {/* Pestañas de Navegación: Citas vs Disponibilidad vs Agenda Diaria */}
       <div className="flex border-b border-slate-200">
         <button
           type="button"
@@ -259,7 +277,7 @@ export function AppointmentsManager() {
           }`}
         >
           <CalendarCheck className="w-4 h-4" />
-          <span>Citas Programadas</span>
+          <span>{role === 'PACIENTE' ? 'Mis Citas Médicas' : 'Citas Programadas (CU10)'}</span>
           <span className="ml-1 text-[11px] px-2 py-0.5 rounded-full bg-slate-100 font-bold text-slate-700">
             {pagination.total}
           </span>
@@ -275,14 +293,35 @@ export function AppointmentsManager() {
           }`}
         >
           <Clock className="w-4 h-4" />
-          <span>Consultar Disponibilidad de Horarios (CU09)</span>
+          <span>Consultar Disponibilidad (CU09)</span>
         </button>
+
+        {role !== 'PACIENTE' && (
+          <button
+            type="button"
+            onClick={() => setActiveTab('agenda')}
+            className={`flex items-center gap-2 px-6 py-3 font-semibold text-xs sm:text-sm border-b-2 transition cursor-pointer ${
+              activeTab === 'agenda'
+                ? 'border-[#00687a] text-[#00687a]'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Stethoscope className="w-4 h-4" />
+            <span>Agenda Médica Diaria (CU14)</span>
+          </button>
+        )}
       </div>
 
       {/* CONTENIDO DE PESTAÑAS */}
-      {activeTab === 'disponibilidad' ? (
+      {activeTab === 'disponibilidad' && (
         <AppointmentAvailabilityViewer onSelectSlotForBooking={handleSelectSlotForBooking} />
-      ) : (
+      )}
+
+      {activeTab === 'agenda' && role !== 'PACIENTE' && (
+        <DoctorAgendaView onOpenTicket={setTicketModalAppointment} />
+      )}
+
+      {activeTab === 'citas' && (
         <div className="space-y-4">
           {/* Barra de Filtros y Búsqueda */}
           <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
@@ -291,7 +330,11 @@ export function AppointmentsManager() {
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Buscar por código (CM-XXXX), paciente, CI, o médico..."
+                placeholder={
+                  role === 'PACIENTE'
+                    ? 'Buscar por código (CM-XXXX), fecha o médico...'
+                    : 'Buscar por código (CM-XXXX), paciente, CI, o médico...'
+                }
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-[#00687a] focus:bg-white transition"
@@ -446,6 +489,17 @@ export function AppointmentsManager() {
                                 </span>
                               )}
                             </div>
+                            {cita.paciente && (
+                              <button
+                                type="button"
+                                onClick={() => setSelectedPatientForHistory(cita.paciente)}
+                                className="mt-1 text-[11px] font-semibold text-[#00687a] hover:text-[#004d5a] hover:underline inline-flex items-center gap-1 cursor-pointer"
+                                title="Ver historial cronológico de citas del paciente (CU15)"
+                              >
+                                <History className="w-3 h-3" />
+                                <span>Ver Historial</span>
+                              </button>
+                            )}
                           </td>
 
                           {/* Médico y Especialidad */}
@@ -488,15 +542,28 @@ export function AppointmentsManager() {
 
                           {/* Acciones */}
                           <td className="px-5 py-3.5 text-right whitespace-nowrap">
-                            <button
-                              type="button"
-                              onClick={() => setTicketModalAppointment(cita)}
-                              className="px-2.5 py-1 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition inline-flex items-center gap-1 cursor-pointer"
-                              title="Ver ficha / ticket de la cita"
-                            >
-                              <Printer className="w-3 h-3" />
-                              <span>Ticket</span>
-                            </button>
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => setTicketModalAppointment(cita)}
+                                className="px-2.5 py-1 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition inline-flex items-center gap-1 cursor-pointer"
+                                title="Ver ficha / ticket de la cita"
+                              >
+                                <Printer className="w-3 h-3" />
+                                <span>Ticket</span>
+                              </button>
+                              {['PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
+                                <button
+                                  type="button"
+                                  onClick={() => setCancellingAppointment(cita)}
+                                  className="px-2.5 py-1 text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition inline-flex items-center gap-1 cursor-pointer"
+                                  title="Cancelar cita médica (libera cupo horario - CU12)"
+                                >
+                                  <Ban className="w-3 h-3" />
+                                  <span>Cancelar</span>
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       );
@@ -653,6 +720,25 @@ export function AppointmentsManager() {
           </div>
         </div>
       )}
+
+      {/* Modal de Cancelación de Cita con Motivo Obligatorio (CU12) */}
+      <AppointmentCancelModal
+        isOpen={Boolean(cancellingAppointment)}
+        onClose={() => setCancellingAppointment(null)}
+        appointment={cancellingAppointment}
+        onAppointmentCancelled={() => {
+          setCancellingAppointment(null);
+          loadAppointments(pagination.current_page);
+        }}
+      />
+
+      {/* Modal de Historial Cronológico de Citas del Paciente (CU15) */}
+      <PatientAppointmentHistoryModal
+        isOpen={Boolean(selectedPatientForHistory)}
+        onClose={() => setSelectedPatientForHistory(null)}
+        patientInitial={selectedPatientForHistory}
+        onOpenTicket={setTicketModalAppointment}
+      />
     </div>
   );
 }

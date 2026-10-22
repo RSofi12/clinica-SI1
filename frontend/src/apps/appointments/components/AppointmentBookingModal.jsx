@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { appointmentService } from '../services/appointmentService';
 import { patientService } from '../../clinical-resources/services/patientService';
+import { patientProfileService } from '../../clinical-resources/services/patientProfileService';
+import { useAuth } from '../../../context/AuthContext';
 
 /**
  * Modal Asistido para Programar Cita Médica con Prevención Anti-Colisión Transaccional (CU10 / RF06, RF07)
@@ -31,6 +33,8 @@ export function AppointmentBookingModal({
   onAppointmentBooked,
   initialData = null,
 }) {
+  const { role, user } = useAuth();
+  const isPaciente = role === 'PACIENTE';
   const [step, setStep] = useState(1); // 1: Paciente, 2: Especialidad/Médico, 3: Horario, 4: Confirmación, 5: Éxito (Ticket)
 
   // Catálogos
@@ -114,10 +118,28 @@ export function AppointmentBookingModal({
       if (initialData.slot) {
         setSelectedSlot(initialData.slot);
       }
-      // Si ya vienen médico, fecha y slot, podemos empezar en paso 1 o 2
       setStep(1);
     }
   }, [initialData, isOpen]);
+
+  // Auto-vincular y asegurar la identidad del paciente en modo autoservicio (Rol PACIENTE)
+  useEffect(() => {
+    if (!isOpen) return;
+    if (isPaciente) {
+      async function loadPatientSelf() {
+        try {
+          const res = await patientProfileService.fetchMyProfile();
+          const p = res?.data || res?.patient;
+          if (p) {
+            setSelectedPatient(p);
+          }
+        } catch (err) {
+          console.error('Error al cargar perfil de paciente en modal:', err);
+        }
+      }
+      loadPatientSelf();
+    }
+  }, [isOpen, isPaciente]);
 
   // 2. Búsqueda en vivo de pacientes
   const handleSearchPatient = async (term) => {
@@ -296,86 +318,115 @@ export function AppointmentBookingModal({
           {/* ========================================================================= */}
           {step === 1 && (
             <div className="space-y-5">
-              {/* Buscador de Paciente */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  1. Buscar Paciente Clínico <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                  <input
-                    type="text"
-                    placeholder="Escriba CI, N° Historia (HC-XXXX) o Nombre..."
-                    value={patientSearchTerm}
-                    onChange={(e) => handleSearchPatient(e.target.value)}
-                    className="w-full text-xs py-2 pl-9 pr-3 bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#00687a]"
-                  />
-                  {isSearchingPatient && (
-                    <div className="absolute right-3 top-2.5">
-                      <div className="w-3.5 h-3.5 border-2 border-[#00687a]/40 border-t-[#00687a] rounded-full animate-spin" />
-                    </div>
-                  )}
-                </div>
-
-                {/* Lista de resultados desplegable */}
-                {patientResults.length > 0 && !selectedPatient && (
-                  <div className="mt-2 border border-slate-200 rounded-xl overflow-hidden shadow-md max-h-48 overflow-y-auto divide-y divide-slate-100 bg-white">
-                    {patientResults.map((p) => (
-                      <div
-                        key={p.id_paciente}
-                        onClick={() => {
-                          setSelectedPatient(p);
-                          setPatientResults([]);
-                          setPatientSearchTerm(`${p.nombres} ${p.apellidos}`);
-                        }}
-                        className="p-2.5 hover:bg-cyan-50/60 cursor-pointer transition flex items-center justify-between text-xs"
-                      >
-                        <div>
-                          <span className="font-bold text-slate-900 block">
-                            {p.nombres} {p.apellidos}
-                          </span>
-                          <span className="text-slate-500 text-[11px]">
-                            CI: {p.numero_documento} • HC: {p.numero_historia} • {p.edad} años ({p.grupo_etario})
-                          </span>
-                        </div>
-                        <span className="text-[11px] font-semibold text-[#00687a]">Seleccionar →</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Ficha del Paciente Seleccionado */}
-              {selectedPatient ? (
-                <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-50/60 to-emerald-50/60 border border-cyan-200 flex items-center justify-between">
+              {/* Buscador de Paciente para Recepción/Admin O Ficha fija para Paciente */}
+              {isPaciente ? (
+                <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-50/80 to-emerald-50/80 border border-cyan-200 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-[#00687a] text-white flex items-center justify-center font-bold text-sm">
-                      {selectedPatient.nombres?.charAt(0)}{selectedPatient.apellidos?.charAt(0)}
+                      {selectedPatient?.nombres?.charAt(0) || 'P'}{selectedPatient?.apellidos?.charAt(0) || ''}
                     </div>
                     <div>
-                      <span className="font-montserrat font-bold text-slate-900 text-sm block">
-                        {selectedPatient.nombres} {selectedPatient.apellidos}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-montserrat font-bold text-slate-900 text-sm">
+                          {selectedPatient ? `${selectedPatient.nombres} ${selectedPatient.apellidos}` : 'Cargando tus datos...'}
+                        </span>
+                        <span className="text-[10px] font-bold bg-[#00687a] text-white px-2 py-0.5 rounded-md uppercase tracking-wider">
+                          Tu Ficha Personal
+                        </span>
+                      </div>
                       <p className="text-[11px] text-slate-600 mt-0.5">
-                        CI: <strong>{selectedPatient.numero_documento}</strong> • HC: <strong>{selectedPatient.numero_historia}</strong> • Edad: <strong>{selectedPatient.edad} años</strong> ({selectedPatient.grupo_etario})
+                        CI: <strong>{selectedPatient?.numero_documento || '—'}</strong> • HC: <strong>{selectedPatient?.numero_historia || '—'}</strong> • Edad: <strong>{selectedPatient?.edad ?? '—'} años</strong> ({selectedPatient?.grupo_etario || 'General'})
                       </p>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedPatient(null);
-                      setPatientSearchTerm('');
-                    }}
-                    className="text-xs text-rose-600 hover:underline font-semibold"
-                  >
-                    Cambiar
-                  </button>
+                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-full border border-emerald-200">
+                    ✓ Identidad Verificada
+                  </span>
                 </div>
               ) : (
-                <div className="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs text-slate-400">
-                  Seleccione un paciente de la búsqueda para continuar con la reserva.
-                </div>
+                <>
+                  {/* Buscador de Paciente */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      1. Buscar Paciente Clínico <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                      <input
+                        type="text"
+                        placeholder="Escriba CI, N° Historia (HC-XXXX) o Nombre..."
+                        value={patientSearchTerm}
+                        onChange={(e) => handleSearchPatient(e.target.value)}
+                        className="w-full text-xs py-2 pl-9 pr-3 bg-slate-50 border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#00687a]"
+                      />
+                      {isSearchingPatient && (
+                        <div className="absolute right-3 top-2.5">
+                          <div className="w-3.5 h-3.5 border-2 border-[#00687a]/40 border-t-[#00687a] rounded-full animate-spin" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Lista de resultados desplegable */}
+                    {patientResults.length > 0 && !selectedPatient && (
+                      <div className="mt-2 border border-slate-200 rounded-xl overflow-hidden shadow-md max-h-48 overflow-y-auto divide-y divide-slate-100 bg-white">
+                        {patientResults.map((p) => (
+                          <div
+                            key={p.id_paciente}
+                            onClick={() => {
+                              setSelectedPatient(p);
+                              setPatientResults([]);
+                              setPatientSearchTerm(`${p.nombres} ${p.apellidos}`);
+                            }}
+                            className="p-2.5 hover:bg-cyan-50/60 cursor-pointer transition flex items-center justify-between text-xs"
+                          >
+                            <div>
+                              <span className="font-bold text-slate-900 block">
+                                {p.nombres} {p.apellidos}
+                              </span>
+                              <span className="text-slate-500 text-[11px]">
+                                CI: {p.numero_documento} • HC: {p.numero_historia} • {p.edad} años ({p.grupo_etario})
+                              </span>
+                            </div>
+                            <span className="text-[11px] font-semibold text-[#00687a]">Seleccionar →</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Ficha del Paciente Seleccionado */}
+                  {selectedPatient ? (
+                    <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-50/60 to-emerald-50/60 border border-cyan-200 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-[#00687a] text-white flex items-center justify-center font-bold text-sm">
+                          {selectedPatient.nombres?.charAt(0)}{selectedPatient.apellidos?.charAt(0)}
+                        </div>
+                        <div>
+                          <span className="font-montserrat font-bold text-slate-900 text-sm block">
+                            {selectedPatient.nombres} {selectedPatient.apellidos}
+                          </span>
+                          <p className="text-[11px] text-slate-600 mt-0.5">
+                            CI: <strong>{selectedPatient.numero_documento}</strong> • HC: <strong>{selectedPatient.numero_historia}</strong> • Edad: <strong>{selectedPatient.edad} años</strong> ({selectedPatient.grupo_etario})
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedPatient(null);
+                          setPatientSearchTerm('');
+                        }}
+                        className="text-xs text-rose-600 hover:underline font-semibold cursor-pointer"
+                      >
+                        Cambiar
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-300 text-center text-xs text-slate-400">
+                      Seleccione un paciente de la búsqueda para continuar con la reserva.
+                    </div>
+                  )}
+                </>
               )}
 
               {/* Selector de Tipo de Cita */}
@@ -389,7 +440,7 @@ export function AppointmentBookingModal({
                       key={tc.id_tipo_cita}
                       type="button"
                       onClick={() => setSelectedTipoCitaId(String(tc.id_tipo_cita))}
-                      className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition flex flex-col items-center gap-1 ${
+                      className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition flex flex-col items-center gap-1 cursor-pointer ${
                         String(selectedTipoCitaId) === String(tc.id_tipo_cita)
                           ? 'bg-cyan-50 border-[#00687a] text-[#00687a] shadow-xs'
                           : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
@@ -409,6 +460,16 @@ export function AppointmentBookingModal({
           {/* ========================================================================= */}
           {step === 2 && (
             <div className="space-y-5">
+              {/* Resumen del Paciente para el que se reserva */}
+              {selectedPatient && (
+                <div className="p-3 bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-between text-xs text-slate-700">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-[#00687a]" />
+                    <span>Cita médica para: <strong>{selectedPatient.nombres} {selectedPatient.apellidos}</strong> (CI: {selectedPatient.numero_documento})</span>
+                  </div>
+                  <span className="text-[11px] font-semibold text-slate-500">{selectedPatient.edad} años • {selectedPatient.grupo_etario}</span>
+                </div>
+              )}
               {/* Selector de Especialidad */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">

@@ -272,9 +272,9 @@ export default function App() {
             <AuditLogViewer />
           ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
             <PatientsManager />
-          ) : dashboardTab === 'doctors' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
+          ) : dashboardTab === 'doctors' && role === 'ADMIN' ? (
             <DoctorsManager />
-          ) : dashboardTab === 'schedules' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
+          ) : dashboardTab === 'schedules' && role === 'ADMIN' ? (
             <SchedulesManager />
           ) : dashboardTab === 'appointments' ? (
             <AppointmentsManager />

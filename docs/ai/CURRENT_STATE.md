@@ -11,8 +11,8 @@
 - ✅ Guía y directrices de contexto para agentes formalizadas en `AGENTS.md` y `docs/ai/MASTER_AGENT_PROMPT.md` con la regla de oro de guiarse por `DDL_Database_Clinica_LaCruz.sql` y `diagrama_de_clases.puml`.
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
-  - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva/Cancelación y Consultas de Citas). Estado: **10 completados de 13 (76.9%)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 10 CUs + 1 Opcional):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe y reportes con voz) + `CU24-OPC` condicional en reserva. Estado: **0 completados de 10 (+1)**. Total Global: **10 de 23 (+1) completados (43.5%)**.
+  - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 10 CUs + 1 Opcional):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe y reportes con voz) + `CU24-OPC` condicional en reserva. Estado: **0 completados de 10 (+1)**. Total Global: **13 de 23 (+1) completados (56.5%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -55,7 +55,7 @@
 - **Frontend (`frontend/src/apps/clinical-resources/`):**
   - ✅ Servicios: `doctorService.js` y `specialtyService.js`.
   - ✅ Componentes: `DoctorsManager.jsx`, `DoctorFormModal.jsx`, `DoctorDetailModal.jsx`.
-  - ✅ Habilitado en `Sidebar.jsx` para roles `ADMIN` y `RECEPCIONISTA`.
+  - ✅ Habilitado en `Sidebar.jsx` y `App.jsx` exclusivamente para rol `ADMIN` (según especificación PUDS de CU06).
 
 ### 8. Implementación de CU08 (Gestionar Horarios de Atención Médica — RF05)
 - **Backend (`backend/app/Packages/ClinicalResources/`):**
@@ -64,11 +64,11 @@
   - ✅ Relaciones añadidas a [`Medico.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/Medico.php): `disponibilidades()` y `bloqueos()`.
   - ✅ FormRequests con validación estricta: `ScheduleBatchRequest.php` (valida coherencia `hora_fin > hora_inicio` para prueba P8.1 y solapamientos en el mismo día) y `BlockCreateRequest.php` (feriados generales y licencias con control de horas).
   - ✅ Controlador: `SchedulesController.php` (`getDoctorSchedule`, `saveDoctorSchedule` bajo `DB::transaction()`, `getBlocks`, `storeBlock`, `deleteBlock`), auditando cada operación en la `bitacora` (CU03).
-  - ✅ Rutas registradas en `backend/routes/api.php` bajo `/api/schedules/`.
+  - ✅ Rutas registradas en `backend/routes/api.php` bajo `/api/schedules/` con protección `role:ADMIN`.
 - **Frontend (`frontend/src/apps/clinical-resources/`):**
   - ✅ Servicio: `scheduleService.js`.
   - ✅ Componentes: [`SchedulesManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/clinical-resources/components/SchedulesManager.jsx) y [`BlockModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/clinical-resources/components/BlockModal.jsx).
-  - ✅ Integrado en `Sidebar.jsx` (icono `Clock`, roles `ADMIN`, `MEDICO`, `RECEPCIONISTA`) y en el panel general de `App.jsx`.
+  - ✅ Integrado en `Sidebar.jsx` (icono `Clock`) y en el panel general de `App.jsx` exclusivamente para rol `ADMIN`.
 
 ### 9. Implementación de CU09 (Consultar Disponibilidad de Horarios libres — RF05, RF06)
 - **Backend (`backend/app/Packages/Appointments/`):**
@@ -84,32 +84,97 @@
   - ✅ Seeder: `AppointmentTypeSeeder.php` poblando tipos oficiales de cita (`PRIMERA CONSULTA`, `CONTROL`, `RECONSULTA`).
 - **Frontend (`frontend/src/apps/appointments/`):**
   - ✅ Servicio: `appointmentService.js` con método `fetchAvailability()`.
-  - ✅ Componente: [`AppointmentAvailabilityViewer.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentAvailabilityViewer.jsx) con filtro en cascada de especialidad y médico, selector de fecha con validación `min={hoy}`, atajos rápidos, KPIs de turnos (totales, libres, ocupados, bloqueados), visualización en cuadrícula con badges de estado y selector de turno listo para el flujo de reserva (CU10).
-  - ✅ Integrado en `Sidebar.jsx` (icono `Calendar`, roles `ADMIN`, `RECEPCIONISTA`, `MEDICO`, `PACIENTE`) y renderizado en `App.jsx`.
+  - ✅ Componente: [`AppointmentAvailabilityViewer.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentAvailabilityViewer.jsx).
+  - ✅ Integrado en `Sidebar.jsx` y renderizado en `App.jsx`.
 
 ### 10. Implementación de CU10 (Programar Cita Médica — RF06, RF07)
 - **Backend (`backend/app/Packages/Appointments/`):**
-  - ✅ **Motor Transaccional Anti-Colisión:** `AppointmentBookingService.php` ejecuta toda la reserva dentro de `DB::transaction()` con bloqueo pesimista `lockForUpdate()` en el médico y verificación de solapamientos sobre citas activas (`lockForUpdate()`), garantizando matemáticamente la **Prueba #4** del examen (si dos recepcionistas o pacientes intentan reservar el mismo turno simultáneamente, uno gana y el otro recibe HTTP 409 con mensaje explicativo).
-  - ✅ **Correlativo Atómico Único:** Generación secuencial inmutable con prefijo `CM-XXXX` (ej. `CM-0001`, `CM-0002`).
-  - ✅ **Validación de Compatibilidad Etaria (RF04 / Prueba P10.4):** Verifica que la edad del paciente encaje en los rangos de la especialidad (`Pediatría` < 15 años, `Medicina General` 15 a 59 años, `Geriatría` ≥ 60 años).
+  - ✅ **Motor Transaccional Anti-Colisión:** `AppointmentBookingService.php` ejecuta toda la reserva dentro de `DB::transaction()` con bloqueo pesimista `lockForUpdate()` en el médico y verificación de solapamientos sobre citas activas (`lockForUpdate()`), garantizando la **Prueba #4** del examen.
+  - ✅ **Correlativo Atómico Único:** Generación secuencial inmutable con prefijo `CM-XXXX` (ej. `CM-0001`).
+  - ✅ **Validación de Compatibilidad Etaria (RF04 / Prueba P10.4):** Verifica que la edad del paciente encaje en los rangos de la especialidad.
   - ✅ **Validación de Franjas y Horarios (RF05 / Prueba #5):** Confirma que el intervalo pertenezca al horario regular del médico y no caiga en feriado general ni licencia médica (HTTP 422).
-  - ✅ **FormRequest Tipado:** `AppointmentBookRequest.php` validando existencia y coherencia de `id_paciente`, `id_medico`, `id_especialidad`, `id_tipo_cita`, `fecha`, `hora_inicio`, `hora_fin`, `modalidad`.
+  - ✅ **FormRequest Tipado:** `AppointmentBookRequest.php`.
   - ✅ **Trazabilidad y Auditoría:** Creación del registro inicial en `cita_estado_historial` y evento inmutable en `bitacora` (CU03).
-  - ✅ **Controlador y Endpoints:** `AppointmentsController.php` con métodos `store()`, `index()` con filtros avanzados (`q`, `fecha`, `estado`, `medico_id`, `paciente_id`), control RBAC (pacientes solo ven sus citas, médicos ven su agenda), `show()`, y catálogo `booking-form-data`.
+  - ✅ **Controlador y Endpoints:** `AppointmentsController.php` con métodos `store()`, `index()`, `show()`, y catálogo `booking-form-data`.
 - **Frontend (`frontend/src/apps/appointments/`):**
-  - ✅ **Servicio de Citas:** `appointmentService.js` con métodos `fetchBookingFormData()`, `fetchAppointments()`, `bookAppointment()`, `fetchAppointmentById()`.
-  - ✅ **Modal Asistido Multipasos:** [`AppointmentBookingModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx) con wizard en 5 pasos:
-    1. Selección de Paciente (con buscador en vivo por CI/nombre).
-    2. Especialidad y Médico (con filtrado cruzado dinámico).
-    3. Selección de Fecha y Slot (consulta en vivo al motor de CU09).
-    4. Resumen y Modalidad (Presencial / Teleconsulta, motivo de consulta).
-    5. Paso de Éxito con Emisión de Ticket Oficial imprimible con código `CM-XXXX`.
-  - ✅ **Panel Gestor Unificado:** [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx) que integra dos pestañas: *Citas Programadas* (tabla paginada con filtros, badges de estado y visualización de tickets) y *Consultar Disponibilidad* (integrando a [`AppointmentAvailabilityViewer.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentAvailabilityViewer.jsx)).
-  - ✅ **Integración en Sistema:** Conectado a la pestaña `appointments` en `Sidebar.jsx` y `App.jsx`.
+  - ✅ **Servicio de Citas:** `appointmentService.js`.
+  - ✅ **Modal Asistido Multipasos:** [`AppointmentBookingModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx) con wizard en 5 pasos.
+  - ✅ **Panel Gestor Unificado:** [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx).
 
-### 11. Siguiente Bloque Inmediato de Trabajo (Cierre del Ciclo 1)
-- Lote final de 3 Casos de Uso del Ciclo 1:
-  - **`CU12`**: Cancelar Cita Médica (RF09 / Prueba #6).
-  - **`CU14`**: Consultar Agenda de Citas Médicas por Médico y Fecha (RF11 / Prueba #8).
-  - **`CU15`**: Consultar Historial de Citas Médicas del Paciente (RF12 / Prueba #7).
-- Con este lote final, el **Ciclo 1 alcanzará el 100% de ejecución (13 de 13 Casos de Uso)** y quedarán cubiertas al 100% las 10 pruebas mínimas del examen.
+### 11. Implementación de CU12 (Cancelar Cita Médica — RF09 / Prueba #6)
+- **Backend (`backend/app/Packages/Appointments/`):**
+  - ✅ `AppointmentCancelRequest.php`: Validación estricta de `motivo_cancelacion` (requerido, min: 5, max: 500).
+  - ✅ `AppointmentsController::cancel()`:
+    - Validación de existencia y de estados terminales (no se permite cancelar citas `ATENDIDA` o ya `CANCELADA`).
+    - Control de acceso RBAC: paciente solo cancela sus propias citas; médico cancela sus citas agendadas; recepcionista y admin cancelan cualquier cita.
+    - Transacción atómica llamando a `$cita->cancelar($motivo, $idUsuario)`: guarda motivo, fecha de cancelación y usuario responsable.
+    - Liberación instantánea del cupo horario: al pasar a `CANCELADA`, `AppointmentAvailabilityService` libera inmediatamente el slot horario para nuevas reservas (Prueba #6).
+    - Registro en `cita_estado_historial` y en `bitacora` inmutable (CU03).
+- **Frontend (`frontend/src/apps/appointments/`):**
+  - ✅ Servicio: `appointmentService.cancelAppointment(id, motivo)`.
+  - ✅ Modal [`AppointmentCancelModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentCancelModal.jsx) con contador de caracteres, resumen de la cita y advertencia de liberación de turno.
+  - ✅ Botón "Cancelar" condicional en tablas y listados de `AppointmentsManager.jsx`, `DoctorAgendaView.jsx` y `PatientAppointmentHistoryModal.jsx`.
+
+### 12. Implementación de CU14 (Consultar Agenda Médica Diaria — RF11 / Prueba #8)
+- **Backend (`backend/app/Packages/Appointments/`):**
+  - ✅ `AppointmentsController::doctorAgenda()`:
+    - Filtro por médico y fecha (`fecha` en formato `YYYY-MM-DD`).
+    - Scoping RBAC: Médicos consultan exclusivamente su propia agenda; recepcionistas y admin seleccionan cualquier médico. Bloqueo estricto a `PACIENTE` con HTTP 403.
+    - 4 KPIs dinámicos calculados en tiempo real (citas programadas, por atender, atendidas, canceladas).
+    - Resolución de franjas horarias configuradas (`Disponibilidad`) para el día de la semana correspondiente.
+- **Frontend (`frontend/src/apps/appointments/`):**
+  - ✅ Servicio: `appointmentService.fetchDoctorAgenda()`.
+  - ✅ Vista [`DoctorAgendaView.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/DoctorAgendaView.jsx) integrada como pestaña principal en `AppointmentsManager.jsx`:
+    - Selector de médico (para Admin/Recepción) o vista personal automática (para Médicos).
+    - Navegación de fecha con botones de día anterior/siguiente y botón de atajo "Hoy".
+    - Tarjeta resumen con franja semanal de atención médica.
+    - 4 KPIs de la jornada.
+    - Cronograma cronológico de citas del día con visualización de paciente, motivo, estado y acciones rápidas (Ticket oficial, Cancelar).
+
+### 13. Implementación de CU15 (Consultar Historial Cronológico de Paciente — RF12 / Prueba #7)
+- **Backend (`backend/app/Packages/Appointments/`):**
+  - ✅ `AppointmentsController::patientHistory()`:
+    - Scoping RBAC: Pacientes solo pueden ver su propio historial en modo solo lectura; personal médico y administrativo pueden consultar a cualquier paciente.
+    - Métricas históricas completas (total de citas, atendidas, canceladas, pendientes, tasa de asistencia % y fechas primera/última).
+    - Lista cronológica descendente completa sin eliminación física (RN10 / RN11).
+- **Frontend (`frontend/src/apps/appointments/`):**
+  - ✅ Servicio: `appointmentService.fetchPatientHistory()`.
+  - ✅ Modal [`PatientAppointmentHistoryModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/PatientAppointmentHistoryModal.jsx):
+    - Ficha de datos y contacto del paciente.
+    - 4 métricas globales de atención.
+    - Filtro por estado y visualización cronológica con scroll independiente.
+    - Botón "Ver Historial" integrado en la columna de paciente de `AppointmentsManager.jsx`.
+
+---
+
+### 14. Blindaje Integral de Seguridad, Middleware RBAC Global y Anti-IDOR (22/10/2026)
+- **Middleware Global `EnsureUserRole`:**
+  - Registrado en `bootstrap/app.php` bajo el alias `'role'`.
+  - Valida en capa HTTP `Auth::check()`, estado de usuario `ACTIVO` y pertenencia a roles autorizados (`role:ADMIN`, etc.), devolviendo `HTTP 401 Unauthorized` o `HTTP 403 Forbidden`.
+  - Protege de forma perimetral todas las rutas de `api.php`.
+- **Protección Anti-IDOR en CU10 (Programar Cita):**
+  - En `AppointmentsController::store()`, cuando el usuario es `PACIENTE`, se recupera forzosamente su propio `id_paciente` en el servidor, sobreescribiendo el cuerpo de la petición y anulando cualquier intento de manipulación o reserva para terceros.
+- **Protección de Consulta y Cancelación de Citas:**
+  - `AppointmentsController::show()` y `cancel()` exigen autenticación y restringen al paciente exclusivamente a sus propios registros.
+  - `PatientsController::index()` bloquea al paciente con `HTTP 403` para salvaguardar la privacidad de la base de datos de pacientes.
+- **Alineación de Permisos en Frontend y Wizard de Reserva:**
+  - Restricción de `DoctorsManager` (CU06) y `SchedulesManager` (CU08) exclusivamente a `ADMIN`.
+  - `AppointmentBookingModal.jsx` precarga y bloquea la identidad del paciente cuando inicia el flujo un paciente autenticado, mostrando el distintivo *"Tu Ficha Personal (Verificada)"* y ocultando selectores innecesarios.
+
+---
+
+### 15. Estado de Avance y Próximos Pasos (Arranque del Ciclo 2)
+- 🎯 **Hito Histórico Alcanzado:** **Ciclo 1 al 100% de ejecución (13 de 13 Casos de Uso completados y blindados)**.
+- 🧪 **10 Pruebas Mínimas del Examen Oficial Superadas (10 de 10 — 100%)**:
+  1. Registrar paciente nuevo (CU04 / RF02) ✅
+  2. CI duplicado rechazado con HTTP 422 (CU04 / RF02) ✅
+  3. Programar cita con correlativo `CM-XXXX` (CU10 / RF06) ✅
+  4. Bloqueo transaccional anti-colisión `lockForUpdate` HTTP 409 (CU10 / RF07) ✅
+  5. Cita fuera de horario rechazada HTTP 422 (CU10 / RF05) ✅
+  6. Cancelar cita con motivo obligatorio y liberación de cupo (CU12 / RF09) ✅
+  7. Consultar historial de citas de paciente sin pérdida (CU15 / RF12) ✅
+  8. Agenda médica diaria por médico y fecha (CU14 / RF11) ✅
+  9. Bloqueo de acceso sin autenticación HTTP 401 (CU01 / RF01) ✅
+  10. Validación de datos inválidos HTTP 422 tipados (Transversal) ✅
+- 🔜 **Próximo Paso Inmediato:** Planificar y dar inicio al **Ciclo 2: Clínico, Pagos y Analítica** (`CU11` Reprogramar Cita Médica, `CU13` Registro de Asistencia y cambio de estado, `CU16-CU19` Expediente Clínico Digital, `CU20-CU23` Notificaciones, Pagos y Reportes).
+

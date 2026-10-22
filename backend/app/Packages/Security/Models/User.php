@@ -49,6 +49,18 @@ class User extends Authenticatable
         ];
     }
 
+    protected $appends = [
+        'rol',
+    ];
+
+    /**
+     * Accessor de compatibilidad para $user->rol mapeado a tipo_usuario
+     */
+    public function getRolAttribute(): ?string
+    {
+        return $this->tipo_usuario;
+    }
+
     /**
      * Requerimiento nativo de Laravel Auth para obtener el hash de la contraseña.
      */

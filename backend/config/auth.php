@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Packages\Security\Models\User;
 
 return [
 
