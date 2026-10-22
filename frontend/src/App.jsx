@@ -8,6 +8,8 @@ import { AuditLogViewer } from './apps/security/components/AuditLogViewer';
 import { SecurityPolicyModal } from './apps/security/components/SecurityPolicyModal';
 import { PatientsManager } from './apps/clinical-resources/components/PatientsManager';
 import { DoctorsManager } from './apps/clinical-resources/components/DoctorsManager';
+import { SchedulesManager } from './apps/clinical-resources/components/SchedulesManager';
+import { AppointmentsManager } from './apps/appointments/components/AppointmentsManager';
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
@@ -166,6 +168,10 @@ export default function App() {
         return 'Gestión de Pacientes (CU04)';
       case 'doctors':
         return 'Plantel Médico y Especialidades (CU06 / CU07)';
+      case 'schedules':
+        return 'Gestión de Horarios y Disponibilidad Médica (CU08)';
+      case 'appointments':
+        return 'Consulta de Disponibilidad de Horarios y Citas (CU09)';
       case 'patient-profile':
         return 'Mi Perfil de Paciente (CU05)';
       case 'overview':
@@ -268,6 +274,10 @@ export default function App() {
             <PatientsManager />
           ) : dashboardTab === 'doctors' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
             <DoctorsManager />
+          ) : dashboardTab === 'schedules' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
+            <SchedulesManager />
+          ) : dashboardTab === 'appointments' ? (
+            <AppointmentsManager />
           ) : dashboardTab === 'patient-profile' ? (
             <PatientProfileView />
           ) : (
@@ -421,6 +431,42 @@ export default function App() {
                     </div>
                     <p className="text-xs text-slate-600 mt-1">
                       Plantel institucional, especialidades asignadas, matrículas y bajas lógicas (RF03).
+                    </p>
+                  </div>
+
+                  <div
+                    onClick={() => ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && setDashboardTab('schedules')}
+                    className={`p-4 rounded-xl border transition ${
+                      ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+                        ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
+                        : 'bg-slate-50 border-slate-200/80'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-[#00687a] uppercase">CU08: Horarios y Bloqueos</span>
+                      {['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && (
+                        <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
+                          Gestionar →
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Franjas semanales por médico, duración de cita y bloqueo de feriados (RF05).
+                    </p>
+                  </div>
+
+                  <div
+                    onClick={() => setDashboardTab('appointments')}
+                    className="p-4 rounded-xl border bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs cursor-pointer transition"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-emerald-800 uppercase">CU09 / CU10: Citas y Agenda</span>
+                      <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded-md">
+                        Gestionar →
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Disponibilidad de turnos y reserva asistida con motor anti-colisión transaccional (RF06, RF07).
                     </p>
                   </div>
                 </div>

@@ -188,5 +188,8 @@ class DatabaseSeeder extends Seeder
 
         // 8. Poblar plantel de médicos institucionales con especialidades (CU06 / RF03)
         $this->call(DoctorSeeder::class);
+
+        // 9. Poblar catálogo oficial de tipos de cita (CU09, CU10 / RF06)
+        $this->call(AppointmentTypeSeeder::class);
     }
 }

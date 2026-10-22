@@ -10,9 +10,9 @@
 
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
-| **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 7 | 6 | 🟡 En Desarrollo (Meta: Domingo 25/10/2026 — 53.8%) |
+| **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 10 | 3 | 🟢 En Desarrollo (Avance: 76.9% — Meta Domingo 25/10/2026) |
 | **Ciclo 2: Clínico, Pagos y Analítica** | 10 (+1) | 0 | 10 (+1) | ⚪ Planificado (Meta: Domingo 08/11/2026) |
-| **TOTAL GENERAL** | **23 (+1)** | **7** | **16 (+1)** | **Progreso Global: 30.4%** |
+| **TOTAL GENERAL** | **23 (+1)** | **10** | **13 (+1)** | **Progreso Global: 43.5%** |
 
 ---
 
@@ -24,9 +24,9 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 |:---:|:---|:---:|:---:|:---:|:---|
 | **1** | Registrar un paciente nuevo | **CU04** | RF02 | ✅ Superada | Paciente guardado con correlativo `HC-XXXX`, grupo etario y auditoría. |
 | **2** | Registrar un paciente con CI duplicado | **CU04** | RF02 | ✅ Superada | Servidor rechaza con HTTP 422 y mensaje de unicidad de documento. |
-| **3** | Programar una cita en horario disponible | **CU10** | RF06 / RF07 | ⏳ Pendiente | Cita queda guardada con correlativo único `CM-XXXX` y estado *Programada*. |
-| **4** | Programar otra cita superpuesta para el mismo médico | **CU10** | RF07 / RN07 | ⏳ Pendiente | Servidor bloquea colisión atómicamente dentro de `DB::transaction()`. |
-| **5** | Intentar reservar fuera del horario médico | **CU10** | RF05 / RN05 | ⏳ Pendiente | Servidor rechaza si no coincide con las franjas horarias del médico. |
+| **3** | Programar una cita en horario disponible | **CU10** | RF06 / RF07 | ✅ Superada | Cita queda guardada con correlativo único `CM-XXXX`, estado *Pendiente* y ticket oficial. |
+| **4** | Programar otra cita superpuesta para el mismo médico | **CU10** | RF07 / RN07 | ✅ Superada | Servidor bloquea colisión atómicamente dentro de `DB::transaction()` con `lockForUpdate()`. |
+| **5** | Intentar reservar fuera del horario médico | **CU10** | RF05 / RN05 | ✅ Superada | Servidor valida que el horario encaje en las franjas activas del médico (HTTP 422). |
 | **6** | Cancelar una cita | **CU12** | RF09 / RN09 | ⏳ Pendiente | Pasa a estado *Cancelada* con motivo obligatorio, libera cupo y mantiene histórico. |
 | **7** | Consultar el historial de un paciente | **CU15** | RF12 / RN10 | ⏳ Pendiente | Cronología completa de citas previas, atendidas y canceladas sin pérdida. |
 | **8** | Buscar las citas de un médico por fecha | **CU14** | RF11 | ⏳ Pendiente | Vista de agenda médica filtrando por fecha, paciente, especialidad y estado. |
@@ -156,45 +156,50 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
   - [x] **P7.2:** Validación de rango de edad coherente.
   - [x] **P7.3:** Compatibilidad etaria con pacientes (Pediatría <15, General 15-59, Geriatría ≥60).
 
-#### ⏳ CU08: Gestionar Horarios de Atención Médica (RF05)
-- [ ] **Backend:**
-  - [ ] Migración `disponibilidades` y `bloqueos_horario`.
-  - [ ] Validación de coherencia horaria (`hora_fin > hora_inicio`) y duración en minutos.
-  - [ ] Bloqueo de feriados institucionales y licencias médicas.
-- [ ] **Frontend:**
-  - [ ] Configuración visual semanal por médico (días, franjas y duración de cita).
-- [ ] **Fase de Pruebas:**
-  - [ ] **P8.1:** Intentar guardar horario con hora fin menor o igual a hora inicio (rechazo).
-  - [ ] **P8.2:** Asignación de días laborables (Lunes a Viernes / Sábado).
-  - [ ] **P8.3:** Registro de bloqueo de feriado general de la clínica.
+#### ✅ CU08: Gestionar Horarios de Atención Médica (RF05)
+- [x] **Backend:**
+  - [x] Migración `disponibilidades` y `bloqueos_horario`.
+  - [x] Validación de coherencia horaria (`hora_fin > hora_inicio`) y duración en minutos.
+  - [x] Bloqueo de feriados institucionales y licencias médicas.
+- [x] **Frontend:**
+  - [x] Configuración visual semanal por médico (días, franjas y duración de cita).
+- [x] **Fase de Pruebas:**
+  - [x] **P8.1:** Intentar guardar horario con hora fin menor o igual a hora inicio (rechazo con error visual y HTTP 422).
+  - [x] **P8.2:** Asignación de días laborables (Lunes a Viernes / Sábado).
+  - [x] **P8.3:** Registro de bloqueo de feriado general de la clínica.
 
 ---
 
 ### 📦 Paquete 3: Gestión de Citas Médicas (P3)
 
-#### ⏳ CU09: Consultar Disponibilidad de Horarios (RF05, RF06)
-- [ ] **Backend:**
-  - [ ] Algoritmo generador de slots libres según franja del médico menos citas ya reservadas y bloqueos.
-  - [ ] Filtro automático de fechas pasadas (RN06) y médicos inactivos (RN04).
-- [ ] **Frontend:**
-  - [ ] Selector interactivo de médico, fecha y visualización en cuadrícula de horas disponibles.
-- [ ] **Fase de Pruebas:**
-  - [ ] **P9.1:** Cálculo de intervalos exactos según duración configurada (ej. 30 min).
-  - [ ] **P9.2:** Descarte de horarios de citas ya confirmadas/programadas.
-  - [ ] **P9.3:** Descarte de feriados o bloqueos de agenda.
+#### ✅ CU09: Consultar Disponibilidad de Horarios (RF05, RF06)
+- [x] **Backend:**
+  - [x] Algoritmo generador de slots libres según franja del médico menos citas ya reservadas y bloqueos.
+  - [x] Filtro automático de fechas pasadas (RN06) y médicos inactivos (RN04).
+- [x] **Frontend:**
+  - [x] Selector interactivo de médico, fecha y visualización en cuadrícula de horas disponibles.
+- [x] **Fase de Pruebas:**
+  - [x] **P9.1:** Cálculo de intervalos exactos según duración configurada (ej. 30 min).
+  - [x] **P9.2:** Descarte de horarios de citas ya confirmadas/programadas.
+  - [x] **P9.3:** Descarte de feriados o bloqueos de agenda.
 
-#### ⏳ CU10: Programar Cita Médica (RF06, RF07)
-- [ ] **Backend:**
-  - [ ] Transacción `DB::transaction()` con `lockForUpdate()` para prevención anti-colisión.
-  - [ ] Correlativo único `CM-XXXX`.
-  - [ ] Validación de compatibilidad etaria paciente-especialidad.
-- [ ] **Frontend:**
-  - [ ] Flujo guiado de reserva de cita médica (Paciente → Especialidad → Médico → Horario → Confirmación).
-- [ ] **Fase de Pruebas:**
-  - [ ] **P10.1 (Prueba #3):** Programar cita en horario libre (éxito).
-  - [ ] **P10.2 (Prueba #4):** Simular 2 solicitudes concurrentes para el mismo médico y hora (1 gana, la 2da es rechazada).
-  - [ ] **P10.3 (Prueba #5):** Intentar forzar cita fuera del horario de atención del médico (rechazo).
-  - [ ] **P10.4:** Advertencia o restricción de rango etario.
+#### ✅ CU10: Programar Cita Médica (RF06, RF07)
+- [x] **Backend:**
+  - [x] Transacción `DB::transaction()` con `lockForUpdate()` pesimista para prevención estricta de colisiones concurrentes (Prueba #4).
+  - [x] Generación atómica de correlativo único `CM-XXXX` (ej. `CM-0001`).
+  - [x] Validación de compatibilidad etaria paciente-especialidad (`RF04` / Prueba P10.4).
+  - [x] Validación de franja horaria activa del médico (`RF05` / Prueba #5).
+  - [x] Registro inicial en `cita_estado_historial` y auditoría inmutable en `bitacora` (CU03).
+- [x] **Frontend:**
+  - [x] Servicio `appointmentService.js` (`fetchBookingFormData`, `fetchAppointments`, `bookAppointment`).
+  - [x] Flujo guiado en 5 pasos (`AppointmentBookingModal.jsx`): Paciente → Especialidad/Médico → Horario/Slot → Confirmación/Modalidad → Ticket Oficial con opción de impresión.
+  - [x] Panel gestor unificado (`AppointmentsManager.jsx`) con filtros (búsqueda textual, fecha, estado, médico), paginación y modal de ticket oficial.
+  - [x] Conexión bidireccional con el Visor de Disponibilidad (`AppointmentAvailabilityViewer.jsx` / CU09).
+- [x] **Fase de Pruebas:**
+  - [x] **P10.1 (Prueba #3):** Programar cita en horario libre (éxito con generación de `CM-XXXX` y estado *Pendiente*).
+  - [x] **P10.2 (Prueba #4):** Simular solicitudes concurrentes para el mismo médico y hora (`lockForUpdate()` garantiza que 1 gana y la colisión es rechazada con HTTP 409).
+  - [x] **P10.3 (Prueba #5):** Intentar forzar cita fuera del horario de atención del médico (rechazo con HTTP 422).
+  - [x] **P10.4:** Advertencia y validación de rango etario según la especialidad médica.
 
 #### ⏳ CU12: Cancelar Cita Médica (RF09)
 - [ ] **Backend:**

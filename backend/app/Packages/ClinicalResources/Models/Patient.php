@@ -95,6 +95,14 @@ class Patient extends Model
     }
 
     /**
+     * Calcula la edad cronológica en años (diagrama_de_clases.puml: calcularEdad(): Int)
+     */
+    public function calcularEdad(): int
+    {
+        return $this->edad;
+    }
+
+    /**
      * Clasificación de grupo etario institucional según RF04
      */
     public function getGrupoEtarioAttribute(): string

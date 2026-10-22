@@ -10,6 +10,9 @@ use App\Packages\ClinicalResources\Controllers\PatientsController;
 use App\Packages\ClinicalResources\Controllers\PatientProfileController;
 use App\Packages\ClinicalResources\Controllers\DoctorsController;
 use App\Packages\ClinicalResources\Controllers\SpecialtiesController;
+use App\Packages\ClinicalResources\Controllers\SchedulesController;
+use App\Packages\Appointments\Controllers\AvailabilityController;
+use App\Packages\Appointments\Controllers\AppointmentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,4 +101,24 @@ Route::prefix('specialties')->middleware('web')->group(function () {
     Route::get('/', [SpecialtiesController::class, 'index']);
     Route::post('/', [SpecialtiesController::class, 'store']);
 });
+
+// CU08: Gestión de Horarios de Atención y Bloqueos (RF05)
+Route::prefix('schedules')->middleware('web')->group(function () {
+    Route::get('/doctors/{id}', [SchedulesController::class, 'getDoctorSchedule']);
+    Route::post('/doctors/{id}', [SchedulesController::class, 'saveDoctorSchedule']);
+    Route::get('/blocks', [SchedulesController::class, 'getBlocks']);
+    Route::post('/blocks', [SchedulesController::class, 'storeBlock']);
+    Route::delete('/blocks/{id}', [SchedulesController::class, 'deleteBlock']);
+});
+
+// CU09 & CU10: Gestión y Reserva de Citas Médicas (RF05, RF06, RF07)
+Route::prefix('appointments')->middleware('web')->group(function () {
+    Route::get('/availability', [AvailabilityController::class, 'getAvailability']);
+    Route::get('/booking-form-data', [AppointmentsController::class, 'getBookingFormData']);
+    Route::get('/', [AppointmentsController::class, 'index']);
+    Route::post('/', [AppointmentsController::class, 'store']);
+    Route::get('/{id}', [AppointmentsController::class, 'show']);
+});
+
+
 

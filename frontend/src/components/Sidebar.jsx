@@ -14,6 +14,7 @@ import {
   X,
   Shield,
   Layers,
+  Clock,
 } from 'lucide-react';
 import logoColor from '../assets/logo-color.svg';
 
@@ -90,13 +91,20 @@ export function Sidebar({
           requiredRoles: ['ADMIN', 'RECEPCIONISTA'],
         },
         {
+          id: 'schedules',
+          label: 'Horarios y Disponibilidad',
+          subtitle: 'Franjas semanales y feriados',
+          tag: 'CU08 / RF05',
+          icon: Clock,
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO'],
+        },
+        {
           id: 'appointments',
-          label: 'Agenda y Citas',
-          subtitle: 'Reserva anti-colisión',
-          tag: 'CU10 / RF07',
+          label: 'Disponibilidad y Citas',
+          subtitle: 'Turnos libres y agenda',
+          tag: 'CU09, CU10 / RF06, RF07',
           icon: Calendar,
-          disabled: true,
-          badge: 'Ciclo 2',
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO', 'PACIENTE'],
         },
       ],
     },

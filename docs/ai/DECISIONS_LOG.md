@@ -44,6 +44,32 @@
   2. Los casos CU10 (Programar), CU12 (Cancelar), CU14 (Agenda Médica) y CU15 (Historial del Paciente) son de demostración obligatoria en las 10 pruebas mínimas del examen (Pruebas #3, #4, #5, #6, #7 y #8).
   3. En contraste, **CU11** (reprogramar es sustituible operativamente por cancelar + nueva reserva) y **CU13** (transiciones avanzadas a confirmada/atendida se integran de forma natural con la consulta médica CU16) no comprometen ninguna de las 10 pruebas mínimas del examen.
 * **Impacto:**
-  - **Ciclo 1:** 13 Casos de Uso (`CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15`). Con 7 CUs ya completados, el avance del Ciclo 1 se sitúa en **53.8%**.
+  - **Ciclo 1:** 13 Casos de Uso (`CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15`). Con 9 CUs completados, el avance del Ciclo 1 asciende a **69.2%**.
   - **Ciclo 2:** 10 Casos de Uso (`CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23`) + 1 Reserva Opcional (`CU24-OPC`).
   - Total general inalterado: 23 Casos de Uso oficiales (+ 1 condicional).
+
+### Registro 09: 2026-10-22
+* **Decisión:** Implementación del modelo y arquitectura para **CU08 (Gestionar Horarios de Atención Médica — RF05)** con separación estricta entre franjas semanales regulares (`disponibilidades`) y excepciones de calendario (`bloqueos_horario`).
+* **Motivo:**
+  1. Seguir con exactitud el DDL (`DDL_Database_Clinica_LaCruz.sql`) y el Diagrama de Clases PUDS (`diagrama_de_clases.puml`).
+  2. Cumplir con la prueba **P8.1** exigiendo en validación y base de datos que `hora_fin > hora_inicio` con rechazo tipado HTTP 422.
+  3. Permitir que `bloqueos_horario` con `id_medico = NULL` representen feriados institucionales para toda la clínica (Prueba **P8.3**), o con `id_medico` específico para licencias médicas.
+* **Impacto:** Los modelos `Disponibilidad.php` y `BloqueoHorario.php` proveen los métodos `generarSlots()` y `solapaConHorario()`, dejando sentada la base matemática directa para los algoritmos de disponibilidad de CU09 y prevención anti-colisión de CU10.
+
+### Registro 10: 2026-10-22
+* **Decisión:** Creación del paquete arquitectónico **Paquete 3: Gestión de Citas Médicas (`app/Packages/Appointments/`)** y del servicio de dominio `AppointmentAvailabilityService` para **CU09 (Consultar Disponibilidad de Horarios libres — RF05, RF06)**.
+* **Motivo:**
+  1. Mantener la simetría estricta de 6 paquetes definida en `ARCHITECTURE.md` y el DDL oficial (`tipos_cita`, `citas`, `cita_estado_historial`).
+  2. Desacoplar el cálculo de intervalos libres en un servicio de dominio reutilizable tanto para la consulta interactiva (CU09) como para la validación atómica en la reserva de citas (CU10).
+  3. Aplicar las reglas de negocio RN04 (médicos inactivos), RN05 (días no laborables), RN06 (fechas pasadas), P9.2 (descarte de turnos ocupados por citas activas) y P9.3 (descarte de feriados y licencias).
+* **Impacto:** Permite al frontend consultar turnos en tiempo real y sentar las bases completas para la reserva con prevención anti-colisión transaccional en CU10.
+
+### Registro 11: 2026-10-22
+* **Decisión:** Implementación del motor transaccional anti-colisión para **CU10 (Programar Cita Médica — RF06, RF07)** con `DB::transaction()` y bloqueo pesimista `lockForUpdate()`, generación atómica del correlativo `CM-XXXX`, y panel unificado `AppointmentsManager.jsx`.
+* **Motivo:**
+  1. Cumplir estrictamente con la **Prueba #4** del examen ("Programar otra cita superpuesta para el mismo médico rechazada") frente a concurrencia real entre múltiples recepcionistas o pacientes.
+  2. Implementar la secuencia correlativa inmutable `CM-0001`, `CM-0002` mediante consulta atómica protegida sin duplicados.
+  3. Vincular la compatibilidad etaria paciente-especialidad (`RF04` / Prueba P10.4) y el encaje en las franjas de disponibilidad del médico (`RF05` / Prueba #5).
+  4. Mantener la trazabilidad en `cita_estado_historial` y `bitacora` inmutable (CU03).
+  5. Ofrecer en el frontend una experiencia unificada que conecta el visor de turnos libres (CU09) y la gestión asistida con tickets imprimibles (CU10).
+* **Impacto:** Culminación del tercer Caso de Uso del lote, elevando el avance del **Ciclo 1 al 76.9%** (10 de 13 CUs) y **43.5% Global**.

@@ -21,10 +21,39 @@
    - Cuentas demo de pacientes (`paciente.carlos`, `paciente.mariana`, `paciente.valeria`, `paciente.fernando` con password `Admin123@`) vinculadas y verificadas.
    - Corregida la navegación hacia "¿Olvidaste tu contraseña?" (`ForgotPasswordPage`) desde cualquier ruta de acceso.
 
-4. **Herramientas de Planificación y Calidad:**
-   - [`docs/informes/implementation_prompt.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/informes/implementation_prompt.md): Prompt estándar para revisiones previas a cualquier CU.
-   - [`docs/IMPLEMENTATION_PHASES.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/IMPLEMENTATION_PHASES.md): Checklist de Casos de Uso y Fases de Prueba: **Ciclo 1 con 13 CUs (7 de 13 completados = 53.8%)** cubriendo el 100% de las 10 pruebas mínimas del examen, y Ciclo 2 con 10 CUs (+1 opcional). Progreso global del sistema: 7 de 23 completados = 30.4%.
-   - [`docs/informes/poblacion_database_clinica.sql`](file:///c:/Users/PERSONAL/clinica-SI1/docs/informes/poblacion_database_clinica.sql): Población SQL con Usuarios, Pacientes, Especialidades y Médicos.
+4. **CU08 (Gestionar Horarios de Atención Médica — RF05) 100% Operativo:**
+   - Backend: Migración `2026_10_20_000005_create_paquete2_horarios_and_bloqueos_tables.php` (`disponibilidades` y `bloqueos_horario`).
+   - Modelos Eloquent en español: [`Disponibilidad.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/Disponibilidad.php) y [`BloqueoHorario.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/BloqueoHorario.php), con relaciones en [`Medico.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Models/Medico.php).
+   - FormRequests con validación P8.1 (`hora_fin > hora_inicio`): `ScheduleBatchRequest.php` y `BlockCreateRequest.php`.
+   - Controlador: `SchedulesController.php` con auditoría inmutable en `bitacora` (CU03).
+   - Frontend: [`SchedulesManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/clinical-resources/components/SchedulesManager.jsx), [`BlockModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/clinical-resources/components/BlockModal.jsx) y `scheduleService.js`.
+   - Navegación: Habilitado en `Sidebar.jsx` (icono `Clock`) y panel de `App.jsx`.
 
-### 2. Próxima Tarea Inmediata
-- **CU08: Gestionar Horarios de Atención Médica (RF05)** (Franjas horarias semanales por médico, duración de cita y bloqueos de feriados institucionales).
+5. **CU09 (Consultar Disponibilidad de Horarios libres — RF05, RF06) 100% Operativo:**
+   - Backend: Migración `2026_10_20_000006_create_paquete3_citas_tables.php` (`tipos_cita`, `citas`, `cita_estado_historial`).
+   - Modelos Eloquent: [`Cita.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Models/Cita.php), [`TipoCita.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Models/TipoCita.php) y [`CitaEstadoHistorial.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Models/CitaEstadoHistorial.php).
+   - Servicio de Dominio: [`AppointmentAvailabilityService.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Services/AppointmentAvailabilityService.php) con descarte de citas activas (Prueba P9.2), feriados y licencias (Prueba P9.3), validación de médico activo (RN04) y fechas pasadas (RN06).
+   - Controlador: [`AvailabilityController.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Controllers/AvailabilityController.php) y ruta `/api/appointments/availability`.
+   - Frontend: [`AppointmentAvailabilityViewer.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentAvailabilityViewer.jsx) y `appointmentService.js`.
+
+6. **CU10 (Programar Cita Médica con motor anti-colisión transaccional — RF06, RF07) 100% Operativo:**
+   - Backend:
+     - FormRequest: `AppointmentBookRequest.php` validando rangos, IDs y coherencia.
+     - Servicio Transaccional: [`AppointmentBookingService.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Services/AppointmentBookingService.php) con `DB::transaction()` y `lockForUpdate()` pesimista para resolver colisiones concurrentes (Prueba #4), generación de correlativo secuencial único `CM-XXXX`, validación etaria (RF04 / Prueba P10.4) y verificación de franja activa del médico (RF05 / Prueba #5).
+     - Controlador: [`AppointmentsController.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Controllers/AppointmentsController.php) con endpoints `store()`, `index()` con scoping RBAC (pacientes ven solo sus citas, médicos ven su agenda), `show()` y `getBookingFormData()`.
+     - Auditoría: Trazabilidad en `cita_estado_historial` y `bitacora` inmutable (CU03).
+   - Frontend:
+     - Asistente Multipasos: [`AppointmentBookingModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx) con 5 pasos interactivos y emisión de ticket oficial imprimible.
+     - Panel Gestor: [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx) integrando citas programadas con visor de disponibilidad y modal de ticket.
+     - Integración en `Sidebar.jsx` y `App.jsx` en pestaña `appointments`.
+
+7. **Métricas de Avance Consolidado tras el Lote de 3 CUs (`CU08`, `CU09`, `CU10`):**
+   - **Ciclo 1:** 10 de 13 Casos de Uso completados (**76.9%**).
+   - **Progreso Global:** 10 de 23 (+1) Casos de Uso completados (**43.5%**).
+   - Superadas las pruebas mínimas del examen: **#1, #2, #3, #4, #5, #9, #10** (7 de 10 pruebas oficiales superadas al 100%).
+
+### 2. Próxima Tarea Inmediata (Segundo Lote de 3 CUs para Cierre del Ciclo 1)
+- **CU12:** Cancelar Cita Médica con motivo obligatorio y liberación de cupo (RF09 / Prueba #6).
+- **CU14:** Consultar Agenda de Citas Médicas por Médico y Fecha (RF11 / Prueba #8).
+- **CU15:** Consultar Historial de Citas Médicas del Paciente (RF12 / Prueba #7).
+- Con este lote final, el **Ciclo 1 alcanzará el 100% (13 de 13 CUs)** y todas las 10 pruebas mínimas del examen quedarán listas para la defensa.
