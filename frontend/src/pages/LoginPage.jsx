@@ -265,7 +265,11 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
                 </label>
                 <button
                   type="button"
-                  onClick={onNavigateForgotPassword}
+                  onClick={() => {
+                    if (onNavigateForgotPassword) {
+                      onNavigateForgotPassword();
+                    }
+                  }}
                   className="text-xs font-semibold text-[#00687a] hover:text-[#004d5a] hover:underline transition cursor-pointer"
                 >
                   ¿Olvidaste tu contraseña?

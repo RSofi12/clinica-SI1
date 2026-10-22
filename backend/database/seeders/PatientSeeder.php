@@ -12,6 +12,11 @@ class PatientSeeder extends Seeder
 {
     public function run(): void
     {
+        $idUserCarlos   = DB::table('usuarios')->where('username', 'paciente.carlos')->value('id_usuario');
+        $idUserMariana  = DB::table('usuarios')->where('username', 'paciente.mariana')->value('id_usuario');
+        $idUserValeria  = DB::table('usuarios')->where('username', 'paciente.valeria')->value('id_usuario');
+        $idUserFernando = DB::table('usuarios')->where('username', 'paciente.fernando')->value('id_usuario');
+
         $pacientes = [
             [
                 'id_paciente' => 1,
@@ -103,7 +108,7 @@ class PatientSeeder extends Seeder
             ],
             [
                 'id_paciente' => 5,
-                'id_usuario' => null,
+                'id_usuario' => $idUserCarlos,
                 'numero_historia' => 'HC-0005',
                 'numero_documento' => '78923410',
                 'nombres' => 'Carlos Andrés',
@@ -125,7 +130,7 @@ class PatientSeeder extends Seeder
             ],
             [
                 'id_paciente' => 6,
-                'id_usuario' => null,
+                'id_usuario' => $idUserMariana,
                 'numero_historia' => 'HC-0006',
                 'numero_documento' => '65432190',
                 'nombres' => 'Mariana',
@@ -213,7 +218,7 @@ class PatientSeeder extends Seeder
             ],
             [
                 'id_paciente' => 10,
-                'id_usuario' => null,
+                'id_usuario' => $idUserValeria,
                 'numero_historia' => 'HC-0010',
                 'numero_documento' => '60123450',
                 'nombres' => 'Valeria',
@@ -224,8 +229,8 @@ class PatientSeeder extends Seeder
                 'telefono' => '76543210',
                 'correo' => 'valeria.escalante@gmail.com',
                 'direccion' => 'Villa 1ro de Mayo, Calle 3 #45',
-                'notificaciones_activas' => false,
-                'estado_paciente' => 'INACTIVO',
+                'notificaciones_activas' => true,
+                'estado_paciente' => 'ACTIVO',
                 'fecha_registro' => '2026-06-25 12:10:00',
                 'contacto' => [
                     'nombre' => 'Gonzalo Escalante Romero',
@@ -235,7 +240,7 @@ class PatientSeeder extends Seeder
             ],
             [
                 'id_paciente' => 11,
-                'id_usuario' => null,
+                'id_usuario' => $idUserFernando,
                 'numero_historia' => 'HC-0011',
                 'numero_documento' => '94561230',
                 'nombres' => 'Fernando',
@@ -247,6 +252,7 @@ class PatientSeeder extends Seeder
                 'correo' => 'fer.justiniano@estudiante.edu',
                 'direccion' => 'Av. Tres Pasos al Frente #1200',
                 'notificaciones_activas' => true,
+                'estado_paciente' => 'ACTIVO',
                 'estado_paciente' => 'ACTIVO',
                 'fecha_registro' => '2026-07-04 17:00:00',
                 'contacto' => [
@@ -358,6 +364,17 @@ class PatientSeeder extends Seeder
                 $idPaciente = DB::table('pacientes')->insertGetId($item, 'id_paciente');
             } else {
                 $idPaciente = $pacienteExistente->id_paciente;
+                // Si el seeder trae id_usuario, actualizar vinculación de cuenta web
+                $updateData = [];
+                if (!empty($item['id_usuario'])) {
+                    $updateData['id_usuario'] = $item['id_usuario'];
+                }
+                if (!empty($item['estado_paciente'])) {
+                    $updateData['estado_paciente'] = $item['estado_paciente'];
+                }
+                if (!empty($updateData)) {
+                    DB::table('pacientes')->where('id_paciente', $idPaciente)->update($updateData);
+                }
             }
 
             // Insertar contacto de emergencia si no existe

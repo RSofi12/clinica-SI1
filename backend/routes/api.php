@@ -8,6 +8,8 @@ use App\Packages\Security\Controllers\AuditController;
 use App\Packages\Security\Controllers\SecurityPolicyController;
 use App\Packages\ClinicalResources\Controllers\PatientsController;
 use App\Packages\ClinicalResources\Controllers\PatientProfileController;
+use App\Packages\ClinicalResources\Controllers\DoctorsController;
+use App\Packages\ClinicalResources\Controllers\SpecialtiesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,3 +82,20 @@ Route::prefix('patient-profile')->middleware('web')->group(function () {
     Route::put('/me', [PatientProfileController::class, 'updateProfile']);
     Route::put('/change-password', [PatientProfileController::class, 'changePassword']);
 });
+
+// CU06: Gestión de Médicos y Especialistas (RF03 - Actor Médico Unificado)
+Route::prefix('doctors')->middleware('web')->group(function () {
+    Route::get('/', [DoctorsController::class, 'index']);
+    Route::get('/stats', [DoctorsController::class, 'stats']);
+    Route::get('/{id}', [DoctorsController::class, 'show']);
+    Route::post('/', [DoctorsController::class, 'store']);
+    Route::put('/{id}', [DoctorsController::class, 'update']);
+    Route::patch('/{id}/toggle-status', [DoctorsController::class, 'toggleStatus']);
+});
+
+// CU07: Catálogo de Especialidades Médicas (RF04)
+Route::prefix('specialties')->middleware('web')->group(function () {
+    Route::get('/', [SpecialtiesController::class, 'index']);
+    Route::post('/', [SpecialtiesController::class, 'store']);
+});
+

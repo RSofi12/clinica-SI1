@@ -85,10 +85,9 @@ export function Sidebar({
           id: 'doctors',
           label: 'Médicos y Especialidades',
           subtitle: 'Plantel médico institucional',
-          tag: 'CU08 / RF04',
+          tag: 'CU06 / RF03',
           icon: Stethoscope,
-          disabled: true,
-          badge: 'Ciclo 2',
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA'],
         },
         {
           id: 'appointments',

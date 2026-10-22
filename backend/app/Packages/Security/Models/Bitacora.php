@@ -8,12 +8,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * Modelo Bitacora
  * Paquete: P1 - Seguridad y Auditoría (CU03)
- * Mapeo oficial: Tabla 'bitacora' (DDL) y Clase 'Bitacora' (diagrama_de_clases.puml)
- * 
- * NOTA DEL EQUIPO: Esta nomenclatura de clase 'Bitacora' está sujeta a evaluación
- * y posibles cambios futuros si el equipo de desarrollo prefiere estandarizar 
- * únicamente bajo el nombre 'AuditLog'. Por ahora se mantiene 'Bitacora' como
- * implementación nativa y 'AuditLog.php' como puente de retrocompatibilidad total.
+ * Mapeo oficial: Tabla 'bitacora' (DDL_Database_Clinica_LaCruz.sql) y Clase 'Bitacora' (diagrama_de_clases.puml)
  */
 class Bitacora extends Model
 {

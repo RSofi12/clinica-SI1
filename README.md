@@ -138,6 +138,24 @@ cd frontend
    ```
    *El sistema web estará disponible en:* **`http://localhost:5173`**
 
+---
+
+## 🤝 Flujo de Trabajo en Equipo y Registro de Sesiones (`docs/ai/sessions/`)
+
+Para mantener la trazabilidad, evitar conflictos entre integrantes y facilitar el relevo entre sesiones y agentes de IA:
+
+> [!IMPORTANT]
+> **Regla de Colaboración Obligatoria:** Cada vez que un integrante del equipo o agente modifique el proyecto (backend, base de datos o frontend), **debe registrar un archivo Markdown en [`docs/ai/sessions/`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/sessions/)** resumiendo las modificaciones implementadas.
+
+### 📝 Formato del Archivo de Sesión:
+- **Ruta:** `docs/ai/sessions/YYYY-MM-DD-autor-o-tarea.md` (ej. `2026-10-21-implementacion-cu01-al-cu07.md`).
+- **Estructura Requerida:**
+  1. **Encabezado:** Fecha, autor/agente y Casos de Uso (`CUxx`) o requerimientos abordados.
+  2. **Backend:** Nuevas migraciones, modelos creados en español, FormRequests, controladores y endpoints REST.
+  3. **Frontend:** Nuevas vistas, modales, servicios API y ajustes de navegación.
+  4. **Comandos post-pull:** Lista de comandos que sus compañeros deben ejecutar tras hacer `git pull` (ej. `php artisan migrate`, `php artisan db:seed`, etc.).
+  5. **Validación:** Comprobaciones realizadas (`php -l`, `npm run build`, pruebas funcionales superadas).
+  6. **Actualización de Documentos:** Actualizar siempre [`docs/ai/CURRENT_STATE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/CURRENT_STATE.md) y [`docs/ai/HANDOFF_LATEST.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/HANDOFF_LATEST.md).
 
 ---
 

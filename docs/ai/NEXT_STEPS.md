@@ -1,5 +1,7 @@
 # NEXT STEPS — CLÍNICA VIDA SALUD
 
+> **Documento de Seguimiento Operativo:** Consulta [`docs/IMPLEMENTATION_PHASES.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/IMPLEMENTATION_PHASES.md) para el checklist exhaustivo de Casos de Uso, Fases de Prueba y Criterios de Aceptación por Ciclo.
+
 ## Ruta de Trabajo Inmediata — Ciclo 1 (Presentación 1: 25/Octubre/2026)
 
 ### Fase 1: Sincronización del Frontend (React + JavaScript)

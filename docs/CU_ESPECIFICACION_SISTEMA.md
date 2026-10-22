@@ -96,7 +96,7 @@ graph TD
 |:---:|:---|:---|:---|:---:|:---:|
 | **CU01** | Autenticar usuario | Todos los usuarios | Valida credenciales contra hash criptográfico (`password_verify`). Inicia sesión segura, resuelve el menú según rol y bloquea rutas protegidas. Incluye recuperación de contraseña por correo. | RF01 | **1** |
 | **CU02** | Gestionar usuarios, roles y permisos | Administrador | Alta, edición, activación y baja lógica de usuarios del sistema. Asigna roles (`Administrador`, `Recepcionista`, `Médico`, `Paciente`). | RF01 | **1** |
-| **CU03** | Gestionar bitácora de auditoría | Administrador, Sistema | Consulta en solo lectura de acciones registradas automáticamente (altas, modificaciones, cancelaciones) con filtros por usuario, acción, módulo y rango de fechas. | Extra | **2** |
+| **CU03** | Gestionar bitácora de auditoría | Administrador, Sistema | Consulta en solo lectura de acciones registradas automáticamente (altas, modificaciones, cancelaciones) con filtros por usuario, acción, módulo y rango de fechas. | Extra | **1** |
 
 ---
 
@@ -105,7 +105,7 @@ graph TD
 | CU | Nombre del Caso de Uso | Actor(es) | Descripción del Proceso | RF | Ciclo |
 |:---:|:---|:---|:---|:---:|:---:|
 | **CU04** | Gestionar pacientes | Recepcionista, Administrador | Registra, busca (por CI, nombre, apellido), modifica datos demográficos y desactiva pacientes sin eliminar historial asociado. Valida unicidad de CI. | RF02 | **1** |
-| **CU05** | Gestionar cuenta y perfil del paciente | Paciente, Recepcionista | Activa la cuenta web vinculada a la CI del paciente. Permite al paciente editar datos de contacto, contacto de emergencia y preferencias de notificación. | 3.4 | **2** |
+| **CU05** | Gestionar cuenta y perfil del paciente | Paciente, Recepcionista | Activa la cuenta web vinculada a la CI del paciente. Permite al paciente editar datos de contacto, contacto de emergencia y preferencias de notificación. | 3.4 | **1** |
 | **CU06** | Gestionar médicos | Administrador | Registra y edita profesionales de la salud con matrícula profesional, teléfono, correo y asignación de especialidades. Médicos inactivos no reciben citas pero conservan histórico. | RF03 | **1** |
 | **CU07** | Gestionar especialidades médicas | Administrador | Gestiona catálogo de especialidades con nombres normalizados únicos y define el **rango de edad** aplicable (Pediatría <15, Medicina General 15-59, Geriatría ≥60 años). | RF04 | **1** |
 | **CU08** | Gestionar horarios de atención médica | Administrador | Define días, hora inicial, hora final y duración fija de cita por médico. Valida coherencia horaria (fin posterior a inicio) y permite bloquear feriados. | RF05 | **1** |
@@ -118,9 +118,9 @@ graph TD
 |:---:|:---|:---|:---|:---:|:---:|
 | **CU09** | Consultar disponibilidad de horarios | Recepcionista, Paciente | Calcula e ilustra los horarios libres para un médico y fecha dada, descartando cupos reservados, horarios pasados, feriados y médicos inactivos. | RF05, RF06 | **1** |
 | **CU10** | Programar cita médica | Recepcionista, Paciente | Selecciona paciente, especialidad, médico, fecha y hora. Sugiere especialidad según edad. Genera código correlativo único (ej. `CM-0001`) y valida disponibilidad dentro de una transacción (`DB::transaction`) para evitar solapamientos. | RF06, RF07 | **1** |
-| **CU11** | Reprogramar cita médica | Recepcionista, Paciente | Modifica fecha y hora de una cita en estado *Programada* o *Confirmada*, verificando disponibilidad. No permite reprogramar citas *Atendidas* o *Canceladas*. | RF08 | **1** |
+| **CU11** | Reprogramar cita médica | Recepcionista, Paciente | Modifica fecha y hora de una cita en estado *Programada* o *Confirmada*, verificando disponibilidad. No permite reprogramar citas *Atendidas* o *Canceladas*. | RF08 | **2** |
 | **CU12** | Cancelar cita médica | Recepcionista, Paciente | Cambia el estado a *Cancelada* con registro obligatorio del motivo. Libera de inmediato el cupo horario sin borrar el registro físico. | RF09 | **1** |
-| **CU13** | Registrar asistencia y estado de cita | Recepcionista, Médico | Aplica transiciones válidas: *Programada* → *Confirmada* → *Atendida* / *Inasistencia*. Bloquea transiciones ilegales según la máquina de estados. | RF10 | **1** |
+| **CU13** | Registrar asistencia y estado de cita | Recepcionista, Médico | Aplica transiciones válidas: *Programada* → *Confirmada* → *Atendida* / *Inasistencia*. Bloquea transiciones ilegales según la máquina de estados. | RF10 | **2** |
 | **CU14** | Consultar agenda médica diaria | Médico, Recepcionista, Admin | Despliega el listado de citas de un médico por fecha y estado, detallando hora, paciente, especialidad, código y estado. | RF11 | **1** |
 | **CU15** | Consultar historial de citas de paciente | Recepcionista, Paciente, Médico | Muestra la cronología de citas previas, atendidas y canceladas del paciente con fecha, médico y resultado de la atención. | RF12 | **1** |
 
@@ -170,8 +170,8 @@ graph TD
 
 | Ciclo de Desarrollo | Casos de Uso Asignados | Hito / Entrega | Justificación PUDS |
 |:---|:---|:---|:---|
-| **Ciclo 1: Cita de Punta a Punta** *(13 Casos de Uso)* | **CU01, CU02, CU04, CU06, CU07, CU08, CU09, CU10, CU11, CU12, CU13, CU14, CU15** | **Presentación 1** (Domingo 25/10/2026 — Avance ≥ 50%) | Cubre los requerimientos nucleares obligatorios (**RF01 a RF12**) y resuelve de manera verificable las **10 pruebas mínimas exigidas por el examen**. |
-| **Ciclo 2: Clínico, Integraciones y Analítica** *(10 Casos de Uso + 1 Opcional)* | **CU03, CU05, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23** *(Opcional: CU24-OPC)* | **Presentación 2** (Domingo 08/11/2026 — 100% Funcional) | Incorpora la bitácora visible, el perfil del paciente (§3.4), expediente clínico completo, recetas, pagos con Stripe, recordatorios, reportes dinámicos/voz (RF13) y evaluación del asistente diagnóstico. |
+| **Ciclo 1: Base Operativa y Cita de Punta a Punta** *(13 Casos de Uso)* | **CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15** | **Presentación 1** (Domingo 25/10/2026 — Avance 53.8%) | Consolida la seguridad y bitácora (CU01-CU03), recursos y pacientes (CU04-CU07), disponibilidad horaria (CU08-CU09), reserva y cancelación de citas (CU10, CU12) y consultas de agenda/historial (CU14, CU15). **Cubre al 100% las 10 pruebas mínimas del examen**. |
+| **Ciclo 2: Clínico, Ciclo de Vida de Citas, Pagos y Analítica** *(10 Casos de Uso + 1 Opcional)* | **CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23** *(Opcional: CU24-OPC)* | **Presentación 2** (Domingo 08/11/2026 — 100% Funcional) | Incorpora la reprogramación de citas (CU11), control fino de asistencia/inasistencia (CU13), consulta médica y expediente clínico (CU16-CU19), notificaciones (CU20), pagos con Stripe (CU21), reportes gerenciales con voz (CU22-CU23) y evaluación del asistente diagnóstico. |
 
 ---
 
