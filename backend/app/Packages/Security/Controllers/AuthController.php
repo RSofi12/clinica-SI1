@@ -143,6 +143,9 @@ class AuthController extends Controller
         $user->actualizarUltimoAcceso();
         Auth::login($user);
 
+        // Generar Bearer Token con Laravel Sanctum (Sección 7.1 del Documento Oficial)
+        $token = $user->createToken('auth-token')->plainTextToken;
+
         Bitacora::registrar($user->id_usuario, 'Seguridad', 'LOGIN_EXITOSO', 'usuarios', $user->id_usuario, 'Inicio de sesión satisfactorio.', $ip);
 
         $user->load('roles.permisos');
@@ -150,6 +153,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Bienvenido al sistema.',
+            'token' => $token,
             'user' => [
                 'id_usuario' => $user->id_usuario,
                 'username' => $user->username,
@@ -158,6 +162,18 @@ class AuthController extends Controller
                 'estado' => $user->estado,
                 'ultimo_acceso' => $user->ultimo_acceso,
                 'roles' => $user->roles->pluck('nombre'),
+            ],
+            'data' => [
+                'token' => $token,
+                'user' => [
+                    'id_usuario' => $user->id_usuario,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'tipo_usuario' => $user->tipo_usuario,
+                    'estado' => $user->estado,
+                    'ultimo_acceso' => $user->ultimo_acceso,
+                    'roles' => $user->roles->pluck('nombre'),
+                ],
             ],
         ]);
     }

@@ -22,15 +22,21 @@ class EnsureUserRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        // 1. Comprobación de Sesión Obligatoria
-        if (!Auth::check()) {
+        // 1. Comprobación de Autenticación Híbrida (Cookies de Sesión o Bearer Token de Sanctum)
+        $user = Auth::user();
+        if (!$user && $request->bearerToken()) {
+            $user = Auth::guard('sanctum')->user();
+            if ($user) {
+                Auth::setUser($user);
+            }
+        }
+
+        if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sesión no iniciada o credenciales expiradas. Inicie sesión para continuar.',
             ], 401);
         }
-
-        $user = Auth::user();
 
         // 2. Comprobación de Estado Activo del Usuario
         if ($user->estado !== 'ACTIVO') {
