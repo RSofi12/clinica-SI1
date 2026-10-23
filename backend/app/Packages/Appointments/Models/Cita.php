@@ -35,6 +35,7 @@ class Cita extends Model
         'estado', // PROGRAMADA, CONFIRMADA, EN_CONSULTA, ATENDIDA, CANCELADA, NO_ASISTIO
         'modalidad', // PRESENCIAL, TELEMEDICINA
         'motivo_consulta',
+        'motivo_breve', // Homologación DDL / Sección 7.1
         'motivo_cancelacion',
         'cancelada_en',
         'creada_por',
@@ -52,6 +53,7 @@ class Cita extends Model
         'hora_inicio_formateada',
         'hora_fin_formateada',
         'es_cancelada',
+        'motivo_breve',
     ];
 
     // =========================================================================
@@ -115,6 +117,16 @@ class Cita extends Model
     public function getEsCanceladaAttribute(): bool
     {
         return $this->estado === 'CANCELADA';
+    }
+
+    public function getMotivoBreveAttribute(): ?string
+    {
+        return $this->attributes['motivo_consulta'] ?? null;
+    }
+
+    public function setMotivoBreveAttribute($value): void
+    {
+        $this->attributes['motivo_consulta'] = $value;
     }
 
     // =========================================================================

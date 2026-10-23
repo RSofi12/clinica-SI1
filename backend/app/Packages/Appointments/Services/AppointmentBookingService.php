@@ -58,7 +58,7 @@ class AppointmentBookingService
             $fecha = $data['fecha'];
             $horaInicio = $data['hora_inicio'];
             $modalidad = $data['modalidad'] ?? 'PRESENCIAL';
-            $motivo = $data['motivo_consulta'] ?? null;
+            $motivo = $data['motivo_breve'] ?? $data['motivo_consulta'] ?? null;
 
             // 1. Validar Paciente y compatibilidad etaria con la especialidad (RF04 / Prueba P10.4)
             $paciente = Paciente::find($idPaciente);

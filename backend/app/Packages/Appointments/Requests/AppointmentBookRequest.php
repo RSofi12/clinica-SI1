@@ -27,6 +27,7 @@ class AppointmentBookRequest extends FormRequest
             'duracion_minutos' => ['nullable', 'integer', 'min:5', 'max:240'],
             'modalidad' => ['nullable', 'string', 'in:PRESENCIAL,TELEMEDICINA'],
             'motivo_consulta' => ['nullable', 'string', 'max:255'],
+            'motivo_breve' => ['nullable', 'string', 'max:255'],
         ];
     }
 
