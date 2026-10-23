@@ -197,6 +197,13 @@ export function AppointmentsManager() {
             Cancelada
           </span>
         );
+      case 'INASISTENCIA':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            <Ban className="w-3.5 h-3.5 text-amber-500" />
+            Inasistencia
+          </span>
+        );
       case 'REPROGRAMADA':
         return (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
@@ -362,6 +369,7 @@ export function AppointmentsManager() {
                 <option value="CONFIRMADA">Confirmadas</option>
                 <option value="ATENDIDA">Atendidas</option>
                 <option value="CANCELADA">Canceladas</option>
+                <option value="INASISTENCIA">Inasistencias</option>
                 <option value="REPROGRAMADA">Reprogramadas</option>
               </select>
 

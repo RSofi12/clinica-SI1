@@ -172,6 +172,13 @@ export function DoctorAgendaView({ onOpenTicket = null }) {
             Cancelada
           </span>
         );
+      case 'INASISTENCIA':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            <Ban className="w-3 h-3 text-amber-500" />
+            Inasistencia
+          </span>
+        );
       default:
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700">
@@ -187,6 +194,7 @@ export function DoctorAgendaView({ onOpenTicket = null }) {
     confirmadas: 0,
     atendidas: 0,
     canceladas: 0,
+    inasistencias: 0,
   };
 
   const medico = agendaData?.medico;
@@ -285,6 +293,7 @@ export function DoctorAgendaView({ onOpenTicket = null }) {
             <option value="CONFIRMADA">Confirmadas</option>
             <option value="ATENDIDA">Atendidas</option>
             <option value="CANCELADA">Canceladas</option>
+            <option value="INASISTENCIA">Inasistencias</option>
           </select>
 
           <button

@@ -38,6 +38,7 @@ export function PatientAppointmentHistoryModal({
     total_citas: 0,
     atendidas: 0,
     canceladas: 0,
+    inasistencias: 0,
     pendientes: 0,
     tasa_asistencia: 0,
     primera_cita_fecha: null,
@@ -143,6 +144,13 @@ export function PatientAppointmentHistoryModal({
             Cancelada
           </span>
         );
+      case 'INASISTENCIA':
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            <Ban className="w-3 h-3 text-amber-500" />
+            Inasistencia
+          </span>
+        );
       default:
         return (
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700">
@@ -228,6 +236,7 @@ export function PatientAppointmentHistoryModal({
                 <option value="PENDIENTE">Programadas</option>
                 <option value="CONFIRMADA">Confirmadas</option>
                 <option value="CANCELADA">Canceladas</option>
+                <option value="INASISTENCIA">Inasistencias</option>
               </select>
 
               <button

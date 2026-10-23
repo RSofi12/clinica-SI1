@@ -32,7 +32,7 @@ class Cita extends Model
         'fecha_hora_inicio',
         'fecha_hora_fin',
         'duracion_minutos',
-        'estado', // PROGRAMADA, CONFIRMADA, EN_CONSULTA, ATENDIDA, CANCELADA, NO_ASISTIO
+        'estado', // PROGRAMADA, CONFIRMADA, ATENDIDA, CANCELADA, INASISTENCIA (DDL_Database_Clinica_LaCruz.sql)
         'modalidad', // PRESENCIAL, TELEMEDICINA
         'motivo_consulta',
         'motivo_breve', // Homologación DDL / Sección 7.1

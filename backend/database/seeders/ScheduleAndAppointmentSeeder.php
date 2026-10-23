@@ -200,6 +200,18 @@ class ScheduleAndAppointmentSeeder extends Seeder
                 'modalidad' => 'PRESENCIAL',
                 'motivo_consulta' => 'Consulta dermatológica por irritación cutánea.',
             ],
+            // Cita 10: Dr. Juan Carlos Pérez - Ayer 11:30 a 12:00 (INASISTENCIA)
+            [
+                'codigo_cita' => 'CM-0010',
+                'medico_idx' => 0,
+                'paciente_id' => 7, // Rodrigo Benítez
+                'fecha' => $ayer,
+                'inicio' => '11:30:00',
+                'fin' => '12:00:00',
+                'estado' => 'INASISTENCIA',
+                'modalidad' => 'PRESENCIAL',
+                'motivo_consulta' => 'Control de dolor lumbar programado.',
+            ],
         ];
 
         foreach ($citasDemo as $c) {

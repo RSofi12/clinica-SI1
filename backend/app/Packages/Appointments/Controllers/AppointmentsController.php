@@ -287,11 +287,11 @@ class AppointmentsController extends Controller
             ], 404);
         }
 
-        // Regla de Negocio (RF09 / RN09): Una cita atendida no puede cancelarse
-        if ($cita->estado === 'ATENDIDA') {
+        // Regla de Negocio (RF09 / RN09): Una cita atendida o con inasistencia no puede cancelarse
+        if ($cita->estado === 'ATENDIDA' || $cita->estado === 'INASISTENCIA') {
             return response()->json([
                 'success' => false,
-                'message' => 'Una cita médica atendida no puede ser cancelada.',
+                'message' => 'Una cita médica atendida o registrada como inasistencia no puede ser cancelada.',
             ], 422);
         }
 
@@ -435,6 +435,7 @@ class AppointmentsController extends Controller
             'confirmadas' => $citas->where('estado', 'CONFIRMADA')->count(),
             'atendidas' => $citas->where('estado', 'ATENDIDA')->count(),
             'canceladas' => $citas->where('estado', 'CANCELADA')->count(),
+            'inasistencias' => $citas->where('estado', 'INASISTENCIA')->count(),
         ];
 
         return response()->json([
@@ -507,6 +508,7 @@ class AppointmentsController extends Controller
         $total = $citas->count();
         $atendidas = $citas->where('estado', 'ATENDIDA')->count();
         $canceladas = $citas->where('estado', 'CANCELADA')->count();
+        $inasistencias = $citas->where('estado', 'INASISTENCIA')->count();
         $pendientes = $citas->whereIn('estado', ['PENDIENTE', 'CONFIRMADA'])->count();
 
         $primeraCita = $citas->sortBy('fecha_hora_inicio')->first();
@@ -520,6 +522,7 @@ class AppointmentsController extends Controller
                     'total_citas' => $total,
                     'atendidas' => $atendidas,
                     'canceladas' => $canceladas,
+                    'inasistencias' => $inasistencias,
                     'pendientes' => $pendientes,
                     'tasa_asistencia' => $total > 0 ? round(($atendidas / $total) * 100, 1) : 0,
                     'primera_cita_fecha' => $primeraCita?->fecha_hora_inicio?->format('Y-m-d'),
