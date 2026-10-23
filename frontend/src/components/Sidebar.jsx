@@ -80,7 +80,7 @@ export function Sidebar({
           subtitle: 'Padrón clínico y admisiones',
           tag: 'CU04 / RF02',
           icon: UserPlus,
-          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO'],
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA'],
         },
         {
           id: 'doctors',
@@ -100,10 +100,10 @@ export function Sidebar({
         },
         {
           id: 'appointments',
-          label: 'Disponibilidad y Citas',
-          subtitle: 'Turnos libres y agenda',
-          tag: 'CU09, CU10 / RF06, RF07',
-          icon: Calendar,
+          label: role === 'MEDICO' ? 'Mi Agenda Médica' : role === 'PACIENTE' ? 'Mis Citas Médicas' : 'Disponibilidad y Citas',
+          subtitle: role === 'MEDICO' ? 'Pacientes de la jornada e historial' : role === 'PACIENTE' ? 'Reserva y seguimiento' : 'Turnos libres y agenda',
+          tag: role === 'MEDICO' ? 'CU14 / CU15' : role === 'PACIENTE' ? 'CU09 / CU10' : 'CU09, CU10 / RF06, RF07',
+          icon: role === 'MEDICO' ? Stethoscope : Calendar,
           requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO', 'PACIENTE'],
         },
       ],

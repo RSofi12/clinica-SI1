@@ -220,6 +220,132 @@ export function AppointmentsManager() {
     }
   };
 
+  // Para el rol MEDICO, su módulo es exclusivamente su Agenda Médica Diaria (CU14) e Historial de Citas (CU15)
+  if (role === 'MEDICO') {
+    return (
+      <div className="space-y-6">
+        {/* Cabecera Exclusiva para Médico */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00687a] to-[#008b9e] text-white flex items-center justify-center shadow-md shadow-[#00687a]/20 shrink-0">
+              <Stethoscope className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold font-montserrat text-slate-900 tracking-tight">
+                  Mi Agenda Médica Diaria (CU14)
+                </h1>
+                <span className="text-[11px] font-bold bg-[#00687a]/10 text-[#00687a] px-2 py-0.5 rounded-md uppercase tracking-wider">
+                  CU14 / CU15
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Consulte los pacientes citados para su jornada, franjas activas y acceda al historial clínico cronológico de citas del paciente (RF11, RF12).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Vista directa de la agenda médica diaria */}
+        <DoctorAgendaView
+          onOpenTicket={setTicketModalAppointment}
+          onOpenPatientHistory={setSelectedPatientForHistory}
+        />
+
+        {/* Modal de Ticket de Cita */}
+        {ticketModalAppointment && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+            <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden animate-in zoom-in-95 duration-200">
+              <div className="bg-gradient-to-r from-[#004d5a] to-[#00687a] p-5 text-white flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <Printer className="w-5 h-5 text-cyan-200" />
+                  <h3 className="font-bold text-sm font-montserrat">Ticket de Cita Médica</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setTicketModalAppointment(null)}
+                  className="p-1 hover:bg-white/10 rounded-lg transition cursor-pointer"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-4 text-xs">
+                <div className="text-center pb-3 border-b border-dashed border-slate-200">
+                  <span className="font-mono font-extrabold text-xl text-[#00687a] block">
+                    {ticketModalAppointment.codigo_cita}
+                  </span>
+                  <span className="text-[11px] text-slate-400">Comprobante Oficial de Cita</span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500">Paciente:</span>
+                    <span className="font-bold text-slate-800">
+                      {ticketModalAppointment.paciente?.nombres} {ticketModalAppointment.paciente?.apellidos}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500">Documento / CI:</span>
+                    <span className="font-mono text-slate-700">
+                      {ticketModalAppointment.paciente?.numero_documento || '—'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500">Médico:</span>
+                    <span className="font-semibold text-slate-800">
+                      Dr(a). {ticketModalAppointment.medico?.nombres} {ticketModalAppointment.medico?.apellidos}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500">Especialidad:</span>
+                    <span className="text-slate-700">{ticketModalAppointment.especialidad?.nombre}</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-slate-100">
+                    <span className="text-slate-500">Fecha y Hora:</span>
+                    <span className="font-bold text-slate-900">
+                      {formatDateDisplay(ticketModalAppointment.fecha_hora_inicio)} — {formatTimeDisplay(ticketModalAppointment.fecha_hora_inicio)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between py-1">
+                    <span className="text-slate-500">Estado:</span>
+                    <div>{getStatusBadge(ticketModalAppointment.estado)}</div>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="flex-1 py-2 px-3 bg-gradient-to-r from-[#00687a] to-[#008b9e] text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-1.5 hover:brightness-105 cursor-pointer"
+                  >
+                    <Printer className="w-4 h-4" />
+                    <span>Imprimir Ticket</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTicketModalAppointment(null)}
+                    className="py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Historial Cronológico de Citas del Paciente (CU15) */}
+        <PatientAppointmentHistoryModal
+          isOpen={Boolean(selectedPatientForHistory)}
+          onClose={() => setSelectedPatientForHistory(null)}
+          patientInitial={selectedPatientForHistory}
+          onOpenTicket={setTicketModalAppointment}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Cabecera Principal */}

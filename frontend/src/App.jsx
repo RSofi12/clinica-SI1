@@ -165,7 +165,7 @@ export default function App() {
       case 'audit':
         return role === 'ADMIN' ? 'Bitácora de Auditoría del Sistema (CU03)' : 'Panel General';
       case 'patients':
-        return ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+        return ['ADMIN', 'RECEPCIONISTA'].includes(role)
           ? 'Gestión de Pacientes y Cuentas Web (CU04 / CU05)'
           : 'Panel General';
       case 'doctors':
@@ -173,7 +173,11 @@ export default function App() {
       case 'schedules':
         return role === 'ADMIN' ? 'Gestión de Horarios y Disponibilidad Médica (CU08)' : 'Panel General';
       case 'appointments':
-        return 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
+        return role === 'MEDICO'
+          ? 'Mi Agenda Médica Diaria (CU14 / CU15)'
+          : role === 'PACIENTE'
+          ? 'Mis Citas Médicas'
+          : 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
       case 'patient-profile':
         return 'Mi Perfil de Paciente (CU05)';
       case 'overview':
@@ -272,7 +276,7 @@ export default function App() {
             <UsersManager />
           ) : dashboardTab === 'audit' && role === 'ADMIN' ? (
             <AuditLogViewer />
-          ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
+          ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
             <PatientsManager />
           ) : dashboardTab === 'doctors' && role === 'ADMIN' ? (
             <DoctorsManager />
@@ -395,18 +399,22 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && setDashboardTab('patients')}
+                    onClick={() => ['ADMIN', 'RECEPCIONISTA'].includes(role) && setDashboardTab('patients')}
                     className={`p-4 rounded-xl border transition ${
-                      ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+                      ['ADMIN', 'RECEPCIONISTA'].includes(role)
                         ? 'bg-amber-50/50 border-amber-200/80 hover:bg-amber-50 hover:shadow-xs cursor-pointer'
                         : 'bg-slate-50 border-slate-200/80'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-amber-800 uppercase">CU04: Pacientes</span>
-                      {['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && (
+                      {['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
                         <span className="text-[10px] font-semibold text-amber-700 bg-amber-100/60 px-1.5 py-0.5 rounded-md">
                           Gestionar →
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-semibold text-slate-400 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
+                          Recepción / Admin
                         </span>
                       )}
                     </div>
@@ -490,13 +498,21 @@ export default function App() {
                     className="p-4 rounded-xl border bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs cursor-pointer transition"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-emerald-800 uppercase">CU09 / CU10: Citas y Agenda</span>
+                      <span className="text-xs font-bold text-emerald-800 uppercase">
+                        {role === 'MEDICO'
+                          ? 'CU14 / CU15: Mi Agenda'
+                          : role === 'PACIENTE'
+                          ? 'CU10: Mis Citas'
+                          : 'CU09 / CU10: Citas y Agenda'}
+                      </span>
                       <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded-md">
-                        Gestionar →
+                        {role === 'MEDICO' ? 'Mi Agenda →' : 'Gestionar →'}
                       </span>
                     </div>
                     <p className="text-xs text-slate-600 mt-1">
-                      Disponibilidad de turnos y reserva asistida con motor anti-colisión transaccional (RF06, RF07).
+                      {role === 'MEDICO'
+                        ? 'Consulte sus pacientes asignados para la jornada diaria y acceda a su historial clínico (RF11, RF12).'
+                        : 'Disponibilidad de turnos y reserva asistida con motor anti-colisión transaccional (RF06, RF07).'}
                     </p>
                   </div>
                 </div>

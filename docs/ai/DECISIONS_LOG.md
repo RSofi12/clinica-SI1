@@ -111,7 +111,16 @@
 ### Registro 16: 2026-10-23
 * **Decisión:** Blindaje de interfaz RBAC en Frontend para la gestión de pacientes (CU04) y programación de citas (CU10): Ocultamiento de acciones de mutación de pacientes (`Registrar`, `Editar`, `Desactivar`) y del botón `Programar Cita (CU10)` para el rol `MEDICO`.
 * **Motivo:**
-  1. Alinear al 100% la interfaz de usuario con la matriz oficial de actores y casos de uso (CU04 y CU10 del PUDS): El personal médico no gestiona el padrón administrativo de pacientes ni agenda turnos desde su panel, evitando discrepancias con las respuestas `HTTP 403 Forbidden` del backend.
+  1. Alinear al 100% la interfaz de usuario con la matriz oficial de actores y casos de uso (CU04 y CU10 del PUDS): El personal médico no gestiona el padrón administrativo de pacientes ni agenda turnos desde su panel.
   2. Ofrecer una experiencia de usuario limpia y congruente donde cada actor visualiza exclusivamente los controles y botones para los cuales posee autorización operativa.
 * **Impacto:** Coherencia absoluta en la experiencia de usuario de Médicos, Recepcionistas y Pacientes.
+
+### Registro 17: 2026-10-23
+* **Decisión:** Alineación estricta de navegación e interfaz para el actor Médico según matriz de Casos de Uso del Ciclo 1 (Google Doc / PUDS):
+  1. Eliminación definitiva de la pestaña `Pacientes y Fichas` (CU04) de la barra lateral para el rol `MEDICO`, ya que CU04 pertenece exclusivamente a `Recepcionista` y `Administrador`.
+  2. Especialización del módulo de citas para el rol `MEDICO`: no se muestran pestañas de `Citas Programadas (CU10)` ni `Consultar Disponibilidad (CU09)`. En su lugar, el médico accede de forma directa a **"Mi Agenda Médica Diaria (CU14)"** y desde cada cita dispone del botón **"Ver Historial (CU15)"** para consultar la cronología de citas del paciente (`PatientAppointmentHistoryModal`).
+  3. En el Panel General (Dashboard), las tarjetas informativas diferencian con precisión las acciones permitidas por rol, evitando enlaces rotos hacia módulos restringidos.
+* **Motivo:** Cumplimiento riguroso de la especificación oficial de actores del Ciclo 1 donde al Médico le corresponden única y exclusivamente CU14 (Agenda Médica Diaria) y CU15 (Historial de Citas del Paciente), impidiendo cualquier intento de navegación o visualización de módulos ajenos.
+* **Impacto:** Interfaz 100% limpia, precisa y perfectamente alineada con la documentación oficial del proyecto.
+
 
