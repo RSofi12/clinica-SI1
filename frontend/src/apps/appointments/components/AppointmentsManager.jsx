@@ -364,21 +364,21 @@ export function AppointmentsManager() {
   return (
     <div className="space-y-6">
       {/* Cabecera Principal */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-xs">
+        <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00687a] to-[#008b9e] text-white flex items-center justify-center shadow-md shadow-[#00687a]/20 shrink-0">
             <Calendar className="w-6 h-6" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2.5 flex-wrap">
               <h1 className="text-xl sm:text-2xl font-bold font-montserrat text-slate-900 tracking-tight">
                 {role === 'PACIENTE' ? 'Mis Citas Médicas y Agenda' : 'Gestión de Citas Médicas y Agenda'}
               </h1>
-              <span className="text-[11px] font-bold bg-[#00687a]/10 text-[#00687a] px-2 py-0.5 rounded-md uppercase tracking-wider">
+              <span className="text-[11px] font-bold bg-[#00687a]/10 text-[#00687a] px-2.5 py-0.5 rounded-md uppercase tracking-wider shrink-0">
                 {role === 'PACIENTE' ? 'Portal Paciente' : 'CU09 / CU10 / CU12 / CU14 / CU15'}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
               {role === 'PACIENTE'
                 ? 'Consulta el estado de tus citas médicas, tickets de atención, turnos disponibles y tu historial de salud.'
                 : 'Prevención anti-colisión transaccional (RF07), auditoría inmutable en bitácora, agenda diaria y consulta de turnos libres.'}
@@ -387,7 +387,7 @@ export function AppointmentsManager() {
         </div>
 
         {/* Acciones principales */}
-        <div className="flex items-center gap-3 self-stretch md:self-auto justify-end">
+        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap sm:flex-nowrap justify-start xl:justify-end shrink-0">
           {role === 'PACIENTE' && (
             <button
               type="button"
@@ -426,7 +426,7 @@ export function AppointmentsManager() {
       </div>
 
       {/* Pestañas de Navegación: Citas vs Disponibilidad vs Agenda Diaria */}
-      <div className="flex border-b border-slate-200">
+      <div className="flex border-b border-slate-200 overflow-x-auto scrollbar-none">
         <button
           type="button"
           onClick={() => setActiveTab('citas')}

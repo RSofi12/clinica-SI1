@@ -107,6 +107,10 @@
       - Prueba #9 (Página sin sesión HTTP 401 / CU01) ✅
       - Prueba #10 (Operación inválida HTTP 422 tipado / Transversal) ✅
 
+14. **Refinamiento de UX/UI y Responsividad en Cabecera de Citas (Portal Paciente / Citas):**
+    - Corregida la colisión visual entre el botón `"Mi Historial (CU15)"` y el badge `"PORTAL PACIENTE"` en [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx).
+    - Implementado `xl:flex-row`, `min-w-0 flex-1`, envoltura elástica (`flex-wrap`) en títulos y botones, y `overflow-x-auto` en la barra de pestañas para garantizar fluidez en todas las resoluciones.
+
 ### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
 - Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
   - `CU11`: Reprogramar Cita Médica (RF08) con nueva fecha y liberación del horario anterior.

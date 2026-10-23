@@ -99,7 +99,7 @@
 - **Frontend (`frontend/src/apps/appointments/`):**
   - ✅ **Servicio de Citas:** `appointmentService.js`.
   - ✅ **Modal Asistido Multipasos:** [`AppointmentBookingModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx) con wizard en 5 pasos.
-  - ✅ **Panel Gestor Unificado:** [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx) y [`AppointmentAvailabilityViewer.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentAvailabilityViewer.jsx) (botón de agendar citas restringido a Recepcionista y Paciente; rol `MEDICO` enfocado en consulta de disponibilidad y atención de su agenda médica diaria).
+  - ✅ **Panel Gestor Unificado:** [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx) y [`AppointmentAvailabilityViewer.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentAvailabilityViewer.jsx) (botón de agendar citas restringido a Recepcionista y Paciente; rol `MEDICO` enfocado en consulta de disponibilidad y atención de su agenda médica diaria; cabecera responsiva `xl:flex-row` anti-solapamiento en resoluciones intermedias).
 
 ### 11. Implementación de CU12 (Cancelar Cita Médica — RF09 / Prueba #6)
 - **Backend (`backend/app/Packages/Appointments/`):**
