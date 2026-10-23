@@ -51,6 +51,14 @@ frontend/dist-ssr/
 frontend/.env
 frontend/.env.local
 frontend/.env.*.local
-frontend/*.local
 frontend/.turbo
 frontend/.eslintcache
+
+# ==========================================
+# Scripts y Datos Temporales de Población (Demo / Mock)
+# ==========================================
+backend/database/seeders/*Demo*.php
+backend/database/seeders/*Massive*.php
+backend/database/seeders/*Mock*.php
+backend/database/data/
+*.demo.sql

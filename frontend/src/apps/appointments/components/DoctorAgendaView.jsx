@@ -426,8 +426,8 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
         ) : (
           <div className="divide-y divide-slate-100">
             {citas.map((cita) => {
-              const horaInicio = formatTimeDisplay(cita.fecha_hora_inicio);
-              const horaFin = formatTimeDisplay(cita.fecha_hora_fin);
+              const horaInicio = cita.hora_inicio_formateada || formatTimeDisplay(cita.fecha_hora_inicio);
+              const horaFin = cita.hora_fin_formateada || formatTimeDisplay(cita.fecha_hora_fin);
               const puedeCancelar = ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && role !== 'MEDICO';
 
               return (
@@ -455,7 +455,10 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
 
                   {/* Datos del Paciente y Especialidad */}
                   <div className="flex-1 space-y-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-cyan-50 text-[#00687a] border border-cyan-200">
+                        Paciente Citada:
+                      </span>
                       <User className="w-4 h-4 text-slate-400 shrink-0" />
                       <span className="font-bold text-slate-900 text-sm">
                         {cita.paciente?.nombres} {cita.paciente?.apellidos}
