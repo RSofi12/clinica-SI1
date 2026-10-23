@@ -35,7 +35,7 @@
 
 ### 5. Implementación de CU04 (Gestionar Pacientes — RF02)
 - **Backend:** `2026_10_20_000003_create_paquete2_pacientes_tables.php`, modelos `Patient.php` y `EmergencyContact.php` con correlativo `HC-XXXX` y sugerencia de especialidad según edad. `PatientsController.php` con filtros y baja lógica RN11.
-- **Frontend:** `PatientsManager.jsx`, `PatientFormModal.jsx` y `PatientDetailModal.jsx`.
+- **Frontend:** `PatientsManager.jsx`, `PatientFormModal.jsx` y `PatientDetailModal.jsx` (acciones de registro, edición y baja restringidas a `ADMIN` y `RECEPCIONISTA`; rol `MEDICO` dispone de modo de solo lectura clínica `PatientDetailModal.jsx`).
 
 ### 6. Implementación de CU05 (Gestionar Cuenta y Perfil del Paciente — §3.4)
 - **Backend:** `PatientProfileController.php` con autoservicio `/check-ci`, `/activate-account`, `/me`, `/change-password` y `/enable-web-account`.
@@ -99,7 +99,7 @@
 - **Frontend (`frontend/src/apps/appointments/`):**
   - ✅ **Servicio de Citas:** `appointmentService.js`.
   - ✅ **Modal Asistido Multipasos:** [`AppointmentBookingModal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx) con wizard en 5 pasos.
-  - ✅ **Panel Gestor Unificado:** [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx).
+  - ✅ **Panel Gestor Unificado:** [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx) y [`AppointmentAvailabilityViewer.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentAvailabilityViewer.jsx) (botón de agendar citas restringido a Recepcionista y Paciente; rol `MEDICO` enfocado en consulta de disponibilidad y atención de su agenda médica diaria).
 
 ### 11. Implementación de CU12 (Cancelar Cita Médica — RF09 / Prueba #6)
 - **Backend (`backend/app/Packages/Appointments/`):**

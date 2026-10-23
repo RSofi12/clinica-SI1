@@ -48,6 +48,7 @@
 - [x] Bloqueo perimetral de `/api/patients` a pacientes para evitar fuga de padrón (CU04).
 - [x] Alineación de CU06 y CU08 en Frontend (`Sidebar.jsx`, `App.jsx`) y Backend (`api.php`) al rol exclusivo `ADMIN`.
 - [x] Asistente de reserva en frontend (`AppointmentBookingModal.jsx`) con auto-detección y bloqueo de ficha personal para pacientes.
+- [x] Blindaje de UI para el rol MEDICO: Ocultadas acciones de alta/edición/baja de pacientes (CU04) y botón de programar citas en gestor y visor de disponibilidad (CU10), alineado a la especificación de actores de PUDS.
 
 ### Fase 6: Homologación Técnica y Arquitectónica con Sección 7.1 (Google Doc / RUP)
 - [x] Adopción de Axios en `frontend/src/services/api.js` con interceptores Bearer y withCredentials.

@@ -108,3 +108,10 @@
   5. **Configuración de Correo SMTP:** Se documentaron explícitamente en `.env.example` y `.env` las variables de entorno de Mailtrap Sandbox (`sandbox.smtp.mailtrap.io:2525`).
 * **Impacto:** Conformidad técnica absoluta y sin discrepancias entre el código fuente (backend Laravel 13 y frontend React) y la Sección 7.1 del Documento de Especificación del Sistema.
 
+### Registro 16: 2026-10-23
+* **Decisión:** Blindaje de interfaz RBAC en Frontend para la gestión de pacientes (CU04) y programación de citas (CU10): Ocultamiento de acciones de mutación de pacientes (`Registrar`, `Editar`, `Desactivar`) y del botón `Programar Cita (CU10)` para el rol `MEDICO`.
+* **Motivo:**
+  1. Alinear al 100% la interfaz de usuario con la matriz oficial de actores y casos de uso (CU04 y CU10 del PUDS): El personal médico no gestiona el padrón administrativo de pacientes ni agenda turnos desde su panel, evitando discrepancias con las respuestas `HTTP 403 Forbidden` del backend.
+  2. Ofrecer una experiencia de usuario limpia y congruente donde cada actor visualiza exclusivamente los controles y botones para los cuales posee autorización operativa.
+* **Impacto:** Coherencia absoluta en la experiencia de usuario de Médicos, Recepcionistas y Pacientes.
+

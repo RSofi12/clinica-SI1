@@ -258,17 +258,19 @@ export function AppointmentsManager() {
             </button>
           )}
 
-          <button
-            type="button"
-            onClick={() => {
-              setBookingInitialData(null);
-              setIsBookingModalOpen(true);
-            }}
-            className="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#00687a] to-[#008b9e] hover:brightness-105 rounded-xl shadow-md shadow-[#00687a]/20 transition flex items-center gap-2 cursor-pointer shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            <span>{role === 'PACIENTE' ? 'Reservar Mi Cita (CU10)' : 'Programar Cita (CU10)'}</span>
-          </button>
+          {role !== 'MEDICO' && (
+            <button
+              type="button"
+              onClick={() => {
+                setBookingInitialData(null);
+                setIsBookingModalOpen(true);
+              }}
+              className="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-[#00687a] to-[#008b9e] hover:brightness-105 rounded-xl shadow-md shadow-[#00687a]/20 transition flex items-center gap-2 cursor-pointer shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              <span>{role === 'PACIENTE' ? 'Reservar Mi Cita (CU10)' : 'Programar Cita (CU10)'}</span>
+            </button>
+          )}
         </div>
       </div>
 

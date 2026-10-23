@@ -18,6 +18,7 @@ import {
   CalendarX,
   Info,
 } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
 import { appointmentService } from '../services/appointmentService';
 import { doctorService } from '../../clinical-resources/services/doctorService';
 import { specialtyService } from '../../clinical-resources/services/specialtyService';
@@ -27,6 +28,9 @@ import { specialtyService } from '../../clinical-resources/services/specialtySer
  * Paquete 3: Gestión de Citas Médicas
  */
 export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null }) {
+  const { role } = useAuth();
+  const canBook = role !== 'MEDICO';
+
   const [specialties, setSpecialties] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [selectedSpecialtyId, setSelectedSpecialtyId] = useState('');
@@ -486,7 +490,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
                     </div>
                   </div>
 
-                  {onSelectSlotForBooking ? (
+                  {onSelectSlotForBooking && canBook ? (
                     <button
                       type="button"
                       onClick={() =>
@@ -503,7 +507,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
                     </button>
                   ) : (
                     <span className="text-xs font-bold text-[#00687a] bg-white/80 border border-[#00687a]/30 px-3 py-1.5 rounded-xl">
-                      ✓ Turno libre verificado listo para reserva (CU10)
+                      ✓ Turno libre verificado (Reserva gestionada por Recepción o Paciente)
                     </span>
                   )}
                 </div>
