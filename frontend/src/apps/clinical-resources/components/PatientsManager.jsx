@@ -512,6 +512,25 @@ export function PatientsManager() {
                             <Eye className="w-3.5 h-3.5" />
                           </button>
 
+                          {/* Habilitar Acceso Web en Ventanilla (CU05 §3.4) */}
+                          {canManage && (
+                            <button
+                              onClick={() => handleOpenWebAccountModal(patient)}
+                              title={
+                                patient.id_usuario
+                                  ? 'Cuenta web activa (Editar / Regenerar credenciales CU05)'
+                                  : 'Habilitar cuenta web en ventanilla (CU05)'
+                              }
+                              className={`p-1.5 rounded-lg border transition cursor-pointer ${
+                                patient.id_usuario
+                                  ? 'border-teal-200 text-teal-700 bg-teal-50 hover:bg-teal-100'
+                                  : 'border-slate-200 text-slate-600 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50'
+                              }`}
+                            >
+                              <Globe className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+
                           {/* Editar Paciente (Solo Administrador y Recepcionista) */}
                           {canManage && (
                             <button

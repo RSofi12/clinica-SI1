@@ -428,7 +428,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
             {citas.map((cita) => {
               const horaInicio = formatTimeDisplay(cita.fecha_hora_inicio);
               const horaFin = formatTimeDisplay(cita.fecha_hora_fin);
-              const puedeCancelar = ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado);
+              const puedeCancelar = ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && role !== 'MEDICO';
 
               return (
                 <div

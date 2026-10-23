@@ -34,6 +34,7 @@ import { AppointmentBookingModal } from './AppointmentBookingModal';
 import { DoctorAgendaView } from './DoctorAgendaView';
 import { AppointmentCancelModal } from './AppointmentCancelModal';
 import { PatientAppointmentHistoryModal } from './PatientAppointmentHistoryModal';
+import { patientProfileService } from '../../clinical-resources/services/patientProfileService';
 
 /**
  * Gestor Integral de Citas Médicas y Agenda (CU09, CU10, CU12, CU14, CU15 / RF05-RF12)
@@ -42,6 +43,7 @@ import { PatientAppointmentHistoryModal } from './PatientAppointmentHistoryModal
 export function AppointmentsManager() {
   const { role, user } = useAuth();
   const [activeTab, setActiveTab] = useState('citas'); // 'citas' | 'disponibilidad'
+  const [myPatientProfile, setMyPatientProfile] = useState(null);
 
   // Estados de listado de citas
   const [appointments, setAppointments] = useState([]);
@@ -81,6 +83,19 @@ export function AppointmentsManager() {
     }
     loadDoctors();
   }, []);
+
+  // Cargar ficha propia si el usuario es PACIENTE (para CU15 y autocitas)
+  useEffect(() => {
+    if (role === 'PACIENTE') {
+      patientProfileService
+        .fetchMyProfile()
+        .then((res) => {
+          const p = res?.data || res?.patient;
+          if (p) setMyPatientProfile(p);
+        })
+        .catch((err) => console.error('Error al cargar perfil de paciente en appointments:', err));
+    }
+  }, [role]);
 
   // Cargar citas desde el backend
   const loadAppointments = useCallback(async (page = 1) => {
@@ -376,7 +391,17 @@ export function AppointmentsManager() {
           {role === 'PACIENTE' && (
             <button
               type="button"
-              onClick={() => setSelectedPatientForHistory({ id_paciente: appointments[0]?.id_paciente, nombres: user?.username })}
+              onClick={() => {
+                const targetPatient =
+                  myPatientProfile ||
+                  appointments[0]?.paciente ||
+                  (appointments[0]?.id_paciente
+                    ? { id_paciente: appointments[0].id_paciente, nombres: user?.username }
+                    : null);
+                if (targetPatient) {
+                  setSelectedPatientForHistory(targetPatient);
+                }
+              }}
               className="px-4 py-2.5 text-xs sm:text-sm font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-xl transition flex items-center gap-2 cursor-pointer shrink-0"
             >
               <History className="w-4 h-4" />

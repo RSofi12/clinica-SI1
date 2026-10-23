@@ -179,7 +179,7 @@ export default function App() {
           ? 'Mis Citas Médicas'
           : 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
       case 'patient-profile':
-        return 'Mi Perfil de Paciente (CU05)';
+        return role === 'PACIENTE' ? 'Mi Perfil de Paciente (CU05)' : 'Panel General';
       case 'overview':
       default:
         return 'Panel General';
@@ -284,7 +284,7 @@ export default function App() {
             <SchedulesManager />
           ) : dashboardTab === 'appointments' ? (
             <AppointmentsManager />
-          ) : dashboardTab === 'patient-profile' ? (
+          ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
             <PatientProfileView />
           ) : (
             <div className="space-y-8">
@@ -315,7 +315,109 @@ export default function App() {
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {/* Tarjeta especial para Paciente Autenticado */}
+                  {/* CU01: Autenticación (Todos los usuarios) */}
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#00687a] uppercase">CU01: Autenticación</span>
+                        {role === 'ADMIN' && (
+                          <button
+                            onClick={() => setIsPolicyModalOpen(true)}
+                            className="text-[10px] font-semibold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 px-2 py-0.5 rounded-md transition cursor-pointer flex items-center gap-1"
+                            title="Editar intentos fallidos y minutos de bloqueo de seguridad"
+                          >
+                            <ShieldAlert className="w-3 h-3" />
+                            <span>Configurar Bloqueo →</span>
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-600 mt-1">
+                        Sesión activa con hash criptográfico, bloqueo tras 3 intentos y registro inmutable en bitácora.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* CU02: Usuarios y Roles (Exclusivo Administrador) */}
+                  {role === 'ADMIN' && (
+                    <div
+                      onClick={() => setDashboardTab('users')}
+                      className="p-4 rounded-xl border bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-emerald-700 uppercase">CU02: Usuarios y Roles</span>
+                          <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-100/60 px-1.5 py-0.5 rounded-md">
+                            Abrir módulo →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Control de operadores, asignación de roles y bajas lógicas (RF01).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU03: Bitácora Activa (Exclusivo Administrador) */}
+                  {role === 'ADMIN' && (
+                    <div
+                      onClick={() => setDashboardTab('audit')}
+                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-cyan-800 uppercase">CU03: Bitácora Activa</span>
+                          <span className="text-[10px] font-semibold text-cyan-700 bg-cyan-100/60 px-1.5 py-0.5 rounded-md">
+                            Consultar →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Trazabilidad inmutable de accesos con IP, usuario, acción y fecha.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU04: Pacientes (Recepcionista y Administrador) */}
+                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('patients')}
+                      className="p-4 rounded-xl border bg-amber-50/50 border-amber-200/80 hover:bg-amber-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-amber-800 uppercase">CU04: Pacientes</span>
+                          <span className="text-[10px] font-semibold text-amber-700 bg-amber-100/60 px-1.5 py-0.5 rounded-md">
+                            Gestionar →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Admisión clínica, correlativo HC, grupos etarios y bajas lógicas (RF02).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU05: Cuentas Web de Pacientes (Recepcionista y Administrador) */}
+                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('patients')}
+                      className="p-4 rounded-xl border bg-teal-50/60 border-teal-200/80 hover:bg-teal-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-teal-800 uppercase">CU05: Cuentas Web</span>
+                          <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-1.5 py-0.5 rounded-md">
+                            Padrón →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Habilite el acceso web de autoservicio para pacientes con su CI desde el padrón de admisiones (§3.4).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU05: Mi Perfil (Exclusivo Paciente) */}
                   {role === 'PACIENTE' && (
                     <div
                       onClick={() => setDashboardTab('patient-profile')}
@@ -335,186 +437,167 @@ export default function App() {
                     </div>
                   )}
 
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#00687a] uppercase">CU01: Autenticación</span>
-                        {role === 'ADMIN' && (
-                          <button
-                            onClick={() => setIsPolicyModalOpen(true)}
-                            className="text-[10px] font-semibold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 px-2 py-0.5 rounded-md transition cursor-pointer flex items-center gap-1"
-                            title="Editar intentos fallidos y minutos de bloqueo de seguridad"
-                          >
-                            <ShieldAlert className="w-3 h-3" />
-                            <span>Configurar Bloqueo →</span>
-                          </button>
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-600 mt-1">
-                        Sesión activa con hash seguro, bloqueo tras 3 intentos y registro en bitácora.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    onClick={() => role === 'ADMIN' && setDashboardTab('users')}
-                    className={`p-4 rounded-xl border transition ${
-                      role === 'ADMIN'
-                        ? 'bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs cursor-pointer'
-                        : 'bg-slate-50 border-slate-200/80'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-emerald-700 uppercase">CU02: Usuarios y Roles</span>
-                      {role === 'ADMIN' && (
-                        <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-100/60 px-1.5 py-0.5 rounded-md">
-                          Abrir módulo →
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      Control de operadores, asignación de roles y bajas lógicas (RF01).
-                    </p>
-                  </div>
-
-                  <div
-                    onClick={() => role === 'ADMIN' && setDashboardTab('audit')}
-                    className={`p-4 rounded-xl border transition ${
-                      role === 'ADMIN'
-                        ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
-                        : 'bg-slate-50 border-slate-200/80'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-cyan-800 uppercase">CU03: Bitácora Activa</span>
-                      {role === 'ADMIN' && (
-                        <span className="text-[10px] font-semibold text-cyan-700 bg-cyan-100/60 px-1.5 py-0.5 rounded-md">
-                          Consultar →
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      Trazabilidad inmutable de accesos con IP, usuario, acción y fecha.
-                    </p>
-                  </div>
-
-                  <div
-                    onClick={() => ['ADMIN', 'RECEPCIONISTA'].includes(role) && setDashboardTab('patients')}
-                    className={`p-4 rounded-xl border transition ${
-                      ['ADMIN', 'RECEPCIONISTA'].includes(role)
-                        ? 'bg-amber-50/50 border-amber-200/80 hover:bg-amber-50 hover:shadow-xs cursor-pointer'
-                        : 'bg-slate-50 border-slate-200/80'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-amber-800 uppercase">CU04: Pacientes</span>
-                      {['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
-                        <span className="text-[10px] font-semibold text-amber-700 bg-amber-100/60 px-1.5 py-0.5 rounded-md">
-                          Gestionar →
-                        </span>
-                      ) : (
-                        <span className="text-[9px] font-semibold text-slate-400 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
-                          Recepción / Admin
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      Admisión clínica, correlativo HC, grupos etarios y bajas lógicas (RF02).
-                    </p>
-                  </div>
-
-                  {/* Tarjeta de CU05: Habilitación de Cuentas Web para Recepción y Admin */}
-                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                  {/* CU06: Médicos y Especialidades (Exclusivo Administrador) */}
+                  {role === 'ADMIN' && (
                     <div
-                      onClick={() => setDashboardTab('patients')}
-                      className="p-4 rounded-xl border bg-teal-50/60 border-teal-200/80 hover:bg-teal-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                      onClick={() => setDashboardTab('doctors')}
+                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-teal-800 uppercase">CU05: Cuentas Web</span>
-                          <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-1.5 py-0.5 rounded-md">
-                            Padrón →
+                          <span className="text-xs font-bold text-[#00687a] uppercase">CU06 / CU07: Médicos</span>
+                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
+                            Plantel →
                           </span>
                         </div>
                         <p className="text-xs text-slate-600 mt-1">
-                          Habilite el acceso web de autoservicio para pacientes con su CI desde la tabla de Pacientes (§3.4).
+                          Plantel institucional, especialidades asignadas, rangos etarios y matrículas (RF03, RF04).
                         </p>
                       </div>
                     </div>
                   )}
 
-                  <div
-                    onClick={() => role === 'ADMIN' && setDashboardTab('doctors')}
-                    className={`p-4 rounded-xl border transition ${
-                      role === 'ADMIN'
-                        ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
-                        : 'bg-slate-50 border-slate-200/80'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#00687a] uppercase">CU06: Médicos</span>
-                      {role === 'ADMIN' ? (
-                        <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
-                          Plantel →
-                        </span>
-                      ) : (
-                        <span className="text-[9px] font-semibold text-slate-400 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
-                          Admin
-                        </span>
-                      )}
+                  {/* CU08: Horarios y Bloqueos (Exclusivo Administrador) */}
+                  {role === 'ADMIN' && (
+                    <div
+                      onClick={() => setDashboardTab('schedules')}
+                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#00687a] uppercase">CU08: Horarios y Bloqueos</span>
+                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
+                            Gestionar →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Franjas semanales por médico, duración de cita y bloqueo de feriados (RF05).
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      Plantel institucional, especialidades asignadas, matrículas y bajas lógicas (RF03).
-                    </p>
-                  </div>
+                  )}
 
-                  <div
-                    onClick={() => role === 'ADMIN' && setDashboardTab('schedules')}
-                    className={`p-4 rounded-xl border transition ${
-                      role === 'ADMIN'
-                        ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
-                        : 'bg-slate-50 border-slate-200/80'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#00687a] uppercase">CU08: Horarios y Bloqueos</span>
-                      {role === 'ADMIN' ? (
-                        <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
-                          Gestionar →
-                        </span>
-                      ) : (
-                        <span className="text-[9px] font-semibold text-slate-400 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
-                          Admin
-                        </span>
-                      )}
+                  {/* CU09 / CU10 / CU12: Gestión de Citas (Recepcionista y Administrador) */}
+                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('appointments')}
+                      className="p-4 rounded-xl border bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-emerald-800 uppercase">CU09 / CU10 / CU12: Citas</span>
+                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded-md">
+                            Gestionar →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Disponibilidad de turnos libres, programación asistida y cancelación con motivo (RF06, RF07, RF09).
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      Franjas semanales por médico, duración de cita y bloqueo de feriados (RF05).
-                    </p>
-                  </div>
+                  )}
 
-                  <div
-                    onClick={() => setDashboardTab('appointments')}
-                    className="p-4 rounded-xl border bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs cursor-pointer transition"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-emerald-800 uppercase">
-                        {role === 'MEDICO'
-                          ? 'CU14 / CU15: Mi Agenda'
-                          : role === 'PACIENTE'
-                          ? 'CU10: Mis Citas'
-                          : 'CU09 / CU10: Citas y Agenda'}
-                      </span>
-                      <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded-md">
-                        {role === 'MEDICO' ? 'Mi Agenda →' : 'Gestionar →'}
-                      </span>
+                  {/* CU14: Agenda Médica Diaria (Recepcionista y Administrador) */}
+                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('appointments')}
+                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#00687a] uppercase">CU14: Agendas Médicas</span>
+                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
+                            Consultar →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Supervise el cronograma de pacientes y los KPIs del día de cualquier médico de la institución (RF11).
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      {role === 'MEDICO'
-                        ? 'Consulte sus pacientes asignados para la jornada diaria y acceda a su historial clínico (RF11, RF12).'
-                        : 'Disponibilidad de turnos y reserva asistida con motor anti-colisión transaccional (RF06, RF07).'}
-                    </p>
-                  </div>
+                  )}
+
+                  {/* CU14: Mi Agenda Médica (Exclusivo Médico) */}
+                  {role === 'MEDICO' && (
+                    <div
+                      onClick={() => setDashboardTab('appointments')}
+                      className="p-4 rounded-xl border bg-emerald-50/70 border-emerald-300 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-emerald-800 uppercase">CU14: Mi Agenda Médica</span>
+                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-md">
+                            Mi Agenda →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Consulte su cronograma diario de citas, turnos confirmados y franjas horarias de atención (RF11).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU15: Historial Clínico de Citas (Médico y Recepcionista) */}
+                  {['MEDICO', 'RECEPCIONISTA'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('appointments')}
+                      className="p-4 rounded-xl border bg-slate-50 border-slate-200/80 flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#00687a] uppercase">CU15: Historial de Citas</span>
+                          <span className="text-[9px] font-semibold text-slate-500 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
+                            Integrado
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          {role === 'MEDICO'
+                            ? 'Consulte la cronología y tasa de asistencia de sus pacientes asignados desde su agenda (RF12).'
+                            : 'Consulte el historial completo de atenciones y estados de cualquier paciente desde citas y padrón (RF12).'}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU09 / CU10 / CU12: Mis Citas (Exclusivo Paciente) */}
+                  {role === 'PACIENTE' && (
+                    <div
+                      onClick={() => setDashboardTab('appointments')}
+                      className="p-4 rounded-xl border bg-emerald-50/70 border-emerald-300 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-emerald-800 uppercase">CU09 / CU10: Mis Citas</span>
+                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-md">
+                            Mis Citas →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Consulte disponibilidad de turnos libres y reserve sus citas médicas personales con anti-colisión (RF06, RF07).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU15: Mi Historial de Salud (Exclusivo Paciente) */}
+                  {role === 'PACIENTE' && (
+                    <div
+                      onClick={() => setDashboardTab('appointments')}
+                      className="p-4 rounded-xl border bg-cyan-50/70 border-cyan-300 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#00687a] uppercase">CU15: Mi Historial</span>
+                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100 px-1.5 py-0.5 rounded-md">
+                            Consultar →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Consulte la cronología completa de sus citas previas, atendidas y canceladas en modo solo lectura (RF12).
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
