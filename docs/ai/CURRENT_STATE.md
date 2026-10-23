@@ -182,8 +182,30 @@
 
 ---
 
-### 16. Estado de Avance y Próximos Pasos (Arranque del Ciclo 2)
-- 🎯 **Hito Histórico Alcanzado:** **Ciclo 1 al 100% de ejecución (13 de 13 Casos de Uso completados, blindados y homologados con la Sección 7.1)**.
+### 17. Aislamiento Estricto de Roles y Casos de Uso por Actor (23/10/2026)
+- **Cumplimiento Riguroso de la Matriz de Casos de Uso Oficial (PUDS):**
+  - **Médico (`MEDICO`):**
+    - Módulo exclusivo: *Mi Agenda Médica (CU14)* e *Historial de Pacientes (CU15)*.
+    - Se eliminó del menú la pestaña general de admisiones/pacientes (CU04) y la vista general de agendamiento/turnos (CU09/CU10).
+    - Desactivada la acción de cancelación de cita (CU12) para médicos (privativa de Recepcionista y Paciente).
+    - Tarjetas visibles en Dashboard: Únicamente `CU01` (Autenticación), `CU14` (Mi Agenda Médica) y `CU15` (Historial Clínico).
+  - **Recepcionista (`RECEPCIONISTA`):**
+    - Menú y módulos autorizados: *Panel General*, *Pacientes y Fichas (CU04)*, *Habilitación de Cuentas Web en Ventanilla (CU05)* y *Disponibilidad y Citas (CU09, CU10, CU12, CU14, CU15)*.
+    - Se agregó el botón interactivo de acceso web (`Globe`) en la tabla de pacientes para habilitar o resetear credenciales de autoservicio (CU05 §3.4).
+    - Tarjetas visibles en Dashboard: `CU01`, `CU04`, `CU05`, `CU09/CU10/CU12`, `CU14`, `CU15`.
+    - No visualiza ni accede a: Usuarios/Roles (CU02), Bitácora (CU03), Médicos (CU06), Horarios (CU08).
+  - **Paciente (`PACIENTE`):**
+    - Módulos autorizados: *Mi Perfil de Paciente (CU05)* y *Mis Citas Médicas (CU09, CU10, CU12, CU15)*.
+    - Botón *Mi Historial (CU15)* adaptado para cargar la ficha propia vía `patientProfileService.fetchMyProfile()`, funcionando de inmediato incluso para pacientes nuevos sin citas previas.
+    - Tarjetas visibles en Dashboard: Únicamente `CU01`, `CU05`, `CU09/CU10` y `CU15`.
+    - No visualiza agendas médicas (CU14), padrón general (CU04), bitácora (CU03) ni usuarios (CU02).
+  - **Administrador (`ADMIN`):**
+    - Suite completa de control y supervisión (`CU01-CU04, CU06-CU08, CU09-CU15`).
+
+---
+
+### 18. Estado de Avance y Próximos Pasos (Arranque del Ciclo 2)
+- 🎯 **Hito Histórico Alcanzado:** **Ciclo 1 al 100% de ejecución (13 de 13 Casos de Uso completados, blindados con RBAC estricto, 0 fugas de UI entre actores y homologados con la Sección 7.1)**.
 - 🧪 **10 Pruebas Mínimas del Examen Oficial Superadas (10 de 10 — 100%)**:
   1. Registrar paciente nuevo (CU04 / RF02) ✅
   2. CI duplicado rechazado con HTTP 422 (CU04 / RF02) ✅

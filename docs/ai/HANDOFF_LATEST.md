@@ -73,8 +73,27 @@
     - **Estado `INASISTENCIA`:** Estandarización del 5to estado formal de cita en modelos, migraciones, seeders (CM-0010) y componentes frontend (`AppointmentsManager`, `DoctorAgendaView`, `PatientAppointmentHistoryModal`).
     - **Mailtrap Sandbox SMTP:** Parámetros configurados en `.env.example` y `.env`.
 
-12. **Métricas de Avance Consolidado (Cierre Histórico del Ciclo 1):**
-    - **Ciclo 1:** 13 de 13 Casos de Uso completados (**100% de ejecución de Ciclo 1 blindado, auditado y homologado al 100% con la Sección 7.1**).
+12. **Aislamiento Estricto de Roles y Casos de Uso por Actor (23/10/2026):**
+    - **Médico (`MEDICO`):**
+      - Módulo directo: *Mi Agenda Médica (CU14)* e *Historial de Pacientes (CU15)*.
+      - Retirado del menú de admisiones/pacientes (CU04) y de la vista general de agendamiento (CU09/CU10).
+      - Desactivada la acción de cancelación de cita (CU12) para médicos (privativa de Recepcionista y Paciente).
+      - Tarjetas visibles en Dashboard: Únicamente `CU01` (Autenticación), `CU14` (Mi Agenda Médica) y `CU15` (Historial Clínico). Cero tarjetas extrañas.
+    - **Recepcionista (`RECEPCIONISTA`):**
+      - Menú y módulos autorizados: *Panel General*, *Pacientes y Fichas (CU04)*, *Habilitación de Cuentas Web en Ventanilla (CU05)* y *Disponibilidad y Citas (CU09, CU10, CU12, CU14, CU15)*.
+      - Botón interactivo de habilitación web (`Globe`) integrado en la tabla del padrón para dar acceso o resetear credenciales de autoservicio (CU05 §3.4).
+      - Tarjetas visibles en Dashboard: `CU01`, `CU04`, `CU05`, `CU09/CU10/CU12`, `CU14`, `CU15`.
+      - Sin acceso a Usuarios (CU02), Bitácora (CU03), Médicos (CU06) ni Horarios (CU08).
+    - **Paciente (`PACIENTE`):**
+      - Módulos autorizados: *Mi Perfil de Paciente (CU05)* y *Mis Citas Médicas (CU09, CU10, CU12, CU15)*.
+      - Botón *Mi Historial (CU15)* adaptado para cargar la ficha propia vía `patientProfileService.fetchMyProfile()`, funcionando de inmediato incluso para pacientes nuevos sin citas previas.
+      - Tarjetas visibles en Dashboard: Únicamente `CU01`, `CU05`, `CU09/CU10` y `CU15`.
+      - Sin acceso a agendas médicas de doctores (CU14), padrón general (CU04), bitácora (CU03) ni usuarios (CU02).
+    - **Administrador (`ADMIN`):**
+      - Visualiza la suite completa de control institucional (`CU01-CU04, CU06-CU08, CU09-CU15`).
+
+13. **Métricas de Avance Consolidado (Cierre Histórico del Ciclo 1):**
+    - **Ciclo 1:** 13 de 13 Casos de Uso completados (**100% de ejecución de Ciclo 1 blindado, auditado y homologado al 100% con la Sección 7.1 y aislamiento de roles**).
     - **Progreso Global del Proyecto:** 13 de 23 (+1) Casos de Uso completados (**56.5%**).
     - **10 Pruebas Mínimas del Examen Oficial Superadas:** **10 de 10 (100% de pruebas oficiales superadas)**:
       - Prueba #1 (Registrar paciente / CU04) ✅

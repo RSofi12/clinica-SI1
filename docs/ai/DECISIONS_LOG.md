@@ -115,12 +115,13 @@
   2. Ofrecer una experiencia de usuario limpia y congruente donde cada actor visualiza exclusivamente los controles y botones para los cuales posee autorización operativa.
 * **Impacto:** Coherencia absoluta en la experiencia de usuario de Médicos, Recepcionistas y Pacientes.
 
-### Registro 17: 2026-10-23
-* **Decisión:** Alineación estricta de navegación e interfaz para el actor Médico según matriz de Casos de Uso del Ciclo 1 (Google Doc / PUDS):
-  1. Eliminación definitiva de la pestaña `Pacientes y Fichas` (CU04) de la barra lateral para el rol `MEDICO`, ya que CU04 pertenece exclusivamente a `Recepcionista` y `Administrador`.
-  2. Especialización del módulo de citas para el rol `MEDICO`: no se muestran pestañas de `Citas Programadas (CU10)` ni `Consultar Disponibilidad (CU09)`. En su lugar, el médico accede de forma directa a **"Mi Agenda Médica Diaria (CU14)"** y desde cada cita dispone del botón **"Ver Historial (CU15)"** para consultar la cronología de citas del paciente (`PatientAppointmentHistoryModal`).
-  3. En el Panel General (Dashboard), las tarjetas informativas diferencian con precisión las acciones permitidas por rol, evitando enlaces rotos hacia módulos restringidos.
-* **Motivo:** Cumplimiento riguroso de la especificación oficial de actores del Ciclo 1 donde al Médico le corresponden única y exclusivamente CU14 (Agenda Médica Diaria) y CU15 (Historial de Citas del Paciente), impidiendo cualquier intento de navegación o visualización de módulos ajenos.
-* **Impacto:** Interfaz 100% limpia, precisa y perfectamente alineada con la documentación oficial del proyecto.
+### Registro 18: 2026-10-23
+* **Decisión:** Aislamiento estricto y exhaustivo de navegación, tarjetas de Dashboard y acciones operativas por actor según la matriz oficial de Casos de Uso (PUDS):
+  1. **Dashboard Cards:** En `App.jsx`, renderizado estrictamente condicional por rol de cada tarjeta del Dashboard. Ningún actor visualiza tarjetas de Casos de Uso ajenos (cero tarjetas de administración o bitácora para Médicos/Pacientes, cero tarjetas de padrón general para Médicos/Pacientes).
+  2. **Recepcionista y CU05:** Integración directa del botón interactivo `Globe` en la tabla de pacientes (`PatientsManager.jsx`) para que la recepcionista pueda habilitar cuentas web en ventanilla y gestionar credenciales de autoservicio (CU05 §3.4).
+  3. **Médico y CU12:** La acción de cancelar citas (CU12) se condiciona estrictamente a `role !== 'MEDICO'`, dado que en PUDS la cancelación es potestad de Recepcionista y Paciente.
+  4. **Paciente y CU15:** El botón `Mi Historial (CU15)` en `AppointmentsManager.jsx` se vincula a `myPatientProfile` vía `patientProfileService.fetchMyProfile()`, permitiendo que el paciente acceda a su historial incluso si aún no tiene citas programadas.
+* **Motivo:** Evitar sorpresas o fugas de interfaz donde a un usuario le aparezcan opciones que no corresponden a su rol, garantizando una segregación de funciones (SoD) total tanto en la UI como en el Backend.
+* **Impacto:** Segregación perfecta y comprobada de Casos de Uso por actor en todo el frontend y backend.
 
 
