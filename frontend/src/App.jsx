@@ -157,21 +157,23 @@ export default function App() {
     );
   }
 
-  // Nombre de sección activa para el breadcrumb superior
+  // Nombre de sección activa para el breadcrumb superior (con validación de rol)
   const getSectionTitle = () => {
     switch (dashboardTab) {
       case 'users':
-        return 'Gestión de Usuarios y Roles (CU02)';
+        return role === 'ADMIN' ? 'Gestión de Usuarios y Roles (CU02)' : 'Panel General';
       case 'audit':
-        return 'Bitácora de Auditoría del Sistema (CU03)';
+        return role === 'ADMIN' ? 'Bitácora de Auditoría del Sistema (CU03)' : 'Panel General';
       case 'patients':
-        return 'Gestión de Pacientes (CU04)';
+        return ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+          ? 'Gestión de Pacientes y Cuentas Web (CU04 / CU05)'
+          : 'Panel General';
       case 'doctors':
-        return 'Plantel Médico y Especialidades (CU06 / CU07)';
+        return role === 'ADMIN' ? 'Plantel Médico y Especialidades (CU06 / CU07)' : 'Panel General';
       case 'schedules':
-        return 'Gestión de Horarios y Disponibilidad Médica (CU08)';
+        return role === 'ADMIN' ? 'Gestión de Horarios y Disponibilidad Médica (CU08)' : 'Panel General';
       case 'appointments':
-        return 'Consulta de Disponibilidad de Horarios y Citas (CU09)';
+        return 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
       case 'patient-profile':
         return 'Mi Perfil de Paciente (CU05)';
       case 'overview':
@@ -413,19 +415,43 @@ export default function App() {
                     </p>
                   </div>
 
+                  {/* Tarjeta de CU05: Habilitación de Cuentas Web para Recepción y Admin */}
+                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('patients')}
+                      className="p-4 rounded-xl border bg-teal-50/60 border-teal-200/80 hover:bg-teal-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-teal-800 uppercase">CU05: Cuentas Web</span>
+                          <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-1.5 py-0.5 rounded-md">
+                            Padrón →
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          Habilite el acceso web de autoservicio para pacientes con su CI desde la tabla de Pacientes (§3.4).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <div
-                    onClick={() => ['ADMIN', 'RECEPCIONISTA'].includes(role) && setDashboardTab('doctors')}
+                    onClick={() => role === 'ADMIN' && setDashboardTab('doctors')}
                     className={`p-4 rounded-xl border transition ${
-                      ['ADMIN', 'RECEPCIONISTA'].includes(role)
+                      role === 'ADMIN'
                         ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
                         : 'bg-slate-50 border-slate-200/80'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-[#00687a] uppercase">CU06: Médicos</span>
-                      {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
+                      {role === 'ADMIN' ? (
                         <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
                           Plantel →
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-semibold text-slate-400 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
+                          Admin
                         </span>
                       )}
                     </div>
@@ -435,18 +461,22 @@ export default function App() {
                   </div>
 
                   <div
-                    onClick={() => ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && setDashboardTab('schedules')}
+                    onClick={() => role === 'ADMIN' && setDashboardTab('schedules')}
                     className={`p-4 rounded-xl border transition ${
-                      ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+                      role === 'ADMIN'
                         ? 'bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs cursor-pointer'
                         : 'bg-slate-50 border-slate-200/80'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-[#00687a] uppercase">CU08: Horarios y Bloqueos</span>
-                      {['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) && (
+                      {role === 'ADMIN' ? (
                         <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
                           Gestionar →
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-semibold text-slate-400 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
+                          Admin
                         </span>
                       )}
                     </div>
