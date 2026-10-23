@@ -49,6 +49,12 @@
 - [x] Alineación de CU06 y CU08 en Frontend (`Sidebar.jsx`, `App.jsx`) y Backend (`api.php`) al rol exclusivo `ADMIN`.
 - [x] Asistente de reserva en frontend (`AppointmentBookingModal.jsx`) con auto-detección y bloqueo de ficha personal para pacientes.
 
+### Fase 6: Homologación Técnica y Arquitectónica con Sección 7.1 (Google Doc / RUP)
+- [x] Adopción de Axios en `frontend/src/services/api.js` con interceptores Bearer y withCredentials.
+- [x] Emisión de Bearer Token con Laravel Sanctum v4 en `/auth/login` y soporte híbrido en middleware `EnsureUserRole`.
+- [x] Homologación de atributo `motivo_breve` en `Cita.php`, `AppointmentBookRequest` y `AppointmentBookingService`.
+- [x] Estandarización de estados de cita con `INASISTENCIA` en modelos, migraciones, seeders y componentes frontend.
+- [x] Parámetros Mailtrap Sandbox SMTP documentados en `.env.example` y `.env`.
 
 ---
 

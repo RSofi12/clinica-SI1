@@ -163,8 +163,27 @@
 
 ---
 
-### 15. Estado de Avance y Próximos Pasos (Arranque del Ciclo 2)
-- 🎯 **Hito Histórico Alcanzado:** **Ciclo 1 al 100% de ejecución (13 de 13 Casos de Uso completados y blindados)**.
+### 15. Homologación Técnica y Arquitectónica con Sección 7.1 del Documento de Especificación (23/10/2026)
+- **Cliente HTTP Frontend (Axios):**
+  - Adopción de `axios` en `frontend/src/services/api.js` exportando `apiClient` con interceptores para inyección automática de cabeceras `Authorization: Bearer <token>`, `withCredentials: true` para cookies y manejo unificado de errores. Helper `apiFetch` envuelto para compatibilidad 100% retroactiva.
+- **Autenticación Dual / Bearer Tokens con Laravel Sanctum v4:**
+  - Instalación de `laravel/sanctum` v4 con migración de `personal_access_tokens`.
+  - Emisión de token Sanctum (`plainTextToken`) en `AuthController::login()` devuelto en clave `'token'`.
+  - Soporte híbrido en middleware `EnsureUserRole`: autentica tanto por sesión web de cookies (`Auth::user()`) como por Bearer Token (`$request->user('sanctum')`).
+  - Almacenamiento y limpieza automática de `token` en `localStorage` vía `AuthContext.jsx`.
+- **Homologación de Atributo `motivo_breve`:**
+  - Modelo `Cita.php` incluye `motivo_breve` en `$fillable`, `$appends` y accessors/mutators transparentes vinculados a la columna `motivo_consulta`.
+  - `AppointmentBookRequest` y `AppointmentBookingService` aceptan y procesan indistintamente `motivo_breve` o `motivo_consulta`.
+- **Estandarización del Estado `INASISTENCIA`:**
+  - Alineación con `DDL_Database_Clinica_LaCruz.sql` y el Informe Oficial: el quinteto oficial de estados de cita es `PROGRAMADA`, `CONFIRMADA`, `ATENDIDA`, `CANCELADA`, `INASISTENCIA`.
+  - Homologación en `Cita.php`, `AppointmentsController.php` (métricas de agenda e historial), `ScheduleAndAppointmentSeeder.php` (demo CM-0010) y componentes frontend (`AppointmentsManager`, `DoctorAgendaView`, `PatientAppointmentHistoryModal`).
+- **Configuración SMTP Mailtrap Sandbox:**
+  - Documentación de credenciales y host `sandbox.smtp.mailtrap.io:2525` en `backend/.env.example` y `backend/.env`.
+
+---
+
+### 16. Estado de Avance y Próximos Pasos (Arranque del Ciclo 2)
+- 🎯 **Hito Histórico Alcanzado:** **Ciclo 1 al 100% de ejecución (13 de 13 Casos de Uso completados, blindados y homologados con la Sección 7.1)**.
 - 🧪 **10 Pruebas Mínimas del Examen Oficial Superadas (10 de 10 — 100%)**:
   1. Registrar paciente nuevo (CU04 / RF02) ✅
   2. CI duplicado rechazado con HTTP 422 (CU04 / RF02) ✅

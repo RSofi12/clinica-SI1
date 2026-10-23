@@ -66,8 +66,15 @@
     - **Alineación de Permisos en UI:** Gestión de médicos (CU06) y horarios (CU08) restringidos exclusivamente a `ADMIN` en `Sidebar.jsx` y `App.jsx`.
     - **Autoservicio Guiado en Frontend:** `AppointmentBookingModal.jsx` detecta sesión de paciente y fija automáticamente su titularidad, mostrando badge *"Tu Ficha Personal (Verificada)"*.
 
-11. **Métricas de Avance Consolidado (Cierre Histórico del Ciclo 1):**
-    - **Ciclo 1:** 13 de 13 Casos de Uso completados (**100% de ejecución de Ciclo 1 blindado y auditado**).
+11. **Homologación Arquitectónica con Sección 7.1 (Google Doc / RUP):**
+    - **Axios en Frontend:** `frontend/src/services/api.js` configurado con `apiClient` e interceptores Bearer y withCredentials, envolviendo `apiFetch` con retrocompatibilidad absoluta.
+    - **Dual Auth Sanctum Bearer Token:** Laravel Sanctum v4 emitiendo Bearer Tokens en `/auth/login`, soportado de forma híbrida en `EnsureUserRole` y almacenado en `localStorage` vía `AuthContext.jsx`.
+    - **Atributo `motivo_breve`:** Mapeo bidireccional en `Cita.php` y soporte en `AppointmentBookRequest` / `AppointmentBookingService`.
+    - **Estado `INASISTENCIA`:** Estandarización del 5to estado formal de cita en modelos, migraciones, seeders (CM-0010) y componentes frontend (`AppointmentsManager`, `DoctorAgendaView`, `PatientAppointmentHistoryModal`).
+    - **Mailtrap Sandbox SMTP:** Parámetros configurados en `.env.example` y `.env`.
+
+12. **Métricas de Avance Consolidado (Cierre Histórico del Ciclo 1):**
+    - **Ciclo 1:** 13 de 13 Casos de Uso completados (**100% de ejecución de Ciclo 1 blindado, auditado y homologado al 100% con la Sección 7.1**).
     - **Progreso Global del Proyecto:** 13 de 23 (+1) Casos de Uso completados (**56.5%**).
     - **10 Pruebas Mínimas del Examen Oficial Superadas:** **10 de 10 (100% de pruebas oficiales superadas)**:
       - Prueba #1 (Registrar paciente / CU04) ✅
@@ -84,7 +91,7 @@
 ### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
 - Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
   - `CU11`: Reprogramar Cita Médica (RF08) con nueva fecha y liberación del horario anterior.
-  - `CU13`: Registrar Asistencia y Estado de Cita Médica (RF10).
+  - `CU13`: Registrar Asistencia y Estado de Cita Médica (RF10 — *Programada* → *Confirmada* → *Atendida* / *Inasistencia*).
   - `CU16-CU19`: Expediente Clínico Digital, Consultas, Diagnósticos CIE y Recetas.
   - `CU20-CU23`: Recordatorios, Pasarela de Pagos Stripe Sandbox y Reportes con Filtros Dinámicos (RF13).
 
