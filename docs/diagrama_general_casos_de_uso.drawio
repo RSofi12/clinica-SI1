@@ -1,0 +1,485 @@
+<mxfile host="app.diagrams.net" modified="2026-10-25T19:00:00.000Z" agent="Mozilla/5.0" version="24.0.0" type="device">
+  <diagram id="diag_general_c1" name="Diagrama General CU (Ciclo 1)">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1150" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- ENCABEZADO -->
+        <mxCell id="title_c1" value="&lt;b style=&quot;font-size: 18px;&quot;&gt;DIAGRAMA GENERAL DE CASOS DE USO — CENTRO MÉDICO LA CRUZ&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 12px; color: #475569;&quot;&gt;Metodología PUDS / RUP — Alcance Ciclo 1 (Base Operativa, Padrón Clínico y Citas Médicas)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="60" y="20" width="1680" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- LÍMITE DEL SISTEMA (BOUNDARY) -->
+        <mxCell id="boundary_c1" value="Centro Médico La Cruz — Sistema de Información Clínico (Límite del Sistema)" style="shape=rect;rounded=1;arcSize=2;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#334155;strokeWidth=2;fontFamily=Helvetica;fontSize=13;fontStyle=1;verticalAlign=top;spacingTop=14;align=center;fontColor=#1E293B;" vertex="1" parent="1">
+          <mxGeometry x="290" y="75" width="1080" height="1020" as="geometry" />
+        </mxCell>
+
+        <!-- ACTORES IZQUIERDA -->
+        <!-- Paciente -->
+        <mxCell id="act_p" value="&lt;b&gt;Paciente&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Autoservicio Web)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#E0F2FE;strokeColor=#0284C7;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="310" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- Recepcionista -->
+        <mxCell id="act_r" value="&lt;b&gt;Recepcionista&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Atención y Admisión)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#FEF3C7;strokeColor=#D97706;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="590" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- Médico (Actor Unificado según AGENTS.md) -->
+        <mxCell id="act_m" value="&lt;b&gt;Médico&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(General y Especialistas)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#DCFCE7;strokeColor=#16A34A;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="870" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- ACTORES DERECHA -->
+        <!-- Administrador -->
+        <mxCell id="act_a" value="&lt;b&gt;Administrador&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Gestión Institucional)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#EDE9FE;strokeColor=#7C3AED;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1465" y="340" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- Sistema / Cron Scheduler -->
+        <mxCell id="act_s" value="&lt;b&gt;&amp;laquo;System&amp;raquo;&lt;/b&gt;&lt;br/&gt;&lt;b&gt;Sistema (Cron)&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Tareas en 2do Plano)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#F1F5F9;strokeColor=#64748B;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1465" y="740" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- ========================================================================= -->
+        <!-- CASOS DE USO (ELIPSES UML) DENTRO DEL LÍMITE -->
+        <!-- ========================================================================= -->
+
+        <!-- PAQUETE 1: SEGURIDAD Y AUDITORÍA (AZUL PASTEL #DAE8FC) -->
+        <mxCell id="cu01" value="&lt;b&gt;CU01&lt;/b&gt;&lt;br/&gt;Autenticar usuario" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="720" y="130" width="220" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu02" value="&lt;b&gt;CU02&lt;/b&gt;&lt;br/&gt;Gestionar usuarios, roles y permisos" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="210" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu03" value="&lt;b&gt;CU03&lt;/b&gt;&lt;br/&gt;Gestionar bitácora de auditoría" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="340" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 2: RECURSOS CLÍNICOS Y PACIENTES (VERDE PASTEL #D5E8D4) -->
+        <mxCell id="cu04" value="&lt;b&gt;CU04&lt;/b&gt;&lt;br/&gt;Gestionar pacientes" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="720" y="270" width="220" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu05" value="&lt;b&gt;CU05&lt;/b&gt;&lt;br/&gt;Gestionar cuenta y perfil del paciente" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="350" y="240" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu06" value="&lt;b&gt;CU06&lt;/b&gt;&lt;br/&gt;Gestionar médicos" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="480" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu07" value="&lt;b&gt;CU07&lt;/b&gt;&lt;br/&gt;Gestionar especialidades médicas" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="620" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu08" value="&lt;b&gt;CU08&lt;/b&gt;&lt;br/&gt;Gestionar horarios de atención médica" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="760" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 3: GESTIÓN DE CITAS MÉDICAS (NARANJA PASTEL #FFE6CC) -->
+        <mxCell id="cu09" value="&lt;b&gt;CU09&lt;/b&gt;&lt;br/&gt;Consultar disponibilidad de horarios" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="350" y="380" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu10" value="&lt;b&gt;CU10&lt;/b&gt;&lt;br/&gt;Programar cita médica" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="350" y="525" width="230" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu12" value="&lt;b&gt;CU12&lt;/b&gt;&lt;br/&gt;Cancelar cita médica" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="350" y="675" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu14" value="&lt;b&gt;CU14&lt;/b&gt;&lt;br/&gt;Consultar agenda médica diaria" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="720" y="870" width="220" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu15" value="&lt;b&gt;CU15&lt;/b&gt;&lt;br/&gt;Consultar historial de citas de paciente" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="350" y="815" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ========================================================================= -->
+        <!-- ASOCIACIONES COMUNICACIONALES (LÍNEAS SÓLIDAS ACTOR - CU) -->
+        <!-- ========================================================================= -->
+
+        <!-- PACIENTE -->
+        <mxCell id="link_p_cu01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_p" target="cu01" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_p_cu05" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_p" target="cu05" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_p_cu09" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_p" target="cu09" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_p_cu10" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_p" target="cu10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_p_cu12" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_p" target="cu12" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_p_cu15" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_p" target="cu15" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RECEPCIONISTA -->
+        <mxCell id="link_r_cu01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu01" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_r_cu04" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu04" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_r_cu05" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu05" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_r_cu09" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu09" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_r_cu10" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_r_cu12" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu12" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_r_cu14" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu14" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_r_cu15" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_r" target="cu15" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- MÉDICO -->
+        <mxCell id="link_m_cu01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_m" target="cu01" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_m_cu14" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_m" target="cu14" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_m_cu15" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_m" target="cu15" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ADMINISTRADOR -->
+        <mxCell id="link_a_cu01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu01" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_a_cu02" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu02" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_a_cu03" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu03" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_a_cu04" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu04" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_a_cu06" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu06" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_a_cu07" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu07" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_a_cu08" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu08" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link_a_cu14" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_a" target="cu14" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SISTEMA (CRON) -->
+        <mxCell id="link_s_cu03" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="act_s" target="cu03" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ========================================================================= -->
+        <!-- RELACIONES DE DEPENDENCIA UML: «include» y «extend» -->
+        <!-- ========================================================================= -->
+
+        <!-- CU10 «include» CU09 (Para programar cita es obligatorio consultar disponibilidad) -->
+        <mxCell id="rel_inc_cu10_cu09" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="cu10" target="cu09" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_inc_cu10_cu09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#0369A1;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="rel_inc_cu10_cu09">
+          <mxGeometry x="0" relative="1" as="geometry">
+            <mxPoint x="-15" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CU10 «include» CU03 (Toda reserva genera registro obligatorio en bitácora) -->
+        <mxCell id="rel_inc_cu10_cu03" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;entryX=0;entryY=0.8;" edge="1" source="cu10" target="cu03" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="670" y="550" />
+              <mxPoint x="1000" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_inc_cu10_cu03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#0369A1;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="rel_inc_cu10_cu03">
+          <mxGeometry x="0" relative="1" as="geometry">
+            <mxPoint x="20" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CU12 «include» CU03 (La cancelación con motivo registra en bitácora) -->
+        <mxCell id="rel_inc_cu12_cu03" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;entryX=0.2;entryY=1;" edge="1" source="cu12" target="cu03" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="700" />
+              <mxPoint x="1050" y="470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_inc_cu12_cu03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#0369A1;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="rel_inc_cu12_cu03">
+          <mxGeometry x="0" relative="1" as="geometry">
+            <mxPoint x="40" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CU12 «extend» CU10 (Cancelar extiende la cita programada existente) -->
+        <mxCell id="rel_ext_cu12_cu10" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="cu12" target="cu10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_ext_cu12_cu10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="rel_ext_cu12_cu10">
+          <mxGeometry x="0" relative="1" as="geometry">
+            <mxPoint x="-15" y="0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- CU05 «extend» CU04 (Activar autoservicio web extiende la ficha de paciente) -->
+        <mxCell id="rel_ext_cu05_cu04" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="cu05" target="cu04" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_ext_cu05_cu04" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="rel_ext_cu05_cu04">
+          <mxGeometry x="0" relative="1" as="geometry">
+            <mxPoint x="0" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- LEYENDA TÉCNICA PUDS -->
+        <mxCell id="legend_box" value="&lt;b&gt;LEYENDA METODOLÓGICA (PUDS / RUP)&lt;/b&gt;&lt;hr style=&quot;margin: 4px 0;&quot;/&gt;&lt;table style=&quot;font-size: 10px; font-family: Helvetica; color: #334155; line-height: 1.3;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;background:#DAE8FC; border:1px solid #6C8EBF; width:14px; height:10px;&quot;&gt;&lt;/td&gt;&lt;td&gt;&amp;nbsp;Paquete 1: Seguridad y Auditoría&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;background:#D5E8D4; border:1px solid #82B366; width:14px; height:10px;&quot;&gt;&lt;/td&gt;&lt;td&gt;&amp;nbsp;Paquete 2: Recursos Clínicos y Pacientes&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;background:#FFE6CC; border:1px solid #D79B00; width:14px; height:10px;&quot;&gt;&lt;/td&gt;&lt;td&gt;&amp;nbsp;Paquete 3: Gestión de Citas Médicas&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan=&quot;2&quot; style=&quot;padding-top:4px;&quot;&gt;&lt;font color=&quot;#0369A1&quot;&gt;&lt;b&gt;- - -&amp;gt; &amp;laquo;include&amp;raquo;&lt;/b&gt;&lt;/font&gt; Inclusión obligatoria incondicional&lt;br/&gt;&lt;font color=&quot;#BE123C&quot;&gt;&lt;b&gt;- - -&amp;gt; &amp;laquo;extend&amp;raquo;&lt;/b&gt;&lt;/font&gt; Extensión condicional según evento&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="html=1;whiteSpace=wrap;rounded=1;arcSize=5;fillColor=#FFFFFF;strokeColor=#94A3B8;strokeWidth=1.2;fontFamily=Helvetica;fontSize=10;align=left;verticalAlign=top;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="690" y="960" width="280" height="115" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- PÁGINA 2: DIAGRAMA GENERAL DE CASOS DE USO (SISTEMA COMPLETO - CICLOS 1 Y 2) -->
+  <diagram id="diag_general_completo" name="Diagrama General CU (Sistema Completo)">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1450" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ENCABEZADO SISTEMA COMPLETO -->
+        <mxCell id="title_full" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;DIAGRAMA GENERAL DE CASOS DE USO — SISTEMA COMPLETO&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 13px; color: #475569;&quot;&gt;Clínica Vida Salud / Centro Médico La Cruz — 24 Casos de Uso Oficiales distribuidos en los 6 Paquetes de Dominio PUDS&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="80" y="20" width="2040" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- LÍMITE DEL SISTEMA COMPLETO -->
+        <mxCell id="boundary_full" value="Centro Médico La Cruz — Plataforma de Gestión Clínica, Citas y Analítica (Límite Global del Sistema)" style="shape=rect;rounded=1;arcSize=2;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#1E293B;strokeWidth=2;fontFamily=Helvetica;fontSize=14;fontStyle=1;verticalAlign=top;spacingTop=16;align=center;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="1540" height="1320" as="geometry" />
+        </mxCell>
+
+        <!-- ACTORES IZQUIERDA -->
+        <mxCell id="f_act_p" value="&lt;b&gt;Paciente&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Autoservicio)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#E0F2FE;strokeColor=#0284C7;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="380" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f_act_r" value="&lt;b&gt;Recepcionista&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Atención y Admisión)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#FEF3C7;strokeColor=#D97706;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="680" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f_act_m" value="&lt;b&gt;Médico&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(General y Especialista)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#DCFCE7;strokeColor=#16A34A;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="1020" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- ACTORES DERECHA -->
+        <mxCell id="f_act_a" value="&lt;b&gt;Administrador&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Control Institucional)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#EDE9FE;strokeColor=#7C3AED;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1940" y="320" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f_act_s" value="&lt;b&gt;&amp;laquo;System&amp;raquo;&lt;/b&gt;&lt;br/&gt;&lt;b&gt;Sistema (Cron)&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Servicios Background)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#F1F5F9;strokeColor=#64748B;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1940" y="640" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f_act_stripe" value="&lt;b&gt;&amp;laquo;External API&amp;raquo;&lt;/b&gt;&lt;br/&gt;&lt;b&gt;Stripe Sandbox&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Pasarela de Pagos)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#FEE2E2;strokeColor=#DC2626;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1940" y="900" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f_act_ia" value="&lt;b&gt;&amp;laquo;External API&amp;raquo;&lt;/b&gt;&lt;br/&gt;&lt;b&gt;Servicio de IA&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#64748B&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(NLP / Transcripción)&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=12;fontStyle=0;fillColor=#FEF9C3;strokeColor=#CA8A04;fontColor=#0F172A;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1940" y="1150" width="65" height="105" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO POR PAQUETE (24 CUs) -->
+
+        <!-- P1: SEGURIDAD Y AUDITORÍA -->
+        <mxCell id="f_cu01" value="&lt;b&gt;CU01&lt;/b&gt;&lt;br/&gt;Autenticar usuario" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="930" y="140" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu02" value="&lt;b&gt;CU02&lt;/b&gt;&lt;br/&gt;Gestionar usuarios, roles y permisos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="210" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu03" value="&lt;b&gt;CU03&lt;/b&gt;&lt;br/&gt;Gestionar bitácora de auditoría" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="320" width="230" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- P2: RECURSOS CLÍNICOS Y PACIENTES -->
+        <mxCell id="f_cu04" value="&lt;b&gt;CU04&lt;/b&gt;&lt;br/&gt;Gestionar pacientes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="270" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu05" value="&lt;b&gt;CU05&lt;/b&gt;&lt;br/&gt;Gestionar cuenta y perfil del paciente" style="ellipse;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="250" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu06" value="&lt;b&gt;CU06&lt;/b&gt;&lt;br/&gt;Gestionar médicos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="430" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu07" value="&lt;b&gt;CU07&lt;/b&gt;&lt;br/&gt;Gestionar especialidades médicas" style="ellipse;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="530" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu08" value="&lt;b&gt;CU08&lt;/b&gt;&lt;br/&gt;Gestionar horarios de atención médica" style="ellipse;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="630" width="230" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- P3: GESTIÓN DE CITAS -->
+        <mxCell id="f_cu09" value="&lt;b&gt;CU09&lt;/b&gt;&lt;br/&gt;Consultar disponibilidad de horarios" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="370" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu10" value="&lt;b&gt;CU10&lt;/b&gt;&lt;br/&gt;Programar cita médica" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="490" width="230" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu11" value="&lt;b&gt;CU11&lt;/b&gt;&lt;br/&gt;Reprogramar cita médica" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="600" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu12" value="&lt;b&gt;CU12&lt;/b&gt;&lt;br/&gt;Cancelar cita médica" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="700" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu13" value="&lt;b&gt;CU13&lt;/b&gt;&lt;br/&gt;Registrar asistencia y estado de cita" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="720" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu14" value="&lt;b&gt;CU14&lt;/b&gt;&lt;br/&gt;Consultar agenda médica diaria" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="830" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu15" value="&lt;b&gt;CU15&lt;/b&gt;&lt;br/&gt;Consultar historial de citas de paciente" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE6CC;strokeColor=#D79B00;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="340" y="820" width="230" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- P4: HISTORIAL CLÍNICO Y CONSULTAS -->
+        <mxCell id="f_cu16" value="&lt;b&gt;CU16&lt;/b&gt;&lt;br/&gt;Registrar consulta médica (Triaje y Diagnóstico)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="990" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu17" value="&lt;b&gt;CU17&lt;/b&gt;&lt;br/&gt;Gestionar antecedentes médicos" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="990" width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu18" value="&lt;b&gt;CU18&lt;/b&gt;&lt;br/&gt;Gestionar historial clínico digital (Recetas y Evolución)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="640" y="1110" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu19" value="&lt;b&gt;CU19&lt;/b&gt;&lt;br/&gt;Consultar historial médico y antecedentes" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="940" y="1110" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu20" value="&lt;b&gt;CU20&lt;/b&gt;&lt;br/&gt;Generar análisis clínico automatizado (IA)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1050" width="240" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- P5: INTEGRACIONES Y PAGOS -->
+        <mxCell id="f_cu21" value="&lt;b&gt;CU21&lt;/b&gt;&lt;br/&gt;Enviar recordatorios y notificaciones push" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="760" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu22" value="&lt;b&gt;CU22&lt;/b&gt;&lt;br/&gt;Pagar cita con Stripe (modo prueba)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="890" width="230" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- P6: REPORTES Y ANALÍTICA -->
+        <mxCell id="f_cu23" value="&lt;b&gt;CU23&lt;/b&gt;&lt;br/&gt;Generar reportes con filtros dinámicos (RF13)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="1030" width="250" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cu24" value="&lt;b&gt;CU24&lt;/b&gt;&lt;br/&gt;Generar reporte personalizado por voz con IA" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontColor=#1E293B;strokeWidth=1.5;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="1170" width="250" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- ASOCIACIONES CLAVE SISTEMA COMPLETO -->
+        <!-- Paciente -->
+        <mxCell id="fl_p_01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu01" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_05" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu05" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_09" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_10" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_11" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu11" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_12" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu12" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_15" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu15" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_19" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu19" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_p_22" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_p" target="f_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Recepcionista -->
+        <mxCell id="fl_r_01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu01" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_04" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_05" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu05" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_09" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_10" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_11" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu11" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_12" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu12" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_13" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu13" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_14" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu14" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_15" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu15" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_r_22" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_r" target="f_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Médico -->
+        <mxCell id="fl_m_01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu01" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_13" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu13" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_14" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu14" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_15" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu15" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_16" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu16" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_17" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu17" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_18" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_19" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu19" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_m_20" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_m" target="f_cu20" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Administrador -->
+        <mxCell id="fl_a_01" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu01" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_02" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu02" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_03" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu03" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_04" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_06" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu06" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_07" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu07" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_08" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu08" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_14" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu14" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_23" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu23" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_a_24" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_a" target="f_cu24" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Sistema, Stripe, IA -->
+        <mxCell id="fl_s_03" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_s" target="f_cu03" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_s_21" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_s" target="f_cu21" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_st_22" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_stripe" target="f_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_ia_20" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_ia" target="f_cu20" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="fl_ia_24" style="html=1;strokeColor=#475569;strokeWidth=1.2;endArrow=none;" edge="1" source="f_act_ia" target="f_cu24" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- DEPENDENCIAS INCLUYE Y EXTIENDE FULL -->
+        <mxCell id="f_inc_10_09" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu10" target="f_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_10_09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#0369A1;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_inc_10_09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="f_inc_16_18" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu16" target="f_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_16_18" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#0369A1;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_inc_16_18"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="f_ext_11_10" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu11" target="f_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_11_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_ext_11_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="f_ext_12_10" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu12" target="f_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_12_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_ext_12_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="f_ext_22_10" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu22" target="f_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_22_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_ext_22_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-12" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="f_ext_05_04" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu05" target="f_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_05_04" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_ext_05_04"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-12" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="f_ext_17_16" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu17" target="f_cu16" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_17_16" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_ext_17_16"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-12" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="f_ext_24_23" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="f_cu24" target="f_cu23" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="f_lbl_24_23" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#BE123C;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="f_ext_24_23"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-15" y="0" as="offset" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
