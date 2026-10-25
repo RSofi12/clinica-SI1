@@ -25,6 +25,14 @@ class PatientsController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $user = Auth::user();
+        if ($user && ($user->tipo_usuario ?? $user->rol) === 'PACIENTE') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Acceso denegado: los pacientes no tienen autorización para consultar el padrón general.',
+            ], 403);
+        }
+
         $query = Patient::with(['contactosEmergencia']);
 
         // Filtro de búsqueda textual (CI, N° Historia, Nombres o Apellidos)
@@ -341,6 +349,14 @@ class PatientsController extends Controller
      */
     public function enableWebAccount(Request $request, int $id): JsonResponse
     {
+        $operator = Auth::user();
+        if (!$operator || !in_array($operator->tipo_usuario ?? $operator->rol, ['ADMIN', 'RECEPCIONISTA'], true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Acceso denegado: solo el personal de recepción o administración puede habilitar accesos web.',
+            ], 403);
+        }
+
         $patient = Patient::find($id);
 
         if (!$patient) {

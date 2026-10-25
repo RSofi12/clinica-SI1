@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Modelo User (Usuarios)
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'usuarios';
     protected $primaryKey = 'id_usuario';
@@ -47,6 +48,18 @@ class User extends Authenticatable
             'fecha_actualizacion' => 'datetime',
             'intentos_fallidos' => 'integer',
         ];
+    }
+
+    protected $appends = [
+        'rol',
+    ];
+
+    /**
+     * Accessor de compatibilidad para $user->rol mapeado a tipo_usuario
+     */
+    public function getRolAttribute(): ?string
+    {
+        return $this->tipo_usuario;
     }
 
     /**

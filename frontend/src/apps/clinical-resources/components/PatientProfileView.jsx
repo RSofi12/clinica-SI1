@@ -52,7 +52,7 @@ export function PatientProfileView() {
     setFeedback({ type: null, message: null });
     try {
       const res = await patientProfileService.fetchMyProfile();
-      const p = res.patient;
+      const p = res.data || res.patient;
       setPatient(p);
 
       const contacto = p.contactos_emergencia?.[0] || {};

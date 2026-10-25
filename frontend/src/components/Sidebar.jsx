@@ -14,6 +14,7 @@ import {
   X,
   Shield,
   Layers,
+  Clock,
 } from 'lucide-react';
 import logoColor from '../assets/logo-color.svg';
 
@@ -79,7 +80,7 @@ export function Sidebar({
           subtitle: 'Padrón clínico y admisiones',
           tag: 'CU04 / RF02',
           icon: UserPlus,
-          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO'],
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA'],
         },
         {
           id: 'doctors',
@@ -87,16 +88,23 @@ export function Sidebar({
           subtitle: 'Plantel médico institucional',
           tag: 'CU06 / RF03',
           icon: Stethoscope,
-          requiredRoles: ['ADMIN', 'RECEPCIONISTA'],
+          requiredRoles: ['ADMIN'],
+        },
+        {
+          id: 'schedules',
+          label: 'Horarios y Disponibilidad',
+          subtitle: 'Franjas semanales y feriados',
+          tag: 'CU08 / RF05',
+          icon: Clock,
+          requiredRoles: ['ADMIN'],
         },
         {
           id: 'appointments',
-          label: 'Agenda y Citas',
-          subtitle: 'Reserva anti-colisión',
-          tag: 'CU10 / RF07',
-          icon: Calendar,
-          disabled: true,
-          badge: 'Ciclo 2',
+          label: role === 'MEDICO' ? 'Mi Agenda Médica' : role === 'PACIENTE' ? 'Mis Citas Médicas' : 'Disponibilidad y Citas',
+          subtitle: role === 'MEDICO' ? 'Pacientes de la jornada e historial' : role === 'PACIENTE' ? 'Reserva y seguimiento' : 'Turnos libres y agenda',
+          tag: role === 'MEDICO' ? 'CU14 / CU15' : role === 'PACIENTE' ? 'CU09 / CU10' : 'CU09, CU10 / RF06, RF07',
+          icon: role === 'MEDICO' ? Stethoscope : Calendar,
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO', 'PACIENTE'],
         },
       ],
     },

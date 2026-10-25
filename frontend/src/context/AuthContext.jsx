@@ -21,11 +21,13 @@ export function AuthProvider({ children }) {
         } else {
           setUser(null);
           localStorage.removeItem('clinica_user');
+          localStorage.removeItem('token');
         }
       } catch (err) {
         // Si no hay sesión o da 401, se limpia
         setUser(null);
         localStorage.removeItem('clinica_user');
+        localStorage.removeItem('token');
       } finally {
         setLoading(false);
       }
@@ -39,6 +41,9 @@ export function AuthProvider({ children }) {
     if (response?.user) {
       setUser(response.user);
       localStorage.setItem('clinica_user', JSON.stringify(response.user));
+      if (response.token) {
+        localStorage.setItem('token', response.token);
+      }
       return response.user;
     }
     throw new Error('Respuesta de autenticación inválida');
@@ -50,6 +55,7 @@ export function AuthProvider({ children }) {
     } finally {
       setUser(null);
       localStorage.removeItem('clinica_user');
+      localStorage.removeItem('token');
     }
   };
 

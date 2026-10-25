@@ -44,6 +44,84 @@
   2. Los casos CU10 (Programar), CU12 (Cancelar), CU14 (Agenda Médica) y CU15 (Historial del Paciente) son de demostración obligatoria en las 10 pruebas mínimas del examen (Pruebas #3, #4, #5, #6, #7 y #8).
   3. En contraste, **CU11** (reprogramar es sustituible operativamente por cancelar + nueva reserva) y **CU13** (transiciones avanzadas a confirmada/atendida se integran de forma natural con la consulta médica CU16) no comprometen ninguna de las 10 pruebas mínimas del examen.
 * **Impacto:**
-  - **Ciclo 1:** 13 Casos de Uso (`CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15`). Con 7 CUs ya completados, el avance del Ciclo 1 se sitúa en **53.8%**.
+  - **Ciclo 1:** 13 Casos de Uso (`CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15`). Con 9 CUs completados, el avance del Ciclo 1 asciende a **69.2%**.
   - **Ciclo 2:** 10 Casos de Uso (`CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23`) + 1 Reserva Opcional (`CU24-OPC`).
   - Total general inalterado: 23 Casos de Uso oficiales (+ 1 condicional).
+
+### Registro 09: 2026-10-22
+* **Decisión:** Implementación del modelo y arquitectura para **CU08 (Gestionar Horarios de Atención Médica — RF05)** con separación estricta entre franjas semanales regulares (`disponibilidades`) y excepciones de calendario (`bloqueos_horario`).
+* **Motivo:**
+  1. Seguir con exactitud el DDL (`DDL_Database_Clinica_LaCruz.sql`) y el Diagrama de Clases PUDS (`diagrama_de_clases.puml`).
+  2. Cumplir con la prueba **P8.1** exigiendo en validación y base de datos que `hora_fin > hora_inicio` con rechazo tipado HTTP 422.
+  3. Permitir que `bloqueos_horario` con `id_medico = NULL` representen feriados institucionales para toda la clínica (Prueba **P8.3**), o con `id_medico` específico para licencias médicas.
+* **Impacto:** Los modelos `Disponibilidad.php` y `BloqueoHorario.php` proveen los métodos `generarSlots()` y `solapaConHorario()`, dejando sentada la base matemática directa para los algoritmos de disponibilidad de CU09 y prevención anti-colisión de CU10.
+
+### Registro 10: 2026-10-22
+* **Decisión:** Creación del paquete arquitectónico **Paquete 3: Gestión de Citas Médicas (`app/Packages/Appointments/`)** y del servicio de dominio `AppointmentAvailabilityService` para **CU09 (Consultar Disponibilidad de Horarios libres — RF05, RF06)**.
+* **Motivo:**
+  1. Mantener la simetría estricta de 6 paquetes definida en `ARCHITECTURE.md` y el DDL oficial (`tipos_cita`, `citas`, `cita_estado_historial`).
+  2. Desacoplar el cálculo de intervalos libres en un servicio de dominio reutilizable tanto para la consulta interactiva (CU09) como para la validación atómica en la reserva de citas (CU10).
+  3. Aplicar las reglas de negocio RN04 (médicos inactivos), RN05 (días no laborables), RN06 (fechas pasadas), P9.2 (descarte de turnos ocupados por citas activas) y P9.3 (descarte de feriados y licencias).
+* **Impacto:** Permite al frontend consultar turnos en tiempo real y sentar las bases completas para la reserva con prevención anti-colisión transaccional en CU10.
+
+### Registro 11: 2026-10-22
+* **Decisión:** Implementación del motor transaccional anti-colisión para **CU10 (Programar Cita Médica — RF06, RF07)** con `DB::transaction()` y bloqueo pesimista `lockForUpdate()`, generación atómica del correlativo `CM-XXXX`, y panel unificado `AppointmentsManager.jsx`.
+* **Motivo:**
+  1. Cumplir estrictamente con la **Prueba #4** del examen ("Programar otra cita superpuesta para el mismo médico rechazada") frente a concurrencia real entre múltiples recepcionistas o pacientes.
+  2. Implementar la secuencia correlativa inmutable `CM-0001`, `CM-0002` mediante consulta atómica protegida sin duplicados.
+  3. Vincular la compatibilidad etaria paciente-especialidad (`RF04` / Prueba P10.4) y el encaje en las franjas de disponibilidad del médico (`RF05` / Prueba #5).
+  4. Mantener la trazabilidad en `cita_estado_historial` y `bitacora` inmutable (CU03).
+  5. Ofrecer en el frontend una experiencia unificada que conecta el visor de turnos libres (CU09) y la gestión asistida con tickets imprimibles (CU10).
+* **Impacto:** Culminación del tercer Caso de Uso del lote, elevando el avance del **Ciclo 1 al 76.9%** (10 de 13 CUs) y **43.5% Global**.
+
+### Registro 12: 2026-10-22
+* **Decisión:** Implementación y cierre de **CU12 (Cancelar Cita Médica — RF09 / Prueba #6)**, **CU14 (Consultar Agenda Médica Diaria — RF11 / Prueba #8)** y **CU15 (Consultar Historial Cronológico del Paciente — RF12 / Prueba #7)**, alcanzando el **100% de ejecución del Ciclo 1** y superando las **10 pruebas mínimas del examen oficial**.
+* **Motivo:**
+  1. **CU12 (RF09):** Validación con `AppointmentCancelRequest` exigiendo `motivo_cancelacion` (mín. 5 caracteres). Al invocar `$cita->cancelar()`, el estado pasa a `CANCELADA` y, dado que `AppointmentAvailabilityService` filtra únicamente citas activas (`where('estado', '!=', 'CANCELADA')`), el cupo horario se libera instantáneamente en tiempo real sin requerir eliminación física (RN09 / RN11 / Prueba #6).
+  2. **CU14 (RF11):** Endpoint y componente `DoctorAgendaView.jsx` que combina el horario semanal configurado en `Disponibilidad` con las citas del día, 4 KPIs dinámicos en vivo y control RBAC (médicos solo ven su agenda; recepción y admin seleccionan cualquier médico).
+  3. **CU15 (RF12):** Endpoint e interfaz modal `PatientAppointmentHistoryModal.jsx` con métricas históricas completas (total, atendidas, canceladas, pendientes, tasa de asistencia %) y ordenación cronológica descendente con acceso protegido de solo lectura para el paciente autenticado (RN10 / RN11 / Prueba #7).
+* **Impacto:** Culminación formal del **Ciclo 1 con 13 de 13 Casos de Uso (100% de ejecución)** y superación formal de las **10 de 10 pruebas mínimas exigidas por el examen oficial**. Avance global del sistema: **56.5% (13 de 23 CUs)**.
+### Registro 13: 2026-10-22
+* **Decisión:** Blindaje de control de accesos RBAC en backend para la agenda médica diaria (`doctorAgenda`), homologación de relaciones bilingües con usuario en modelos (`Medico::usuario()` / `Patient::user()`), y estandarización dual de payload REST (`data` y `patient`) en `PatientProfileController`.
+* **Motivo:**
+  1. Garantizar la confidencialidad médica (Capítulo 2.1.3 y RN10): Impedir que solicitudes manuales o manipuladas de pacientes puedan acceder al endpoint de agenda médica (`doctorAgenda`), retornando HTTP 403 Forbidden.
+  2. Evitar futuras excepciones de Eloquent similares a `emergencyContacts`: Homologar alias bilingües en modelos de dominio `Medico.php` y `Patient.php` (`usuario` / `user`), protegiendo el código frente a cualquier llamada en inglés o español.
+  3. Consistencia de la API REST: Estandarizar respuestas en el perfil del paciente con la clave universal `data` manteniendo `patient` por retrocompatibilidad.
+* **Impacto:** Sistema 100% blindado contra accesos no autorizados en APIs de agenda, modelos de dominio completamente tolerantes y consistencia en el frontend.
+
+### Registro 14: 2026-10-22
+* **Decisión:** Implementación del middleware RBAC global `EnsureUserRole` a nivel de rutas en Laravel, protección anti-IDOR en CU10 (Reserva de Cita) / CU04 / CU15, y alineación estricta de permisos de CU06 (Médicos) y CU08 (Horarios) al rol exclusivo `ADMIN`.
+* **Motivo:**
+  1. Cumplir con la matriz de roles y permisos oficial del documento de especificación de Casos de Uso (PUDS): Los casos de uso CU02, CU03, CU06, CU07 y CU08 son de potestad exclusiva del **Administrador**. El frontend y las rutas permitían a roles como `RECEPCIONISTA` o `MEDICO` acceder a mutaciones de estos catálogos.
+  2. Subsanar la vulnerabilidad de referencia directa a objetos inseguros (IDOR) en CU10: Un paciente podía alterar el payload JSON enviando el `id_paciente` de otra persona. Ahora el backend fuerza en servidor `$data['id_paciente'] = $miPaciente->id_paciente` si el actor es `PACIENTE`.
+  3. Prevenir fugas de información masiva (CU04 / CU14 / CU15): El padrón general de pacientes (`/api/patients`) queda inaccesible para `PACIENTE` (HTTP 403), y la consulta individual de citas (`show`) e historiales (`patientHistory`) valida la titularidad del registro antes de devolver datos.
+  4. Robustecer la seguridad de la API: Las rutas ahora tienen una primera línea de defensa a nivel de middleware HTTP (`role:ADMIN`, etc.), devolviendo `HTTP 401 Unauthorized` si no hay sesión y `HTTP 403 Forbidden` si el rol no tiene privilegios.
+* **Impacto:** Eliminación de brechas de autorización horizontal y vertical en los 13 Casos de Uso del Ciclo 1. Total coherencia entre la interfaz de usuario, la API y la especificación oficial.
+
+### Registro 15: 2026-10-23
+* **Decisión:** Homologación arquitectónica y técnica 100% con la Sección 7.1 del Documento Oficial de Especificación del Proyecto (Google Doc / RUP): adopción de Axios en cliente frontend, emisión y validación híbrida de Bearer Tokens con Laravel Sanctum v4, compatibilidad bilingüe del atributo `motivo_breve` en modelo Cita y FormRequests, estandarización de estados de cita con `INASISTENCIA`, y documentación formal de configuración Mailtrap SMTP Sandbox.
+* **Motivo:**
+  1. **Sección 7.1 Frontend (Axios):** La especificación técnica oficial designa a Axios como cliente HTTP estándar con interceptores para inyección automática de cabeceras de autorización (`Authorization: Bearer <token>`), soporte con credenciales (`withCredentials: true`) y manejo centralizado de respuestas HTTP 401.
+  2. **Sección 7.1 Backend (Sanctum Bearer Token):** Habilitar emisión de tokens personales vía `personal_access_tokens` (`$user->createToken('auth-token')->plainTextToken`) en `AuthController::login()` y soporte dual en `EnsureUserRole` (sesiones web basadas en cookies y tokens Sanctum en cabecera `Authorization: Bearer`), permitiendo a su vez que `AuthContext.jsx` persista el token en `localStorage`.
+  3. **Homologación DDL `motivo_breve`:** El DDL y la sección 7.1 contemplan el motivo de la cita como `motivo_breve` / `motivo_consulta`. Se dotó al modelo `Cita.php` de un accessor y mutator transparente (`getMotivoBreveAttribute` / `setMotivoBreveAttribute`) y se homologó `AppointmentBookRequest` y `AppointmentBookingService` para aceptar ambos sin fricción.
+  4. **Estandarización DDL `INASISTENCIA`:** El DDL oficial y el informe general tipifican `INASISTENCIA` como el 5to estado formal de una cita médica (`PROGRAMADA`, `CONFIRMADA`, `ATENDIDA`, `CANCELADA`, `INASISTENCIA`). Se homologaron los comentarios de migraciones, modelos, seeders y componentes frontend (`AppointmentsManager`, `DoctorAgendaView`, `PatientAppointmentHistoryModal`).
+  5. **Configuración de Correo SMTP:** Se documentaron explícitamente en `.env.example` y `.env` las variables de entorno de Mailtrap Sandbox (`sandbox.smtp.mailtrap.io:2525`).
+* **Impacto:** Conformidad técnica absoluta y sin discrepancias entre el código fuente (backend Laravel 13 y frontend React) y la Sección 7.1 del Documento de Especificación del Sistema.
+
+### Registro 16: 2026-10-23
+* **Decisión:** Blindaje de interfaz RBAC en Frontend para la gestión de pacientes (CU04) y programación de citas (CU10): Ocultamiento de acciones de mutación de pacientes (`Registrar`, `Editar`, `Desactivar`) y del botón `Programar Cita (CU10)` para el rol `MEDICO`.
+* **Motivo:**
+  1. Alinear al 100% la interfaz de usuario con la matriz oficial de actores y casos de uso (CU04 y CU10 del PUDS): El personal médico no gestiona el padrón administrativo de pacientes ni agenda turnos desde su panel.
+  2. Ofrecer una experiencia de usuario limpia y congruente donde cada actor visualiza exclusivamente los controles y botones para los cuales posee autorización operativa.
+* **Impacto:** Coherencia absoluta en la experiencia de usuario de Médicos, Recepcionistas y Pacientes.
+
+### Registro 18: 2026-10-23
+* **Decisión:** Aislamiento estricto y exhaustivo de navegación, tarjetas de Dashboard y acciones operativas por actor según la matriz oficial de Casos de Uso (PUDS):
+  1. **Dashboard Cards:** En `App.jsx`, renderizado estrictamente condicional por rol de cada tarjeta del Dashboard. Ningún actor visualiza tarjetas de Casos de Uso ajenos (cero tarjetas de administración o bitácora para Médicos/Pacientes, cero tarjetas de padrón general para Médicos/Pacientes).
+  2. **Recepcionista y CU05:** Integración directa del botón interactivo `Globe` en la tabla de pacientes (`PatientsManager.jsx`) para que la recepcionista pueda habilitar cuentas web en ventanilla y gestionar credenciales de autoservicio (CU05 §3.4).
+  3. **Médico y CU12:** La acción de cancelar citas (CU12) se condiciona estrictamente a `role !== 'MEDICO'`, dado que en PUDS la cancelación es potestad de Recepcionista y Paciente.
+  4. **Paciente y CU15:** El botón `Mi Historial (CU15)` en `AppointmentsManager.jsx` se vincula a `myPatientProfile` vía `patientProfileService.fetchMyProfile()`, permitiendo que el paciente acceda a su historial incluso si aún no tiene citas programadas.
+* **Motivo:** Evitar sorpresas o fugas de interfaz donde a un usuario le aparezcan opciones que no corresponden a su rol, garantizando una segregación de funciones (SoD) total tanto en la UI como en el Backend.
+* **Impacto:** Segregación perfecta y comprobada de Casos de Uso por actor en todo el frontend y backend.
+
+

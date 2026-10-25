@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../../../context/AuthContext';
 import { patientService } from '../services/patientService';
 import { PatientFormModal } from './PatientFormModal';
 import { PatientDetailModal } from './PatientDetailModal';
@@ -26,6 +27,9 @@ import {
 } from 'lucide-react';
 
 export function PatientsManager() {
+  const { role } = useAuth();
+  const canManage = role === 'ADMIN' || role === 'RECEPCIONISTA';
+
   const [patients, setPatients] = useState([]);
   const [pagination, setPagination] = useState({ total: 0, current_page: 1, last_page: 1 });
   const [stats, setStats] = useState(null);
@@ -206,13 +210,15 @@ export function PatientsManager() {
           </div>
         </div>
 
-        <button
-          onClick={handleOpenCreateModal}
-          className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#00687a] hover:bg-[#004d5a] rounded-xl shadow-xs hover:shadow-md transition cursor-pointer shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Registrar Paciente</span>
-        </button>
+        {canManage && (
+          <button
+            onClick={handleOpenCreateModal}
+            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#00687a] hover:bg-[#004d5a] rounded-xl shadow-xs hover:shadow-md transition cursor-pointer shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Registrar Paciente</span>
+          </button>
+        )}
       </div>
 
       {/* 4 Tarjetas Métricas KPI con interactividad para filtrar */}
@@ -506,32 +512,55 @@ export function PatientsManager() {
                             <Eye className="w-3.5 h-3.5" />
                           </button>
 
-                          {/* Editar Paciente */}
-                          <button
-                            onClick={() => handleOpenEditModal(patient)}
-                            title="Editar datos del paciente"
-                            className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-[#00687a] hover:border-[#00687a]/30 hover:bg-[#00687a]/5 transition cursor-pointer"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
+                          {/* Habilitar Acceso Web en Ventanilla (CU05 §3.4) */}
+                          {canManage && (
+                            <button
+                              onClick={() => handleOpenWebAccountModal(patient)}
+                              title={
+                                patient.id_usuario
+                                  ? 'Cuenta web activa (Editar / Regenerar credenciales CU05)'
+                                  : 'Habilitar cuenta web en ventanilla (CU05)'
+                              }
+                              className={`p-1.5 rounded-lg border transition cursor-pointer ${
+                                patient.id_usuario
+                                  ? 'border-teal-200 text-teal-700 bg-teal-50 hover:bg-teal-100'
+                                  : 'border-slate-200 text-slate-600 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50'
+                              }`}
+                            >
+                              <Globe className="w-3.5 h-3.5" />
+                            </button>
+                          )}
 
-                          {/* Baja Lógica RN11 / Reactivación */}
-                          <button
-                            onClick={() => handleToggleStatus(patient)}
-                            disabled={isActionBusy}
-                            title={
-                              patient.estado_paciente === 'ACTIVO'
-                                ? 'Desactivar paciente (Baja Lógica RN11)'
-                                : 'Reactivar paciente'
-                            }
-                            className={`p-1.5 rounded-lg border transition cursor-pointer ${
-                              patient.estado_paciente === 'ACTIVO'
-                                ? 'border-slate-200 text-slate-500 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50'
-                                : 'border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
-                            }`}
-                          >
-                            <Power className="w-3.5 h-3.5" />
-                          </button>
+                          {/* Editar Paciente (Solo Administrador y Recepcionista) */}
+                          {canManage && (
+                            <button
+                              onClick={() => handleOpenEditModal(patient)}
+                              title="Editar datos del paciente"
+                              className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-[#00687a] hover:border-[#00687a]/30 hover:bg-[#00687a]/5 transition cursor-pointer"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+
+                          {/* Baja Lógica RN11 / Reactivación (Solo Administrador y Recepcionista) */}
+                          {canManage && (
+                            <button
+                              onClick={() => handleToggleStatus(patient)}
+                              disabled={isActionBusy}
+                              title={
+                                patient.estado_paciente === 'ACTIVO'
+                                  ? 'Desactivar paciente (Baja Lógica RN11)'
+                                  : 'Reactivar paciente'
+                              }
+                              className={`p-1.5 rounded-lg border transition cursor-pointer ${
+                                patient.estado_paciente === 'ACTIVO'
+                                  ? 'border-slate-200 text-slate-500 hover:text-rose-600 hover:border-rose-200 hover:bg-rose-50'
+                                  : 'border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
+                              }`}
+                            >
+                              <Power className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

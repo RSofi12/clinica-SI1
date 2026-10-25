@@ -5,6 +5,7 @@ namespace App\Packages\ClinicalResources\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Packages\Security\Models\User;
 
 /**
@@ -45,6 +46,14 @@ class Medico extends Model
     }
 
     /**
+     * Alias de relación en español: usuario
+     */
+    public function usuario(): BelongsTo
+    {
+        return $this->user();
+    }
+
+    /**
      * Especialidades médicas vinculadas (N:M con tabla 'medico_especialidad')
      */
     public function specialties(): BelongsToMany
@@ -63,6 +72,22 @@ class Medico extends Model
     public function especialidades(): BelongsToMany
     {
         return $this->specialties();
+    }
+
+    /**
+     * Horarios de atención semanal del médico (CU08 / RF05)
+     */
+    public function disponibilidades(): HasMany
+    {
+        return $this->hasMany(Disponibilidad::class, 'id_medico', 'id_medico')->orderBy('dia_semana')->orderBy('hora_inicio');
+    }
+
+    /**
+     * Bloqueos o licencias particulares del médico (CU08 / RF05)
+     */
+    public function bloqueos(): HasMany
+    {
+        return $this->hasMany(BloqueoHorario::class, 'id_medico', 'id_medico')->orderBy('fecha', 'desc');
     }
 
     /**
