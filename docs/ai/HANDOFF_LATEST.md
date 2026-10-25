@@ -111,6 +111,19 @@
     - Corregida la colisión visual entre el botón `"Mi Historial (CU15)"` y el badge `"PORTAL PACIENTE"` en [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx).
     - Implementado `xl:flex-row`, `min-w-0 flex-1`, envoltura elástica (`flex-wrap`) en títulos y botones, y `overflow-x-auto` en la barra de pestañas para garantizar fluidez en todas las resoluciones.
 
+15. **Despliegue Fullstack en la Nube (Render Cloud) y Resolución de Error 500 (25/10/2026):**
+    - Empaquetada arquitectura All-in-One: Dockerfile multi-etapa con PHP 8.3 CLI Alpine + PostgreSQL + extensiones (`pdo_pgsql`, `bcmath`, `zip`).
+    - Frontend React compilado e integrado directamente dentro de `backend/public/`.
+    - Retirados los botones de acceso rápido de `LoginPage.jsx` para una estética institucional formal.
+    - Diagnosticado y erradicado el error `500 | Server Error`:
+      - Creada migración `sessions` (`2026_10_20_000007_create_sessions_table.php`).
+      - Desacoplado el middleware `web` en `routes/web.php` para la entrega directa de la SPA.
+      - Corregido el default de base de datos a `DB_CONNECTION=pgsql` (retirado fallback a `sqlite`).
+      - Fallback de sesiones establecido en `SESSION_DRIVER=file`.
+      - Habilitado `stderr` en `config/logging.php` para observabilidad en tiempo real en los logs de Render.
+      - Robustecido `backend/entrypoint.sh` con creación de directorios, permisos 777 y fallbacks para `APP_KEY`, `SESSION_DRIVER` y `DB_CONNECTION`.
+    - URL de Producción: `https://clinica-la-cruz-si1.onrender.com`.
+
 ### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
 - Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
   - `CU11`: Reprogramar Cita Médica (RF08) con nueva fecha y liberación del horario anterior.
