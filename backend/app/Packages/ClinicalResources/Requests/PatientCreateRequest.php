@@ -26,7 +26,7 @@ class PatientCreateRequest extends FormRequest
             'telefono'             => ['nullable', 'string', 'max:30'],
             'correo'               => ['nullable', 'email', 'max:120'],
             'direccion'            => ['nullable', 'string', 'max:255'],
-            'notificaciones_activas' => ['boolean'],
+            'notificaciones_activas' => ['nullable', 'boolean'],
             'contacto_nombre'      => ['nullable', 'string', 'max:150'],
             'contacto_parentesco'  => ['nullable', 'string', 'max:50'],
             'contacto_telefono'    => ['nullable', 'string', 'max:30'],

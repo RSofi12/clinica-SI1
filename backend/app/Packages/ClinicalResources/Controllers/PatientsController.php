@@ -164,65 +164,83 @@ class PatientsController extends Controller
      */
     public function store(PatientCreateRequest $request): JsonResponse
     {
-        return DB::transaction(function () use ($request) {
-            $data = $request->validated();
+        $registrarOperacion = function () use ($request) {
+            return DB::transaction(function () use ($request) {
+                $data = $request->validated();
 
-            // Auto-generar número correlativo de historia clínica (ej. HC-0001)
-            $numeroHistoria = Patient::generarNumeroHistoria();
+                // Auto-generar número correlativo de historia clínica (ej. HC-0001)
+                $numeroHistoria = Patient::generarNumeroHistoria();
 
-            $patient = Patient::create([
-                'numero_historia'       => $numeroHistoria,
-                'numero_documento'      => trim($data['numero_documento']),
-                'nombres'               => trim($data['nombres']),
-                'apellidos'             => trim($data['apellidos']),
-                'fecha_nacimiento'      => $data['fecha_nacimiento'],
-                'sexo'                  => $data['sexo'],
-                'tipo_sangre'           => $data['tipo_sangre'] ?? null,
-                'telefono'              => $data['telefono'] ?? null,
-                'correo'                => $data['correo'] ?? null,
-                'direccion'             => $data['direccion'] ?? null,
-                'notificaciones_activas'=> $data['notificaciones_activas'] ?? true,
-                'estado_paciente'       => 'ACTIVO',
-                'fecha_registro'        => now(),
-            ]);
-
-            // Guardar contacto de emergencia si fue proporcionado
-            if (!empty($data['contacto_nombre']) && !empty($data['contacto_telefono'])) {
-                EmergencyContact::create([
-                    'id_paciente' => $patient->id_paciente,
-                    'nombre'      => trim($data['contacto_nombre']),
-                    'parentesco'  => trim($data['contacto_parentesco'] ?? 'Familiar'),
-                    'telefono'    => trim($data['contacto_telefono']),
+                $patient = Patient::create([
+                    'numero_historia'       => $numeroHistoria,
+                    'numero_documento'      => trim($data['numero_documento']),
+                    'nombres'               => trim($data['nombres']),
+                    'apellidos'             => trim($data['apellidos']),
+                    'fecha_nacimiento'      => $data['fecha_nacimiento'],
+                    'sexo'                  => $data['sexo'],
+                    'tipo_sangre'           => $data['tipo_sangre'] ?? null,
+                    'telefono'              => $data['telefono'] ?? null,
+                    'correo'                => $data['correo'] ?? null,
+                    'direccion'             => $data['direccion'] ?? null,
+                    'notificaciones_activas'=> $data['notificaciones_activas'] ?? true,
+                    'estado_paciente'       => 'ACTIVO',
+                    'fecha_registro'        => now(),
                 ]);
+
+                // Guardar contacto de emergencia si fue proporcionado
+                if (!empty($data['contacto_nombre']) && !empty($data['contacto_telefono'])) {
+                    EmergencyContact::create([
+                        'id_paciente' => $patient->id_paciente,
+                        'nombre'      => trim($data['contacto_nombre']),
+                        'parentesco'  => trim($data['contacto_parentesco'] ?? 'Familiar'),
+                        'telefono'    => trim($data['contacto_telefono']),
+                    ]);
+                }
+
+                // Auditoría inmutable en Bitácora (CU03)
+                Bitacora::registrar([
+                    'id_usuario'      => Auth::id(),
+                    'modulo'          => 'Recursos Clínicos',
+                    'accion'          => 'ALTA_PACIENTE',
+                    'tabla_afectada'  => 'pacientes',
+                    'id_registro'     => $patient->id_paciente,
+                    'datos_nuevos'    => [
+                        'numero_historia'  => $patient->numero_historia,
+                        'numero_documento' => $patient->numero_documento,
+                        'nombre_completo'  => $patient->nombre_completo,
+                        'edad'             => $patient->edad,
+                        'grupo_etario'     => $patient->grupo_etario,
+                    ],
+                    'descripcion'     => "Se registró el paciente '{$patient->nombre_completo}' con CI '{$patient->numero_documento}' e Historia '{$patient->numero_historia}'.",
+                    'ip_origen'       => $request->ip(),
+                    'user_agent'      => $request->userAgent(),
+                ]);
+
+                $patient->load('contactosEmergencia');
+
+                return response()->json([
+                    'success' => true,
+                    'message' => "Paciente '{$patient->nombre_completo}' registrado con éxito bajo la Historia Clínica {$patient->numero_historia}.",
+                    'patient' => $patient,
+                ], 201);
+            });
+        };
+
+        try {
+            return $registrarOperacion();
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Auto-recuperación si la secuencia de PostgreSQL quedó rezagada tras el seed
+            if (DB::connection()->getDriverName() === 'pgsql') {
+                $maxId = DB::table('pacientes')->max('id_paciente') ?? 0;
+                DB::statement("SELECT setval(pg_get_serial_sequence('pacientes', 'id_paciente'), {$maxId})");
+                $maxContacto = DB::table('contactos_emergencia')->max('id_contacto') ?? 0;
+                if ($maxContacto > 0) {
+                    DB::statement("SELECT setval(pg_get_serial_sequence('contactos_emergencia', 'id_contacto'), {$maxContacto})");
+                }
+                return $registrarOperacion();
             }
-
-            // Auditoría inmutable en Bitácora (CU03)
-            Bitacora::registrar([
-                'id_usuario'      => Auth::id(),
-                'modulo'          => 'Recursos Clínicos',
-                'accion'          => 'ALTA_PACIENTE',
-                'tabla_afectada'  => 'pacientes',
-                'id_registro'     => $patient->id_paciente,
-                'datos_nuevos'    => [
-                    'numero_historia'  => $patient->numero_historia,
-                    'numero_documento' => $patient->numero_documento,
-                    'nombre_completo'  => $patient->nombre_completo,
-                    'edad'             => $patient->edad,
-                    'grupo_etario'     => $patient->grupo_etario,
-                ],
-                'descripcion'     => "Se registró el paciente '{$patient->nombre_completo}' con CI '{$patient->numero_documento}' e Historia '{$patient->numero_historia}'.",
-                'ip_origen'       => $request->ip(),
-                'user_agent'      => $request->userAgent(),
-            ]);
-
-            $patient->load('contactosEmergencia');
-
-            return response()->json([
-                'success' => true,
-                'message' => "Paciente '{$patient->nombre_completo}' registrado con éxito bajo la Historia Clínica {$patient->numero_historia}.",
-                'patient' => $patient,
-            ], 201);
-        });
+            throw $e;
+        }
     }
 
     /**

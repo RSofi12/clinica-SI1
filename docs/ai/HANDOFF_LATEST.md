@@ -124,6 +124,13 @@
       - Robustecido `backend/entrypoint.sh` con creación de directorios, permisos 777 y fallbacks para `APP_KEY`, `SESSION_DRIVER` y `DB_CONNECTION`.
     - URL de Producción: `https://clinica-la-cruz-si1.onrender.com`.
 
+16. **Resolución de Error 500 al Registrar Paciente en PostgreSQL (Sincronización de Secuencias):**
+    - Diagnosticado fallo `SQLSTATE[23505] Unique violation: key (id_paciente)=(1) already exists` provocado por desincronización de la secuencia `pacientes_id_paciente_seq` tras la ejecución del seeder de 15 pacientes con IDs explícitos.
+    - Creada migración [`backend/database/migrations/2026_10_20_000008_sync_all_database_sequences.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/database/migrations/2026_10_20_000008_sync_all_database_sequences.php) que sincroniza todas las secuencias seriales de PostgreSQL al `MAX(id)` de cada tabla (`pacientes`, `contactos_emergencia`, `usuarios`, `roles`, `permisos`, `medicos`, `especialidades`, `disponibilidades`, `bloqueos_horario`, `tipos_cita`, `citas`, `cita_estado_historial`, `bitacora`).
+    - Actualizado [`PatientSeeder.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/database/seeders/PatientSeeder.php) para ajustar `setval` inmediatamente tras insertar los registros.
+    - Implementada lógica de auto-recuperación y reintento en [`PatientsController.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Controllers/PatientsController.php) ante cualquier colisión de secuencia.
+    - Ajustado [`PatientCreateRequest.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/ClinicalResources/Requests/PatientCreateRequest.php) permitiendo `notificaciones_activas` como `nullable|boolean`.
+
 ### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
 - Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
   - `CU11`: Reprogramar Cita Médica (RF08) con nueva fecha y liberación del horario anterior.
