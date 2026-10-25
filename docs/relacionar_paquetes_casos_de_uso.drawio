@@ -1,0 +1,464 @@
+<mxfile host="app.diagrams.net" modified="2026-10-25T19:50:00.000Z" agent="Mozilla/5.0" version="24.0.0" type="device">
+
+  <!-- ========================================================================= -->
+  <!-- PÁGINA 1: PAQUETE 1 - SEGURIDAD Y AUDITORÍA -->
+  <!-- ========================================================================= -->
+  <diagram id="diag_p1_seguridad" name="P1 - Seguridad y Auditoría">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="650" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TÍTULO -->
+        <mxCell id="t_p1" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;3.1.2. RELACIONAR PAQUETE Y CASOS DE USO — PAQUETE 1&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 11px; color: #475569;&quot;&gt;Trazabilidad entre el Paquete P1: Seguridad y Auditoría y sus Casos de Uso (PUDS)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1020" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE FOLDER -->
+        <mxCell id="pkg_p1" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Seguridad y Auditoría&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#475569&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Paquete P1)&lt;/font&gt;" style="shape=folder;tabWidth=100;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#D9E8FB;strokeColor=#4A7BB0;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="80" y="190" width="220" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO (ELIPSES ESTILO DOCENTE) -->
+        <mxCell id="p1_cu01" value="&lt;b&gt;CU01: Autenticar usuario&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="480" y="90" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1_cu02" value="&lt;b&gt;CU02: Gestionar usuarios,&lt;br/&gt;roles y permisos&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="480" y="215" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1_cu03" value="&lt;b&gt;CU03: Gestionar bitácora&lt;br/&gt;de auditoría&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="480" y="340" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- FLECHAS &amp;laquo;trace&amp;raquo; DESDE EL PAQUETE -->
+        <mxCell id="tr_p1_01" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" source="pkg_p1" target="p1_cu01" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_tr_p1_01" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p1_01">
+          <mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="tr_p1_02" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="pkg_p1" target="p1_cu02" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_tr_p1_02" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p1_02">
+          <mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="tr_p1_03" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" edge="1" source="pkg_p1" target="p1_cu03" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_tr_p1_03" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p1_03">
+          <mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ========================================================================= -->
+  <!-- PÁGINA 2: PAQUETE 2 - RECURSOS CLÍNICOS Y PACIENTES -->
+  <!-- ========================================================================= -->
+  <diagram id="diag_p2_recursos" name="P2 - Recursos Clínicos">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="700" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TÍTULO -->
+        <mxCell id="t_p2" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;3.1.2. RELACIONAR PAQUETE Y CASOS DE USO — PAQUETE 2&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 11px; color: #475569;&quot;&gt;Trazabilidad entre el Paquete P2: Recursos Clínicos y Pacientes y sus Casos de Uso (PUDS)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1170" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE FOLDER -->
+        <mxCell id="pkg_p2" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Recursos Clínicos&lt;br/&gt;y Pacientes&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#475569&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Paquete P2)&lt;/font&gt;" style="shape=folder;tabWidth=110;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#D9E8FB;strokeColor=#4A7BB0;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="70" y="260" width="220" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO -->
+        <mxCell id="p2_cu04" value="&lt;b&gt;CU04: Gestionar pacientes&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="440" y="90" width="240" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2_cu05" value="&lt;b&gt;CU05: Gestionar cuenta y&lt;br/&gt;perfil del paciente&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="840" y="90" width="240" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2_cu07" value="&lt;b&gt;CU07: Gestionar especialidades&lt;br/&gt;médicas&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="440" y="260" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2_cu06" value="&lt;b&gt;CU06: Gestionar médicos&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="840" y="260" width="240" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2_cu08" value="&lt;b&gt;CU08: Gestionar horarios de&lt;br/&gt;atención médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="440" y="430" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- FLECHAS &amp;laquo;trace&amp;raquo; -->
+        <mxCell id="tr_p2_04" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.2;entryX=0;entryY=0.5;" edge="1" source="pkg_p2" target="p2_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p2_04" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p2_04"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p2_05" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.3;entryX=0.2;entryY=1;" edge="1" source="pkg_p2" target="p2_cu05" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p2_05" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p2_05"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="40" y="-15" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p2_07" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="pkg_p2" target="p2_cu07" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p2_07" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p2_07"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p2_06" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.6;entryX=0.1;entryY=1;" edge="1" source="pkg_p2" target="p2_cu06" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p2_06" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p2_06"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="40" y="15" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p2_08" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.85;entryX=0;entryY=0.5;" edge="1" source="pkg_p2" target="p2_cu08" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p2_08" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p2_08"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- DEPENDENCIAS INTERNAS -->
+        <!-- CU05 «extend» CU04 -->
+        <mxCell id="ext_cu05_cu04" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="p2_cu05" target="p2_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ext_05_04" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_cu05_cu04"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- CU06 «include» CU07 -->
+        <mxCell id="inc_cu06_cu07" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="p2_cu06" target="p2_cu07" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_inc_06_07" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_cu06_cu07"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ========================================================================= -->
+  <!-- PÁGINA 3: PAQUETE 3 - GESTIÓN DE CITAS MÉDICAS -->
+  <!-- ========================================================================= -->
+  <diagram id="diag_p3_citas" name="P3 - Gestión de Citas">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1350" pageHeight="800" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TÍTULO -->
+        <mxCell id="t_p3" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;3.1.2. RELACIONAR PAQUETE Y CASOS DE USO — PAQUETE 3&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 11px; color: #475569;&quot;&gt;Trazabilidad entre el Paquete P3: Gestión de Citas Médicas y sus Casos de Uso (PUDS)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1270" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE FOLDER -->
+        <mxCell id="pkg_p3" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Gestión de Citas Médicas&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#475569&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Paquete P3)&lt;/font&gt;" style="shape=folder;tabWidth=110;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#D9E8FB;strokeColor=#4A7BB0;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="70" y="320" width="230" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO COLUMNA CENTRAL -->
+        <mxCell id="p3_cu09" value="&lt;b&gt;CU09: Consultar disponibilidad&lt;br/&gt;de horarios&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="460" y="100" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3_cu14" value="&lt;b&gt;CU14: Consultar agenda&lt;br/&gt;médica diaria&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="460" y="440" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3_cu15" value="&lt;b&gt;CU15: Consultar historial de&lt;br/&gt;citas de paciente&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="460" y="580" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO COLUMNA DERECHA (FLUJO DE CITAS) -->
+        <mxCell id="p3_cu10" value="&lt;b&gt;CU10: Programar cita médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="100" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3_cu11" value="&lt;b&gt;CU11: Reprogramar cita médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="240" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3_cu12" value="&lt;b&gt;CU12: Cancelar cita médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="380" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3_cu13" value="&lt;b&gt;CU13: Registrar asistencia y&lt;br/&gt;estado de cita&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="520" width="240" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- FLECHAS &amp;laquo;trace&amp;raquo; -->
+        <mxCell id="tr_p3_09" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.15;entryX=0;entryY=0.5;" edge="1" source="pkg_p3" target="p3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p3_09" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p3_09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p3_14" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.6;entryX=0;entryY=0.5;" edge="1" source="pkg_p3" target="p3_cu14" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p3_14" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p3_14"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p3_15" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.85;entryX=0;entryY=0.5;" edge="1" source="pkg_p3" target="p3_cu15" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p3_15" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p3_15"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p3_10" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.25;entryX=0;entryY=0.8;" edge="1" source="pkg_p3" target="p3_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p3_10" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p3_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="40" y="-15" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p3_11" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.4;entryX=0;entryY=0.5;" edge="1" source="pkg_p3" target="p3_cu11" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p3_11" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p3_11"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p3_12" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.55;entryX=0;entryY=0.5;" edge="1" source="pkg_p3" target="p3_cu12" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p3_12" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p3_12"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p3_13" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.75;entryX=0;entryY=0.5;" edge="1" source="pkg_p3" target="p3_cu13" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p3_13" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p3_13"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- DEPENDENCIAS INTERNAS -->
+        <!-- CU10 «include» CU09 -->
+        <mxCell id="inc_cu10_cu09" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="p3_cu10" target="p3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_inc_10_09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_cu10_cu09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- CU11 «include» CU09 -->
+        <mxCell id="inc_cu11_cu09" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.8;" edge="1" source="p3_cu11" target="p3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_inc_11_09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_cu11_cu09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-10" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- CU11 «extend» CU10 -->
+        <mxCell id="ext_cu11_cu10" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="p3_cu11" target="p3_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ext_11_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_cu11_cu10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-25" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- CU12 «extend» CU10 -->
+        <mxCell id="ext_cu12_cu10" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.9;exitY=0;entryX=0.9;entryY=1;" edge="1" source="p3_cu12" target="p3_cu10" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1150" y="350" />
+              <mxPoint x="1150" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_ext_12_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_cu12_cu10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- CU13 «extend» CU10 -->
+        <mxCell id="ext_cu13_cu10" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.95;exitY=0;entryX=1;entryY=0.7;" edge="1" source="p3_cu13" target="p3_cu10" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1190" y="490" />
+              <mxPoint x="1190" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_ext_13_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_cu13_cu10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="20" y="0" as="offset" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ========================================================================= -->
+  <!-- PÁGINA 4: PAQUETE 4 - HISTORIAL CLÍNICO Y CONSULTAS (ESTILO IMAGEN DOCENTE) -->
+  <!-- ========================================================================= -->
+  <diagram id="diag_p4_historial" name="P4 - Historial Clínico">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="650" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TÍTULO -->
+        <mxCell id="t_p4" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;3.1.2. RELACIONAR PAQUETE Y CASOS DE USO — PAQUETE 4&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 11px; color: #475569;&quot;&gt;Trazabilidad entre el Paquete P4: Historial Clínico y Consultas y sus Casos de Uso (PUDS)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE FOLDER (IDÉNTICO AL EJEMPLO DEL DOCENTE) -->
+        <mxCell id="pkg_p4" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Historial Clínico&lt;br/&gt;y Consultas&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#475569&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Paquete P4)&lt;/font&gt;" style="shape=folder;tabWidth=100;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#D9E8FB;strokeColor=#4A7BB0;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="80" y="210" width="220" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO -->
+        <mxCell id="p4_cu18" value="&lt;b&gt;CU18: Gestionar historial&lt;br/&gt;clínico digital&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="470" y="90" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4_cu16" value="&lt;b&gt;CU16: Registrar consulta&lt;br/&gt;médica (Triaje y Diagnóstico)&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="840" y="90" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4_cu17" value="&lt;b&gt;CU17: Gestionar antecedentes&lt;br/&gt;médicos&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="840" y="260" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4_cu19" value="&lt;b&gt;CU19: Consultar expediente&lt;br/&gt;médico y antecedentes&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="470" y="320" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- FLECHAS &amp;laquo;trace&amp;raquo; DESDE EL PAQUETE -->
+        <mxCell id="tr_p4_18" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.2;entryX=0;entryY=0.5;" edge="1" source="pkg_p4" target="p4_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p4_18" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p4_18"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p4_16" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.35;entryX=0.2;entryY=1;" edge="1" source="pkg_p4" target="p4_cu16" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p4_16" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p4_16"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="50" y="-15" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p4_17" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.6;entryX=0;entryY=0.5;" edge="1" source="pkg_p4" target="p4_cu17" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p4_17" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p4_17"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="30" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p4_19" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.8;entryX=0;entryY=0.5;" edge="1" source="pkg_p4" target="p4_cu19" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p4_19" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p4_19"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- DEPENDENCIAS INTERNAS -->
+        <!-- CU16 «include» CU18 -->
+        <mxCell id="inc_cu16_cu18" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="p4_cu16" target="p4_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_inc_16_18" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_cu16_cu18"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- CU17 «extend» CU16 -->
+        <mxCell id="ext_cu17_cu16" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="p4_cu17" target="p4_cu16" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ext_17_16" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_cu17_cu16"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-25" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- CU19 «extend» CU18 -->
+        <mxCell id="ext_cu19_cu18" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="p4_cu19" target="p4_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ext_19_18" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_cu19_cu18"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-25" y="0" as="offset" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ========================================================================= -->
+  <!-- PÁGINA 5: PAQUETE 5 - INTEGRACIONES Y PAGOS -->
+  <!-- ========================================================================= -->
+  <diagram id="diag_p5_pagos" name="P5 - Integraciones y Pagos">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TÍTULO -->
+        <mxCell id="t_p5" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;3.1.2. RELACIONAR PAQUETE Y CASOS DE USO — PAQUETE 5&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 11px; color: #475569;&quot;&gt;Trazabilidad entre el Paquete P5: Integraciones y Pagos y sus Casos de Uso (PUDS)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1020" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE FOLDER -->
+        <mxCell id="pkg_p5" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Integraciones y Pagos&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#475569&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Paquete P5)&lt;/font&gt;" style="shape=folder;tabWidth=100;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#D9E8FB;strokeColor=#4A7BB0;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="220" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO -->
+        <mxCell id="p5_cu20" value="&lt;b&gt;CU20: Enviar recordatorios y&lt;br/&gt;notificaciones push&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="480" y="110" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p5_cu21" value="&lt;b&gt;CU21: Pagar cita médica&lt;br/&gt;con Stripe (modo prueba)&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="480" y="270" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- FLECHAS &amp;laquo;trace&amp;raquo; -->
+        <mxCell id="tr_p5_20" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" edge="1" source="pkg_p5" target="p5_cu20" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p5_20" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p5_20"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p5_21" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" source="pkg_p5" target="p5_cu21" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p5_21" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p5_21"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ========================================================================= -->
+  <!-- PÁGINA 6: PAQUETE 6 - REPORTES Y ANALÍTICA -->
+  <!-- ========================================================================= -->
+  <diagram id="diag_p6_reportes" name="P6 - Reportes y Analítica">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="600" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TÍTULO -->
+        <mxCell id="t_p6" value="&lt;b style=&quot;font-size: 16px;&quot;&gt;3.1.2. RELACIONAR PAQUETE Y CASOS DE USO — PAQUETE 6&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 11px; color: #475569;&quot;&gt;Trazabilidad entre el Paquete P6: Reportes y Analítica y sus Casos de Uso (PUDS)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1020" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE FOLDER -->
+        <mxCell id="pkg_p6" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Reportes y Analítica&lt;/b&gt;&lt;br/&gt;&lt;font color=&quot;#475569&quot; style=&quot;font-size: 10px; font-weight: normal;&quot;&gt;(Paquete P6)&lt;/font&gt;" style="shape=folder;tabWidth=100;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#D9E8FB;strokeColor=#4A7BB0;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="220" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- CASOS DE USO -->
+        <mxCell id="p6_cu22" value="&lt;b&gt;CU22: Generar reportes con&lt;br/&gt;filtros dinámicos (RF13)&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="480" y="110" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p6_cu23" value="&lt;b&gt;CU23: Generar reporte&lt;br/&gt;personalizado por voz con IA&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;align=center;verticalAlign=middle;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="480" y="270" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- FLECHAS &amp;laquo;trace&amp;raquo; -->
+        <mxCell id="tr_p6_22" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" edge="1" source="pkg_p6" target="p6_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p6_22" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p6_22"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="tr_p6_23" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" source="pkg_p6" target="p6_cu23" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_tr_p6_23" value="&amp;laquo;trace&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="tr_p6_23"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- DEPENDENCIAS INTERNAS -->
+        <!-- CU23 «extend» CU22 -->
+        <mxCell id="ext_cu23_cu22" style="html=1;strokeColor=#000000;strokeWidth=1.3;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="p6_cu23" target="p6_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_ext_23_22" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_cu23_cu22"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-25" y="0" as="offset" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- ========================================================================= -->
+  <!-- PÁGINA 7: 3.1.3 VISTA DE PAQUETES (DIAGRAMA DE ARQUITECTURA DE PAQUETES) -->
+  <!-- ========================================================================= -->
+  <diagram id="diag_vista_paquetes" name="3.1.3 - Vista de Paquetes">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="850" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TÍTULO -->
+        <mxCell id="t_vpkg" value="&lt;b style=&quot;font-size: 18px;&quot;&gt;3.1.3. VISTA DE PAQUETES — ARQUITECTURA DE DOMINIO PUDS&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 12px; color: #475569;&quot;&gt;Organización y dependencias entre los 6 Paquetes de Dominio de la Clínica La Cruz&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="50" y="20" width="1200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 1: SEGURIDAD Y AUDITORÍA (TRANSVERSAL ARRIBA) -->
+        <mxCell id="vp_p1" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;P1: Seguridad y Auditoría&lt;/b&gt;&lt;hr style=&quot;margin: 4px 0;&quot;/&gt;&lt;span style=&quot;font-size: 10px; color: #334155;&quot;&gt;+ CU01: Autenticar usuario&lt;br/&gt;+ CU02: Gestionar usuarios y roles&lt;br/&gt;+ CU03: Gestionar bitácora auditoría&lt;/span&gt;" style="shape=folder;tabWidth=110;tabHeight=24;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="480" y="90" width="260" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 2: RECURSOS CLÍNICOS Y PACIENTES -->
+        <mxCell id="vp_p2" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;P2: Recursos Clínicos y Pacientes&lt;/b&gt;&lt;hr style=&quot;margin: 4px 0;&quot;/&gt;&lt;span style=&quot;font-size: 10px; color: #334155;&quot;&gt;+ CU04: Gestionar pacientes&lt;br/&gt;+ CU05: Gestionar cuenta/perfil&lt;br/&gt;+ CU06: Gestionar médicos&lt;br/&gt;+ CU07: Gestionar especialidades&lt;br/&gt;+ CU08: Gestionar horarios médicos&lt;/span&gt;" style="shape=folder;tabWidth=130;tabHeight=24;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#D5E8D4;strokeColor=#82B366;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="120" y="270" width="260" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 3: GESTIÓN DE CITAS MÉDICAS (NÚCLEO CENTRAL) -->
+        <mxCell id="vp_p3" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;P3: Gestión de Citas Médicas&lt;/b&gt;&lt;hr style=&quot;margin: 4px 0;&quot;/&gt;&lt;span style=&quot;font-size: 10px; color: #334155;&quot;&gt;+ CU09: Consultar disponibilidad&lt;br/&gt;+ CU10: Programar cita médica&lt;br/&gt;+ CU11: Reprogramar cita médica&lt;br/&gt;+ CU12: Cancelar cita médica&lt;br/&gt;+ CU13: Registrar asistencia&lt;br/&gt;+ CU14: Agenda médica diaria&lt;br/&gt;+ CU15: Historial de citas&lt;/span&gt;" style="shape=folder;tabWidth=120;tabHeight=24;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFE6CC;strokeColor=#D79B00;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="480" y="270" width="260" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 4: HISTORIAL CLÍNICO Y CONSULTAS -->
+        <mxCell id="vp_p4" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;P4: Historial Clínico y Consultas&lt;/b&gt;&lt;hr style=&quot;margin: 4px 0;&quot;/&gt;&lt;span style=&quot;font-size: 10px; color: #334155;&quot;&gt;+ CU16: Registrar consulta médica&lt;br/&gt;+ CU17: Gestionar antecedentes&lt;br/&gt;+ CU18: Expediente digital y recetas&lt;br/&gt;+ CU19: Consultar expediente médico&lt;/span&gt;" style="shape=folder;tabWidth=130;tabHeight=24;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#E1D5E7;strokeColor=#9673A6;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="860" y="270" width="260" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 5: INTEGRACIONES Y PAGOS -->
+        <mxCell id="vp_p5" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;P5: Integraciones y Pagos&lt;/b&gt;&lt;hr style=&quot;margin: 4px 0;&quot;/&gt;&lt;span style=&quot;font-size: 10px; color: #334155;&quot;&gt;+ CU20: Recordatorios y notif. push&lt;br/&gt;+ CU21: Pago con Stripe Sandbox&lt;/span&gt;" style="shape=folder;tabWidth=110;tabHeight=24;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#F8CECC;strokeColor=#B85450;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="300" y="540" width="260" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- PAQUETE 6: REPORTES Y ANALÍTICA -->
+        <mxCell id="vp_p6" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;P6: Reportes y Analítica&lt;/b&gt;&lt;hr style=&quot;margin: 4px 0;&quot;/&gt;&lt;span style=&quot;font-size: 10px; color: #334155;&quot;&gt;+ CU22: Reportes filtros dinámicos RF13&lt;br/&gt;+ CU23: Reporte por voz con IA&lt;/span&gt;" style="shape=folder;tabWidth=110;tabHeight=24;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontFamily=Helvetica;align=center;verticalAlign=middle;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="680" y="540" width="260" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- DEPENDENCIAS ENTRE PAQUETES (FLECHAS DASHED UML) -->
+        <!-- P1 es transversal: Middleware hacia P2, P3, P4 -->
+        <mxCell id="dep_p1_p2" style="html=1;strokeColor=#475569;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.7;entryX=0.5;entryY=0;" edge="1" source="vp_p1" target="vp_p2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_p1_p2" value="&amp;laquo;access&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#475569;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="dep_p1_p2"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-10" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="dep_p1_p3" style="html=1;strokeColor=#475569;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="vp_p1" target="vp_p3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_p1_p3" value="&amp;laquo;access&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#475569;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="dep_p1_p3"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="dep_p1_p4" style="html=1;strokeColor=#475569;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.7;entryX=0.5;entryY=0;" edge="1" source="vp_p1" target="vp_p4" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_p1_p4" value="&amp;laquo;access&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#475569;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="dep_p1_p4"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="10" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- P3 depende de P2 (provisión de médicos, pacientes, horarios) -->
+        <mxCell id="dep_p3_p2" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp_p3" target="vp_p2" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_p3_p2" value="&amp;laquo;import&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#0284C7;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="dep_p3_p2"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- P4 depende de P3 (cita atendida origina consulta médica) -->
+        <mxCell id="dep_p4_p3" style="html=1;strokeColor=#7C3AED;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp_p4" target="vp_p3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_p4_p3" value="&amp;laquo;import&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#7C3AED;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="dep_p4_p3"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- P5 depende de P3 (eventos de cita disparan pagos y recordatorios) -->
+        <mxCell id="dep_p5_p3" style="html=1;strokeColor=#DC2626;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.25;entryY=1;" edge="1" source="vp_p5" target="vp_p3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_p5_p3" value="&amp;laquo;use&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#DC2626;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="dep_p5_p3"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- P6 depende de P2, P3 y P4 (consultas agregadas de solo lectura) -->
+        <mxCell id="dep_p6_p3" style="html=1;strokeColor=#D97706;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.75;entryY=1;" edge="1" source="vp_p6" target="vp_p3" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_p6_p3" value="&amp;laquo;use&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#D97706;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="dep_p6_p3"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="15" y="0" as="offset" /></mxGeometry></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+</mxfile>
