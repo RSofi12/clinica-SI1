@@ -207,35 +207,6 @@
           </mxGeometry>
         </mxCell>
 
-        <!-- CU10 «include» CU03 (Toda reserva genera registro obligatorio en bitácora) -->
-        <mxCell id="rel_inc_cu10_cu03" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;entryX=0;entryY=0.8;" edge="1" source="cu10" target="cu03" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="670" y="550" />
-              <mxPoint x="1000" y="420" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="lbl_inc_cu10_cu03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#0369A1;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="rel_inc_cu10_cu03">
-          <mxGeometry x="0" relative="1" as="geometry">
-            <mxPoint x="20" y="-12" as="offset" />
-          </mxGeometry>
-        </mxCell>
-
-        <!-- CU12 «include» CU03 (La cancelación con motivo registra en bitácora) -->
-        <mxCell id="rel_inc_cu12_cu03" style="html=1;strokeColor=#0284C7;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;entryX=0.2;entryY=1;" edge="1" source="cu12" target="cu03" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="690" y="700" />
-              <mxPoint x="1050" y="470" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="lbl_inc_cu12_cu03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontStyle=2;fontColor=#0369A1;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="rel_inc_cu12_cu03">
-          <mxGeometry x="0" relative="1" as="geometry">
-            <mxPoint x="40" y="-10" as="offset" />
-          </mxGeometry>
-        </mxCell>
 
         <!-- CU12 «extend» CU10 (Cancelar extiende la cita programada existente) -->
         <mxCell id="rel_ext_cu12_cu10" style="html=1;strokeColor=#E11D48;strokeWidth=1.5;endArrow=open;dashed=1;dashPattern=5 5;" edge="1" source="cu12" target="cu10" parent="1">
