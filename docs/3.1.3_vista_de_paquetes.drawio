@@ -1,0 +1,343 @@
+<mxfile host="app.diagrams.net" modified="2026-10-25T20:30:00.000Z" agent="Mozilla/5.0" version="24.0.0" type="device">
+  <diagram id="diag_vista_paquetes_rup" name="3.1.3 - Vista de Paquetes">
+    <mxGraphModel dx="2000" dy="1400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2650" pageHeight="1400" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ENCABEZADO -->
+        <mxCell id="t_vrup" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;3.1.3. VISTA DE PAQUETES — ESPECIFICACIÓN POR PAQUETES DE DOMINIO&lt;/b&gt;&lt;br/&gt;&lt;span style=&quot;font-size: 13px; color: #475569;&quot;&gt;Organización en Paquetes según la Metodología PUDS / RUP — Clínica Vida Salud / Centro Médico La Cruz&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontColor=#0F172A;" vertex="1" parent="1">
+          <mxGeometry x="50" y="20" width="2550" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- ===================================================================== -->
+        <!-- 1. PKG SEGURIDAD Y AUDITORÍA (P1) -->
+        <!-- ===================================================================== -->
+        <mxCell id="box_p1" value="pkg Seguridad y Auditoría" style="shape=folder;tabWidth=210;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontSize=12;fontStyle=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="760" height="580" as="geometry" />
+        </mxCell>
+
+        <!-- Actores P1 -->
+        <mxCell id="p1_act_m" value="Médico" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="160" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_act_r" value="Recepcionista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="270" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_act_a" value="Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="380" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_act_p" value="Paciente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="490" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Actor Generalizado Usuario -->
+        <mxCell id="p1_act_u" value="Usuario" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="250" y="240" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Flechas de Generalización hacia Usuario -->
+        <mxCell id="gen_m_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" source="p1_act_m" target="p1_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gen_r_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="p1_act_r" target="p1_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gen_a_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.3;entryX=0;entryY=0.7;" edge="1" source="p1_act_a" target="p1_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gen_p_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.3;entryX=0.2;entryY=1;" edge="1" source="p1_act_p" target="p1_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Casos de Uso P1 (Amarillo Pastel #FFF2CC como en la imagen) -->
+        <mxCell id="vp1_cu01" value="&lt;b&gt;CU01: Autenticar usuario&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="460" y="160" width="260" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="vp1_cu02" value="&lt;b&gt;CU02: Gestionar usuarios,&lt;br/&gt;roles y permisos&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="460" y="300" width="260" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="vp1_cu03" value="&lt;b&gt;CU03: Gestionar bitácora&lt;br/&gt;de auditoría&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="460" y="440" width="260" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- Asociaciones P1 -->
+        <mxCell id="link_u_cu01" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p1_act_u" target="vp1_cu01" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="link_a_cu02" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="p1_act_a" target="vp1_cu02" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="link_a_cu03" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" source="p1_act_a" target="vp1_cu03" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="inc_01_03" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp1_cu01" target="vp1_cu03" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="750" y="193" /><mxPoint x="750" y="473" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_inc_01_03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_01_03"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="inc_cu02_cu03" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="vp1_cu02" target="vp1_cu03" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_inc_02_03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_cu02_cu03"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="20" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- ===================================================================== -->
+        <!-- 2. PKG GESTIÓN DE CITAS MÉDICAS (P3) -->
+        <!-- ===================================================================== -->
+        <mxCell id="box_p3" value="pkg Gestión de Citas Médicas" style="shape=folder;tabWidth=230;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontSize=12;fontStyle=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="840" y="90" width="940" height="660" as="geometry" />
+        </mxCell>
+
+        <!-- Actores P3 -->
+        <mxCell id="p3_act_a" value="Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="160" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p3_act_r" value="Recepcionista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="290" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p3_act_p" value="Paciente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="430" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p3_act_m" value="Médico" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="560" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Casos de Uso P3 -->
+        <mxCell id="vp3_cu09" value="&lt;b&gt;CU09: Consultar disponibilidad&lt;br/&gt;de horarios&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="150" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp3_cu10" value="&lt;b&gt;CU10: Programar cita médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="150" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp3_cu11" value="&lt;b&gt;CU11: Reprogramar cita médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="270" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp3_cu12" value="&lt;b&gt;CU12: Cancelar cita médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="390" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp3_cu13" value="&lt;b&gt;CU13: Registrar asistencia y&lt;br/&gt;estado de cita&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="510" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp3_cu14" value="&lt;b&gt;CU14: Consultar agenda&lt;br/&gt;médica diaria&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="470" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp3_cu15" value="&lt;b&gt;CU15: Consultar historial de&lt;br/&gt;citas de paciente&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="580" width="220" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Asociaciones P3 -->
+        <mxCell id="l3_r_cu09" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_r" target="vp3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_r_cu10" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_r" target="vp3_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_r_cu11" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_r" target="vp3_cu11" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_r_cu12" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_r" target="vp3_cu12" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_r_cu13" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_r" target="vp3_cu13" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_r_cu14" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_r" target="vp3_cu14" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_r_cu15" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_r" target="vp3_cu15" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="l3_p_cu09" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_p" target="vp3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_p_cu10" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_p" target="vp3_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_p_cu11" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_p" target="vp3_cu11" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_p_cu12" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_p" target="vp3_cu12" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_p_cu15" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_p" target="vp3_cu15" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="l3_m_cu13" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_m" target="vp3_cu13" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_m_cu14" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_m" target="vp3_cu14" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_m_cu15" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_m" target="vp3_cu15" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l3_a_cu14" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p3_act_a" target="vp3_cu14" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Dependencias P3 -->
+        <mxCell id="inc_10_09" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp3_cu10" target="vp3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_i_10_09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_10_09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="inc_11_09" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.8;" edge="1" source="vp3_cu11" target="vp3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_i_11_09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_11_09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="10" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="ext_11_10" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="vp3_cu11" target="vp3_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_e_11_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_11_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-20" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="ext_12_10" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.9;exitY=0;entryX=0.9;entryY=1;" edge="1" source="vp3_cu12" target="vp3_cu10" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1690" y="360" /><mxPoint x="1690" y="230" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_e_12_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_12_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="15" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="ext_13_10" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.95;exitY=0;entryX=1;entryY=0.7;" edge="1" source="vp3_cu13" target="vp3_cu10" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1730" y="480" /><mxPoint x="1730" y="170" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_e_13_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_13_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="20" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- ===================================================================== -->
+        <!-- 3. PKG RECURSOS CLÍNICOS Y PACIENTES (P2) -->
+        <!-- ===================================================================== -->
+        <mxCell id="box_p2" value="pkg Recursos Clínicos y Pacientes" style="shape=folder;tabWidth=250;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontSize=12;fontStyle=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1820" y="90" width="780" height="660" as="geometry" />
+        </mxCell>
+
+        <!-- Actores P2 -->
+        <mxCell id="p2_act_a" value="Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="180" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p2_act_r" value="Recepcionista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="360" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p2_act_p" value="Paciente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="520" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Casos de Uso P2 -->
+        <mxCell id="vp2_cu04" value="&lt;b&gt;CU04: Gestionar pacientes&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2020" y="160" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp2_cu05" value="&lt;b&gt;CU05: Gestionar cuenta y&lt;br/&gt;perfil del paciente&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2340" y="160" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp2_cu07" value="&lt;b&gt;CU07: Gestionar especialidades&lt;br/&gt;médicas&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2020" y="320" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp2_cu06" value="&lt;b&gt;CU06: Gestionar médicos&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2340" y="320" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vp2_cu08" value="&lt;b&gt;CU08: Gestionar horarios de&lt;br/&gt;atención médica&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2020" y="480" width="220" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Asociaciones P2 -->
+        <mxCell id="l2_a_cu04" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p2_act_a" target="vp2_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l2_a_cu06" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p2_act_a" target="vp2_cu06" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l2_a_cu07" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p2_act_a" target="vp2_cu07" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l2_a_cu08" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p2_act_a" target="vp2_cu08" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="l2_r_cu04" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p2_act_r" target="vp2_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l2_r_cu05" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p2_act_r" target="vp2_cu05" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="l2_p_cu05" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p2_act_p" target="vp2_cu05" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Dependencias P2 -->
+        <mxCell id="ext_05_04" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp2_cu05" target="vp2_cu04" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_e_05_04" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_05_04"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="inc_06_07" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp2_cu06" target="vp2_cu07" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_i_06_07" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_06_07"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <!-- ===================================================================== -->
+        <!-- 4. PKG REPORTES Y ANALÍTICA (P6) -->
+        <!-- ===================================================================== -->
+        <mxCell id="box_p6" value="pkg Reportes y Analítica" style="shape=folder;tabWidth=210;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontSize=12;fontStyle=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="40" y="770" width="760" height="580" as="geometry" />
+        </mxCell>
+
+        <!-- Actores P6 -->
+        <mxCell id="p6_act_a" value="Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="850" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p6_act_r" value="Recepcionista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="980" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p6_act_m" value="Médico" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1110" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p6_act_ia" value="&amp;laquo;External&amp;raquo;&lt;br/&gt;Servicio de IA" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1030" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Casos de Uso P6 -->
+        <mxCell id="vp6_cu22" value="&lt;b&gt;CU22: Generar reportes con&lt;br/&gt;filtros dinámicos (RF13)&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="320" y="870" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="vp6_cu23" value="&lt;b&gt;CU23: Generar reporte&lt;br/&gt;personalizado por voz con IA&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="320" y="1050" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Asociaciones P6 -->
+        <mxCell id="l6_a_22" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p6_act_a" target="vp6_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l6_r_22" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p6_act_r" target="vp6_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l6_m_22" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p6_act_m" target="vp6_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l6_a_23" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p6_act_a" target="vp6_cu23" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l6_ia_23" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p6_act_ia" target="vp6_cu23" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="ext_23_22" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="vp6_cu23" target="vp6_cu22" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_e_23_22" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_23_22"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-20" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- ===================================================================== -->
+        <!-- 5. PKG HISTORIAL CLÍNICO Y CONSULTAS (P4 - EXACTO AL EJEMPLO DOCENTE) -->
+        <!-- ===================================================================== -->
+        <mxCell id="box_p4" value="pkg Historial Clínico y Consultas" style="shape=folder;tabWidth=250;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontSize=12;fontStyle=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="840" y="770" width="940" height="580" as="geometry" />
+        </mxCell>
+
+        <!-- Actores P4 -->
+        <mxCell id="p4_act_m" value="Médico" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="860" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p4_act_a" value="Administrador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="990" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p4_act_r" value="Recepcionista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="1120" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p4_act_p" value="Paciente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="880" y="1250" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Actor Usuario Generalizado P4 -->
+        <mxCell id="p4_act_u" value="Usuario" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="1030" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="gen_m4_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.2;" edge="1" source="p4_act_m" target="p4_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gen_a4_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="p4_act_a" target="p4_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gen_r4_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.5;entryX=0;entryY=0.8;" edge="1" source="p4_act_r" target="p4_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="gen_p4_u" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=block;endFill=0;dashed=0;exitX=1;exitY=0.3;entryX=0.2;entryY=1;" edge="1" source="p4_act_p" target="p4_act_u" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Casos de Uso P4 (Exactos al ejemplo docente) -->
+        <mxCell id="vp4_cu18" value="&lt;b&gt;CU18: Gestionar historial&lt;br/&gt;clínico digital&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="850" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="vp4_cu16" value="&lt;b&gt;CU16: Registrar consulta médica&lt;br/&gt;(Triaje y Diagnóstico)&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="850" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="vp4_cu17" value="&lt;b&gt;CU17: Gestionar antecedentes&lt;br/&gt;médicos&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1510" y="1030" width="240" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="vp4_cu19" value="&lt;b&gt;CU19: Consultar expediente&lt;br/&gt;médico y antecedentes&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="1030" width="240" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- Asociaciones P4 -->
+        <mxCell id="l4_m_16" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p4_act_m" target="vp4_cu16" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l4_m_17" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p4_act_m" target="vp4_cu17" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l4_m_18" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p4_act_m" target="vp4_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l4_u_19" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p4_act_u" target="vp4_cu19" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Dependencias P4 (Idénticas al modelo del docente) -->
+        <mxCell id="inc_16_18" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp4_cu16" target="vp4_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_i_16_18" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_16_18"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="ext_17_16" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="vp4_cu17" target="vp4_cu16" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_e_17_16" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_17_16"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-20" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="ext_19_18" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="vp4_cu19" target="vp4_cu18" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_e_19_18" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_19_18"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-20" y="0" as="offset" /></mxGeometry></mxCell>
+
+        <!-- ===================================================================== -->
+        <!-- 6. PKG INTEGRACIONES Y PAGOS (P5) -->
+        <!-- ===================================================================== -->
+        <mxCell id="box_p5" value="pkg Integraciones y Pagos" style="shape=folder;tabWidth=210;tabHeight=26;tabPosition=left;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontFamily=Helvetica;fontSize=12;fontStyle=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=4;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1820" y="770" width="780" height="580" as="geometry" />
+        </mxCell>
+
+        <!-- Actores P5 -->
+        <mxCell id="p5_act_p" value="Paciente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="870" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p5_act_r" value="Recepcionista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="1050" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p5_act_st" value="&amp;laquo;External&amp;raquo;&lt;br/&gt;Stripe Sandbox" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2520" y="870" width="45" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="p5_act_s" value="&amp;laquo;System&amp;raquo;&lt;br/&gt;Sistema (Cron)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontFamily=Helvetica;fontSize=11;fontStyle=1;fillColor=#FFFFFF;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2520" y="1050" width="45" height="75" as="geometry" />
+        </mxCell>
+
+        <!-- Casos de Uso P5 -->
+        <mxCell id="vp5_cu20" value="&lt;b&gt;CU20: Enviar recordatorios y&lt;br/&gt;notificaciones push&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2100" y="880" width="260" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="vp5_cu21" value="&lt;b&gt;CU21: Pagar cita médica&lt;br/&gt;con Stripe (modo prueba)&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=1.5;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="2100" y="1060" width="260" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- Asociaciones P5 -->
+        <mxCell id="l5_s_20" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p5_act_s" target="vp5_cu20" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l5_p_21" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p5_act_p" target="vp5_cu21" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l5_r_21" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p5_act_r" target="vp5_cu21" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="l5_st_21" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p5_act_st" target="vp5_cu21" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
