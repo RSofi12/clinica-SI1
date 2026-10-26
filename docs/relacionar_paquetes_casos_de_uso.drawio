@@ -54,6 +54,9 @@
           <mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry>
         </mxCell>
 
+              <!-- DEPENDENCIA INTERNA DE AUDITORÍA -->
+        <mxCell id="inc_cu02_cu03_p1" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="p1_cu02" target="p1_cu03" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_inc_02_03_p1" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_cu02_cu03_p1"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="20" y="0" as="offset" /></mxGeometry></mxCell>
       </root>
     </mxGraphModel>
   </diagram>
@@ -450,6 +453,11 @@
         <mxCell id="link_u_cu01" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;" edge="1" source="p1_act_u" target="vp1_cu01" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="link_a_cu02" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="p1_act_a" target="vp1_cu02" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="link_a_cu03" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=none;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" source="p1_act_a" target="vp1_cu03" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="inc_01_03" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp1_cu01" target="vp1_cu03" parent="1">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="750" y="193" /><mxPoint x="750" y="473" /></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_inc_01_03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_01_03"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="15" y="0" as="offset" /></mxGeometry></mxCell>
+
         <mxCell id="inc_cu02_cu03" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="vp1_cu02" target="vp1_cu03" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="lbl_inc_02_03" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_cu02_cu03"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="20" y="0" as="offset" /></mxGeometry></mxCell>
 
@@ -520,6 +528,9 @@
         <!-- Dependencias P3 -->
         <mxCell id="inc_10_09" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="vp3_cu10" target="vp3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="lbl_i_10_09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_10_09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="0" y="-10" as="offset" /></mxGeometry></mxCell>
+
+        <mxCell id="inc_11_09" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0;exitY=0.5;entryX=1;entryY=0.8;" edge="1" source="vp3_cu11" target="vp3_cu09" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="lbl_i_11_09" value="&amp;laquo;include&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="inc_11_09"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="10" y="-10" as="offset" /></mxGeometry></mxCell>
 
         <mxCell id="ext_11_10" style="html=1;strokeColor=#000000;strokeWidth=1.2;endArrow=open;dashed=1;dashPattern=5 5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="vp3_cu11" target="vp3_cu10" parent="1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="lbl_e_11_10" value="&amp;laquo;extend&amp;raquo;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontFamily=Helvetica;fontColor=#000000;labelBackgroundColor=#FFFFFF;" vertex="1" connectable="0" parent="ext_11_10"><mxGeometry x="0" relative="1" as="geometry"><mxPoint x="-20" y="0" as="offset" /></mxGeometry></mxCell>
