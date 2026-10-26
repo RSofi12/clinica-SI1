@@ -74,6 +74,11 @@ frontend/scripts/
 docs/diagramas_comunicacion_ciclo1.drawio
 docs/diagramas_clases_analisis_ciclo1.drawio
 docs/diagramas_secuencia_ciclo1.drawio
+docs/diagrama_general_casos_de_uso.drawio
+docs/relacionar_paquetes_casos_de_uso.drawio
+docs/3.1.3_vista_de_paquetes.drawio
+docs/*.drawio
+*.drawio
 
 
 
