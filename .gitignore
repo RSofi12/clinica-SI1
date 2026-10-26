@@ -64,21 +64,29 @@ backend/database/data/
 *.demo.sql
 
 # ==========================================
-# Archivos de Apoyo Documental / Académico (Punto A, B, etc.)
+# Archivos de Apoyo Documental, Diagramas y Scripts Utilitarios
 # ==========================================
 docs/tablas_casos_de_uso.html
 docs/PUNTO_A_DETALLE_CASOS_DE_USO.md
 docs/prototipos/
 docs/screenshots/
 frontend/scripts/
-docs/diagramas_comunicacion_ciclo1.drawio
-docs/diagramas_clases_analisis_ciclo1.drawio
-docs/diagramas_secuencia_ciclo1.drawio
-docs/diagrama_general_casos_de_uso.drawio
-docs/relacionar_paquetes_casos_de_uso.drawio
-docs/3.1.3_vista_de_paquetes.drawio
+scripts/
+backend/scripts/
+*.cjs
+check_*.js
+inspect_*.js
+update_*.js
+reorder_*.js
+validate_*.js
+extract_*.js
+deep_check_*.js
+test_*.js
 docs/*.drawio
 *.drawio
+*.drawio.bkp
+*.drawio.dtmp
+*.bkp
 
 
 
