@@ -128,6 +128,18 @@
     - **14 Modelos Eloquent en Español:** Creados en `MedicalRecords/Models/` (10 modelos), `Integrations/Models/` (3 modelos) y `Analytics/Models/` (1 modelo) con relaciones tipadas, casts y fillables.
     - **Validación:** Sintaxis verificada al 100% con `php -l` (0 errores). Esquema listo para `php artisan migrate` y seeders clínicos.
 
+18. **Implementación Integral de CU23 (Generar Reporte Personalizado por Voz con IA — 05/11/2026):**
+    - **Backend (`app/Packages/Analytics/`):**
+      - `VoiceCommandParserService.php`: Motor NLP determinístico en PHP con soporte opcional a Gemini API y fallback transparente. Reconoce intenciones, estados (`CANCELADA`, `ATENDIDA`, `PROGRAMADA`, `INASISTENCIA`), rangos de fechas dinámicos (`Carbon`) y nombres de médicos/especialidades.
+      - `VoiceReportService.php`: Ejecución de consultas analíticas sobre `citas` y `pacientes`, métricas de asistencia, persistencia en `reportes_ia` y auditoría en `bitacora` (CU03).
+      - `VoiceReportController.php`: Endpoints `/api/analytics/voice-report`, `/voice-history` y `/voice-stats` protegidos por middleware RBAC (`ADMIN` y `MEDICO`).
+      - `VoiceReportTest.php`: Prueba automatizada de parsing semántico.
+    - **Frontend (`src/apps/analytics/`):**
+      - `analyticsService.js`: Conexión con endpoints y exportador a CSV.
+      - `VoiceReportAssistant.jsx`: Componente interactivo con Web Speech API (`window.webkitSpeechRecognition`), animación de ondas sonoras, transcripción editable, fallback manual, chips de ejemplo, tarjetas de KPI, tabla de registros coincidentes y cajón de historial.
+      - `Sidebar.jsx` y `App.jsx`: Pestaña "Reportes por Voz (IA)" agregada bajo el paquete "Reportes y Analítica (P6)".
+      - Verificación de compilación: `npm run build` exitoso (0 errores).
+
 ### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
 - Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
   - `CU11`: Reprogramar Cita Médica (RF08) con nueva fecha y liberación del horario anterior.

@@ -12,7 +12,7 @@
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **0 completados de 13 (+2)**. Total Global: **13 de 26 (+2) completados (50.0%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **2 completados de 13 (+2) (CU11, CU23)**. Total Global: **15 de 26 (+2) completados (57.7%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -232,3 +232,71 @@
 - ✅ **Documentación Operativa:**
   - `README.md` actualizado con comandos de arranque (`docker compose up -d --build`), migraciones y seeders dentro del contenedor.
 
+
+---
+
+### 20. Implementación Integral de CU11 (Reprogramar Cita Médica — RF08) (05/11/2026)
+- **Backend (`backend/app/Packages/Appointments/`):**
+  - ✅ Migración `2026_11_05_000001_add_reprogramacion_fields_to_citas_table.php`: campos `reprogramada_en` (timestamp) y `motivo_reprogramacion` (varchar 255) en tabla `citas`. Sincronizado en `DDL_Database_Clinica_LaCruz.sql`.
+  - ✅ Modelo `Cita.php`: `$fillable` y `$casts` actualizados, métodos `puedeReprogramarse(): bool` (solo en estado PROGRAMADA o CONFIRMADA) y `reprogramar($nuevaFechaHora, $nuevaFechaHoraFin, $duracion, $motivo, $idUsuario)`.
+  - ✅ FormRequest `AppointmentRescheduleRequest.php`: validación estricta de fecha futura (`YYYY-MM-DD`, `after_or_equal:today`), hora de inicio (`H:i`), duración (15-120 min) y motivo obligatorio (min: 5, max: 500).
+  - ✅ Servicio Transaccional `AppointmentRescheduleService.php`:
+    - `DB::transaction()` y `lockForUpdate()` sobre la cita.
+    - Validación de estado activo del médico (RN04) y fecha futura (RN06).
+    - Verificación de agenda semanal (RN05) y bloqueos/feriados en `bloqueos_horario`.
+    - Algoritmo anti-colisión con exclusión de la propia cita (`id_cita != $cita->id_cita`) evitando auto-colisiones (RF07).
+    - Auditoría inmutable en `Bitacora.php` (CU03) y registro en `cita_estado_historial`.
+  - ✅ Controlador `AppointmentsController::reschedule()` y ruta `PATCH /api/appointments/{id}/reschedule` con RBAC para `ADMIN`, `RECEPCIONISTA` y `PACIENTE` (médico bloqueado según PUDS).
+- **Frontend (`frontend/src/apps/appointments/`):**
+  - ✅ Servicio `appointmentService.js`: método `rescheduleAppointment(id, data)` (PATCH).
+  - ✅ Componente `AppointmentRescheduleModal.jsx`:
+    - Estilo guiado por `/frontend-design` con paleta institucional (#004d5a, #00687a, #70cbff, #e8f7f9), micro-transiciones fluidas y fondo difuminado `backdrop-blur-xs`.
+    - Visualización del resumen de la cita (paciente, médico, especialidad).
+    - Tarjeta comparativa visual del cambio de turno: **Horario Actual ➔ Nuevo Horario Elegido**.
+    - Selector dinámico de fecha con consulta en tiempo real al motor de disponibilidad (`CU09`).
+    - Grilla interactiva de turnos libres con selector verde esmeralda y feedback de ocupación/bloqueos.
+    - Textarea con contador dinámico y validación reactiva de motivo justificado (mínimo 5 caracteres).
+  - ✅ Integración en `AppointmentsManager.jsx`:
+    - Botón de acción 'Reprogramar' para citas activas (`PROGRAMADA`, `CONFIRMADA`) visible para roles autorizados.
+    - Indicador visual tipo pill `Reprogramada` en listados de citas con tooltip de motivo y fecha.
+  - ✅ Integración en `PatientAppointmentHistoryModal.jsx`:
+    - Acción de reprogramación disponible desde la ficha de historial del paciente.
+    - Bloque de trazabilidad mostrando fecha y motivo de reprogramaciones históricas.
+  - ✅ Compilación limpia con Vite (`npm run build` en 18.28s, 0 errores).
+- **Pruebas de Caja Negra (`docs/informes/PRUEBAS_CAJA_NEGRA.md`):**
+  - 11 casos de prueba exhaustivos documentados (`CN-CU11-01` a `CN-CU11-11`) cubriendo reprogramación exitosa, colisiones (HTTP 409), motivos cortos (HTTP 422), fechas pasadas, citas atendidas/canceladas y protección IDOR.
+
+
+---
+
+### 21. Implementación Integral de CU23 (Generar Reporte Personalizado por Voz con IA — RF13 / Extra) (05/11/2026)
+- **Backend (`backend/app/Packages/Analytics/`):**
+  - ✅ Tabla PostgreSQL `reportes_ia` migrada con campos `id_reporte`, `id_usuario`, `comando_texto`, `filtros_json` (JSONB) y `tipo_reporte`.
+  - ✅ Modelo `ReporteIa.php` con cast `array` a `filtros_json`, relaciones con `User` y scope de usuario.
+  - ✅ FormRequest `ProcessVoiceReportRequest.php` para validación y sanitización estricta de la consulta dictada.
+  - ✅ Motor Híbrido de NLP `VoiceCommandParserService.php`:
+    - Procesamiento determinístico en PHP con latencia 0 ms, 100% offline y costo $0.
+    - Detección precisa de intenciones y estados de cita (`CANCELADA`, `ATENDIDA`, `PROGRAMADA`, `INASISTENCIA`).
+    - Detección de rangos temporales dinámicos con Carbon (*"hoy"*, *"este mes"*, *"semana pasada"*, *"este año"*, *"octubre"*).
+    - Mapeo de entidades contra catálogos relacionales de médicos y especialidades con normalización fonética y sin diacríticos.
+    - Soporte opcional y desacoplado para enriquecimiento vía Gemini API (`GEMINI_API_KEY`) con fallback transparente.
+  - ✅ Servicio Transaccional `VoiceReportService.php`:
+    - Construcción de consultas dinámicas en PostgreSQL sobre `citas` y `pacientes`.
+    - Cálculo de métricas agregadas (total de citas, atendidas, canceladas, tasa de asistencia porcentual).
+    - Persistencia en tabla `reportes_ia` y auditoría inmutable en `Bitacora.php` (CU03).
+    - Scoping automático para rol `MEDICO` (restringido a sus propios pacientes) y control global para `ADMIN`.
+  - ✅ Controlador `VoiceReportController.php` y rutas `/api/analytics/voice-report`, `/voice-history` y `/voice-stats`.
+  - ✅ Prueba de Caja Negra Automatizada `VoiceReportTest.php` validando parsing de estados y rangos temporales.
+- **Frontend (`frontend/src/apps/analytics/`):**
+  - ✅ Servicio `analyticsService.js`: consumo de endpoints y exportador a CSV estándar del navegador.
+  - ✅ Componente `VoiceReportAssistant.jsx`:
+    - Diseño adaptado a la identidad visual de la clínica con paleta `#004d5a`, `#00687a`, `#008b9e` y directrices `/frontend-design`.
+    - Micrófono interactivo con Web Speech API (`window.webkitSpeechRecognition`), animación de ondas de audio (ecualizador en vivo) y pulso de escucha activa.
+    - Transcripción en tiempo real con campo editable y fallback manual por teclado ante navegadores sin soporte o permisos denegados.
+    - Chips con consultas de ejemplo dictables (*"Citas canceladas de este mes"*, *"Atenciones de hoy"*, etc.).
+    - Cajón desplegable de consultas recientes para reejecución en 1 clic.
+    - 4 Tarjetas KPI interactivas (Total, Atendidas, Canceladas, Tasa de Asistencia).
+    - Tabla detallada con badges estilizados según estado y buscador dinámico integrado.
+    - Botón de exportación instantánea a CSV.
+  - ✅ Integración en `Sidebar.jsx` (grupo "Reportes y Analítica (P6)") y renderizado condicional en `App.jsx`.
+  - ✅ Compilación de producción exitosa con Vite (`npm run build` en 52.15s, 0 errores).

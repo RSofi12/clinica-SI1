@@ -15,6 +15,7 @@ import {
   Shield,
   Layers,
   Clock,
+  Mic,
 } from 'lucide-react';
 import logoColor from '../assets/logo-color.svg';
 
@@ -105,6 +106,19 @@ export function Sidebar({
           tag: role === 'MEDICO' ? 'CU14 / CU15' : role === 'PACIENTE' ? 'CU09 / CU10' : 'CU09, CU10 / RF06, RF07',
           icon: role === 'MEDICO' ? Stethoscope : Calendar,
           requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO', 'PACIENTE'],
+        },
+      ],
+    },
+    {
+      group: 'Reportes y Analítica (P6)',
+      items: [
+        {
+          id: 'voice-reports',
+          label: 'Reportes por Voz (IA)',
+          subtitle: 'Consultas dictadas con IA',
+          tag: 'CU23 / Extra',
+          icon: Mic,
+          requiredRoles: ['ADMIN', 'MEDICO'],
         },
       ],
     },

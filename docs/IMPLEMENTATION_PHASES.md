@@ -206,6 +206,32 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
   - [x] **P10.5 (Anti-IDOR):** Paciente no puede manipular el payload HTTP para agendar a nombre de otro paciente.
 
 
+
+#### ✅ CU11: Reprogramar Cita Médica (RF08)
+- [x] **Backend:**
+  - [x] Migración agregando campos 
+eprogramada_en (timestamp) y motivo_reprogramacion (varchar 255) a tabla citas.
+  - [x] Sincronización en DDL_Database_Clinica_LaCruz.sql.
+  - [x] Modelo Cita.php con métodos puedeReprogramarse(): bool y 
+eprogramar(...).
+  - [x] FormRequest AppointmentRescheduleRequest (validación de fecha futura, hora, duración y motivo obligatorio min:5).
+  - [x] Servicio transaccional AppointmentRescheduleService con lockForUpdate(), validación de agenda médica (RN05), bloqueos/feriados y anti-colisión excluyendo la propia cita (RF07).
+  - [x] Controlador AppointmentsController::reschedule() y ruta PATCH /api/appointments/{id}/reschedule con control RBAC (ADMIN, RECEPCIONISTA, PACIENTE).
+  - [x] Auditoría inmutable en Bitacora.php (CU03) e historial de estados en cita_estado_historial.
+- [x] **Frontend:**
+  - [x] Servicio ppointmentService.rescheduleAppointment(id, data) (PATCH).
+  - [x] Modal interactivo AppointmentRescheduleModal.jsx con diseño distintivo (paleta turquesa/verde esmeralda, micro-transiciones fluidas, comparativa visual Antes ➔ Después).
+  - [x] Selector dinámico de nueva fecha con consulta en tiempo real de turnos libres (CU09).
+  - [x] Contador interactivo y validación reactiva de motivo obligatorio (mínimo 5 caracteres).
+  - [x] Botón 'Reprogramar' integrado en AppointmentsManager.jsx y PatientAppointmentHistoryModal.jsx.
+  - [x] Indicador visual de citas reprogramadas en listados e historiales.
+- [x] **Fase de Pruebas:**
+  - [x] Casos de prueba documentados en docs/informes/PRUEBAS_CAJA_NEGRA.md (CN-CU11-01 a CN-CU11-11).
+  - [x] Verificación de anti-colisión transaccional y rechazo de solapamientos (409 Conflict).
+  - [x] Verificación de validación de motivo obligatorio menor a 5 caracteres (422 Unprocessable).
+  - [x] Verificación de compilación limpia de frontend (
+pm run build exitoso).
+
 #### ✅ CU12: Cancelar Cita Médica (RF09)
 - [x] **Backend:**
   - [x] Endpoint `POST /api/appointments/{id}/cancel` con validación `AppointmentCancelRequest` (`motivo_cancelacion` min:5, max:500).
@@ -346,10 +372,20 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 - [ ] **Frontend:** Módulo de analítica con gráficos, filtros de fecha y botón de exportación.
 - [ ] **Fase de Pruebas:** Comparación de totales del reporte contra conteos reales en PostgreSQL.
 
-#### ⏳ CU23: Generar Reporte Personalizado por Voz con IA (Extra)
-- [ ] **Backend:** Integración API con servicio LLM (OpenAI / Gemini) para parsing de intención y parámetros SQL.
-- [ ] **Frontend:** Botón de micrófono con Web Speech API en el navegador.
-- [ ] **Fase de Pruebas:** Dictar: *"Muéstrame las citas canceladas del doctor Carlos esta semana"* y verificar filtros generados.
+#### ✅ CU23: Generar Reporte Personalizado por Voz con IA (Extra)
+- [x] **Backend:**
+  - [x] Motor híbrido de NLP determinístico en PHP (`VoiceCommandParserService.php`) con cálculo dinámico de fechas Carbon y soporte opcional a Gemini API.
+  - [x] Servicio transaccional `VoiceReportService.php` con queries optimizadas Eloquent, métricas de asistencia y guardado en `reportes_ia`.
+  - [x] Controlador REST `VoiceReportController.php` con endpoints `/api/analytics/voice-report`, `/voice-history` y `/voice-stats` bajo RBAC (`ADMIN`, `MEDICO`).
+  - [x] Registro inmutable en `bitacora` (CU03) y prueba de caja negra automatizada `VoiceReportTest.php`.
+- [x] **Frontend:**
+  - [x] Servicio `analyticsService.js` con método de exportación a CSV.
+  - [x] Vista interactiva `VoiceReportAssistant.jsx` con Web Speech API (`window.webkitSpeechRecognition`), animación de ondas de audio, transcripción en tiempo real y fallback manual.
+  - [x] Tarjetas de métricas calculadas (Total, Atendidas, Canceladas, Tasa de Asistencia), badges de filtros detectados y tabla con buscador en vivo.
+  - [x] Integración en `Sidebar.jsx` y `App.jsx` bajo el paquete "Reportes y Analítica (P6)".
+- [x] **Fase de Pruebas:**
+  - [x] Dictado: *"Citas canceladas de este mes"*, *"Atenciones de hoy"*, *"Balance de la semana pasada"* resolviendo fechas y filtros en PostgreSQL.
+  - [x] Fallback de escritura manual cuando no hay permisos de micrófono.
 
 #### ⏳ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
 - [ ] **Backend:** Endpoint de agregación analítica en tiempo real (citas por estado, ocupación médica, ingresos estimados).

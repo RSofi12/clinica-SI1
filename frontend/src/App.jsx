@@ -10,6 +10,8 @@ import { PatientsManager } from './apps/clinical-resources/components/PatientsMa
 import { DoctorsManager } from './apps/clinical-resources/components/DoctorsManager';
 import { SchedulesManager } from './apps/clinical-resources/components/SchedulesManager';
 import { AppointmentsManager } from './apps/appointments/components/AppointmentsManager';
+import { VoiceReportAssistant } from './apps/analytics/components/VoiceReportAssistant';
+
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
@@ -172,6 +174,10 @@ export default function App() {
         return role === 'ADMIN' ? 'Plantel Médico y Especialidades (CU06 / CU07)' : 'Panel General';
       case 'schedules':
         return role === 'ADMIN' ? 'Gestión de Horarios y Disponibilidad Médica (CU08)' : 'Panel General';
+            case 'voice-reports':
+        return ['ADMIN', 'MEDICO'].includes(role)
+          ? 'Asistente de Reportes por Voz con IA (CU23)'
+          : 'Panel General';
       case 'appointments':
         return role === 'MEDICO'
           ? 'Mi Agenda Médica Diaria (CU14 / CU15)'
@@ -284,6 +290,9 @@ export default function App() {
             <SchedulesManager />
           ) : dashboardTab === 'appointments' ? (
             <AppointmentsManager />
+          ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
+            <VoiceReportAssistant />
+
           ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
             <PatientProfileView />
           ) : (
