@@ -355,6 +355,42 @@ class AnalisisClinicos <<cli>> {
   + detectarAlertas(): JSON
 }
 
+class OrdenesExamenes <<cli>> {
+  + id_orden: Long [PK]
+  + codigo_orden: String [UNIQUE]
+  + id_consulta: Long [FK]
+  + id_historia_clinica: Long [FK]
+  + id_medico: Long [FK]
+  + tipo_estudio: String
+  + nombre_estudio: String
+  + indicaciones_preparacion: Text [0..1]
+  + diagnostico_presuntivo: String [0..1]
+  + estado: String
+  + fecha_emision: DateTime
+  --
+  + emitirOrden(tipo: String, nombre: String): OrdenesExamenes
+  + actualizarEstado(est: String): Void
+}
+
+class DocumentosClinicos <<cli>> {
+  + id_documento: Long [PK]
+  + id_historia_clinica: Long [FK]
+  + id_consulta: Long [FK, 0..1]
+  + id_orden: Long [FK, 0..1]
+  + id_medico: Long [FK]
+  + titulo: String
+  + tipo_documento: String
+  + descripcion: Text [0..1]
+  + ruta_archivo: String
+  + mime_type: String
+  + tamanio_bytes: Long
+  + fecha_subida: DateTime
+  + estado: String
+  --
+  + subirArchivo(ruta: String, tipo: String): DocumentosClinicos
+  + archivar(): Void
+}
+
 ' =============================================================================
 ' 6. PAGOS, NOTIFICACIONES Y REPORTES IA (ROSA PASTEL - #F8CECC)
 ' =============================================================================
@@ -448,6 +484,11 @@ HistoriasClinicas "1" -- "0..*" Recetas : contiene
 ConsultasMedicas "1" -- "0..*" Recetas : emite
 Recetas "1" -- "1..*" RecetaDetalles : especifica
 HistoriasClinicas "1" -- "0..*" AnalisisClinicos : analiza
+HistoriasClinicas "1" -- "0..*" OrdenesExamenes : contiene
+ConsultasMedicas "1" -- "0..*" OrdenesExamenes : prescribe
+HistoriasClinicas "1" -- "0..*" DocumentosClinicos : custodia
+ConsultasMedicas "0..1" -- "0..*" DocumentosClinicos : adjunta
+OrdenesExamenes "0..1" -- "0..*" DocumentosClinicos : respalda
 
 Usuarios "1" -- "0..*" Notificaciones : recibe
 Usuarios "1" -- "0..*" PushSuscripciones : registra

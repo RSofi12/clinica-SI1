@@ -145,4 +145,11 @@
   3. Desacoplamiento total y compatibilidad híbrida: en `docker-compose.yml` se inyecta `DB_HOST=postgres`, permitiendo que el archivo `backend/.env` local (`DB_HOST=127.0.0.1`) funcione en modo nativo sin tener que modificar variables al alternar entre desarrollo con o sin Docker.
 * **Impacto:** Creación de `docker/php/Dockerfile`, `docker/nginx/default.conf`, `docker/frontend/Dockerfile`, `docker-compose.yml` y actualización de documentación de instalación en `README.md`.
 
+### Registro 21: 2026-11-05
+* **Decisión:** Flexibilidad arquitectónica controlada sobre el esquema relacional base (`DDL_Database_Clinica_LaCruz.sql`). El archivo DDL funge como guía base y modelo inicial de referencia; no obstante, se aprueba formalmente extender o ajustar tablas, columnas relacionales (ej. `id_cita_origen` reflexiva para trazabilidad de reprogramaciones en CU11) y restricciones cuando los Casos de Uso, la lógica de negocio o los requerimientos funcionales del examen lo justifiquen.
+* **Motivo:**
+  1. La metodología PUDS / RUP es iterativa e incremental: el modelo de datos evoluciona armónicamente en cada ciclo sin anclarse a un esquema estático que impida la trazabilidad de negocio.
+  2. Cumplir con los requerimientos de auditoría y ciclo de vida (RF08) asegurando que cualquier cambio quede formalmente versionado en migraciones Laravel y documentado en bitácoras.
+* **Impacto:** Todo ajuste técnico en la base de datos se implementa en migraciones versionadas de Laravel, se sincroniza en `DDL_Database_Clinica_LaCruz.sql` y se refleja en `diagrama_de_clases.puml`.
+
 

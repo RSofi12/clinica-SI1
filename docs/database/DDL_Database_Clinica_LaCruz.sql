@@ -160,17 +160,6 @@ CREATE TABLE pacientes (
   fecha_registro timestamptz NOT NULL DEFAULT now()
 );
 
--- =============================================================================
--- TABLA: configuracion_seguridad
--- Nueva tabla: Parámetros editables por el Administrador para bloqueo temporal (CU01 / Seguridad)
--- =============================================================================
-CREATE TABLE configuracion_seguridad (
-  id_configuracion serial PRIMARY KEY,
-  max_intentos_fallidos integer NOT NULL DEFAULT 3,
-  minutos_bloqueo integer NOT NULL DEFAULT 5,
-  actualizado_por bigint REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
-  fecha_actualizacion timestamptz NOT NULL DEFAULT now()
-);
 
 CREATE TABLE contactos_emergencia (
   id_contacto bigserial PRIMARY KEY,
@@ -204,6 +193,8 @@ CREATE TABLE citas (
   estado varchar(20) NOT NULL DEFAULT 'PROGRAMADA',
   motivo_cancelacion varchar(255),
   cancelada_en timestamptz,
+  reprogramada_en timestamptz,
+  motivo_reprogramacion varchar(255),
   creada_por bigint NOT NULL,
   fecha_creacion timestamptz NOT NULL DEFAULT now(),
   fecha_actualizacion timestamptz NOT NULL DEFAULT now(),
@@ -279,17 +270,6 @@ CREATE TABLE diagnosticos (
   fecha_registro timestamptz NOT NULL DEFAULT now()
 );
 
--- =============================================================================
--- TABLA: configuracion_seguridad
--- Nueva tabla: Parámetros editables por el Administrador para bloqueo temporal (CU01 / Seguridad)
--- =============================================================================
-CREATE TABLE configuracion_seguridad (
-  id_configuracion serial PRIMARY KEY,
-  max_intentos_fallidos integer NOT NULL DEFAULT 3,
-  minutos_bloqueo integer NOT NULL DEFAULT 5,
-  actualizado_por bigint REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
-  fecha_actualizacion timestamptz NOT NULL DEFAULT now()
-);
 
 CREATE TABLE evoluciones (
   id_evolucion bigserial PRIMARY KEY,
@@ -299,17 +279,6 @@ CREATE TABLE evoluciones (
   fecha_registro timestamptz NOT NULL DEFAULT now()
 );
 
--- =============================================================================
--- TABLA: configuracion_seguridad
--- Nueva tabla: Parámetros editables por el Administrador para bloqueo temporal (CU01 / Seguridad)
--- =============================================================================
-CREATE TABLE configuracion_seguridad (
-  id_configuracion serial PRIMARY KEY,
-  max_intentos_fallidos integer NOT NULL DEFAULT 3,
-  minutos_bloqueo integer NOT NULL DEFAULT 5,
-  actualizado_por bigint REFERENCES usuarios(id_usuario) ON DELETE SET NULL,
-  fecha_actualizacion timestamptz NOT NULL DEFAULT now()
-);
 
 CREATE TABLE recetas (
   id_receta bigserial PRIMARY KEY,
@@ -341,10 +310,25 @@ CREATE TABLE analisis_clinicos (
   fecha_generacion timestamptz NOT NULL DEFAULT now()
 );
 
+CREATE TABLE ordenes_examenes (
+  id_orden bigserial PRIMARY KEY,
+  codigo_orden varchar(30) NOT NULL UNIQUE,
+  id_consulta bigint NOT NULL,
+  id_historia_clinica bigint NOT NULL,
+  id_medico bigint NOT NULL,
+  tipo_estudio varchar(30) NOT NULL CHECK (tipo_estudio IN ('LABORATORIO', 'IMAGENOLOGIA', 'CARDIOLOGIA', 'OTROS')),
+  nombre_estudio varchar(150) NOT NULL,
+  indicaciones_preparacion text,
+  diagnostico_presuntivo varchar(255),
+  estado varchar(20) NOT NULL DEFAULT 'PENDIENTE' CHECK (estado IN ('PENDIENTE', 'CON_RESULTADOS', 'CANCELADA')),
+  fecha_emision timestamptz NOT NULL DEFAULT now()
+);
+
 CREATE TABLE documentos_clinicos (
   id_documento bigserial PRIMARY KEY,
   id_historia_clinica bigint NOT NULL,
   id_consulta bigint,
+  id_orden bigint,
   id_medico bigint NOT NULL,
   titulo varchar(150) NOT NULL,
   tipo_documento varchar(50) NOT NULL CHECK (tipo_documento IN ('LABORATORIO', 'IMAGENOLOGIA', 'INFORME_EXTERNO', 'CONSENTIMIENTO', 'OTRO')),
@@ -488,9 +472,15 @@ ALTER TABLE analisis_clinicos
   ADD CONSTRAINT fk_ac_hc FOREIGN KEY (id_historia_clinica) REFERENCES historias_clinicas (id_historia_clinica) ON DELETE RESTRICT,
   ADD CONSTRAINT fk_ac_medico FOREIGN KEY (id_medico) REFERENCES medicos (id_medico) ON DELETE RESTRICT;
 
+ALTER TABLE ordenes_examenes
+  ADD CONSTRAINT fk_ord_consulta FOREIGN KEY (id_consulta) REFERENCES consultas_medicas (id_consulta) ON DELETE RESTRICT,
+  ADD CONSTRAINT fk_ord_hc FOREIGN KEY (id_historia_clinica) REFERENCES historias_clinicas (id_historia_clinica) ON DELETE RESTRICT,
+  ADD CONSTRAINT fk_ord_medico FOREIGN KEY (id_medico) REFERENCES medicos (id_medico) ON DELETE RESTRICT;
+
 ALTER TABLE documentos_clinicos
   ADD CONSTRAINT fk_doc_hc FOREIGN KEY (id_historia_clinica) REFERENCES historias_clinicas (id_historia_clinica) ON DELETE RESTRICT,
   ADD CONSTRAINT fk_doc_consulta FOREIGN KEY (id_consulta) REFERENCES consultas_medicas (id_consulta) ON DELETE SET NULL,
+  ADD CONSTRAINT fk_doc_orden FOREIGN KEY (id_orden) REFERENCES ordenes_examenes (id_orden) ON DELETE SET NULL,
   ADD CONSTRAINT fk_doc_medico FOREIGN KEY (id_medico) REFERENCES medicos (id_medico) ON DELETE RESTRICT;
 
 -- Pagos y Notificaciones

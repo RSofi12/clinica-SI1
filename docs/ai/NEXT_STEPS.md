@@ -66,8 +66,18 @@
 
 ---
 
-## 🌟 Ruta de Trabajo para Ciclo 2 (Clínico, Pagos y Analítica)
+### Fase 8: Esquema Físico y Modelos de Dominio del Ciclo 2 (Completada — 05/11/2026)
+- [x] Migración Paquete 4 (`historial_clinico`): 10 tablas (`historias_clinicas`, `consultas_medicas`, `antecedentes`, `diagnosticos`, `evoluciones`, `recetas`, `receta_detalles`, `ordenes_examenes`, `documentos_clinicos`, `analisis_clinicos`).
+- [x] Migración Paquete 5 (`pagos_notificaciones`): 3 tablas (`pagos`, `notificaciones`, `push_suscripciones`).
+- [x] Migración Paquete 6 (`reportes_ia`): 1 tabla (`reportes_ia`).
+- [x] 14 Modelos Eloquent en español en `app/Packages/` con relaciones y casts completos.
+- [x] Verificación sintáctica `php -l` al 100% (0 errores).
+
+---
+
+## 🌟 Ruta de Trabajo Inmediata para Ciclo 2 (Desarrollo Funcional)
 1. **CU11:** Reprogramar Cita Médica (RF08) con nueva fecha/hora y liberación atómica del cupo anterior.
 2. **CU13:** Registrar Asistencia y Estado de Cita (RF10 — *Programada* → *Confirmada* → *Atendida* / *Inasistencia*).
-3. **CU16 - CU19:** Expediente Clínico Digital, Triaje, Recetas y Consultas Médicas.
-4. **CU20 - CU23:** Notificaciones y Recordatorios automáticos, Pagos Stripe Sandbox y Reportes Gerenciales con Filtros Dinámicos (RF13).
+3. **CU16 - CU19, CU25, CU26:** Consulta Médica, Triaje, Recetas, Órdenes de Exámenes y Documentos Adjuntos.
+4. **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
+5. **CU22 - CU24:** Reportes Gerenciales con Filtros Dinámicos (RF13), Dictado por Voz con IA y Dashboard Ejecutivo de KPIs.

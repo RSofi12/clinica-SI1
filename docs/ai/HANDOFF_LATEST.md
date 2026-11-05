@@ -94,7 +94,7 @@
 
 13. **Métricas de Avance Consolidado (Cierre Histórico del Ciclo 1):**
     - **Ciclo 1:** 13 de 13 Casos de Uso completados (**100% de ejecución de Ciclo 1 blindado, auditado y homologado al 100% con la Sección 7.1 y aislamiento de roles**).
-    - **Progreso Global del Proyecto:** 13 de 23 (+1) Casos de Uso completados (**56.5%**).
+    - **Progreso Global del Proyecto:** 13 de 26 (+2) Casos de Uso completados (**50.0%**).
     - **10 Pruebas Mínimas del Examen Oficial Superadas:** **10 de 10 (100% de pruebas oficiales superadas)**:
       - Prueba #1 (Registrar paciente / CU04) ✅
       - Prueba #2 (CI duplicado / CU04) ✅
@@ -121,6 +121,12 @@
     - Scaffolded completo de los 3 paquetes restantes en Backend (`app/Packages/MedicalRecords/`, `Integrations/`, `Analytics/`) con subcarpetas `Controllers/`, `Models/`, `Requests/`, `Services/`.
     - Scaffolded completo de los 3 paquetes restantes en Frontend (`src/apps/medical-records/`, `payments/`, `analytics/`) con subcarpetas `components/`, `services/`.
     - Backend y Frontend cuentan ahora con los **6 paquetes arquitectónicos oficiales** listos para la implementación de los CUs del Ciclo 2.
+
+17. **Declaración de Migraciones y Modelos de Dominio del Ciclo 2 (32 Tablas Totales — 05/11/2026):**
+    - **Catálogo Oficial:** 26 Casos de Uso oficiales y 2 en reserva (`CU27-RES` y `CU28-OPC`).
+    - **Migraciones creadas:** `2026_11_05_000002_create_paquete4_historial_clinico_tables.php` (10 tablas), `2026_11_05_000003_create_paquete5_pagos_notificaciones_tables.php` (3 tablas) y `2026_11_05_000004_create_paquete6_reportes_ia_tables.php` (1 tabla).
+    - **14 Modelos Eloquent en Español:** Creados en `MedicalRecords/Models/` (10 modelos), `Integrations/Models/` (3 modelos) y `Analytics/Models/` (1 modelo) con relaciones tipadas, casts y fillables.
+    - **Validación:** Sintaxis verificada al 100% con `php -l` (0 errores). Esquema listo para `php artisan migrate` y seeders clínicos.
 
 ### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
 - Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
