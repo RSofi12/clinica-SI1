@@ -3,8 +3,8 @@
 ## Estado Actual al 21/10/2026
 
 ### 1. Documentación Base y Especificación Aprobada
-- ✅ Definición formal de los **23 Casos de Uso** oficiales del sistema en `docs/CU_ESPECIFICACION_SISTEMA.md`.
-- ✅ Definición del caso condicional en reserva `CU24-OPC` para ser evaluado en el Ciclo 2.
+- ✅ Definición formal de los **26 Casos de Uso** oficiales del sistema en `docs/CU_ESPECIFICACION_SISTEMA.md`.
+- ✅ Definición del caso condicional en reserva `CU27-OPC` para ser evaluado en el Ciclo 2.
 - ✅ Alcance del proyecto (Sección 1.4) alineado a los 13 requerimientos funcionales del examen (`RF01` al `RF13`) y el perfil del paciente (§3.4).
 - ✅ Unificación del actor **Médico** (se descarta duplicar con Especialista).
 - ✅ Aprobada la Arquitectura por Paquetes de Dominio: Backend (`app/Packages/`) y Frontend (`src/apps/`) simétricos para los 6 paquetes documentada en `docs/ai/ARCHITECTURE.md`.
@@ -12,7 +12,7 @@
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 10 CUs + 1 Opcional):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe y reportes con voz) + `CU24-OPC` condicional en reserva. Estado: **0 completados de 10 (+1)**. Total Global: **13 de 23 (+1) completados (56.5%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 1 Opcional):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, exportación PDF y documentos adjuntos) + `CU27-OPC` condicional en reserva. Estado: **0 completados de 13 (+1)**. Total Global: **13 de 26 (+1) completados (50.0%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -218,4 +218,17 @@
   9. Bloqueo de acceso sin autenticación HTTP 401 (CU01 / RF01) ✅
   10. Validación de datos inválidos HTTP 422 tipados (Transversal) ✅
 - 🔜 **Próximo Paso Inmediato:** Planificar y dar inicio al **Ciclo 2: Clínico, Pagos y Analítica** (`CU11` Reprogramar Cita Médica, `CU13` Registro de Asistencia y cambio de estado, `CU16-CU19` Expediente Clínico Digital, `CU20-CU23` Notificaciones, Pagos y Reportes).
+
+---
+
+### 19. Dockerización del Monorepo y Preparación para Despliegue en la Nube (05/11/2026)
+- ✅ **Arquitectura Multi-Contenedor (`docker-compose.yml`):**
+  - **`clinica_backend` (`docker/php/Dockerfile`):** Imagen basada en `php:8.3-fpm-alpine` con extensiones oficiales (`pdo_pgsql`, `pgsql`, `mbstring`, `zip`, `bcmath`, `intl`, `opcache`) y Composer 2 integrado.
+  - **`clinica_nginx` (`docker/nginx/default.conf`):** Servidor web proxy inverso con timeouts extendidos (300s) y reescritura FastCGI hacia `backend:9000`.
+  - **`clinica_postgres` (`postgres:16-alpine`):** Base de datos relacional con volumen persistente `pgdata`.
+  - **`clinica_frontend` (`docker/frontend/Dockerfile`):** Imagen basada en `node:22-alpine` para servir el SPA de React + Vite en desarrollo y producción.
+- ✅ **Compatibilidad Híbrida Zero-Touch:**
+  - El orquestador inyecta `DB_HOST=postgres` en el contenedor backend, permitiendo que el archivo `backend/.env` local (`DB_HOST=127.0.0.1`) funcione tanto de manera nativa en Windows como en contenedores sin necesidad de alterar variables.
+- ✅ **Documentación Operativa:**
+  - `README.md` actualizado con comandos de arranque (`docker compose up -d --build`), migraciones y seeders dentro del contenedor.
 

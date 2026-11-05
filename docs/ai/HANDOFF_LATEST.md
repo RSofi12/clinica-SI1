@@ -111,6 +111,11 @@
     - Corregida la colisión visual entre el botón `"Mi Historial (CU15)"` y el badge `"PORTAL PACIENTE"` en [`AppointmentsManager.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/appointments/components/AppointmentsManager.jsx).
     - Implementado `xl:flex-row`, `min-w-0 flex-1`, envoltura elástica (`flex-wrap`) en títulos y botones, y `overflow-x-auto` en la barra de pestañas para garantizar fluidez en todas las resoluciones.
 
+15. **Dockerización Multi-Contenedor del Monorepo (05/11/2026):**
+    - Configurado `docker-compose.yml` con 4 contenedores: `clinica_backend` (PHP 8.3 FPM), `clinica_nginx` (Proxy inverso), `clinica_postgres` (PostgreSQL 16) y `clinica_frontend` (React + Vite).
+    - Inyección automática de `DB_HOST=postgres` en backend para asegurar compatibilidad transparente sin alterar `backend/.env`.
+    - Documentación detallada de comandos Docker en `README.md`.
+
 ### 2. Próxima Tarea Inmediata (Arranque del Ciclo 2)
 - Planificación y ejecución del **Ciclo 2: Clínico, Pagos y Analítica**:
   - `CU11`: Reprogramar Cita Médica (RF08) con nueva fecha y liberación del horario anterior.

@@ -57,6 +57,13 @@
 - [x] Estandarización de estados de cita con `INASISTENCIA` en modelos, migraciones, seeders y componentes frontend.
 - [x] Parámetros Mailtrap Sandbox SMTP documentados en `.env.example` y `.env`.
 
+### Fase 7: Dockerización y Despliegue en la Nube
+- [x] Dockerfile para PHP 8.3-fpm-alpine con extensiones oficiales (`pdo_pgsql`, `pgsql`, etc.) y Composer 2.
+- [x] Configuración Nginx proxy inverso con FastCGI y timeouts extendidos (`docker/nginx/default.conf`).
+- [x] Dockerfile para Frontend React + Vite con Node 22 (`docker/frontend/Dockerfile`).
+- [x] Orquestador `docker-compose.yml` multi-contenedor con inyección transparente de `DB_HOST=postgres`.
+- [x] Documentación de comandos de construcción y arranque en `README.md`.
+
 ---
 
 ## 🌟 Ruta de Trabajo para Ciclo 2 (Clínico, Pagos y Analítica)

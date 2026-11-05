@@ -2,7 +2,7 @@
 ### Clínica Vida Salud — Centro Médico La Cruz
 > **Metodología:** PUDS / RUP  
 > **Alcance:** Examen Parcial II — Sistemas de Información I  
-> **Estructura:** 23 Casos de Uso (+ 1 Reserva Opcional) en 2 Ciclos de Desarrollo
+> **Estructura:** 26 Casos de Uso (+ 1 Reserva Opcional) en 2 Ciclos de Desarrollo
 
 ---
 
@@ -11,8 +11,8 @@
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
 | **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 13 | 0 | 🟢 **100% Completado** (Meta superada anticipadamente) |
-| **Ciclo 2: Clínico, Pagos y Analítica** | 10 (+1) | 0 | 10 (+1) | ⚪ Planificado (Meta: Domingo 08/11/2026) |
-| **TOTAL GENERAL** | **23 (+1)** | **13** | **10 (+1)** | **Progreso Global: 56.5% (13 de 23 CUs)** |
+| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 0 | 13 (+1) | ⚪ Planificado (Meta: Domingo 08/11/2026) |
+| **TOTAL GENERAL** | **26 (+1)** | **13** | **13 (+1)** | **Progreso Global: 50.0% (13 de 26 CUs)** |
 
 ---
 
@@ -305,6 +305,16 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 - [ ] **Frontend:** Vista de expediente en solo lectura para el portal del paciente.
 - [ ] **Fase de Pruebas:** Intentar consultar expediente de otro paciente por ID (HTTP 403 Forbidden).
 
+#### ⏳ CU25: Exportar Expediente Clínico y Receta en PDF (Extra)
+- [ ] **Backend:** Servicio de renderizado PDF con membrete institucional, datos de consulta y firma del médico.
+- [ ] **Frontend:** Botón de descarga/impresión directa en vista de consulta y perfil del paciente.
+- [ ] **Fase de Pruebas:** Generación de PDF estructurado y descarga sin errores.
+
+#### ⏳ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
+- [ ] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG) vinculados a la historia clínica.
+- [ ] **Frontend:** Componente de carga de archivos adjuntos con visor previo integrado.
+- [ ] **Fase de Pruebas:** Subida de archivo y descarga protegida por RBAC.
+
 ---
 
 ### 📦 Paquete 5: Integraciones Externas y Pagos (P5)
@@ -341,7 +351,12 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 - [ ] **Frontend:** Botón de micrófono con Web Speech API en el navegador.
 - [ ] **Fase de Pruebas:** Dictar: *"Muéstrame las citas canceladas del doctor Carlos esta semana"* y verificar filtros generados.
 
-#### 🟡 CU24-OPC: Diagnóstico Asistido por IA (Reserva Condicional)
+#### ⏳ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
+- [ ] **Backend:** Endpoint de agregación analítica en tiempo real (citas por estado, ocupación médica, ingresos estimados).
+- [ ] **Frontend:** Panel visual ejecutivo (`DashboardView.jsx`) con tarjetas de métricas interactivas y gráficos de tendencia.
+- [ ] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en base de datos.
+
+#### 🟡 CU27-OPC: Diagnóstico Asistido por IA (Reserva Condicional)
 - [ ] Módulo opcional de asistencia secundaria bajo solicitud explícita del médico.
 
 ---

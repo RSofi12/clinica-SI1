@@ -3,7 +3,7 @@
 
 > **Metodología:** PUDS (Proceso Unificado de Desarrollo de Software) / RUP  
 > **Alcance:** Examen Parcial II — Sistemas de Información I  
-> **Total de Casos de Uso Aprobados:** **23 CU** (con 1 CU condicional/reserva para el Ciclo 2)  
+> **Total de Casos de Uso Aprobados:** **26 CU** (con 1 CU condicional/reserva para el Ciclo 2)  
 > **Decisión de Modelado:** Se unifica **Médico** como un **único actor**, tratando la especialidad como un atributo/relación del profesional (alineado estrictamente con el examen).  
 > **Stack Oficial del Proyecto:**  
 > - **Backend:** Laravel 13 (PHP 8.3) con arquitectura de servicios y transacciones  
@@ -134,6 +134,8 @@ graph TD
 | **CU17** | Gestionar antecedentes médicos | Médico | Registra y clasifica antecedentes clínicos (patológicos, quirúrgicos, alérgicos, familiares, farmacológicos) integrados a la ficha permanente. | Extra | **2** |
 | **CU18** | Gestionar expediente clínico digital | Médico | Módulo asistencial de escritura: emisión de recetas estructuradas, notas de evolución y archivo clínico. Exclusivo para médicos. | Extra | **2** |
 | **CU19** | Consultar expediente médico y antecedentes | Paciente, Médico | Consulta protegida: el médico consulta el expediente completo del paciente en consulta; el paciente consulta **únicamente su propio expediente en solo lectura**. | 3.4 | **2** |
+| **CU25** | Exportar expediente clínico y receta en PDF | Médico, Paciente | Generación y descarga estructurada en PDF del historial clínico, notas de atención o receta digital con firma del profesional para impresión o archivo. | Extra | **2** |
+| **CU26** | Gestionar documentos clínicos adjuntos | Médico, Administrador | Carga, visualización y gestión de archivos clínicos complementarios (estudios de laboratorio externos, imágenes médicas o informes) vinculados a la ficha. | Extra | **2** |
 
 ---
 
@@ -152,6 +154,7 @@ graph TD
 |:---:|:---|:---|:---|:---:|:---:|
 | **CU22** | Generar reportes con filtros dinámicos | Administrador, Recepcionista, Médico | Genera los 7 reportes del RF13 (citas por fecha, médico, especialidad, estado, pacientes activos, balance atendidas/canceladas y agenda diaria) con exportación a CSV/PDF. | RF13 | **2** |
 | **CU23** | Generar reporte personalizado por voz con IA | Administrador, Servicio de IA | El usuario dicta el reporte por el micrófono del navegador; el servicio de IA interpreta los criterios de consulta y genera los filtros automáticamente. | Extra | **2** |
+| **CU24** | Consultar dashboard administrativo y KPIs | Administrador | Panel visual ejecutivo con indicadores clave en tiempo real: citas del día por estado, tasa de ocupación médica, volumen de pacientes e ingresos estimados. | Extra | **2** |
 
 ---
 
@@ -162,7 +165,7 @@ graph TD
 
 | CU | Nombre del Caso de Uso | Actor(es) | Descripción del Proceso | Paquete | Impacto / Dependencia |
 |:---:|:---|:---|:---|:---:|:---|
-| **CU24-OPC** *(Ex-CU20)* | Generar análisis clínico y diagnóstico asistido por IA | Médico, Servicio de IA | A solicitud explícita del médico durante la consulta (CU16), el sistema envía los signos vitales, motivo y antecedentes a un LLM clínico para sugerir diagnósticos diferenciales o alertar posibles interacciones medicamentosas. **Es una herramienta de apoyo, no sustituye el dictamen médico.** | P4 (Historial Clínico) | Extiende de CU16 / CU19. Requiere integración API adicional con OpenAI/Gemini/Claude y advertencia explícita de deslinde de responsabilidad legal. |
+| **CU27-OPC** *(Ex-CU24-OPC)* | Generar análisis clínico y diagnóstico asistido por IA | Médico, Servicio de IA | A solicitud explícita del médico durante la consulta (CU16), el sistema envía los signos vitales, motivo y antecedentes a un LLM clínico para sugerir diagnósticos diferenciales o alertar posibles interacciones medicamentosas. **Es una herramienta de apoyo, no sustituye el dictamen médico.** | P4 (Historial Clínico) | Extiende de CU16 / CU19. Requiere integración API adicional con OpenAI/Gemini/Claude y advertencia explícita de deslinde de responsabilidad legal. |
 
 ---
 
@@ -170,8 +173,8 @@ graph TD
 
 | Ciclo de Desarrollo | Casos de Uso Asignados | Hito / Entrega | Justificación PUDS |
 |:---|:---|:---|:---|
-| **Ciclo 1: Base Operativa y Cita de Punta a Punta** *(13 Casos de Uso)* | **CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15** | **Presentación 1** (Domingo 25/10/2026 — Avance 53.8%) | Consolida la seguridad y bitácora (CU01-CU03), recursos y pacientes (CU04-CU07), disponibilidad horaria (CU08-CU09), reserva y cancelación de citas (CU10, CU12) y consultas de agenda/historial (CU14, CU15). **Cubre al 100% las 10 pruebas mínimas del examen**. |
-| **Ciclo 2: Clínico, Ciclo de Vida de Citas, Pagos y Analítica** *(10 Casos de Uso + 1 Opcional)* | **CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23** *(Opcional: CU24-OPC)* | **Presentación 2** (Domingo 08/11/2026 — 100% Funcional) | Incorpora la reprogramación de citas (CU11), control fino de asistencia/inasistencia (CU13), consulta médica y expediente clínico (CU16-CU19), notificaciones (CU20), pagos con Stripe (CU21), reportes gerenciales con voz (CU22-CU23) y evaluación del asistente diagnóstico. |
+| **Ciclo 1: Base Operativa y Cita de Punta a Punta** *(13 Casos de Uso)* | **CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15** | **Presentación 1** (Domingo 25/10/2026 — Avance 50.0%) | Consolida la seguridad y bitácora (CU01-CU03), recursos y pacientes (CU04-CU07), disponibilidad horaria (CU08-CU09), reserva y cancelación de citas (CU10, CU12) y consultas de agenda/historial (CU14, CU15). **Cubre al 100% las 10 pruebas mínimas del examen**. |
+| **Ciclo 2: Clínico, Ciclo de Vida de Citas, Pagos y Analítica** *(13 Casos de Uso + 1 Opcional)* | **CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26** *(Opcional: CU27-OPC)* | **Presentación 2** (Domingo 08/11/2026 — 100% Funcional) | Incorpora la reprogramación de citas (CU11), control fino de asistencia/inasistencia (CU13), consulta médica y expediente clínico (CU16-CU19), PDF y adjuntos (CU25-CU26), notificaciones (CU20), pagos con Stripe (CU21), reportes gerenciales con voz y dashboard (CU22-CU24) y evaluación del asistente diagnóstico. |
 
 ---
 
@@ -197,13 +200,14 @@ frontend/src/
 │   │   ├── AppointmentBookingModal.jsx
 │   │   ├── DoctorAgendaView.jsx
 │   │   └── AppointmentHistory.jsx
-│   ├── medical-records/     # Expediente digital, consulta y triaje (CU16, CU17, CU18, CU19, [CU24-OPC])
+│   ├── medical-records/     # Expediente digital, consulta, PDF y adjuntos (CU16, CU17, CU18, CU19, CU25, CU26, [CU27-OPC])
 │   │   ├── ConsultationForm.jsx
 │   │   └── PatientRecordView.jsx
 │   ├── payments/            # Formulario de pago con Stripe Elements (CU21)
 │   │   └── StripePaymentModal.jsx
-│   └── analytics/           # Tablas dinámicas, exportador y micrófono IA (CU22, CU23)
+│   └── analytics/           # Tablas dinámicas, exportador, dashboard y micrófono IA (CU22, CU23, CU24)
 │       ├── DynamicReportsView.jsx
+│       ├── DashboardView.jsx
 │       └── VoiceReportAssistant.jsx
 ├── services/                # Clientes API HTTP (fetch / axios) hacia Laravel
 │   └── api.js

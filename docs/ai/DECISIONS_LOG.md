@@ -124,4 +124,24 @@
 * **Motivo:** Evitar sorpresas o fugas de interfaz donde a un usuario le aparezcan opciones que no corresponden a su rol, garantizando una segregación de funciones (SoD) total tanto en la UI como en el Backend.
 * **Impacto:** Segregación perfecta y comprobada de Casos de Uso por actor en todo el frontend y backend.
 
+### Registro 19: 2026-11-05
+* **Decisión:** Ampliación formal del catálogo a **26 Casos de Uso oficiales** (+ 1 Reserva Condicional en `CU27-OPC`) para el Ciclo 2, incorporando:
+  1. **CU24:** Consultar Dashboard Administrativo y KPIs (Paquete 6: Reportes y Analítica).
+  2. **CU25:** Exportar Expediente Clínico y Receta en PDF (Paquete 4: Historial Clínico y Consultas).
+  3. **CU26:** Gestionar Documentos Clínicos Adjuntos (Paquete 4: Historial Clínico y Consultas).
+  4. Renumeración del caso condicional de soporte diagnóstico por IA a **CU27-OPC**.
+* **Motivo:**
+  1. Enriquecer el alcance de la solución sin incurrir en descomposición funcional (evitar separar login/logout o triaje/consulta en botones aislados) y sin introducir elementos ajenos al dominio de la clínica (como inventario de ópticas o refracción).
+  2. Respetar estrictamente los 13 Casos de Uso del Ciclo 1 ya probados y validados al 100%, asignando las nuevas 3 funcionalidades al Ciclo 2 con simetría total en los 6 paquetes de arquitectura.
+  3. Proporcionar valor gerencial y asistencial real (KPIs ejecutivos, exportación para el paciente/médico y custodia de estudios complementarios) con compatibilidad relacional directa en PostgreSQL.
+* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ai/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo pasa de 23 (+1) a 26 (+1) Casos de Uso oficiales.
+
+### Registro 20: 2026-11-05
+* **Decisión:** Dockerización del monorepo mediante arquitectura multi-contenedor con `docker-compose`: Nginx (proxy inverso), PHP 8.3 FPM (Laravel), PostgreSQL 16 Alpine y Node 22 (React + Vite).
+* **Motivo:**
+  1. Estandarizar el entorno de ejecución eliminando discrepancias entre sistemas operativos de desarrollo (Windows) y los entornos de nube (Render, Railway, AWS EC2, Azure VM).
+  2. Proveer un servidor web Nginx dedicado frente a PHP-FPM para atender peticiones HTTP y traducir tráfico FastCGI con cabeceras de seguridad y timeout extendido (300s).
+  3. Desacoplamiento total y compatibilidad híbrida: en `docker-compose.yml` se inyecta `DB_HOST=postgres`, permitiendo que el archivo `backend/.env` local (`DB_HOST=127.0.0.1`) funcione en modo nativo sin tener que modificar variables al alternar entre desarrollo con o sin Docker.
+* **Impacto:** Creación de `docker/php/Dockerfile`, `docker/nginx/default.conf`, `docker/frontend/Dockerfile`, `docker-compose.yml` y actualización de documentación de instalación en `README.md`.
+
 
