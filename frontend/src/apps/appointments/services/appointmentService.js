@@ -1,7 +1,7 @@
 import { apiFetch } from '../../../services/api';
 
 /**
- * Servicio de Gestión de Citas y Disponibilidad (CU09, CU10 / RF05, RF06, RF07)
+ * Servicio de Gestión de Citas y Disponibilidad (CU09, CU10, CU11, CU12, CU14, CU15)
  * Paquete 3: Gestión de Citas Médicas
  */
 export const appointmentService = {
@@ -70,6 +70,16 @@ export const appointmentService = {
   },
 
   /**
+   * Reprogramar una cita médica con validación de agenda y anti-colisión (CU11 / RF08)
+   */
+  async rescheduleAppointment(id, data) {
+    return await apiFetch(`/appointments/${id}/reschedule`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+
+  /**
    * Consultar agenda diaria de un médico por fecha y estado (CU14 / RF11 / Prueba #8)
    */
   async fetchDoctorAgenda(params = {}) {
@@ -93,4 +103,3 @@ export const appointmentService = {
     return await apiFetch(`/appointments/patient-history/${patientId}${queryString ? `?${queryString}` : ''}`);
   },
 };
-

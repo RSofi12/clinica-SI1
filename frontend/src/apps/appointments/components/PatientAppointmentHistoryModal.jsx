@@ -3,6 +3,7 @@ import {
   X,
   History,
   Calendar,
+  CalendarClock,
   Clock,
   User,
   Stethoscope,
@@ -21,6 +22,7 @@ import {
 } from 'lucide-react';
 import { appointmentService } from '../services/appointmentService';
 import { AppointmentCancelModal } from './AppointmentCancelModal';
+import { AppointmentRescheduleModal } from './AppointmentRescheduleModal';
 
 /**
  * Modal de Historial Cronológico de Citas del Paciente (CU15 / RF12 / Prueba #7)
@@ -51,6 +53,7 @@ export function PatientAppointmentHistoryModal({
 
   // Cancelación directa (CU12)
   const [cancellingAppointment, setCancellingAppointment] = useState(null);
+  const [reschedulingAppointment, setReschedulingAppointment] = useState(null);
 
   const loadHistory = useCallback(async () => {
     if (!patientId && !patientInitial?.id_paciente) return;
@@ -116,10 +119,11 @@ export function PatientAppointmentHistoryModal({
 
   const getStatusBadge = (estado) => {
     switch (estado) {
+      case 'PROGRAMADA':
       case 'PENDIENTE':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             Programada
           </span>
         );
@@ -352,7 +356,18 @@ export function PatientAppointmentHistoryModal({
                           <Printer className="w-3.5 h-3.5" />
                         </button>
                       )}
-                      {puedeCancelar && (
+                      {['PROGRAMADA', 'PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
+                        <button
+                          type="button"
+                          onClick={() => setReschedulingAppointment(cita)}
+                          className="px-2 py-0.5 text-[10px] font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-md transition cursor-pointer flex items-center gap-1"
+                          title="Reprogramar cita médica (CU11 / RF08)"
+                        >
+                          <CalendarClock className="w-3 h-3" />
+                          <span>Reprogramar</span>
+                        </button>
+                      )}
+                      {['PROGRAMADA', 'PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
                         <button
                           type="button"
                           onClick={() => setCancellingAppointment(cita)}
@@ -388,6 +403,21 @@ export function PatientAppointmentHistoryModal({
                   {cita.motivo_consulta && (
                     <div className="text-[11px] text-slate-600 italic bg-slate-50 p-2 rounded-lg border border-slate-100">
                       <strong>Motivo de consulta:</strong> "{cita.motivo_consulta}"
+                    </div>
+                  )}
+
+                  {/* Registro de Reprogramación (CU11 / RF08) */}
+                  {cita.reprogramada_en && (
+                    <div className="text-[11px] text-amber-900 bg-amber-50/80 border border-amber-200 p-2 rounded-lg flex items-start gap-1.5">
+                      <CalendarClock className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-bold">Reprogramada:</span>{' '}
+                        <span>{cita.motivo_reprogramacion || 'Cambio de fecha u horario'}</span>
+                        <span className="text-[10px] text-amber-700 block font-mono mt-0.5">
+                          Fecha del cambio: {formatDateDisplay(cita.reprogramada_en)} a las{' '}
+                          {formatTimeDisplay(cita.reprogramada_en)}
+                        </span>
+                      </div>
                     </div>
                   )}
 

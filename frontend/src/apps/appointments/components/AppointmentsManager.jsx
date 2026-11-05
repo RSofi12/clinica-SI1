@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   CalendarCheck,
+  CalendarClock,
   User,
   Stethoscope,
   Building2,
@@ -33,6 +34,7 @@ import { AppointmentAvailabilityViewer } from './AppointmentAvailabilityViewer';
 import { AppointmentBookingModal } from './AppointmentBookingModal';
 import { DoctorAgendaView } from './DoctorAgendaView';
 import { AppointmentCancelModal } from './AppointmentCancelModal';
+import { AppointmentRescheduleModal } from './AppointmentRescheduleModal';
 import { PatientAppointmentHistoryModal } from './PatientAppointmentHistoryModal';
 import { patientProfileService } from '../../clinical-resources/services/patientProfileService';
 
@@ -67,6 +69,7 @@ export function AppointmentsManager() {
   const [bookingInitialData, setBookingInitialData] = useState(null);
   const [ticketModalAppointment, setTicketModalAppointment] = useState(null);
   const [cancellingAppointment, setCancellingAppointment] = useState(null);
+  const [reschedulingAppointment, setReschedulingAppointment] = useState(null);
   const [selectedPatientForHistory, setSelectedPatientForHistory] = useState(null);
 
   // Cargar lista de médicos para filtro
@@ -184,11 +187,12 @@ export function AppointmentsManager() {
   // Badge de estado
   const getStatusBadge = (estado) => {
     switch (estado) {
+      case 'PROGRAMADA':
       case 'PENDIENTE':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-            Pendiente
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            Programada
           </span>
         );
       case 'CONFIRMADA':
@@ -632,6 +636,12 @@ export function AppointmentsManager() {
                                 {horaInicioStr} - {horaFinStr}
                               </span>
                             </div>
+                            {cita.reprogramada_en && (
+                              <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-md" title={`Reprogramada: ${cita.motivo_reprogramacion || 'Cambio de horario'}`}>
+                                <CalendarClock className="w-2.5 h-2.5 text-amber-600 shrink-0" />
+                                <span>Reprogramada</span>
+                              </div>
+                            )}
                           </td>
 
                           {/* Paciente */}
@@ -713,7 +723,18 @@ export function AppointmentsManager() {
                                 <Printer className="w-3 h-3" />
                                 <span>Ticket</span>
                               </button>
-                              {['PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
+                              {role !== 'MEDICO' && ['PROGRAMADA', 'PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
+                                <button
+                                  type="button"
+                                  onClick={() => setReschedulingAppointment(cita)}
+                                  className="px-2.5 py-1 text-[11px] font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition inline-flex items-center gap-1 cursor-pointer"
+                                  title="Reprogramar cita médica a otra fecha u horario (CU11 / RF08)"
+                                >
+                                  <CalendarClock className="w-3 h-3" />
+                                  <span>Reprogramar</span>
+                                </button>
+                              )}
+                              {['PROGRAMADA', 'PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
                                 <button
                                   type="button"
                                   onClick={() => setCancellingAppointment(cita)}
@@ -881,6 +902,17 @@ export function AppointmentsManager() {
           </div>
         </div>
       )}
+
+      {/* Modal de Reprogramación de Cita con Validación Anti-Colisión (CU11 / RF08) */}
+      <AppointmentRescheduleModal
+        isOpen={Boolean(reschedulingAppointment)}
+        onClose={() => setReschedulingAppointment(null)}
+        appointment={reschedulingAppointment}
+        onAppointmentRescheduled={() => {
+          setReschedulingAppointment(null);
+          loadAppointments(pagination.current_page);
+        }}
+      />
 
       {/* Modal de Cancelación de Cita con Motivo Obligatorio (CU12) */}
       <AppointmentCancelModal
