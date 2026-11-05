@@ -13,6 +13,7 @@ use App\Packages\ClinicalResources\Controllers\SpecialtiesController;
 use App\Packages\ClinicalResources\Controllers\SchedulesController;
 use App\Packages\Appointments\Controllers\AvailabilityController;
 use App\Packages\Appointments\Controllers\AppointmentsController;
+use App\Packages\Analytics\Controllers\VoiceReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,6 +135,14 @@ Route::prefix('appointments')->middleware('web')->group(function () {
     Route::patch('/{id}/reschedule', [AppointmentsController::class, 'reschedule'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
     Route::post('/{id}/cancel', [AppointmentsController::class, 'cancel'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
 });
+
+// CU23: Generar reporte personalizado por voz con IA (Paquete 6: Reportes y Analítica)
+Route::prefix('analytics')->middleware('web')->group(function () {
+    Route::post('/voice-report', [VoiceReportController::class, 'processVoiceCommand'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/voice-stats', [VoiceReportController::class, 'stats'])->middleware('role:ADMIN');
+});
+
 
 
 
