@@ -305,10 +305,10 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 - [ ] **Frontend:** Vista de expediente en solo lectura para el portal del paciente.
 - [ ] **Fase de Pruebas:** Intentar consultar expediente de otro paciente por ID (HTTP 403 Forbidden).
 
-#### ⏳ CU25: Exportar Expediente Clínico y Receta en PDF (Extra)
-- [ ] **Backend:** Servicio de renderizado PDF con membrete institucional, datos de consulta y firma del médico.
-- [ ] **Frontend:** Botón de descarga/impresión directa en vista de consulta y perfil del paciente.
-- [ ] **Fase de Pruebas:** Generación de PDF estructurado y descarga sin errores.
+#### ⏳ CU25: Emitir Órdenes de Exámenes Auxiliares (Extra)
+- [ ] **Backend:** Modelo `ordenes_examenes`, generación de código correlativo `ORD-XXXX`, validación de tipo de estudio (laboratorio/imagen) e indicaciones.
+- [ ] **Frontend:** Formulario médico de prescripción de estudios dentro de la consulta médica y vista de órdenes pendientes.
+- [ ] **Fase de Pruebas:** Emisión exitosa de orden y enlace relacional con la consulta y el paciente.
 
 #### ⏳ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
 - [ ] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG) vinculados a la historia clínica.
@@ -356,7 +356,10 @@ Estas 10 pruebas son de demostración obligatoria ante el docente:
 - [ ] **Frontend:** Panel visual ejecutivo (`DashboardView.jsx`) con tarjetas de métricas interactivas y gráficos de tendencia.
 - [ ] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en base de datos.
 
-#### 🟡 CU27-OPC: Diagnóstico Asistido por IA (Reserva Condicional)
+#### 🟡 CU27-RES: Exportar Expediente Clínico y Receta en PDF (Reserva Condicional / Subfunción CU18-19)
+- [ ] Generación de documentos descargables con membrete oficial e impresión.
+
+#### 🟡 CU28-OPC: Diagnóstico Asistido por IA (Reserva Condicional)
 - [ ] Módulo opcional de asistencia secundaria bajo solicitud explícita del médico.
 
 ---

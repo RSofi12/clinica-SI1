@@ -341,6 +341,21 @@ CREATE TABLE analisis_clinicos (
   fecha_generacion timestamptz NOT NULL DEFAULT now()
 );
 
+CREATE TABLE documentos_clinicos (
+  id_documento bigserial PRIMARY KEY,
+  id_historia_clinica bigint NOT NULL,
+  id_consulta bigint,
+  id_medico bigint NOT NULL,
+  titulo varchar(150) NOT NULL,
+  tipo_documento varchar(50) NOT NULL CHECK (tipo_documento IN ('LABORATORIO', 'IMAGENOLOGIA', 'INFORME_EXTERNO', 'CONSENTIMIENTO', 'OTRO')),
+  descripcion text,
+  ruta_archivo varchar(255) NOT NULL,
+  mime_type varchar(100) NOT NULL,
+  tamanio_bytes bigint NOT NULL,
+  fecha_subida timestamptz NOT NULL DEFAULT now(),
+  estado varchar(20) NOT NULL DEFAULT 'ACTIVO' CHECK (estado IN ('ACTIVO', 'ARCHIVADO'))
+);
+
 -- =============================================================================
 -- PAQUETES 5 Y 6: PAGOS, NOTIFICACIONES Y REPORTES IA
 -- =============================================================================
@@ -472,6 +487,11 @@ ALTER TABLE receta_detalles
 ALTER TABLE analisis_clinicos
   ADD CONSTRAINT fk_ac_hc FOREIGN KEY (id_historia_clinica) REFERENCES historias_clinicas (id_historia_clinica) ON DELETE RESTRICT,
   ADD CONSTRAINT fk_ac_medico FOREIGN KEY (id_medico) REFERENCES medicos (id_medico) ON DELETE RESTRICT;
+
+ALTER TABLE documentos_clinicos
+  ADD CONSTRAINT fk_doc_hc FOREIGN KEY (id_historia_clinica) REFERENCES historias_clinicas (id_historia_clinica) ON DELETE RESTRICT,
+  ADD CONSTRAINT fk_doc_consulta FOREIGN KEY (id_consulta) REFERENCES consultas_medicas (id_consulta) ON DELETE SET NULL,
+  ADD CONSTRAINT fk_doc_medico FOREIGN KEY (id_medico) REFERENCES medicos (id_medico) ON DELETE RESTRICT;
 
 -- Pagos y Notificaciones
 ALTER TABLE pagos
