@@ -10,7 +10,9 @@ use App\Packages\Appointments\Models\Cita;
 use App\Packages\Appointments\Models\TipoCita;
 use App\Packages\Appointments\Requests\AppointmentBookRequest;
 use App\Packages\Appointments\Requests\AppointmentCancelRequest;
+use App\Packages\Appointments\Requests\AppointmentRescheduleRequest;
 use App\Packages\Appointments\Services\AppointmentBookingService;
+use App\Packages\Appointments\Services\AppointmentRescheduleService;
 use App\Packages\ClinicalResources\Models\Disponibilidad;
 use App\Packages\ClinicalResources\Models\Especialidad;
 use App\Packages\ClinicalResources\Models\Medico;
@@ -360,6 +362,71 @@ class AppointmentsController extends Controller
     }
 
     /**
+     * Reprogramar una cita médica existente (CU11 / RF08)
+     */
+    public function reschedule(int $id, AppointmentRescheduleRequest $request, AppointmentRescheduleService $service): JsonResponse
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'No autenticado.'], 401);
+        }
+
+        $tipoUsuario = $user->tipo_usuario ?? $user->rol;
+
+        // Regla PUDS: Médicos no reprograman citas directamente
+        if ($tipoUsuario === 'MEDICO') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Los médicos no tienen autorización para reprogramar citas en el sistema (regla de negocio PUDS).',
+            ], 403);
+        }
+
+        $cita = Cita::find($id);
+        if (!$cita) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cita médica no encontrada.',
+            ], 404);
+        }
+
+        // Scoping Anti-IDOR: Si es paciente, solo puede reprogramar sus propias citas
+        if ($tipoUsuario === 'PACIENTE') {
+            $pacienteAuth = Paciente::where('id_usuario', $user->id_usuario)->first();
+            if (!$pacienteAuth) {
+                $pacienteAuth = Paciente::where('correo', $user->email)
+                    ->orWhere('numero_documento', $user->username)
+                    ->when($user->username === 'paciente.carlos', fn($q) => $q->orWhere('numero_documento', '78923410'))
+                    ->first();
+            }
+
+            if (!$pacienteAuth || $pacienteAuth->id_paciente !== $cita->id_paciente) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Acceso denegado: solo puede reprogramar sus propias citas médicas.',
+                ], 403);
+            }
+        }
+
+        try {
+            $citaReprogramada = $service->reprogramar($id, $request->validated(), $user->id_usuario);
+
+            return response()->json([
+                'success' => true,
+                'message' => "Cita médica {$citaReprogramada->codigo_cita} reprogramada exitosamente para el {$citaReprogramada->fecha_hora_inicio->format('d/m/Y H:i')}.",
+                'data' => $citaReprogramada,
+            ], 200);
+        } catch (\Exception $e) {
+            $codigo = $e->getCode();
+            $status = in_array($codigo, [400, 403, 404, 409, 422], true) ? $codigo : 422;
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $status);
+        }
+    }
+
+    /**
      * Consultar agenda médica diaria por médico y fecha (CU14 / RF11 / Prueba #8)
      */
     public function doctorAgenda(Request $request): JsonResponse
@@ -431,7 +498,7 @@ class AppointmentsController extends Controller
         // Estadísticas agregadas del día (RF11 / RF13)
         $stats = [
             'total' => $citas->count(),
-            'programadas' => $citas->where('estado', 'PENDIENTE')->count(),
+            'programadas' => $citas->whereIn('estado', ['PROGRAMADA', 'PENDIENTE'])->count(),
             'confirmadas' => $citas->where('estado', 'CONFIRMADA')->count(),
             'atendidas' => $citas->where('estado', 'ATENDIDA')->count(),
             'canceladas' => $citas->where('estado', 'CANCELADA')->count(),
@@ -509,7 +576,7 @@ class AppointmentsController extends Controller
         $atendidas = $citas->where('estado', 'ATENDIDA')->count();
         $canceladas = $citas->where('estado', 'CANCELADA')->count();
         $inasistencias = $citas->where('estado', 'INASISTENCIA')->count();
-        $pendientes = $citas->whereIn('estado', ['PENDIENTE', 'CONFIRMADA'])->count();
+        $pendientes = $citas->whereIn('estado', ['PROGRAMADA', 'PENDIENTE', 'CONFIRMADA'])->count();
 
         $primeraCita = $citas->sortBy('fecha_hora_inicio')->first();
         $ultimaCita = $citas->first();

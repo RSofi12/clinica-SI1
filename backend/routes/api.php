@@ -127,10 +127,11 @@ Route::prefix('appointments')->middleware('web')->group(function () {
     // CU15: Historial cronológico de citas (con scoping)
     Route::get('/patient-history/{id}', [AppointmentsController::class, 'patientHistory'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
 
-    // CU10 / CU12: Gestión general, Programación, Detalle y Cancelación
+    // CU10 / CU11 / CU12: Gestión general, Programación, Reprogramación, Detalle y Cancelación
     Route::get('/', [AppointmentsController::class, 'index'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
     Route::post('/', [AppointmentsController::class, 'store'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
     Route::get('/{id}', [AppointmentsController::class, 'show'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::patch('/{id}/reschedule', [AppointmentsController::class, 'reschedule'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
     Route::post('/{id}/cancel', [AppointmentsController::class, 'cancel'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
 });
 

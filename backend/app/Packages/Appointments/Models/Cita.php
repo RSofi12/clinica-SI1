@@ -38,6 +38,8 @@ class Cita extends Model
         'motivo_breve', // Homologación DDL / Sección 7.1
         'motivo_cancelacion',
         'cancelada_en',
+        'reprogramada_en',
+        'motivo_reprogramacion',
         'creada_por',
     ];
 
@@ -45,6 +47,7 @@ class Cita extends Model
         'fecha_hora_inicio' => 'datetime',
         'fecha_hora_fin' => 'datetime',
         'cancelada_en' => 'datetime',
+        'reprogramada_en' => 'datetime',
         'duracion_minutos' => 'integer',
     ];
 
@@ -179,6 +182,37 @@ class Cita extends Model
     {
         $this->motivo_cancelacion = $motivo;
         $this->cambiarEstado('CANCELADA', $idUsuario, "Cancelada por motivo: {$motivo}");
+        return true;
+    }
+
+    /**
+     * Determina si la cita se encuentra en estado apto para reprogramación (CU11 / RF08)
+     */
+    public function puedeReprogramarse(): bool
+    {
+        return in_array($this->estado, ['PROGRAMADA', 'CONFIRMADA'], true);
+    }
+
+    /**
+     * Reprograma la cita con nueva fecha/hora y motivo obligatorio (CU11 / RF08)
+     */
+    public function reprogramar(\Carbon\Carbon $nuevaFechaHoraInicio, \Carbon\Carbon $nuevaFechaHoraFin, string $motivo, int $idUsuario): bool
+    {
+        $anteriorInicio = $this->fecha_hora_inicio?->format('d/m/Y H:i');
+        $this->fecha_hora_inicio = $nuevaFechaHoraInicio;
+        $this->fecha_hora_fin = $nuevaFechaHoraFin;
+        $this->motivo_reprogramacion = $motivo;
+        $this->reprogramada_en = now();
+        $this->save();
+
+        CitaEstadoHistorial::registrarCambio(
+            $this->id_cita,
+            $this->estado,
+            $this->estado,
+            $idUsuario,
+            "Cita reprogramada del {$anteriorInicio} al {$nuevaFechaHoraInicio->format('d/m/Y H:i')}. Motivo: {$motivo}"
+        );
+
         return true;
     }
 
