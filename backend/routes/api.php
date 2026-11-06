@@ -13,6 +13,7 @@ use App\Packages\ClinicalResources\Controllers\SpecialtiesController;
 use App\Packages\ClinicalResources\Controllers\SchedulesController;
 use App\Packages\Appointments\Controllers\AvailabilityController;
 use App\Packages\Appointments\Controllers\AppointmentsController;
+use App\Packages\MedicalRecords\Controllers\ConsultasController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
 
 /*
@@ -134,6 +135,14 @@ Route::prefix('appointments')->middleware('web')->group(function () {
     Route::get('/{id}', [AppointmentsController::class, 'show'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
     Route::patch('/{id}/reschedule', [AppointmentsController::class, 'reschedule'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
     Route::post('/{id}/cancel', [AppointmentsController::class, 'cancel'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+});
+
+// CU16: Registrar Consulta Médica y Triaje Clínico (Paquete 4: Historial Clínico)
+Route::prefix('medical-records')->middleware('web')->group(function () {
+    Route::get('/consultas', [ConsultasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::get('/consultas/{id}', [ConsultasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::get('/citas/{id_cita}/preparar', [ConsultasController::class, 'preparar'])->middleware('role:ADMIN,MEDICO');
+    Route::post('/consultas', [ConsultasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
 });
 
 // CU23: Generar reporte personalizado por voz con IA (Paquete 6: Reportes y Analítica)

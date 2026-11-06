@@ -15,6 +15,7 @@ skinparam class {
   FontSize 11
 }
 hide circle
+hide stereotype
 
 ' =============================================================================
 ' 1. SEGURIDAD Y AUDITORÍA (AZUL PASTEL - #DAE8FC)
@@ -53,12 +54,12 @@ class Permisos <<seg>> {
   + verificarPermiso(cod: String): Boolean
 }
 
-class UsuarioRol <<seg>> {
+class UsuarioRol as "UsuarioRol\n<size:9><b>«Clase Asociación»</b></size>" <<seg>> {
   + id_usuario: Long [PK, FK]
   + id_rol: Long [PK, FK]
 }
 
-class RolPermiso <<seg>> {
+class RolPermiso as "RolPermiso\n<size:9><b>«Clase Asociación»</b></size>" <<seg>> {
   + id_rol: Long [PK, FK]
   + id_permiso: Long [PK, FK]
 }
@@ -135,7 +136,7 @@ class Medicos <<mae>> {
   + cambiarEstado(activo: Boolean): Void
 }
 
-class MedicoEspecialidad <<mae>> {
+class MedicoEspecialidad as "MedicoEspecialidad\n<size:9><b>«Clase Asociación»</b></size>" <<mae>> {
   + id_medico: Long [PK, FK]
   + id_especialidad: Long [PK, FK]
   + es_principal: Boolean
@@ -447,50 +448,64 @@ class ReportesIA <<ext>> {
 }
 
 ' =============================================================================
-' RELACIONES (LÍNEAS SIN FLECHAS + CARDINALIDADES)
+' RELACIONES UML RIGUROSAS (ASOCIACIONES, COMPOSICIONES REALES Y CLASES ASOCIACIÓN)
 ' =============================================================================
-Usuarios "1" -- "0..*" UsuarioRol : tiene
+
+' --- 1. SEGURIDAD Y AUDITORÍA ---
+Usuarios "1" -- "0..*" TokensRecuperacion : solicita
+Usuarios "1" -- "0..*" Bitacora : genera
+Usuarios "0..1" -- "0..*" ConfiguracionSeguridad : actualiza
+Usuarios "1" -- "0..1" Medicos : vinculado a
+Usuarios "1" -- "0..1" Pacientes : cuenta web de
+
+' Tablas Intermedias / Clases Asociación N:M puras
+Usuarios "1" -- "0..*" UsuarioRol : posee
 Roles "1" -- "0..*" UsuarioRol : asigna
 Roles "1" -- "0..*" RolPermiso : tiene
 Permisos "1" -- "0..*" RolPermiso : otorga
-Usuarios "1" -- "0..*" TokensRecuperacion : solicita
-Usuarios "1" -- "0..*" Bitacora : registra
-Usuarios "1" -- "0..1" Medicos : es
-Usuarios "1" -- "0..1" Pacientes : cuenta de
 
+' --- 2. RECURSOS CLÍNICOS Y PACIENTES ---
+' Composición Real: Contacto de emergencia no tiene sentido de existencia sin su Paciente
+Pacientes "1" *-- "0..*" ContactosEmergencia : compone
+
+' Clase Asociación N:M con atributo propio ('es_principal')
 Medicos "1" -- "1..*" MedicoEspecialidad : ejerce
 Especialidades "1" -- "0..*" MedicoEspecialidad : agrupa
-Medicos "1" -- "0..*" Disponibilidades : atiende en
-Medicos "0..1" -- "0..*" BloqueosHorario : bloquea
 
-Pacientes "1" -- "0..*" ContactosEmergencia : tiene
-Pacientes "1" -- "0..*" Citas : asiste
+' Asociaciones 1:N
+Medicos "1" -- "0..*" Disponibilidades : define
+Medicos "0..1" -- "0..*" BloqueosHorario : aplica
+
+' --- 3. GESTIÓN DE CITAS MÉDICAS ---
+Pacientes "1" -- "0..*" Citas : reserva
 Medicos "1" -- "0..*" Citas : atiende
-Especialidades "1" -- "0..*" Citas : pertenece
+Especialidades "1" -- "0..*" Citas : pertenece a
 TiposCita "1" -- "0..*" Citas : clasifica
-Citas "0..1" -- "0..1" Citas : reprograma
-Citas "1" -- "0..*" CitaEstadoHistorial : cambia
-Citas "1" -- "0..1" Pagos : se paga
-Pacientes "1" -- "0..*" Pagos : realiza
+Citas "0..1" -- "0..1" Citas : reprograma origen/destino
 
+' Composición Real: El historial de cambios de estado depende exclusivamente de la Cita
+Citas "1" *-- "0..*" CitaEstadoHistorial : audita estados de
+
+' --- 4. HISTORIAL CLÍNICO Y CONSULTAS ---
 Pacientes "1" -- "1" HistoriasClinicas : posee
-Citas "1" -- "0..1" ConsultasMedicas : genera
+Citas "1" -- "0..1" ConsultasMedicas : origina
 HistoriasClinicas "1" -- "0..*" ConsultasMedicas : registra
-HistoriasClinicas "1" -- "0..*" Antecedentes : contiene
-HistoriasClinicas "1" -- "0..*" Diagnosticos : contiene
-ConsultasMedicas "1" -- "0..*" Diagnosticos : produce
-HistoriasClinicas "1" -- "0..*" Evoluciones : contiene
-HistoriasClinicas "1" -- "0..*" Recetas : contiene
-ConsultasMedicas "1" -- "0..*" Recetas : emite
-Recetas "1" -- "1..*" RecetaDetalles : especifica
-HistoriasClinicas "1" -- "0..*" AnalisisClinicos : analiza
-HistoriasClinicas "1" -- "0..*" OrdenesExamenes : contiene
+ConsultasMedicas "1" -- "0..*" Diagnosticos : emite
+ConsultasMedicas "1" -- "0..*" Recetas : prescribe
 ConsultasMedicas "1" -- "0..*" OrdenesExamenes : prescribe
 HistoriasClinicas "1" -- "0..*" DocumentosClinicos : custodia
-ConsultasMedicas "0..1" -- "0..*" DocumentosClinicos : adjunta
 OrdenesExamenes "0..1" -- "0..*" DocumentosClinicos : respalda
 
+' Composiciones Reales (Dependencia ontológica y de ciclo de vida)
+HistoriasClinicas "1" *-- "0..*" Antecedentes : compone
+HistoriasClinicas "1" *-- "0..*" Evoluciones : compone
+HistoriasClinicas "1" *-- "0..*" AnalisisClinicos : genera
+Recetas "1" *-- "1..*" RecetaDetalles : compone (ON DELETE CASCADE)
+
+' --- 5. INTEGRACIONES, PAGOS Y REPORTES ---
+Citas "1" -- "0..1" Pagos : se paga con
+Pacientes "1" -- "0..*" Pagos : realiza
 Usuarios "1" -- "0..*" Notificaciones : recibe
-Usuarios "1" -- "0..*" PushSuscripciones : registra
-Usuarios "1" -- "0..*" ReportesIA : solicita
+Usuarios "1" -- "0..*" PushSuscripciones : suscribe
+Usuarios "1" -- "0..*" ReportesIA : solicita por voz
 @enduml

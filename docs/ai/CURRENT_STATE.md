@@ -300,3 +300,18 @@
     - Botón de exportación instantánea a CSV.
   - ✅ Integración en `Sidebar.jsx` (grupo "Reportes y Analítica (P6)") y renderizado condicional en `App.jsx`.
   - ✅ Compilación de producción exitosa con Vite (`npm run build` en 52.15s, 0 errores).
+
+---
+
+### 22. Implementación de Backend para CU16 (Registrar Consulta Médica y Triaje) (06/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ Modelo `ConsultaMedica.php`: Accessors calculados para IMC y clasificación clínica según la OMS, mapeo de relaciones con `Cita`, `HistoriaClinica`, `Medico` y `Diagnostico`.
+  - ✅ Modelo `Patient.php` y `User.php`: Relaciones agregadas para vincular directamente la ficha médica y cuenta de usuario con el expediente.
+  - ✅ FormRequest `ConsultaCreateRequest.php`: Validaciones biológicas rigurosas para constantes vitales (peso, talla, temperatura, pulso, presión) y diagnósticos (`PRESUNTIVO`/`DEFINITIVO`).
+  - ✅ Servicio Transaccional `ConsultaMedicaService.php`:
+    - Operación dentro de `DB::transaction()` con bloqueo pesimista `lockForUpdate()`.
+    - Validación Anti-IDOR para verificar que el médico autenticado es el titular de la cita.
+    - Aseguramiento/creación automática de la `HistoriaClinica` para el paciente.
+    - Transición atómica de `citas.estado = 'ATENDIDA'` y registro en `cita_estado_historial`.
+    - Asentamiento de auditoría inmutable en `Bitacora.php` (CU03).
+  - ✅ Controlador `ConsultasController.php` y rutas `/api/medical-records/consultas` y `/api/medical-records/citas/{id}/preparar`.

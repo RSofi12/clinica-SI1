@@ -43,6 +43,48 @@ class ConsultaMedica extends Model
         'frecuencia_cardiaca' => 'integer',
     ];
 
+    protected $appends = [
+        'imc',
+        'clasificacion_imc',
+    ];
+
+    /**
+     * Cálculo de IMC (Índice de Masa Corporal): peso / (talla en m)^2
+     */
+    public function getImcAttribute(): ?float
+    {
+        if ($this->peso_kg > 0 && $this->talla_cm > 0) {
+            $tallaMetros = $this->talla_cm / 100;
+            return round($this->peso_kg / ($tallaMetros * $tallaMetros), 1);
+        }
+        return null;
+    }
+
+    /**
+     * Clasificación OMS del IMC
+     */
+    public function getClasificacionImcAttribute(): ?string
+    {
+        $imc = $this->imc;
+        if ($imc === null) {
+            return null;
+        }
+
+        if ($imc < 18.5) {
+            return 'Bajo peso';
+        } elseif ($imc < 25.0) {
+            return 'Peso normal';
+        } elseif ($imc < 30.0) {
+            return 'Sobrepeso';
+        } elseif ($imc < 35.0) {
+            return 'Obesidad Grado I';
+        } elseif ($imc < 40.0) {
+            return 'Obesidad Grado II';
+        } else {
+            return 'Obesidad Grado III (Mórbida)';
+        }
+    }
+
     public function cita(): BelongsTo
     {
         return $this->belongsTo(Cita::class, 'id_cita', 'id_cita');

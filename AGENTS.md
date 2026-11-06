@@ -77,3 +77,46 @@ Inspirado en el flujo de continuidad multi-agente de referencia:
      - Cambios en Frontend (servicios, componentes, modales, vistas).
      - Comandos a ejecutar tras hacer pull (`php artisan migrate`, `php artisan db:seed`, `npm install`).
      - Verificaciones y pruebas realizadas (`php -l`, `npm run build`).
+
+---
+
+## 5. 📐 Reglas Estándar para Diagramas UML (Secuencia, Comunicación y Análisis de Clases)
+
+> **Skill Oficial Asociada:** [`.agents/skills/uml-academic-diagrams/SKILL.md`](file:///c:/Users/PERSONAL/clinica-SI1/.agents/skills/uml-academic-diagrams/SKILL.md)  
+> **Directorio de Artefactos:** `docsUML/CUsecuencia/`, `docsUML/CUcomunicacion/`, `docsUML/CUanalisisClase/`.
+
+Al generar o corregir diagramas para cualquier Caso de Uso (`CUxx`), es obligatorio acatar las siguientes pautas:
+
+### 5.1. Arquitectura BCE y Distribución Horizontal
+* Distribución canónica de izquierda a derecha:  
+  **`Actor` ➔ `Pantalla (Boundary)` ➔ `Controlador (Control)` ➔ `Entidades de Dominio (Entity)`**.
+* **Actores:** Si dos actores realizan la misma interacción, unificarlos con barra (ej. `Recepcionista / Paciente`).
+* **Lógica Centralizada:** Toda la lógica, orquestación y validaciones residen en el Controlador.
+* **Aislamiento de Entidades:** Las entidades **NUNCA** se envían mensajes entre sí, ni devuelven respuestas a otras entidades, ni envían mensajes de regreso a los controladores.
+
+### 5.2. Diagrama de Secuencia (JScript para Enterprise Architect)
+* **Formato:** Script `.js` en `docsUML/CUsecuencia/CUxx_diagrama_secuencia_*.js`.
+* **Participantes:** Cuadros rectangulares con el **color por defecto que otorga Enterprise Architect** (sin forzar estilos ni colores personalizados).
+* **Sin icono de Base de Datos:** Las tablas/modelos se representan como rectángulos estándar con estereotipo `<<Entity>>` o `<<Database>>`.
+* **Estereotipos visibles:** `<<Actor>>`, `<<Interface>>`, `<<Controller>>`, `<<Entity>>`.
+* **Líneas de Vida (Lifelines):** Trazadas continuas desde cada componente (incluyendo el actor).
+* **Mensajes:** Numerados jerárquicamente (`1`, `1.1`, `1.2`...). Nombres de funciones reales según el código del proyecto.
+* **Convención de Parámetros:** `metodo()` sin parámetros o `metodo(parametro)` si solo usa uno; si usa más de uno en el código, **dejar los paréntesis vacíos `()`**.
+* **Retornos:** Flechas discontinuas únicamente hacia el controlador o la pantalla, si el código tiene retorno explícito.
+* **Fragmentos Combinados:** Máximo **3 fragmentos `alt`** para mantener legibilidad académica; usar `opt` para condicionales simples y `loop` para iteraciones. Sin fragmentos redundantes.
+
+### 5.3. Diagrama de Comunicación (Draw.io / JScript)
+* **Formato:** Archivo `.drawio` en `docsUML/CUcomunicacion/` (o `.js` para EA).
+* **Coincidencia 1:1:** Mismos participantes, mismos nombres y mismos mensajes que el diagrama de secuencia.
+* **Iconos BCE:** En este diagrama **SÍ se utilizan los iconos formales** (`boundary`, `control`, `entity`).
+* **Nombres:** Sin prefijo de estereotipo en el texto visible, solo el nombre (`:AppointmentsController`, `:Cita`).
+* **Líneas y Mensajes:** Cada mensaje cuenta con su **relación individual entre los componentes** (facilitando acomodar los mensajes con holgura), con una **flecha direccional señalando al componente destino**.
+* **Validaciones en Controlador:** Si el código contiene validaciones internas o verificaciones lógicas, se muestran explícitamente en el Controller como mensajes reflexivos hacia sí mismo (`self-call`).
+* **Aislamiento:** Las entidades **no** retornan mensajes a los controladores ni se comunican entre sí.
+
+### 5.4. Diagrama de Análisis de Clases (Draw.io)
+* **Formato:** Archivo `.drawio` en `docsUML/CUanalisisClase/CUxx_*.drawio`.
+* **Estructura:** Actor (`shape=umlActor`) ➔ `<<Interface>>` ➔ `<<Controller>>` ➔ `<<Entity>>`.
+* **⚠️ REGLA DE ORO DE RELACIONES Y CARDINALIDADES (INVIOLABLE):**
+  - Las relaciones formales UML (**composición, agregación, herencia / generalización, asociación**) y las cardinalidades (`1`, `0..1`, `0..*`, `1..*`) se diagraman **ÚNICAMENTE ENTRE ENTIDADES**.
+  - Las conexiones entre `Actor ➔ Interface`, `Interface ➔ Controller` y `Controller ➔ Entities` se trazan con líneas simples de navegación/dependencia (`endArrow=none;endFill=0`), **SIN cardinalidades ni multiplicidades**.
