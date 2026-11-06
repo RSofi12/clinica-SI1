@@ -1,4 +1,4 @@
-import {
+﻿import {
   LayoutDashboard,
   User,
   UserCog,
@@ -16,6 +16,7 @@ import {
   Layers,
   Clock,
   Mic,
+  ClipboardList,
 } from 'lucide-react';
 import logoColor from '../assets/logo-color.svg';
 

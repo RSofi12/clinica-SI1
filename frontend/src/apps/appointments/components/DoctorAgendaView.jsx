@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import {
   Calendar,
   Clock,
@@ -20,25 +20,27 @@ import {
   Sparkles,
   Info,
   History,
+  ClipboardList,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { appointmentService } from '../services/appointmentService';
 import { doctorService } from '../../clinical-resources/services/doctorService';
 import { AppointmentCancelModal } from './AppointmentCancelModal';
+import { ConsultaRegistroModal } from '../../medical-records/components/ConsultaRegistroModal';
 
 const DIAS_SEMANA_MAP = {
   1: 'Lunes',
   2: 'Martes',
-  3: 'Miércoles',
+  3: 'MiÃ©rcoles',
   4: 'Jueves',
   5: 'Viernes',
-  6: 'Sábado',
+  6: 'SÃ¡bado',
   7: 'Domingo',
 };
 
 /**
- * Vista de Agenda Médica Diaria por Médico y Fecha (CU14 / RF11 / Prueba #8)
- * Paquete 3: Gestión de Citas Médicas
+ * Vista de Agenda MÃ©dica Diaria por MÃ©dico y Fecha (CU14 / RF11 / Prueba #8)
+ * Paquete 3: GestiÃ³n de Citas MÃ©dicas
  */
 export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = null }) {
   const { role, user } = useAuth();
@@ -56,12 +58,15 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Modal de cancelación (CU12)
+  // Modal de cancelaciÃ³n (CU12)
   const [cancellingAppointment, setCancellingAppointment] = useState(null);
+
+  // Modal de registro de consulta (CU16)
+  const [consultaCita, setConsultaCita] = useState(null);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
-  // 1. Cargar lista de médicos si no es rol MEDICO
+  // 1. Cargar lista de mÃ©dicos si no es rol MEDICO
   useEffect(() => {
     if (role === 'MEDICO') return;
     async function loadDoctors() {
@@ -74,7 +79,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
           }
         }
       } catch (err) {
-        console.error('Error cargando médicos para agenda:', err);
+        console.error('Error cargando mÃ©dicos para agenda:', err);
       }
     }
     loadDoctors();
@@ -94,10 +99,10 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
       if (res?.success && res.data) {
         setAgendaData(res.data);
       } else {
-        setErrorMsg(res?.message || 'Error al obtener la agenda médica.');
+        setErrorMsg(res?.message || 'Error al obtener la agenda mÃ©dica.');
       }
     } catch (err) {
-      setErrorMsg(err.message || 'Error de conexión con el servidor.');
+      setErrorMsg(err.message || 'Error de conexiÃ³n con el servidor.');
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +112,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
     loadAgenda();
   }, [loadAgenda]);
 
-  // Navegación de fechas
+  // NavegaciÃ³n de fechas
   const changeDateByDays = (days) => {
     const curr = new Date(selectedDate + 'T00:00:00');
     curr.setDate(curr.getDate() + days);
@@ -115,7 +120,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
   };
 
   const formatDateDisplay = (dateString) => {
-    if (!dateString) return '—';
+    if (!dateString) return 'â€”';
     try {
       const date = new Date(dateString + 'T00:00:00');
       return date.toLocaleDateString('es-ES', {
@@ -204,9 +209,9 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
 
   return (
     <div className="space-y-5">
-      {/* Barra Superior: Selector de Médico, Fecha y Filtros */}
+      {/* Barra Superior: Selector de MÃ©dico, Fecha y Filtros */}
       <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
-        {/* Selector de Médico (si no es médico) */}
+        {/* Selector de MÃ©dico (si no es mÃ©dico) */}
         {role !== 'MEDICO' && doctorsList.length > 0 ? (
           <div className="flex items-center gap-2">
             <Stethoscope className="w-4 h-4 text-[#00687a]" />
@@ -229,7 +234,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
             </div>
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                Agenda Médica Personal
+                Agenda MÃ©dica Personal
               </span>
               <span className="font-bold text-sm text-slate-900">
                 Dr. {medico ? `${medico.apellidos} ${medico.nombres}` : user?.username}
@@ -238,13 +243,13 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
           </div>
         )}
 
-        {/* Selector de Fecha con botones de día anterior / siguiente */}
+        {/* Selector de Fecha con botones de dÃ­a anterior / siguiente */}
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => changeDateByDays(-1)}
             className="p-2 border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-600 transition cursor-pointer"
-            title="Día anterior"
+            title="DÃ­a anterior"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -263,7 +268,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
             type="button"
             onClick={() => changeDateByDays(1)}
             className="p-2 border border-slate-200 hover:bg-slate-100 rounded-xl text-slate-600 transition cursor-pointer"
-            title="Día siguiente"
+            title="DÃ­a siguiente"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -308,7 +313,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
         </div>
       </div>
 
-      {/* Tarjeta Informativa del Médico y Franja Horaria del Día */}
+      {/* Tarjeta Informativa del MÃ©dico y Franja Horaria del DÃ­a */}
       {medico && (
         <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-5 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -323,8 +328,8 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                 Dr. {medico.nombres} {medico.apellidos}
               </h2>
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300 mt-0.5">
-                <span>Matrícula: {medico.codigo_profesional}</span>
-                <span>•</span>
+                <span>MatrÃ­cula: {medico.codigo_profesional}</span>
+                <span>â€¢</span>
                 <span className="text-cyan-200 font-semibold">
                   {medico.especialidad_principal?.nombre || 'Medicina General'}
                 </span>
@@ -332,10 +337,10 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
             </div>
           </div>
 
-          {/* Horario de Atención Configurado para este Día */}
+          {/* Horario de AtenciÃ³n Configurado para este DÃ­a */}
           <div className="bg-white/10 border border-white/15 rounded-xl px-4 py-2.5 backdrop-blur-xs text-xs">
             <span className="text-slate-300 text-[10px] uppercase font-bold tracking-wider block">
-              Horario de Consulta ({DIAS_SEMANA_MAP[agendaData?.dia_semana] || 'Día'}):
+              Horario de Consulta ({DIAS_SEMANA_MAP[agendaData?.dia_semana] || 'DÃ­a'}):
             </span>
             {disponibilidades.length > 0 ? (
               <div className="flex flex-wrap items-center gap-2 mt-1">
@@ -350,7 +355,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
               </div>
             ) : (
               <span className="text-amber-300 text-xs font-medium mt-1 inline-block">
-                No tiene franja semanal asignada para este día
+                No tiene franja semanal asignada para este dÃ­a
               </span>
             )}
           </div>
@@ -407,7 +412,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
         {isLoading ? (
           <div className="py-16 text-center text-slate-400 flex flex-col items-center justify-center gap-2">
             <div className="w-7 h-7 border-3 border-[#00687a]/30 border-t-[#00687a] rounded-full animate-spin" />
-            <span className="text-xs">Cargando agenda médica...</span>
+            <span className="text-xs">Cargando agenda mÃ©dica...</span>
           </div>
         ) : errorMsg ? (
           <div className="p-8 text-center text-rose-600 text-xs">
@@ -419,7 +424,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
             <Calendar className="w-10 h-10 text-slate-300 stroke-[1.5]" />
             <p className="font-bold text-slate-700 text-sm">Sin citas para esta fecha</p>
             <p className="text-xs text-slate-500">
-              No hay citas programadas para el Dr. {medico?.apellidos} el día{' '}
+              No hay citas programadas para el Dr. {medico?.apellidos} el dÃ­a{' '}
               {formatDateDisplay(selectedDate)}.
             </p>
           </div>
@@ -437,7 +442,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                     cita.estado === 'CANCELADA' ? 'bg-slate-50/80 opacity-75' : 'hover:bg-slate-50/60'
                   }`}
                 >
-                  {/* Horario y Código */}
+                  {/* Horario y CÃ³digo */}
                   <div className="flex items-center gap-3 sm:w-48 shrink-0">
                     <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex flex-col items-center justify-center font-mono font-bold text-xs shrink-0">
                       <Clock className="w-3.5 h-3.5 text-[#00687a] mb-0.5" />
@@ -465,7 +470,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                       </span>
                       {cita.paciente?.numero_documento && (
                         <span className="text-slate-500 font-mono text-xs">
-                          • CI: {cita.paciente.numero_documento}
+                          â€¢ CI: {cita.paciente.numero_documento}
                         </span>
                       )}
                       {cita.paciente?.numero_historia && (
@@ -476,12 +481,12 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                      <span>{cita.tipo_cita?.nombre || 'Consulta Médica'}</span>
-                      <span>•</span>
+                      <span>{cita.tipo_cita?.nombre || 'Consulta MÃ©dica'}</span>
+                      <span>â€¢</span>
                       <span className="text-slate-700 font-medium">
                         {cita.especialidad?.nombre || 'Medicina General'}
                       </span>
-                      <span>•</span>
+                      <span>â€¢</span>
                       {cita.modalidad === 'TELECONSULTA' ? (
                         <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded-md">
                           <Video className="w-2.5 h-2.5" />
@@ -501,12 +506,12 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                       </p>
                     )}
 
-                    {/* Motivo de Cancelación (si aplica) */}
+                    {/* Motivo de CancelaciÃ³n (si aplica) */}
                     {cita.estado === 'CANCELADA' && cita.motivo_cancelacion && (
                       <div className="text-[11px] text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg w-fit mt-1 flex items-center gap-1.5">
                         <Ban className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                         <span>
-                          <strong>Motivo cancelación:</strong> {cita.motivo_cancelacion}
+                          <strong>Motivo cancelaciÃ³n:</strong> {cita.motivo_cancelacion}
                         </span>
                       </div>
                     )}
@@ -522,10 +527,23 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                         type="button"
                         onClick={() => onOpenPatientHistory(cita.paciente)}
                         className="px-2.5 py-1 text-[11px] font-semibold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                        title="Consultar historial cronológico de citas del paciente (CU15)"
+                        title="Consultar historial cronolÃ³gico de citas del paciente (CU15)"
                       >
                         <History className="w-3.5 h-3.5" />
                         <span className="hidden sm:inline">Historial (CU15)</span>
+                      </button>
+                    )}
+
+                    {/* Atender Consulta (CU16) — solo MEDICO sobre citas PENDIENTE o CONFIRMADA */}
+                    {role === 'MEDICO' && ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
+                      <button
+                        type="button"
+                        onClick={() => setConsultaCita(cita)}
+                        className="px-2.5 py-1 text-[11px] font-bold text-white bg-gradient-to-r from-[#00687a] to-[#004d5a] hover:opacity-90 rounded-lg transition flex items-center gap-1 cursor-pointer shadow-sm"
+                        title="Registrar consulta médica y triaje (CU16)"
+                      >
+                        <ClipboardList className="w-3 h-3" />
+                        <span>Atender</span>
                       </button>
                     )}
 
@@ -547,7 +565,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                         type="button"
                         onClick={() => setCancellingAppointment(cita)}
                         className="px-2.5 py-1 text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                        title="Cancelar cita médica (libera cupo)"
+                        title="Cancelar cita mÃ©dica (libera cupo)"
                       >
                         <Ban className="w-3 h-3" />
                         <span>Cancelar</span>
@@ -561,7 +579,18 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
         )}
       </div>
 
-      {/* Modal de Cancelación (CU12) */}
+
+      {/* Modal de Registro de Consulta Médica (CU16) */}
+      <ConsultaRegistroModal
+        isOpen={Boolean(consultaCita)}
+        onClose={() => setConsultaCita(null)}
+        cita={consultaCita}
+        onConsultaRegistrada={() => {
+          setConsultaCita(null);
+          loadAgenda();
+        }}
+      />
+      {/* Modal de CancelaciÃ³n (CU12) */}
       <AppointmentCancelModal
         isOpen={Boolean(cancellingAppointment)}
         onClose={() => setCancellingAppointment(null)}

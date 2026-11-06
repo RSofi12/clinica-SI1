@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
@@ -11,6 +11,7 @@ import { DoctorsManager } from './apps/clinical-resources/components/DoctorsMana
 import { SchedulesManager } from './apps/clinical-resources/components/SchedulesManager';
 import { AppointmentsManager } from './apps/appointments/components/AppointmentsManager';
 import { VoiceReportAssistant } from './apps/analytics/components/VoiceReportAssistant';
+import { ConsultasManager } from './apps/medical-records/components/ConsultasManager';
 
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
@@ -290,6 +291,8 @@ export default function App() {
             <SchedulesManager />
           ) : dashboardTab === 'appointments' ? (
             <AppointmentsManager />
+          ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+            <ConsultasManager />
           ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
             <VoiceReportAssistant />
 
