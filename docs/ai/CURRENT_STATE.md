@@ -315,3 +315,11 @@
     - Transición atómica de `citas.estado = 'ATENDIDA'` y registro en `cita_estado_historial`.
     - Asentamiento de auditoría inmutable en `Bitacora.php` (CU03).
   - ✅ Controlador `ConsultasController.php` y rutas `/api/medical-records/consultas` y `/api/medical-records/citas/{id}/preparar`.
+
+### 11. Implementación de CU13 (Registrar Asistencia y Estado de Cita — RF10) — Backend Completado
+- **Backend (`backend/app/Packages/Appointments/`):**
+  - ✅ **Máquina de Estados en Dominio (`Cita.php`):** Constantes de estado (`PROGRAMADA`, `CONFIRMADA`, `ATENDIDA`, `CANCELADA`, `INASISTENCIA`), matriz canónica de `TRANSICIONES_VALIDAS`, y métodos de evaluación (`esEstadoTerminal()`, `obtenerTransicionesPermitidas()`, `puedeTransicionarA()`).
+  - ✅ **Servicio Transaccional (`AppointmentStatusService.php`):** Bloqueo pesimista `lockForUpdate()` en `DB::transaction()`, control RBAC por rol (médico solo actualiza sus pacientes hacia atendida/inasistencia; recepción/admin confirma check-in e inasistencia; paciente bloqueado 403), validación temporal (rechazo de inasistencia en citas futuras) y auditoría inmutable en `bitacora` (CU03) y `cita_estado_historial`.
+  - ✅ **FormRequest (`AppointmentChangeStatusRequest.php`):** Validación estricta de estados y mensajes en español.
+  - ✅ **Controlador (`AppointmentsController.php`):** Endpoints `PATCH /api/appointments/{id}/status` y `GET /api/appointments/{id}/status-history` con scoping anti-IDOR.
+  - ✅ **Rutas (`routes/api.php`):** Registradas bajo middleware de roles `role:ADMIN,RECEPCIONISTA,MEDICO`.

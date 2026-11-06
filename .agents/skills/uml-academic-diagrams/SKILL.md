@@ -78,7 +78,7 @@ Todos los diagramas de comportamiento y análisis deben respetar el patrón **BC
   - `<<Controller>> [Controller]`: Métodos REST del controlador Laravel con su tipo de retorno (`process(): JsonResponse`).
   - `<<Entity>> [Modelos]`: Atributos reales con tipos PostgreSQL (`Long [PK]`, `String`, `DateTime`, `Boolean`, `Jsonb`) y relaciones Eloquent tipadas (`citas(): List`, `usuario(): User`).
 * **⚠️ REGLA DE ORO DE RELACIONES Y CARDINALIDADES (INVIOLABLE):**
-  - Las relaciones formales UML (**Composición**, **Agregación**, **Herencia / Generalización**, **Asociación**) y sus respectivas cardinalidades (`1`, `0..1`, `0..*`, `1..*`) se diagraman **ÚNICAMENTE ENTRE ENTIDADES**.
+  - Las relaciones formales UML (**Composición**, **Agregación**, **Herencia / Generalización**, **Asociación**) y sus respectivas cardinalidades (`+1`, `+0..1`, `+0..*`, `+1..*`) se diagraman **ÚNICAMENTE ENTRE ENTIDADES**.
   - Las conexiones entre `Actor ➔ Interface`, `Interface ➔ Controller` y `Controller ➔ Entities` se trazan con líneas simples de navegación/dependencia (`endArrow=none;endFill=0`), **SIN cardinalidades ni multiplicidades**.
 
 ---

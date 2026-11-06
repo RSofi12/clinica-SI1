@@ -147,3 +147,15 @@
   - `CU16-CU19`: Expediente Clínico Digital, Consultas, Diagnósticos CIE y Recetas.
   - `CU20-CU23`: Recordatorios, Pasarela de Pagos Stripe Sandbox y Reportes con Filtros Dinámicos (RF13).
 
+
+### 10. CU13: Registrar Asistencia y Estado de Cita (RF10) — Backend Operativo (06/Noviembre/2026)
+- **Backend:**
+  - FormRequest: `AppointmentChangeStatusRequest.php` (`nuevo_estado`, `observacion`).
+  - Dominio: Constantes de estado y matriz `TRANSICIONES_VALIDAS` en `Cita.php`.
+  - Servicio: `AppointmentStatusService.php` transaccional con `lockForUpdate()`, validación temporal y scoping por rol.
+  - Controlador: `AppointmentsController::updateStatus()` y `AppointmentsController::statusHistory()`.
+  - Rutas: `PATCH /api/appointments/{id}/status` y `GET /api/appointments/{id}/status-history`.
+  - Verificación: Sintaxis PHP 100% limpia comprobada con `php -l`.
+- **Pendiente Inmediato Frontend:**
+  - Integrar métodos en `appointmentService.js`.
+  - Crear modal interactivo `AppointmentStatusModal.jsx` y botones de acción rápida en mostrador (`AppointmentsManager.jsx`) y agenda médica (`DoctorAgendaView.jsx`).

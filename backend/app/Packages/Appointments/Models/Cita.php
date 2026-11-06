@@ -216,6 +216,72 @@ class Cita extends Model
         return true;
     }
 
+    // =========================================================================
+    // CONSTANTES Y MÁQUINA DE ESTADOS (CU13 / RF10 / RN10)
+    // =========================================================================
+
+    public const ESTADO_PROGRAMADA = 'PROGRAMADA';
+    public const ESTADO_CONFIRMADA = 'CONFIRMADA';
+    public const ESTADO_ATENDIDA = 'ATENDIDA';
+    public const ESTADO_CANCELADA = 'CANCELADA';
+    public const ESTADO_INASISTENCIA = 'INASISTENCIA';
+
+    public const ESTADOS_VALIDOS = [
+        self::ESTADO_PROGRAMADA,
+        self::ESTADO_CONFIRMADA,
+        self::ESTADO_ATENDIDA,
+        self::ESTADO_CANCELADA,
+        self::ESTADO_INASISTENCIA,
+    ];
+
+    /**
+     * Matriz oficial de transiciones permitidas (Máquina de estados RF10)
+     */
+    public const TRANSICIONES_VALIDAS = [
+        self::ESTADO_PROGRAMADA => [
+            self::ESTADO_CONFIRMADA,
+            self::ESTADO_CANCELADA,
+            self::ESTADO_INASISTENCIA,
+        ],
+        self::ESTADO_CONFIRMADA => [
+            self::ESTADO_ATENDIDA,
+            self::ESTADO_CANCELADA,
+            self::ESTADO_INASISTENCIA,
+        ],
+        self::ESTADO_ATENDIDA => [],     // Terminal
+        self::ESTADO_CANCELADA => [],    // Terminal
+        self::ESTADO_INASISTENCIA => [], // Terminal
+    ];
+
+    /**
+     * Determina si la cita se encuentra en un estado terminal (inmutable)
+     */
+    public function esEstadoTerminal(): bool
+    {
+        return in_array($this->estado, [
+            self::ESTADO_ATENDIDA,
+            self::ESTADO_CANCELADA,
+            self::ESTADO_INASISTENCIA,
+        ], true);
+    }
+
+    /**
+     * Retorna las transiciones válidas disponibles para el estado actual
+     */
+    public function obtenerTransicionesPermitidas(): array
+    {
+        return self::TRANSICIONES_VALIDAS[$this->estado] ?? [];
+    }
+
+    /**
+     * Evalúa si una transición hacia un nuevo estado es legal
+     */
+    public function puedeTransicionarA(string $nuevoEstado): bool
+    {
+        $permitidas = $this->obtenerTransicionesPermitidas();
+        return in_array($nuevoEstado, $permitidas, true);
+    }
+
     /**
      * Valida si esta cita solapa con otra del mismo médico (RF07 / PUDS: validarSolapamiento())
      */

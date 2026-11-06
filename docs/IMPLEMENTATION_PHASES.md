@@ -299,9 +299,15 @@ pm run build exitoso).
   - [ ] **P11.2:** Intentar reprogramar una cita ya atendida (bloqueado por regla de negocio).
 
 #### ⏳ CU13: Registrar Asistencia y Estado de Cita (RF10)
-- [ ] **Backend:**
-  - [ ] Máquina de estados: *Programada* → *Confirmada* → *Atendida* / *Inasistencia*.
-  - [ ] Restricción de saltos ilegales (ej. de *Cancelada* a *Atendida* rechazada).
+- [x] **Backend:**
+  - [x] Máquina de estados: *Programada* → *Confirmada* → *Atendida* / *Inasistencia*.
+  - [x] Constantes y matriz oficial de transiciones en `Cita.php` (`TRANSICIONES_VALIDAS`, `esEstadoTerminal()`, `puedeTransicionarA()`).
+  - [x] Servicio transaccional `AppointmentStatusService` con `DB::transaction()` y `lockForUpdate()`.
+  - [x] Restricción de saltos ilegales (estados terminales protegidos) y validaciones temporales (no inasistencia a citas futuras).
+  - [x] Scoping RBAC: Médicos solo modifican sus citas (a *Atendida* o *Inasistencia*), Recepcionistas/Admin gestionan confirmación/inasistencia, Pacientes bloqueados con HTTP 403.
+  - [x] FormRequest `AppointmentChangeStatusRequest` con validación estricta y mensajes amigables.
+  - [x] Endpoints `PATCH /api/appointments/{id}/status` y `GET /api/appointments/{id}/status-history` en `AppointmentsController`.
+  - [x] Auditoría inmutable en `bitacora` (CU03) y registro secuencial en `cita_estado_historial`.
 - [ ] **Frontend:**
   - [ ] Botones de cambio de estado rápido en el mostrador de recepción.
 - [ ] **Fase de Pruebas:**
