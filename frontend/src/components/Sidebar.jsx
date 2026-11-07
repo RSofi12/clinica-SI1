@@ -1,4 +1,5 @@
-﻿import {
+import {
+  Home,
   LayoutDashboard,
   User,
   UserCog,
@@ -38,9 +39,16 @@ export function Sidebar({
       group: 'Principal',
       items: [
         {
+          id: 'inicio',
+          label: 'Inicio',
+          subtitle: 'Espacio de trabajo y accesos rápidos',
+          icon: Home,
+          requiredRole: null, // Visible para todos
+        },
+        {
           id: 'overview',
-          label: 'Panel General',
-          subtitle: 'Métricas y visión general',
+          label: 'Dashboard Clínico',
+          subtitle: 'Métricas, KPIs y operativo',
           icon: LayoutDashboard,
           requiredRole: null, // Visible para todos
         },
@@ -186,10 +194,10 @@ export function Sidebar({
             </div>
             {!isCollapsed && (
               <div className="min-w-0 transition-opacity duration-200">
-                <h1 className="text-sm font-montserrat font-bold text-slate-900 leading-tight truncate">
+                <h1 className="text-base font-serif-clinical font-semibold text-slate-900 leading-tight tracking-tight truncate">
                   Centro Médico
                 </h1>
-                <p className="text-[11px] font-semibold text-[#00687a] truncate">La Cruz — Vida Salud</p>
+                <p className="text-[11px] font-sans-clinical font-medium text-[#00687a] truncate">La Cruz — Vida Salud</p>
               </div>
             )}
           </div>
