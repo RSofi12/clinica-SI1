@@ -202,8 +202,6 @@ export default function App() {
           : 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
       case 'patient-profile':
         return role === 'PACIENTE' ? 'Mi Perfil de Paciente (CU05)' : 'Inicio';
-      case 'documentos-clinicos':
-        return 'Documentos Clínicos Adjuntos & Visor DICOM (CU26)';
       default:
         return 'Inicio';
     }
@@ -298,44 +296,44 @@ export default function App() {
 
         {/* 3. Contenedor de la Vista Activa con Scroll Independiente a la Derecha */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-transparent">
-          {dashboardTab === 'inicio' ? (
-            <InicioPanelView
-              user={user}
-              role={role}
-              onNavigate={setDashboardTab}
-              onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
-            />
-          ) : dashboardTab === 'users' && role === 'ADMIN' ? (
-            <UsersManager />
-          ) : dashboardTab === 'audit' && role === 'ADMIN' ? (
-            <AuditLogViewer />
-          ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
-            <PatientsManager />
-          ) : dashboardTab === 'doctors' && role === 'ADMIN' ? (
-            <DoctorsManager />
-          ) : dashboardTab === 'schedules' && role === 'ADMIN' ? (
-            <SchedulesManager />
-          ) : dashboardTab === 'appointments' ? (
-            <AppointmentsManager />
-          ) : dashboardTab === 'expediente' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
-            <ExpedienteClinicoView />
-          ) : dashboardTab === 'documentos-clinicos' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
-            <ExpedienteClinicoView defaultTab="documentos" />
-          ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
-            <ConsultasManager />
-          ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
-            <RecetasManager currentUser={user} />
-          ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
-            <VoiceReportAssistant />
-          ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
-            <PatientProfileView />
-          ) : (
-            <ClinicalDashboardView
-              role={role}
-              onNavigate={setDashboardTab}
-              onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
-            />
-          )}
+          <div key={dashboardTab} className="animate-view-fade">
+            {dashboardTab === 'inicio' ? (
+              <InicioPanelView
+                user={user}
+                role={role}
+                onNavigate={setDashboardTab}
+                onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
+              />
+            ) : dashboardTab === 'users' && role === 'ADMIN' ? (
+              <UsersManager />
+            ) : dashboardTab === 'audit' && role === 'ADMIN' ? (
+              <AuditLogViewer />
+            ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
+              <PatientsManager />
+            ) : dashboardTab === 'doctors' && role === 'ADMIN' ? (
+              <DoctorsManager />
+            ) : dashboardTab === 'schedules' && role === 'ADMIN' ? (
+              <SchedulesManager />
+            ) : dashboardTab === 'appointments' ? (
+              <AppointmentsManager />
+            ) : dashboardTab === 'expediente' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+              <ExpedienteClinicoView />
+            ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+              <ConsultasManager />
+            ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
+              <RecetasManager currentUser={user} />
+            ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
+              <VoiceReportAssistant />
+            ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
+              <PatientProfileView />
+            ) : (
+              <ClinicalDashboardView
+                role={role}
+                onNavigate={setDashboardTab}
+                onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
+              />
+            )}
+          </div>
         </main>
       </div>
 

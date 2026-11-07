@@ -32,7 +32,13 @@ class DocumentosClinicosController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $resultado['documentos'],
+                'data' => $resultado['documentos']->items(),
+                'paginacion' => [
+                    'total' => $resultado['documentos']->total(),
+                    'per_page' => $resultado['documentos']->perPage(),
+                    'current_page' => $resultado['documentos']->currentPage(),
+                    'last_page' => $resultado['documentos']->lastPage(),
+                ],
                 'estadisticas' => $resultado['estadisticas'],
                 'historia' => $resultado['historia'],
             ], 200);

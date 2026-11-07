@@ -148,14 +148,6 @@ export function Sidebar({
           icon: Pill,
           requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'],
         },
-        {
-          id: 'documentos-clinicos',
-          label: 'Documentos Adjuntos',
-          subtitle: 'Estudios, informes y visor DICOM',
-          tag: 'CU26 / Extra',
-          icon: Paperclip,
-          requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE'],
-        },
       ],
     },
     {
