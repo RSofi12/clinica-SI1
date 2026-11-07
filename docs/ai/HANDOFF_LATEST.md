@@ -178,3 +178,20 @@
   - Integraciones: `ConsultaRegistroModal.jsx` (gestión directa en consulta activa y recarga de alertas alérgicas), `ConsultasManager.jsx` y `PatientsManager.jsx`.
   - Verificación: Compilación de producción con `npm run build` exitosa (0 errores).
   - Pruebas: Casos `CN-CU17-01` a `CN-CU17-10` documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md`.
+
+### 12. CU18: Gestionar Expediente Clínico Digital — Prescripción y Recetas Médicas — Backend Operativo (07/Noviembre/2026)
+- **Backend:**
+  - Modelos Eloquent: `Receta.php` y `RecetaDetalle.php` enriquecidos con constantes (`ESTADO_ACTIVO`, `ESTADO_ANULADO`), scopes (`scopeActivas`, `scopeDelMedico`) y relaciones completas.
+  - Migración: `2026_11_07_000001_add_motivo_anulacion_to_recetas_table.php` (`motivo_anulacion`, `anulado_en`).
+  - Requests: `RecetaCreateRequest.php` (validación estricta de renglones posológicos no vacíos) y `RecetaAnularRequest.php` (`motivo_anulacion` min:5).
+  - Servicio: `RecetaService.php` con transacción atómica `DB::transaction()`, control Anti-IDOR para facultativos médicos, filtros inteligentes con KPIs y auditoría inmutable en `Bitacora.php` (`EMITIR_RECETA`, `ANULAR_RECETA`).
+  - Controlador: `RecetasController.php` (`index`, `show`, `byConsulta`, `store`, `anular`).
+  - Rutas protegidas en `backend/routes/api.php`:
+    - `GET /api/medical-records/recetas`
+    - `GET /api/medical-records/recetas/{id}`
+    - `GET /api/medical-records/consultas/{idConsulta}/recetas`
+    - `POST /api/medical-records/recetas`
+    - `PATCH /api/medical-records/recetas/{id}/anular`
+  - Verificación: Sintaxis PHP 100% limpia comprobada con `php -l` (0 errores).
+- **Próximo Paso Inmediato:**
+  - Implementar el Frontend de CU18 (`recetaService.js`, `RecetaPrescripcionModal.jsx`, `RecetaDetailModal.jsx` y `RecetasManager.jsx`).

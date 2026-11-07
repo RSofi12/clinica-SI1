@@ -286,8 +286,10 @@ CREATE TABLE recetas (
   id_consulta bigint NOT NULL,
   id_medico bigint NOT NULL,
   indicaciones_generales text,
+  motivo_anulacion varchar(500),
   fecha_emision timestamptz NOT NULL DEFAULT now(),
-  estado varchar(20) NOT NULL DEFAULT 'ACTIVO' CHECK (estado IN ('ACTIVO', 'ANULADA'))
+  anulado_en timestamptz,
+  estado varchar(20) NOT NULL DEFAULT 'ACTIVO' CHECK (estado IN ('ACTIVO', 'ANULADA', 'ANULADO'))
 );
 
 CREATE TABLE receta_detalles (

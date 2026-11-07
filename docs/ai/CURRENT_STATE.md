@@ -347,3 +347,15 @@
     - `PatientsManager.jsx`: Botón de antecedentes por paciente en el padrón de pacientes.
   - ✅ **Compilación:** `npm run build` exitoso con 0 errores.
 - **Pruebas:** 10 casos de prueba de caja negra documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md` (`CN-CU17-01` a `CN-CU17-10`).
+
+---
+
+### 23. Implementación de Backend para CU18 (Prescripción Médica y Recetas Digitales) (07/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Modelos de Dominio (`Receta.php` y `RecetaDetalle.php`):** Constantes de estado (`ACTIVO`, `ANULADO`), scopes de consulta (`activas`, `delMedico`) y relaciones directas con `HistoriaClinica`, `ConsultaMedica`, `Medico` y `RecetaDetalle`.
+  - ✅ **Migración:** `2026_11_07_000001_add_motivo_anulacion_to_recetas_table.php` incorporando `motivo_anulacion` (`varchar(500)`) y `anulado_en` (`timestamptz`).
+  - ✅ **FormRequests (`RecetaCreateRequest.php` y `RecetaAnularRequest.php`):** Validación estricta de medicamentos requeridos con dosis, frecuencia y duración obligatorios, y motivo de anulación mínimo de 5 caracteres.
+  - ✅ **Servicio Transaccional (`RecetaService.php`):** Operaciones atómicas en `DB::transaction()`, control Anti-IDOR para restringir la prescripción exclusivamente al médico tratante de la consulta o Admin, filtros multicriterio con métricas (`total`, `activas`, `anuladas`), anulación inmutable con baja lógica (`RN11`) y auditoría en `Bitacora.php` (`EMITIR_RECETA`, `ANULAR_RECETA`).
+  - ✅ **Controlador REST (`RecetasController.php`):** Endpoints `index`, `show`, `byConsulta`, `store` y `anular`.
+  - ✅ **Rutas API (`routes/api.php`):** 5 rutas protegidas bajo middleware `EnsureUserRole` en `/api/medical-records/recetas`.
+  - ✅ **Verificación:** Sintaxis PHP 100% libre de errores verificada con `php -l`.

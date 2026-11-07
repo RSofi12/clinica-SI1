@@ -98,11 +98,15 @@ En Draw.io, el diagrama debe mantener holgura visual y máxima claridad estétic
    - **Retornos de Datos (Respuestas):** Se ubican **ABAJO** de la línea de relación con flecha a rayas / discontinua (`dashed=1;` / `<------`) orientada de regreso hacia el emisor.
 3. **Diferenciación Cromática de Flujos (Paleta Oficial de Colores Oscuros):**  
    Cada flujo principal de interacción (determinado por su número raíz: Flujo 1, Flujo 2, Flujo 3...) debe distinguirse visualmente en el texto del mensaje y en su flecha asociada utilizando la siguiente paleta formal:
-   - **Flujo 1 (Principal / Listado / Consulta):** Negro (`#000000`) o Azul Marino Oscuro (`#003366`).
+   - **Flujo 1 (Principal / Listado / Consulta):** Estrictamente Negro (`#000000`).
    - **Flujo 2 (Creación / Filtros / Catálogo):** Verde Bosque Oscuro (`#005522`).
    - **Flujo 3 (Actualización / Métricas / Edición):** Púrpura / Morado Oscuro (`#4B0082`).
-   - **Flujo 4 (Eliminación / Detalle / Estado):** Azul Marino Oscuro (`#003366`).
-4. **Validaciones Reflexivas en Controlador:** Se representan con una auto-relación curva sobre el Controller con los mensajes de validación apilados a la izquierda o derecha del bucle.
+   - **Flujo 4 (Eliminación / Detalle / Estado / Baja Lógica):** Rojo Óxido Oscuro (`#8B0000`) o Azul Marino Oscuro (`#003366`).
+4. **Mensajes entre Boundary y Controller (Funciones vs. Endpoints):**
+   - Según el estándar formal **UML 2.5+ y PUDS/RUP**, todo mensaje que llega a un objeto receptor representa una invocación de operación (`callOperation`) sobre dicho objeto.
+   - Por tanto, la convención académica estándar es utilizar **el nombre del método/función real del Controller en el backend** (`index()`, `store()`, `update()`, `indexByPatient()`, etc.), con parámetros según la regla general `metodo()` o `metodo(parametro)`.
+   - Si se requiere documentar la naturaleza REST/HTTP de la comunicación web entre el cliente y el servidor, se puede optar por el endpoint (`GET /ruta`, `POST /ruta`), pero **la preferencia académica estricta son las funciones de los métodos reales del controlador**, asegurando coherencia uniforme con las funciones invocadas en los modelos y entidades.
+5. **Validaciones Reflexivas en Controlador:** Se representan con una auto-relación curva sobre el Controller con los mensajes de validación apilados a la izquierda o derecha del bucle.
 
 ### 3.2. Estándar para JScript (Enterprise Architect)
 Enterprise Architect gestiona las flechas y mensajes mediante conectores de comunicación:

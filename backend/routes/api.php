@@ -15,6 +15,7 @@ use App\Packages\Appointments\Controllers\AvailabilityController;
 use App\Packages\Appointments\Controllers\AppointmentsController;
 use App\Packages\MedicalRecords\Controllers\ConsultasController;
 use App\Packages\MedicalRecords\Controllers\AntecedentesController;
+use App\Packages\MedicalRecords\Controllers\RecetasController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
 
 /*
@@ -153,6 +154,13 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::post('/patients/{patientId}/antecedentes', [AntecedentesController::class, 'store'])->middleware('role:ADMIN,MEDICO');
     Route::put('/antecedentes/{id}', [AntecedentesController::class, 'update'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/antecedentes/{id}/toggle-status', [AntecedentesController::class, 'toggleStatus'])->middleware('role:ADMIN,MEDICO');
+
+    // CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas
+    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::post('/recetas', [RecetasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+    Route::patch('/recetas/{id}/anular', [RecetasController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
 });
 
 // CU23: Generar reporte personalizado por voz con IA (Paquete 6: Reportes y Analítica)
