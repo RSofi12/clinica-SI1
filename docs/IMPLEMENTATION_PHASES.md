@@ -11,8 +11,8 @@
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
 | **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 13 | 0 | 🟢 **100% Completado** (Meta superada anticipadamente) |
-| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 0 | 13 (+1) | ⚪ Planificado (Meta: Domingo 08/11/2026) |
-| **TOTAL GENERAL** | **26 (+1)** | **13** | **13 (+1)** | **Progreso Global: 50.0% (13 de 26 CUs)** |
+| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 6 | 7 (+1) | 🟡 **En Progreso Avanzado** (Meta: Domingo 08/11/2026) |
+| **TOTAL GENERAL** | **26 (+1)** | **19** | **7 (+1)** | **Progreso Global: 73.1% (19 de 26 CUs)** |
 
 ---
 
@@ -327,23 +327,25 @@ pm run build exitoso).
 - [x] **Frontend:** Servicio `antecedenteService.js`, modal de formulario `AntecedenteFormModal.jsx` con chips rápidos y 5 categorías, gestor integral `AntecedentesPatientModal.jsx` con filtrado por pestañas y baja lógica RN11, e integración reactiva con alertas alérgicas en `ConsultaRegistroModal.jsx`, `ConsultasManager.jsx` y `PatientsManager.jsx`.
 - [x] **Fase de Pruebas:** Persistencia en ficha permanente del paciente, reactividad de advertencias de alergias en tiempo real, 10 casos de prueba documentados (`CN-CU17-01` a `CN-CU17-10`).
 
-#### ⏳ CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas (Extra)
+#### ✅ CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas (Extra)
 - [x] **Backend:**
   - [x] Modelos de dominio `Receta.php` y `RecetaDetalle.php` enriquecidos con constantes, scopes y relaciones Eloquent.
   - [x] Migración `2026_11_07_000001_add_motivo_anulacion_to_recetas_table.php` para auditoría de baja lógica (`motivo_anulacion`, `anulado_en`).
   - [x] FormRequests: `RecetaCreateRequest.php` (validación estricta de array no vacío de medicamentos, dosis, frecuencia y duración) y `RecetaAnularRequest.php` (motivo min:5).
   - [x] Servicio de dominio `RecetaService.php` con transacciones atómicas `DB::transaction()`, control Anti-IDOR para médicos asignados y auditoría inmutable en `Bitacora.php` (`EMITIR_RECETA`, `ANULAR_RECETA`).
   - [x] Controlador REST `RecetasController.php` y 5 rutas en `routes/api.php` bajo prefijo `medical-records` con control RBAC.
-- [ ] **Frontend:**
-  - [ ] Servicio API `recetaService.js`.
-  - [ ] Modal reactivo de prescripción médica `RecetaPrescripcionModal.jsx` con renglones posológicos dinámicos y alerta de alergias de CU17.
-  - [ ] Visor oficial membretado `RecetaDetailModal.jsx` para impresión (`@media print`) y descarga.
-  - [ ] Gestor integral de prescripciones `RecetasManager.jsx` con tarjetas KPI y filtros.
-- [ ] **Fase de Pruebas:**
-  - [ ] **P18.1:** Emisión de receta con 2 o más medicamentos vinculados a la consulta médica.
-  - [ ] **P18.2:** Rechazo de prescripción sin renglones posológicos (HTTP 422).
-  - [ ] **P18.3:** Bloqueo Anti-IDOR: médico no asignado a la consulta no puede recetar (HTTP 403).
-  - [ ] **P18.4:** Anulación lógica inmutable con motivo justificado (RN11).
+- [x] **Frontend:**
+  - [x] Servicio API `recetaService.js` (`fetchRecetas`, `fetchRecetaById`, `fetchRecetasByConsulta`, `emitirReceta`, `anularReceta`).
+  - [x] Modal reactivo de prescripción médica `RecetaPrescripcionModal.jsx` con renglones posológicos dinámicos, atajos rápidos de dosis/frecuencia/duración y alerta prominente de alergias de CU17.
+  - [x] Visor oficial membretado `RecetaDetailModal.jsx` con formato institucional, RP (℞), datos del facultativo, CSS `@media print` para impresión directa y marca de agua en anuladas.
+  - [x] Modal `RecetaAnularModal.jsx` para baja lógica permanente con motivo justificado (RN11).
+  - [x] Gestor integral de prescripciones `RecetasManager.jsx` con 3 tarjetas KPI, buscador en vivo, filtros por estado y fecha, paginación e integración en `Sidebar.jsx` y `App.jsx`.
+- [x] **Fase de Pruebas:**
+  - [x] **P18.1:** Emisión de receta con 2 o más medicamentos vinculados a la consulta médica.
+  - [x] **P18.2:** Rechazo de prescripción sin renglones posológicos (HTTP 422).
+  - [x] **P18.3:** Bloqueo Anti-IDOR: médico no asignado a la consulta no puede recetar (HTTP 403).
+  - [x] **P18.4:** Anulación lógica inmutable con motivo justificado (RN11).
+  - [x] **P18.5:** Compilación limpia en Vite (`npm run build` en 22.45s, 0 errores).
 
 #### ⏳ CU19: Consultar Expediente Médico y Antecedentes (3.4)
 - [ ] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes.

@@ -17,6 +17,7 @@
   Clock,
   Mic,
   ClipboardList,
+  Pill,
 } from 'lucide-react';
 import logoColor from '../assets/logo-color.svg';
 
@@ -107,6 +108,27 @@ export function Sidebar({
           tag: role === 'MEDICO' ? 'CU14 / CU15' : role === 'PACIENTE' ? 'CU09 / CU10' : 'CU09, CU10 / RF06, RF07',
           icon: role === 'MEDICO' ? Stethoscope : Calendar,
           requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO', 'PACIENTE'],
+        },
+      ],
+    },
+        {
+      group: 'Historial Clínico y Consultas (P4)',
+      items: [
+        {
+          id: 'consultas',
+          label: 'Consultas Médicas y Triaje',
+          subtitle: 'Atención clínica y diagnósticos',
+          tag: 'CU16 / Extra',
+          icon: ClipboardList,
+          requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE'],
+        },
+        {
+          id: 'recetas',
+          label: 'Prescripciones y Recetas',
+          subtitle: 'Recetario digital y posología',
+          tag: 'CU18 / Extra',
+          icon: Pill,
+          requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'],
         },
       ],
     },

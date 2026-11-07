@@ -350,7 +350,7 @@
 
 ---
 
-### 23. Implementación de Backend para CU18 (Prescripción Médica y Recetas Digitales) (07/11/2026)
+### 23. Implementación Full-Stack de CU18 (Prescripción Médica y Recetas Digitales) (07/11/2026)
 - **Backend (`backend/app/Packages/MedicalRecords/`):**
   - ✅ **Modelos de Dominio (`Receta.php` y `RecetaDetalle.php`):** Constantes de estado (`ACTIVO`, `ANULADO`), scopes de consulta (`activas`, `delMedico`) y relaciones directas con `HistoriaClinica`, `ConsultaMedica`, `Medico` y `RecetaDetalle`.
   - ✅ **Migración:** `2026_11_07_000001_add_motivo_anulacion_to_recetas_table.php` incorporando `motivo_anulacion` (`varchar(500)`) y `anulado_en` (`timestamptz`).
@@ -359,3 +359,10 @@
   - ✅ **Controlador REST (`RecetasController.php`):** Endpoints `index`, `show`, `byConsulta`, `store` y `anular`.
   - ✅ **Rutas API (`routes/api.php`):** 5 rutas protegidas bajo middleware `EnsureUserRole` en `/api/medical-records/recetas`.
   - ✅ **Verificación:** Sintaxis PHP 100% libre de errores verificada con `php -l`.
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio API (`recetaService.js`):** Métodos `fetchRecetas`, `fetchRecetaById`, `fetchRecetasByConsulta`, `emitirReceta` y `anularReceta`.
+  - ✅ **Modal de Prescripción (`RecetaPrescripcionModal.jsx`):** Diseñado con `/frontend-design`, agregador dinámico de medicamentos, atajos de dosis/frecuencia/duración, y banner prominente de advertencia para antecedentes alérgicos (CU17).
+  - ✅ **Modal Membretado Oficial (`RecetaDetailModal.jsx`):** Recetario institucional con formato oficial, RP (℞), datos del facultativo, soporte para impresión directa (`@media print`), exportación y marca de agua en recetas anuladas.
+  - ✅ **Modal de Anulación (`RecetaAnularModal.jsx`):** Baja lógica permanente con motivo obligatorio mínimo de 5 caracteres (RN11).
+  - ✅ **Gestor Integral (`RecetasManager.jsx`):** 3 tarjetas de KPIs, buscador en tiempo real, filtros por estado y fecha, paginación e integración en `Sidebar.jsx` (grupo P4) y `App.jsx`.
+  - ✅ **Compilación:** Verificada con `npm run build` (0 errores en 22.45s).

@@ -179,19 +179,25 @@
   - Verificación: Compilación de producción con `npm run build` exitosa (0 errores).
   - Pruebas: Casos `CN-CU17-01` a `CN-CU17-10` documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md`.
 
-### 12. CU18: Gestionar Expediente Clínico Digital — Prescripción y Recetas Médicas — Backend Operativo (07/Noviembre/2026)
+### 12. CU18: Gestionar Expediente Clínico Digital — Prescripción y Recetas Médicas — 100% Full-Stack Operativo (07/Noviembre/2026)
 - **Backend:**
   - Modelos Eloquent: `Receta.php` y `RecetaDetalle.php` enriquecidos con constantes (`ESTADO_ACTIVO`, `ESTADO_ANULADO`), scopes (`scopeActivas`, `scopeDelMedico`) y relaciones completas.
   - Migración: `2026_11_07_000001_add_motivo_anulacion_to_recetas_table.php` (`motivo_anulacion`, `anulado_en`).
   - Requests: `RecetaCreateRequest.php` (validación estricta de renglones posológicos no vacíos) y `RecetaAnularRequest.php` (`motivo_anulacion` min:5).
   - Servicio: `RecetaService.php` con transacción atómica `DB::transaction()`, control Anti-IDOR para facultativos médicos, filtros inteligentes con KPIs y auditoría inmutable en `Bitacora.php` (`EMITIR_RECETA`, `ANULAR_RECETA`).
   - Controlador: `RecetasController.php` (`index`, `show`, `byConsulta`, `store`, `anular`).
-  - Rutas protegidas en `backend/routes/api.php`:
-    - `GET /api/medical-records/recetas`
-    - `GET /api/medical-records/recetas/{id}`
-    - `GET /api/medical-records/consultas/{idConsulta}/recetas`
-    - `POST /api/medical-records/recetas`
-    - `PATCH /api/medical-records/recetas/{id}/anular`
+  - Rutas protegidas en `backend/routes/api.php` con middleware `role`.
   - Verificación: Sintaxis PHP 100% limpia comprobada con `php -l` (0 errores).
+- **Frontend:**
+  - Servicio API: `recetaService.js` (`fetchRecetas`, `fetchRecetaById`, `fetchRecetasByConsulta`, `emitirReceta`, `anularReceta`).
+  - Modales:
+    - `RecetaPrescripcionModal.jsx`: Creador interactivo de prescripciones con renglones posológicos dinámicos, atajos rápidos de dosis/frecuencia/duración y advertencia destacada de antecedentes alérgicos (CU17).
+    - `RecetaDetailModal.jsx`: Recetario institucional membretado con formato oficial, RP (℞), datos del facultativo, `@media print` para impresión y marca de agua en anuladas.
+    - `RecetaAnularModal.jsx`: Diálogo de confirmación para baja lógica inmutable con motivo obligatorio (RN11).
+  - Vistas y Navegación:
+    - `RecetasManager.jsx`: Panel gestor con 3 tarjetas KPI (`Total`, `Activas`, `Anuladas`), buscador en vivo y filtros por estado/fecha.
+    - `Sidebar.jsx`: Agrupador "Historial Clínico y Consultas (P4)" con accesos a `Consultas` y `Recetas`.
+    - `App.jsx`: Pestaña `recetas` y tarjeta de acceso rápido en el dashboard.
+  - Verificación: Compilación de producción con Vite (`npm run build` en 22.45s, 0 errores).
 - **Próximo Paso Inmediato:**
-  - Implementar el Frontend de CU18 (`recetaService.js`, `RecetaPrescripcionModal.jsx`, `RecetaDetailModal.jsx` y `RecetasManager.jsx`).
+  - Proceder con **CU22: Generar Reportes con Filtros Dinámicos (RF13)** para completar el último Requerimiento Funcional obligatorio del examen oficial.

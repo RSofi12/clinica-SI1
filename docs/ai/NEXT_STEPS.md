@@ -80,9 +80,8 @@
 2. [x] **CU13:** Registrar Asistencia y Cambio de Estado de Cita Médica (RF10) — Programada → Confirmada (Check-in) → Atendida / Inasistencia con máquina de estados, modal reactivo y trazabilidad cronológica (Completado al 100% — 06/11/2026).
 3. [x] **CU16:** Registrar Consulta Médica y Triaje Clínico (Extra) — Formulario de atención, signos vitales, cálculo de IMC, diagnósticos CIE-10 y transición a ATENDIDA (Completado al 100% — 06/11/2026).
 4. [x] **CU17:** Gestionar Antecedentes Médicos (Extra / §3.4) — 5 categorías oficiales, modal con chips rápidos, gestor integral con filtros y baja lógica RN11, e integración reactiva con alertas alérgicas en consultas médicas (Completado al 100% — 07/11/2026).
-5. [ ] **CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas** (En curso):
-   - [x] **Backend (100%):** Modelos `Receta.php` y `RecetaDetalle.php`, migración de anulación lógica, FormRequests con validación posológica, servicio transaccional `RecetaService.php` con Anti-IDOR y auditoría `Bitacora.php`, `RecetasController.php` y rutas API en `api.php`.
-   - [ ] **Frontend:** Servicio `recetaService.js`, modal dinámico de prescripción `RecetaPrescripcionModal.jsx`, vista membretada imprimible `RecetaDetailModal.jsx` y gestor `RecetasManager.jsx`.
-6. [ ] **CU19, CU25, CU26:** Consulta de Expediente Digital, Órdenes de Exámenes Auxiliares y Documentos Adjuntos.
-7. [ ] **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
-8. [ ] **CU22 - CU24:** Reportes Gerenciales con Filtros Dinámicos (RF13), Dictado por Voz con IA y Dashboard Ejecutivo de KPIs.
+5. [x] **CU18:** Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas (Extra) — Full-Stack 100% operativo con prescripción estructurada, alertas de alergias (CU17), vista membretada imprimible (@media print), anulación lógica RN11 y gestor con KPIs (Completado al 100% — 07/11/2026).
+6. [ ] **CU22:** Generar Reportes con Filtros Dinámicos (RF13 — Requisito Obligatorio del Examen Oficial) con los 7 reportes gerenciales, filtros y exportación CSV/PDF.
+7. [ ] **CU19, CU25, CU26:** Consulta de Expediente Digital, Órdenes de Exámenes Auxiliares y Documentos Adjuntos.
+8. [ ] **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
+9. [ ] **CU24:** Dashboard Ejecutivo de KPIs Clínicos y Financieros.
