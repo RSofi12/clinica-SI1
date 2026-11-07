@@ -120,16 +120,16 @@ export function ActivatePatientModal({ isOpen, onClose, onActivated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/80 w-full max-w-lg my-8 overflow-hidden transition-all animate-in fade-in zoom-in-95">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto animate-modal-backdrop">
+      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 w-full max-w-lg my-8 overflow-hidden transition-all animate-modal-panel">
         {/* Cabecera del Modal */}
         <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-[#00687a]/10 text-[#00687a]">
+            <div className="p-2.5 rounded-xl bg-[#00687a]/10 text-[#00687a]">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-lg">
+              <h3 className="font-serif-clinical font-normal text-2xl text-[#003844] tracking-tight">
                 Activar Acceso de Paciente
               </h3>
               <p className="text-xs text-slate-500">

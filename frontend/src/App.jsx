@@ -119,7 +119,7 @@ export default function App() {
 
   if (currentView === 'home' && !isAuthenticated) {
     return (
-      <>
+      <div key="home-view" className="animate-view-fade">
         <HomePage
           onNavigateLogin={() => navigateTo('login')}
           onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
@@ -132,13 +132,13 @@ export default function App() {
             navigateTo('login');
           }}
         />
-      </>
+      </div>
     );
   }
 
   if (currentView === 'login' && !isAuthenticated) {
     return (
-      <>
+      <div key="login-view" className="animate-view-fade">
         <LoginPage
           onNavigateHome={() => navigateTo('home')}
           onLoginSuccess={() => navigateTo('dashboard')}
@@ -150,15 +150,17 @@ export default function App() {
           onClose={() => setIsActivatePatientOpen(false)}
           onActivated={() => setIsActivatePatientOpen(false)}
         />
-      </>
+      </div>
     );
   }
 
   if (currentView === 'forgot-password' && !isAuthenticated) {
     return (
-      <ForgotPasswordPage
-        onNavigateLogin={() => navigateTo('login')}
-      />
+      <div key="forgot-view" className="animate-view-fade">
+        <ForgotPasswordPage
+          onNavigateLogin={() => navigateTo('login')}
+        />
+      </div>
     );
   }
 
@@ -197,7 +199,7 @@ export default function App() {
 
   // Vista de Dashboard Clínico con Barra Lateral Fija y Contenido con Scroll Independiente a la Derecha
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800 font-sans">
+    <div key="dashboard-view" className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800 font-sans animate-view-fade">
       {/* 1. Barra Lateral a la Izquierda (Sidebar fija con su propio scroll) */}
       <Sidebar
         activeTab={dashboardTab}

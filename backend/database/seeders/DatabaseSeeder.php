@@ -194,5 +194,8 @@ class DatabaseSeeder extends Seeder
 
         // 10. Poblar horarios de atención médica (CU08) y citas demostrativas (CU09-CU15)
         $this->call(ScheduleAndAppointmentSeeder::class);
+
+        // 11. Poblar catálogo extendido integral (16 permisos, 3 recepcionistas, 12 especialidades, 16 médicos, 40 pacientes, historias y consultas)
+        $this->call(ComprehensivePopulationSeeder::class);
     }
 }

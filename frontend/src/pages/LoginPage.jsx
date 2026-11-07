@@ -89,9 +89,9 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
             </div>
 
             <div className="text-left">
-              <h1 className="font-montserrat font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+              <h1 className="font-serif-clinical font-normal text-3xl sm:text-4xl text-white tracking-normal leading-tight">
                 Centro Médico <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-[#70cbff]">
+                <span className="text-[#70cbff] italic font-light">
                   La Cruz
                 </span>
               </h1>
@@ -180,7 +180,7 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
             </div>
 
             <div className="mb-5">
-              <h2 className="font-montserrat font-bold text-xl text-slate-900 tracking-tight">
+              <h2 className="font-serif-clinical font-normal text-2xl sm:text-3xl text-[#003844] tracking-tight">
                 Iniciar Sesión
               </h2>
               <p className="text-xs text-slate-500 mt-1">

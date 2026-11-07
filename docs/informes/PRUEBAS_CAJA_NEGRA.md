@@ -121,3 +121,19 @@ Bajo la metodología PUDS, la verificación y validación de los **Casos de Uso*
 | **CN-CU19-06** | Consulta de expediente de paciente inexistente | Partición Inválida | Médico / Admin | `idPaciente`: 99999 (ID no registrado en base de datos) | Error HTTP 404: *"No se encontró el paciente solicitado"*. | `404 Not Found` |
 | **CN-CU19-07** | Consulta de Línea de Tiempo Cronológica (`timeline`) | Integridad de Datos / Consulta | Médico / Paciente | `GET /api/medical-records/expediente/paciente/1/timeline` | Arreglo unificado cronológico descendente que entrelaza consultas presenciales, recetas emitidas y antecedentes registrados con iconos y metadatos específicos. | `200 OK` |
 | **CN-CU19-08** | Solicitud sin autenticación / token inválido (RF01 / Prueba #9) | Seguridad | Anónimo | Solicitud sin sesión activa ni Bearer token | Rechazo HTTP 401: *"No autenticado"*. | `401 Unauthorized` |
+
+
+---
+
+## 8. Casos de Prueba de Caja Negra: CU23 — Generar Reportes Personalizados por Voz con IA (Extra)
+
+| ID | Caso de Prueba | Técnica | Actor | Datos de Entrada (Payload / Parámetros) | Resultado Esperado | HTTP |
+| :--- | :--- | :--- | :--- | :--- | :--- | :---: |
+| **CN-CU23-01** | Procesamiento exitoso de instrucción por voz en lenguaje natural *(Camino Feliz)* | Partición Válida | Administrador / Médico | `POST /api/analytics/voice-report` con `comando_texto: "Mostrar citas atendidas de esta semana"` | El parser semántico (`VoiceCommandParserService`) extrae filtros `{estado: "ATENDIDA", periodo: "semana_actual"}`, ejecuta la agregación en BD, retorna métricas y lista de citas, y persiste el reporte en `reportes_ia` con auditoría en `bitacora`. | `200 OK` |
+| **CN-CU23-02** | Scoping RBAC / Anti-IDOR para rol Médico en consultas por voz | Seguridad / Anti-IDOR | Médico | Médico autenticado dictando: *"Cuántos pacientes atendí hoy?"* | El servicio inyecta de forma forzosa e inalterable el `id_medico` del facultativo en sesión; el reporte devuelve únicamente las citas del propio médico sin filtrar datos de colegas. | `200 OK` |
+| **CN-CU23-03** | Rechazo por instrucción de voz vacía o menor a 2 caracteres (Validación FormRequest) | Valor Límite | Médico / Admin | `comando_texto: "a"` (1 caracter, mínimo requerido: 2) | Rechazo por validación FormRequest HTTP 422: *"El comando debe tener al menos 2 caracteres"*. | `422 Unprocessable` |
+| **CN-CU23-04** | Rechazo por instrucción de voz que supera longitud máxima (500 caracteres) | Valor Límite | Médico / Admin | `comando_texto`: cadena de texto de 501 caracteres | Validación rechazada: *"El comando no puede exceder los 500 caracteres"*. | `422 Unprocessable` |
+| **CN-CU23-05** | Consulta de historial de reportes solicitados por voz | Integridad de Datos / Consulta | Médico / Admin | `GET /api/analytics/voice-history` con sesión activa | Retorno del listado cronológico de reportes generados previamente por el usuario operador con sus filtros JSON y tipo de reporte asociado. | `200 OK` |
+| **CN-CU23-06** | Consulta de estadísticas globales del asistente IA (Exclusivo Administrador) | Seguridad / RBAC | Administrador | `GET /api/analytics/voice-stats` autenticado como Administrador | Retorno de métricas consolidadas: total de reportes generados, solicitudes de hoy y desglose de tipos de consulta más frecuentes. | `200 OK` |
+| **CN-CU23-07** | Bloqueo de Rol: Paciente o Recepcionista intentando procesar comandos por voz | Seguridad / RBAC | Paciente / Recepcionista | Token de Paciente o Recepcionista enviando `POST /api/analytics/voice-report` | Rechazo categórico por middleware de rol: *"No autorizado"*. La analítica por voz está reservada a personal médico y directivo. | `403 Forbidden` |
+| **CN-CU23-08** | Solicitud sin autenticación / token inválido (RF01 / Prueba #9) | Seguridad | Anónimo | Solicitud sin credenciales ni sesión activa | Rechazo HTTP 401: *"No autenticado"*. | `401 Unauthorized` |

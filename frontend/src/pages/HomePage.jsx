@@ -20,6 +20,7 @@ import {
   HeartPulse,
 } from 'lucide-react';
 import logoColorSvg from '../assets/logo-color.svg';
+import logoFullWhiteSvg from '../assets/logo-full-white.svg';
 import doctorsImg from '../assets/doctors-clinica.jpg';
 import pediatriaImg from '../assets/clinica-pediatria.png';
 import geriatricImg from '../assets/doctor-geriatric.jpg';
@@ -28,9 +29,10 @@ import sesionesImg from '../assets/sesiones-clinicas.jpg';
 export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
   const [selectedRoleTab, setSelectedRoleTab] = useState('medicos'); // 'medicos' | 'recepcion' | 'admin'
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white text-[#1a3a3f] flex flex-col font-montserrat selection:bg-[#70cbff] selection:text-[#01171d]">
+    <div className="min-h-screen bg-white text-[#1a3a3f] flex flex-col font-sans-clinical selection:bg-[#70cbff] selection:text-[#01171d]">
       {/* ─────────────────────────────────────────────────────────────
           1. TOP BAR INSTITUCIONAL (Atención 24/7 & Emergencias)
       ───────────────────────────────────────────────────────────── */}
@@ -86,10 +88,10 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
               />
             </div>
             <div>
-              <div className="font-montserrat font-bold text-lg sm:text-xl text-[#004d5a] tracking-tight leading-none group-hover:text-[#00687a] transition-colors">
+              <div className="font-serif-clinical font-semibold text-xl sm:text-2xl text-[#003844] tracking-normal leading-none group-hover:text-[#00687a] transition-colors">
                 Centro Médico La Cruz
               </div>
-              <div className="text-[10px] sm:text-[11px] text-[#008b9e] tracking-wider uppercase font-semibold mt-1">
+              <div className="text-[10px] sm:text-[11px] text-[#00687a] tracking-wider uppercase font-semibold mt-1">
                 Clínica de Atención Primaria
               </div>
             </div>
@@ -201,17 +203,14 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
             
             {/* Columna Izquierda: Copywriting y Llamados a la Acción */}
             <div className="lg:col-span-6 flex flex-col items-start z-10 animate-fade-up">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e8f7f9] border border-[#70cbff]/40 text-xs font-semibold text-[#00687a] mb-5 shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-[#00687a] animate-ping"></span>
-                Atención Médica Integral & Portal Clínico
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#e8f7f9] border border-[#b2e3ea] text-xs font-medium text-[#00687a] mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00687a]"></span>
+                Atención Primaria & Especialidades Clínicas
               </div>
 
-              <h1 className="font-montserrat font-bold text-3xl sm:text-5xl xl:text-[54px] text-[#003844] leading-[1.12] tracking-tight mb-5">
-                Cuidamos de ti, <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00687a] via-[#008b9e] to-[#70cbff]">
-                  gestionamos tu salud
-                </span>{' '}
-                con excelencia.
+              <h1 className="font-serif-clinical text-3xl sm:text-5xl xl:text-[54px] text-[#003844] leading-[1.14] tracking-tight mb-5 font-normal">
+                Cuidamos de ti con <br />
+                <span className="italic font-light text-[#004d5a]">excelencia médica</span> y vocación humana.
               </h1>
 
               <p className="text-[#3b5a60] text-sm sm:text-base leading-relaxed mb-8 max-w-xl">
@@ -222,27 +221,28 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
 
               {/* Botones de acción con hover fluido */}
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
-                <a
-                  href="#portal-pacientes"
-                  className="flex items-center gap-2.5 bg-[#00687a] hover:bg-[#004d5a] text-white font-semibold text-sm px-6 py-3.5 rounded-xl transition-all duration-200 shadow-md shadow-[#00687a]/25 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                <button
+                  type="button"
+                  onClick={() => setIsAppointmentModalOpen(true)}
+                  className="flex items-center gap-2.5 bg-[#00687a] hover:bg-[#004d5a] text-white font-medium text-sm px-6 py-3.5 rounded-xl transition-all duration-200 shadow-sm shadow-[#00687a]/25 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                 >
                   <Calendar className="w-4 h-4 text-[#70cbff]" />
                   <span>Pedir Cita Online</span>
-                </a>
+                </button>
 
                 <button
                   onClick={onNavigateLogin}
-                  className="flex items-center gap-2 bg-[#e8f7f9] hover:bg-[#d5f1f5] text-[#00687a] font-semibold text-sm px-5 py-3.5 rounded-xl transition-all duration-200 border border-[#70cbff]/40 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                  className="flex items-center gap-2 bg-[#e8f7f9] hover:bg-[#d5f1f5] text-[#00687a] font-medium text-sm px-5 py-3.5 rounded-xl transition-all duration-200 border border-[#b2e3ea] hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                 >
                   <UserCheck className="w-4 h-4 text-[#00687a]" />
                   <span>Portal del Personal</span>
                 </button>
               </div>
 
-              {/* Métricas destacadas con transiciones */}
+              {/* Métricas destacadas con tipografía editorial */}
               <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 w-full max-w-lg">
                 <div className="group">
-                  <div className="font-montserrat font-bold text-2xl sm:text-3xl text-[#00687a] transition-transform duration-200 group-hover:scale-105 origin-left">
+                  <div className="font-serif-clinical font-normal text-2xl sm:text-3xl text-[#00687a] transition-transform duration-200 group-hover:scale-105 origin-left">
                     +15
                   </div>
                   <div className="text-xs text-slate-500 font-medium mt-0.5">
@@ -250,7 +250,7 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
                   </div>
                 </div>
                 <div className="group">
-                  <div className="font-montserrat font-bold text-2xl sm:text-3xl text-[#00687a] transition-transform duration-200 group-hover:scale-105 origin-left">
+                  <div className="font-serif-clinical font-normal text-2xl sm:text-3xl text-[#00687a] transition-transform duration-200 group-hover:scale-105 origin-left">
                     +35
                   </div>
                   <div className="text-xs text-slate-500 font-medium mt-0.5">
@@ -258,7 +258,7 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
                   </div>
                 </div>
                 <div className="group">
-                  <div className="font-montserrat font-bold text-2xl sm:text-3xl text-[#00687a] transition-transform duration-200 group-hover:scale-105 origin-left">
+                  <div className="font-serif-clinical font-normal text-2xl sm:text-3xl text-[#00687a] transition-transform duration-200 group-hover:scale-105 origin-left">
                     24/7
                   </div>
                   <div className="text-xs text-slate-500 font-medium mt-0.5">
@@ -268,12 +268,12 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
               </div>
             </div>
 
-            {/* Columna Derecha: Composición de Imágenes con Efectos Sutiles */}
+            {/* Columna Derecha: Composición Limpia de Imágenes */}
             <div className="lg:col-span-6 relative">
               <div className="grid grid-cols-2 gap-3 sm:gap-4 items-center">
                 
-                {/* Imagen 1: Equipo Médico (destacada alta) */}
-                <div className="relative group overflow-hidden rounded-2xl sm:rounded-3xl shadow-lg border border-slate-100 bg-white">
+                {/* Imagen 1: Equipo Médico (destacada) */}
+                <div className="relative group overflow-hidden rounded-2xl shadow-md border border-slate-100 bg-white">
                   <div className="absolute inset-0 bg-gradient-to-t from-[#003844]/75 via-transparent to-transparent z-10 opacity-70 group-hover:opacity-40 transition-opacity duration-300"></div>
                   <img
                     src={doctorsImg}
@@ -314,14 +314,20 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
                 </div>
               </div>
 
-              {/* Badge flotante de acreditación médica con micro-animación */}
-              <div className="absolute -bottom-4 -left-3 sm:bottom-4 sm:left-4 z-20 bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-4 shadow-xl border border-[#70cbff]/40 flex items-center gap-3 animate-float-soft">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00687a] to-[#008b9e] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Shield className="w-5 h-5 text-[#70cbff]" />
+              {/* Tira estructural de acreditación médica (sin tapar las fotos) */}
+              <div className="mt-4 bg-[#f8fdfe] rounded-xl p-3.5 border border-[#b2e3ea] flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-[#00687a] text-white flex items-center justify-center shrink-0">
+                    <Shield className="w-5 h-5 text-[#70cbff]" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-semibold text-[#003844]">Atención Primaria Acreditada</div>
+                    <div className="text-[11px] text-slate-500">Médicos colegiados & protocolos de bioseguridad</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-xs font-bold text-[#003844]">Atención Primaria de Calidad</div>
-                  <div className="text-[11px] text-slate-500">Acreditación Médica Verificada</div>
+                <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#00687a] font-medium shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  Guardia 24/7 Activa
                 </div>
               </div>
             </div>
@@ -336,58 +342,56 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
       <section id="portal-pacientes" className="bg-[#f3fafb] py-12 sm:py-16 border-y border-[#d8f0f3]">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <h2 className="font-montserrat font-bold text-xl sm:text-3xl text-[#004d5a]">
+            <h2 className="font-serif-clinical text-2xl sm:text-3xl text-[#003844] font-normal">
               Servicios Rápidos para Pacientes
             </h2>
-            <p className="text-xs sm:text-sm text-[#3b5a60] mt-1.5">
+            <p className="text-xs sm:text-sm text-[#3b5a60] mt-1.5 font-sans-clinical">
               Sin filas y disponible las 24 horas desde cualquier dispositivo
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 max-w-4xl mx-auto">
             {/* Tarjeta 1: Agendar Cita */}
-            <div className="interactive-card bg-white rounded-2xl p-6 sm:p-8 border border-[#70cbff]/30 shadow-xs flex items-start gap-4 sm:gap-5 group cursor-pointer hover:border-[#00687a]/50">
+            <div 
+              onClick={() => setIsAppointmentModalOpen(true)}
+              className="interactive-card bg-white rounded-2xl p-6 sm:p-8 border border-[#70cbff]/30 shadow-xs flex items-start gap-4 sm:gap-5 group cursor-pointer hover:border-[#00687a]/50"
+            >
               <div className="w-14 h-14 rounded-2xl bg-[#e8f7f9] border border-[#70cbff]/40 text-[#00687a] flex items-center justify-center shrink-0 group-hover:bg-[#00687a] group-hover:text-white transition-colors duration-300 shadow-xs">
                 <Calendar className="w-7 h-7 transition-transform duration-300 group-hover:scale-110" />
               </div>
               <div className="flex-1">
-                <h3 className="font-montserrat font-bold text-base sm:text-lg text-[#003844] mb-1.5 group-hover:text-[#00687a] transition-colors">
+                <h3 className="font-serif-clinical font-semibold text-lg text-[#003844] mb-1.5 group-hover:text-[#00687a] transition-colors">
                   Agenda tu consulta
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 mb-4 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-500 mb-4 leading-relaxed font-sans-clinical">
                   Elige la especialidad, el médico de tu preferencia y la fecha más cómoda para tu atención.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => alert('Módulo de Citas Online: Próximamente disponible.')}
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#00687a] group-hover:text-[#004d5a] transition"
-                >
+                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#00687a] group-hover:text-[#004d5a] transition">
                   <span>Reservar turno ahora</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
+                </div>
               </div>
             </div>
 
             {/* Tarjeta 2: Revisar Resultados */}
-            <div className="interactive-card bg-white rounded-2xl p-6 sm:p-8 border border-[#70cbff]/30 shadow-xs flex items-start gap-4 sm:gap-5 group cursor-pointer hover:border-[#00687a]/50">
+            <div 
+              onClick={() => onOpenActivatePatient?.()}
+              className="interactive-card bg-white rounded-2xl p-6 sm:p-8 border border-[#70cbff]/30 shadow-xs flex items-start gap-4 sm:gap-5 group cursor-pointer hover:border-[#00687a]/50"
+            >
               <div className="w-14 h-14 rounded-2xl bg-[#e8f7f9] border border-[#70cbff]/40 text-[#00687a] flex items-center justify-center shrink-0 group-hover:bg-[#00687a] group-hover:text-white transition-colors duration-300 shadow-xs">
                 <FileText className="w-7 h-7 transition-transform duration-300 group-hover:scale-110" />
               </div>
               <div className="flex-1">
-                <h3 className="font-montserrat font-bold text-base sm:text-lg text-[#003844] mb-1.5 group-hover:text-[#00687a] transition-colors">
+                <h3 className="font-serif-clinical font-semibold text-lg text-[#003844] mb-1.5 group-hover:text-[#00687a] transition-colors">
                   Revisa tus resultados
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 mb-4 leading-relaxed">
-                  Descarga tus órdenes médicas, análisis de laboratorio e informes clínicos de forma segura.
+                <p className="text-xs sm:text-sm text-slate-500 mb-4 leading-relaxed font-sans-clinical">
+                  Accede a tu historial clínico o activa tu cuenta con tu Cédula de Identidad en un paso.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => alert('Módulo de Resultados: Próximamente disponible.')}
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#00687a] group-hover:text-[#004d5a] transition"
-                >
+                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#00687a] group-hover:text-[#004d5a] transition">
                   <span>Consultar con mi cédula</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
+                </div>
               </div>
             </div>
           </div>
@@ -427,16 +431,16 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
 
             {/* Roles interactivos con selección visual */}
             <div className="lg:col-span-7 order-1 lg:order-2">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e8f7f9] text-xs font-semibold text-[#00687a] mb-4">
-                <Users className="w-4 h-4 text-[#00687a]" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#e8f7f9] border border-[#b2e3ea] text-xs font-medium text-[#00687a] mb-4">
+                <Users className="w-3.5 h-3.5 text-[#00687a]" />
                 Flujos de Trabajo por Rol
               </div>
 
-              <h2 className="font-montserrat font-bold text-2xl sm:text-4xl text-[#003844] leading-tight mb-4">
+              <h2 className="font-serif-clinical text-2xl sm:text-4xl text-[#003844] font-normal leading-tight mb-4">
                 Diseñado para el flujo de trabajo real de una clínica.
               </h2>
 
-              <p className="text-sm text-[#3b5a60] leading-relaxed mb-6">
+              <p className="text-sm text-[#3b5a60] leading-relaxed mb-6 font-sans-clinical">
                 El sistema centraliza las operaciones del Centro Médico La Cruz permitiendo que cada
                 perfil acceda exactamente a las herramientas que necesita para una atención de calidad.
               </p>
@@ -446,17 +450,17 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
                 <button
                   type="button"
                   onClick={() => setSelectedRoleTab('medicos')}
-                  className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
+                  className={`p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer ${
                     selectedRoleTab === 'medicos'
                       ? 'border-[#00687a] bg-[#eefafb] shadow-xs'
                       : 'border-slate-200/80 bg-[#f8fdfe] hover:border-[#70cbff]'
                   }`}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-[#00687a] text-white flex items-center justify-center mb-2.5 shadow-xs">
+                  <div className="w-9 h-9 rounded-lg bg-[#00687a] text-white flex items-center justify-center mb-2.5 shadow-xs">
                     <Stethoscope className="w-4 h-4 text-[#70cbff]" />
                   </div>
-                  <h4 className="font-montserrat font-bold text-sm text-[#003844]">Médicos</h4>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <h4 className="font-serif-clinical font-semibold text-base text-[#003844]">Médicos</h4>
+                  <p className="text-xs text-slate-500 mt-1 font-sans-clinical">
                     Agenda diaria, consultas, recetas e historial clínico.
                   </p>
                 </button>
@@ -464,17 +468,17 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
                 <button
                   type="button"
                   onClick={() => setSelectedRoleTab('recepcion')}
-                  className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
+                  className={`p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer ${
                     selectedRoleTab === 'recepcion'
                       ? 'border-[#008b9e] bg-[#eefafb] shadow-xs'
                       : 'border-slate-200/80 bg-[#f8fdfe] hover:border-[#70cbff]'
                   }`}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-[#008b9e] text-white flex items-center justify-center mb-2.5 shadow-xs">
+                  <div className="w-9 h-9 rounded-lg bg-[#008b9e] text-white flex items-center justify-center mb-2.5 shadow-xs">
                     <Calendar className="w-4 h-4 text-cyan-200" />
                   </div>
-                  <h4 className="font-montserrat font-bold text-sm text-[#003844]">Recepción</h4>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <h4 className="font-serif-clinical font-semibold text-base text-[#003844]">Recepción</h4>
+                  <p className="text-xs text-slate-500 mt-1 font-sans-clinical">
                     Admisión de pacientes, asignación de salas y cobros.
                   </p>
                 </button>
@@ -482,17 +486,17 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
                 <button
                   type="button"
                   onClick={() => setSelectedRoleTab('admin')}
-                  className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer ${
+                  className={`p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer ${
                     selectedRoleTab === 'admin'
                       ? 'border-[#004d5a] bg-[#eefafb] shadow-xs'
                       : 'border-slate-200/80 bg-[#f8fdfe] hover:border-[#70cbff]'
                   }`}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-[#004d5a] text-white flex items-center justify-center mb-2.5 shadow-xs">
+                  <div className="w-9 h-9 rounded-lg bg-[#004d5a] text-white flex items-center justify-center mb-2.5 shadow-xs">
                     <Shield className="w-4 h-4 text-[#70cbff]" />
                   </div>
-                  <h4 className="font-montserrat font-bold text-sm text-[#003844]">Administración</h4>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <h4 className="font-serif-clinical font-semibold text-base text-[#003844]">Administración</h4>
+                  <p className="text-xs text-slate-500 mt-1 font-sans-clinical">
                     Control de usuarios, métricas de atención y especialidades.
                   </p>
                 </button>
@@ -502,7 +506,7 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
               <div className="flex items-center gap-4">
                 <button
                   onClick={onNavigateLogin}
-                  className="group inline-flex items-center gap-2 bg-[#00687a] hover:bg-[#004d5a] text-white text-xs sm:text-sm font-semibold px-6 py-3.5 rounded-xl transition-all duration-200 shadow-md shadow-[#00687a]/20 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                  className="group inline-flex items-center gap-2 bg-[#00687a] hover:bg-[#004d5a] text-white text-xs sm:text-sm font-medium px-6 py-3.5 rounded-xl transition-all duration-200 shadow-sm shadow-[#00687a]/20 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                 >
                   <LogIn className="w-4 h-4 text-[#70cbff] group-hover:translate-x-0.5 transition-transform" />
                   <span>Ingresar al panel de gestión</span>
@@ -520,14 +524,14 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
       <section id="especialidades" className="py-12 sm:py-16 bg-[#f9fcfd] border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00687a]/10 text-xs font-semibold text-[#00687a] mb-2.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#00687a]/10 text-xs font-medium text-[#00687a] mb-2.5">
               <HeartPulse className="w-3.5 h-3.5 text-[#00687a]" />
               Servicios Clínicos
             </div>
-            <h2 className="font-montserrat font-bold text-2xl sm:text-3xl text-[#003844]">
+            <h2 className="font-serif-clinical text-2xl sm:text-3xl text-[#003844] font-normal">
               Especialidades Médicas
             </h2>
-            <p className="text-xs sm:text-sm text-[#3b5a60] mt-1.5">
+            <p className="text-xs sm:text-sm text-[#3b5a60] mt-1.5 font-sans-clinical">
               Atención médica de primer nivel con especialistas certificados
             </p>
           </div>
@@ -545,12 +549,12 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
               return (
                 <div
                   key={idx}
-                  className="interactive-card bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/70 shadow-2xs hover:border-[#00687a]/40 text-center flex flex-col items-center group cursor-pointer"
+                  className="interactive-card bg-white p-4 sm:p-5 rounded-xl border border-slate-200/70 shadow-2xs hover:border-[#00687a]/40 text-center flex flex-col items-center group cursor-pointer"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-[#e8f7f9] text-[#00687a] flex items-center justify-center mb-3 group-hover:bg-[#00687a] group-hover:text-white transition-colors duration-300">
+                  <div className="w-12 h-12 rounded-lg bg-[#e8f7f9] text-[#00687a] flex items-center justify-center mb-3 group-hover:bg-[#00687a] group-hover:text-white transition-colors duration-300">
                     <IconComp className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                   </div>
-                  <h4 className="font-montserrat font-bold text-xs sm:text-sm text-[#003844] mb-0.5 leading-tight">
+                  <h4 className="font-serif-clinical font-semibold text-sm text-[#003844] mb-0.5 leading-tight">
                     {esp.name}
                   </h4>
                   <span className="text-[11px] text-slate-400 font-medium">
@@ -599,23 +603,23 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
           <div>
             <div className="flex items-center gap-2.5 mb-3">
               <div className="w-8 h-8 rounded-lg bg-white/10 p-1 flex items-center justify-center">
-                <img src={logoColorSvg} alt="Logo" className="w-full h-full object-contain" />
+                <img src={logoFullWhiteSvg} alt="Centro Médico La Cruz" className="w-full h-full object-contain" />
               </div>
-              <span className="font-montserrat font-bold text-sm text-white">
+              <span className="font-serif-clinical font-semibold text-base text-white tracking-wide">
                 Centro Médico La Cruz
               </span>
             </div>
-            <p className="text-slate-400 leading-relaxed text-[11px]">
+            <p className="text-slate-400 leading-relaxed text-[11px] font-sans-clinical">
               Clínica de Atención Primaria dedicada al cuidado integral del paciente y la gestión médica
               eficiente.
             </p>
           </div>
 
           <div>
-            <h4 className="font-montserrat font-semibold text-white text-xs uppercase tracking-wider mb-3">
+            <h4 className="font-serif-clinical font-semibold text-white text-sm tracking-wide mb-3">
               Especialidades
             </h4>
-            <ul className="space-y-2 text-slate-400 text-[11px]">
+            <ul className="space-y-2 text-slate-400 text-[11px] font-sans-clinical">
               <li>Medicina General & Familiar</li>
               <li>Pediatría & Puericultura</li>
               <li>Cardiología Preventiva</li>
@@ -625,19 +629,25 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
           </div>
 
           <div>
-            <h4 className="font-montserrat font-semibold text-white text-xs uppercase tracking-wider mb-3">
+            <h4 className="font-serif-clinical font-semibold text-white text-sm tracking-wide mb-3">
               Servicios Web
             </h4>
-            <ul className="space-y-2 text-slate-400 text-[11px]">
+            <ul className="space-y-2 text-slate-400 text-[11px] font-sans-clinical">
               <li>
-                <a href="#portal-pacientes" className="hover:text-[#70cbff] transition-colors">
+                <button 
+                  onClick={() => setIsAppointmentModalOpen(true)}
+                  className="hover:text-[#70cbff] transition-colors text-left cursor-pointer"
+                >
                   Agendamiento de Citas
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#portal-pacientes" className="hover:text-[#70cbff] transition-colors">
+                <button 
+                  onClick={() => onOpenActivatePatient?.()}
+                  className="hover:text-[#70cbff] transition-colors text-left cursor-pointer"
+                >
                   Consulta de Resultados
-                </a>
+                </button>
               </li>
               <li>
                 <button onClick={onNavigateLogin} className="hover:text-[#70cbff] transition-colors text-left cursor-pointer">
@@ -648,10 +658,10 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
           </div>
 
           <div>
-            <h4 className="font-montserrat font-semibold text-white text-xs uppercase tracking-wider mb-3">
+            <h4 className="font-serif-clinical font-semibold text-white text-sm tracking-wide mb-3">
               Ubicación & Contacto
             </h4>
-            <div className="space-y-2 text-slate-400 text-[11px]">
+            <div className="space-y-2 text-slate-400 text-[11px] font-sans-clinical">
               <p>Av. San Martín #450, Equipetrol</p>
               <p>Santa Cruz de la Sierra, Bolivia</p>
               <p className="text-[#70cbff] font-semibold">+591 (3) 336-2211</p>
@@ -660,7 +670,7 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+        <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-sans-clinical">
           <div>
             © {new Date().getFullYear()} Centro Médico La Cruz. Sistema de Gestión Clínica.
           </div>
@@ -670,6 +680,70 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
           </div>
         </div>
       </footer>
+
+      {/* Modal Fluido: Agendamiento Rápido de Cita */}
+      {isAppointmentModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 bg-[#00171d]/60 backdrop-blur-sm animate-modal-backdrop"
+            onClick={() => setIsAppointmentModalOpen(false)}
+          />
+          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 sm:p-7 z-10 animate-modal-panel">
+            <button
+              onClick={() => setIsAppointmentModalOpen(false)}
+              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+              aria-label="Cerrar modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="w-12 h-12 rounded-xl bg-[#e8f7f9] text-[#00687a] flex items-center justify-center mb-4">
+              <Calendar className="w-6 h-6" />
+            </div>
+
+            <h3 className="font-serif-clinical text-2xl text-[#003844] font-normal mb-2">
+              Reserva de Consulta
+            </h3>
+            <p className="text-sm text-slate-600 leading-relaxed mb-6 font-sans-clinical">
+              Para programar tu cita con el médico de guardia o especialista, puedes ingresar al portal con tu cédula o contactarnos directamente:
+            </p>
+
+            <div className="space-y-3 mb-6 font-sans-clinical">
+              <button
+                onClick={() => {
+                  setIsAppointmentModalOpen(false);
+                  onOpenActivatePatient?.();
+                }}
+                className="w-full flex items-center justify-between p-3.5 rounded-xl border border-[#b2e3ea] bg-[#f8fdfe] hover:bg-[#eefafb] text-left transition-colors group cursor-pointer"
+              >
+                <div>
+                  <div className="text-xs font-semibold text-[#003844]">Soy Paciente Registrado</div>
+                  <div className="text-[11px] text-slate-500">Ingresa o activa tu acceso con tu C.I.</div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#00687a] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <a
+                href="tel:+59133362211"
+                className="w-full flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-[#00687a] bg-white text-left transition-colors group"
+              >
+                <div>
+                  <div className="text-xs font-semibold text-[#003844]">Central Telefónica 24/7</div>
+                  <div className="text-[11px] text-slate-500">+591 (3) 336-2211 · Recepción y Triaje</div>
+                </div>
+                <Phone className="w-4 h-4 text-[#00687a]" />
+              </a>
+            </div>
+
+            <button
+              onClick={() => setIsAppointmentModalOpen(false)}
+              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors cursor-pointer"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
