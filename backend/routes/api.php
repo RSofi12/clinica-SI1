@@ -17,6 +17,7 @@ use App\Packages\MedicalRecords\Controllers\ConsultasController;
 use App\Packages\MedicalRecords\Controllers\AntecedentesController;
 use App\Packages\MedicalRecords\Controllers\RecetasController;
 use App\Packages\MedicalRecords\Controllers\ExpedienteController;
+use App\Packages\MedicalRecords\Controllers\DocumentosClinicosController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
 use App\Packages\Analytics\Controllers\DashboardController;
 
@@ -168,6 +169,12 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::get('/expediente/mi-expediente', [ExpedienteController::class, 'miExpediente'])->middleware('role:PACIENTE');
     Route::get('/expediente/paciente/{idPaciente}', [ExpedienteController::class, 'showByPatient'])->middleware('role:ADMIN,MEDICO');
     Route::get('/expediente/paciente/{idPaciente}/timeline', [ExpedienteController::class, 'timeline'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+
+    // CU26: Gestionar Documentos Clínicos Adjuntos (Cloudinary / DICOM / Órdenes CU25)
+    Route::get('/historias/{idHistoria}/documentos', [DocumentosClinicosController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::post('/historias/{idHistoria}/documentos', [DocumentosClinicosController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/historias/{idHistoria}/ordenes-pendientes', [DocumentosClinicosController::class, 'ordenesPendientes'])->middleware('role:ADMIN,MEDICO');
+    Route::delete('/documentos/{id}', [DocumentosClinicosController::class, 'destroy'])->middleware('role:ADMIN,MEDICO');
 });
 
 // CU23 / CU24: Reportes, Analítica y Dashboard de KPIs (Paquete 6: Reportes y Analítica)

@@ -358,7 +358,7 @@ pm run build exitoso).
 - [ ] **Fase de Pruebas:** Emisión exitosa de orden y enlace relacional con la consulta y el paciente.
 
 #### ⏳ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
-- [ ] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG) vinculados a la historia clínica.
+- [x] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG, DICOM) con Cloudinary, Anti-IDOR y enlace opcional a órdenes auxiliares CU25 (DocumentoClinicoService + DocumentosClinicosController).
 - [ ] **Frontend:** Componente de carga de archivos adjuntos con visor previo integrado.
 - [ ] **Fase de Pruebas:** Subida de archivo y descarga protegida por RBAC.
 

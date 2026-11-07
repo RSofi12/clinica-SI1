@@ -83,6 +83,7 @@
 5. [x] **CU18:** Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas (Extra) — Full-Stack 100% operativo con prescripción estructurada, alertas de alergias (CU17), vista membretada imprimible (@media print), anulación lógica RN11 y gestor con KPIs (Completado al 100% — 07/11/2026).
 6. [ ] **CU22:** Generar Reportes con Filtros Dinámicos (RF13 — Requisito Obligatorio del Examen Oficial) con los 7 reportes gerenciales, filtros y exportación CSV/PDF.
 7. [x] **CU19:** Consultar Expediente Médico y Antecedentes Clínicos (§3.4) — Full-Stack 100% operativo con Anti-IDOR, timeline cronológico, visor clínico con `/frontend-design` e impresión `@media print` (Completado — 07/11/2026).
-8. [ ] **CU25, CU26:** Órdenes de Exámenes Auxiliares y Documentos Adjuntos.
+8. [ ] **CU26:** Gestionar Documentos Clínicos Adjuntos (Extra) — Backend operativo (Cloudinary, DICOM, soporte de órdenes CU25 y Anti-IDOR); pendiente frontend interactivo.
+9. [ ] **CU25:** Emitir Órdenes de Exámenes Auxiliares.
 8. [ ] **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
 10. [x] **CU24:** Dashboard Ejecutivo de KPIs Clínicos y Financieros (Completado con DashboardController.php, ClinicalDashboardView.jsx e InicioPanelView.jsx).

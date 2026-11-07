@@ -405,3 +405,22 @@
     - `Sidebar.jsx`: Ítem "Expediente Digital" / "Mi Expediente Clínico" (P4) bajo icono `FileText`.
     - `App.jsx`: Pestaña `expediente` y tarjeta interactiva de acceso rápido en el dashboard de bienvenida.
   - ✅ **Compilación:** Verificada con `npm run build` en 27.44s sin errores (0 warnings bloqueantes).
+
+### 25. Implementación del Backend de CU26 (Gestionar Documentos Clínicos Adjuntos) (07/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Migración Incremental (`2026_11_07_000002_add_cloudinary_and_tracking_to_documentos_clinicos_table.php`):**
+    - Incorpora `nombre_archivo`, `formato_archivo` (`JPG, PNG, PDF, DCM`), amplía `ruta_archivo` a 500 caracteres, agrega `cloudinary_public_id`, `subido_por` (FK a `usuarios`) y flexibiliza `id_medico` nullable.
+  - ✅ **Modelo Enriquecido (`DocumentoClinico.php`):** Relaciones con `historiaClinica`, `consulta`, `ordenExamen`, `medico`, `subidoPorUsuario`, y accessors `es_dicom` y `tamanio_legible`.
+  - ✅ **Servicio de Almacenamiento Cloudinary (`CloudinaryStorageService.php`):**
+    - Subida firmada a Cloudinary con detección automática de tipo (`image` para imágenes; `raw` para PDFs y archivos tomográficos DICOM `.dcm`).
+    - Fallback resiliente a almacenamiento local en desarrollo cuando no se configuran credenciales.
+    - Eliminación remota e invalidación de CDN vía API destroy con clave y firma.
+  - ✅ **Servicio de Dominio Transaccional (`DocumentoClinicoService.php`):**
+    - Soporte nativo para ambas modalidades: Modo Autónomo (documentos sueltos, consentimientos o estudios externos sin orden) y Modo Vinculado a CU25 (cierre automático de orden de `PENDIENTE` a `CON_RESULTADOS`).
+    - Bloqueo de concurrencia y validación de historia activa.
+    - Scoping Anti-IDOR estricto (paciente solo ve sus propios documentos; recepcionista bloqueada con 403).
+    - Baja lógica inmutable (RN11) y auditoría en `Bitacora.php` (`ADJUNTAR_DOCUMENTO_CLINICO`, `ELIMINAR_DOCUMENTO_CLINICO`).
+  - ✅ **FormRequest (`DocumentoClinicoUploadRequest.php`):** Validación estricta de peso (máx 15 MB), categorías clínicas admitidas y formatos permitidos (`jpg, jpeg, png, pdf, dcm`).
+  - ✅ **Controlador REST (`DocumentosClinicosController.php`):** Endpoints `index`, `store`, `ordenesPendientes` y `destroy`.
+  - ✅ **Rutas API (`backend/routes/api.php`):** 4 endpoints bajo `/api/medical-records/historias/{idHistoria}/documentos` protegidos por roles.
+  - ✅ **Verificación:** Sintaxis PHP 100% limpia sin errores (`php -l`).
