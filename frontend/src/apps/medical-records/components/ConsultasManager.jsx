@@ -151,7 +151,7 @@ export function ConsultasManager() {
           <ClipboardList className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="font-bold text-slate-900 text-lg font-montserrat leading-tight">
+          <h1 className="font-bold text-slate-900 text-lg font-serif-clinical font-normal tracking-tight leading-tight">
             Consultas Médicas
           </h1>
           <span className="text-xs text-slate-400">Paquete 4 — Historial Clínico · CU16</span>
@@ -234,7 +234,7 @@ export function ConsultasManager() {
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Stethoscope className="w-4 h-4 text-[#00687a]" />
-            <h2 className="font-bold text-slate-900 text-sm font-montserrat">
+            <h2 className="font-bold text-slate-900 text-sm font-serif-clinical font-normal tracking-tight">
               Registro de Consultas
             </h2>
           </div>

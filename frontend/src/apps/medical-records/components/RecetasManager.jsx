@@ -111,7 +111,7 @@ export function RecetasManager({ currentUser }) {
               <Pill className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-900">
+              <h1 className="text-xl sm:text-2xl font-serif-clinical font-normal tracking-tight text-slate-900">
                 Prescripciones y Recetas Médicas
               </h1>
               <p className="text-xs text-slate-500">

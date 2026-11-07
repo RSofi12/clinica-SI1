@@ -194,7 +194,7 @@ export function AntecedenteFormModal({
                 <span className="text-[11px] font-mono tracking-widest text-cyan-200 uppercase font-semibold">
                   Expediente Clínico Permanente • CU17
                 </span>
-                <h3 className="text-lg font-bold font-montserrat text-white mt-0.5">
+                <h3 className="text-lg font-bold font-serif-clinical font-normal tracking-tight text-white mt-0.5">
                   {isEditing ? 'Editar Antecedente Médico' : 'Nuevo Antecedente Médico'}
                 </h3>
                 <span className="text-xs text-cyan-100 block">

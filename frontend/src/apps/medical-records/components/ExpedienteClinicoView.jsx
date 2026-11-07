@@ -175,7 +175,7 @@ export function ExpedienteClinicoView({ initialPatientId = null }) {
                 <FileText className="w-5 h-5" />
               </span>
               <div>
-                <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-serif-clinical font-normal text-slate-900 tracking-tight">
                   {isPatient ? 'Mi Expediente Clínico Digital' : 'Expediente Clínico y Antecedentes'}
                 </h1>
                 <p className="text-xs text-slate-500 font-medium">

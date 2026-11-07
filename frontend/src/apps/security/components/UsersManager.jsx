@@ -195,7 +195,7 @@ export function UsersManager() {
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-montserrat font-bold text-slate-900 text-lg">
+              <h2 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-lg">
                 Gestión de Usuarios y Roles (CU02)
               </h2>
               <p className="text-xs text-slate-500">

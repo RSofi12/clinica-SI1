@@ -45,7 +45,12 @@ body {
 }
 
 .font-sans-clinical {
-  font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Fallback defensivo para clases legacy */
+.font-montserrat {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
 /* ==========================================================================

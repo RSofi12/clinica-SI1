@@ -135,7 +135,7 @@ export function LoginForm({ onSuccess }) {
       <button
         type="submit"
         disabled={loading || lockedCountdown > 0}
-        className="w-full bg-[#00687a] hover:bg-[#005564] text-white font-montserrat font-semibold py-3 px-4 rounded-xl text-sm transition shadow-md shadow-[#00687a]/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full bg-[#00687a] hover:bg-[#005564] text-white font-sans-clinical font-semibold py-3 px-4 rounded-xl text-sm transition shadow-md shadow-[#00687a]/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {loading ? (
           <>

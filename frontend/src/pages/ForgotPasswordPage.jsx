@@ -82,7 +82,7 @@ export const ForgotPasswordPage = ({ onNavigateLogin }) => {
   };
 
   return (
-    <div className="relative min-h-screen text-white flex items-center justify-center p-4 sm:p-6 lg:p-10 selection:bg-[#70cbff] selection:text-[#01171d] font-montserrat overflow-hidden">
+    <div className="relative min-h-screen text-white flex items-center justify-center p-4 sm:p-6 lg:p-10 selection:bg-[#70cbff] selection:text-[#01171d] font-sans-clinical overflow-hidden">
       <BackgroundGlow />
 
       {/* Botón flotante para volver al Login */}
@@ -107,7 +107,7 @@ export const ForgotPasswordPage = ({ onNavigateLogin }) => {
               <img src={logoColorSvg} alt="Centro Médico La Cruz" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-montserrat font-bold text-lg text-slate-900 leading-tight">
+              <h1 className="font-serif-clinical font-normal tracking-tight text-lg text-slate-900 leading-tight">
                 Centro Médico La Cruz
               </h1>
               <p className="text-xs text-slate-500 flex items-center gap-1">
@@ -118,7 +118,7 @@ export const ForgotPasswordPage = ({ onNavigateLogin }) => {
           </div>
 
           <div className="mb-5">
-            <h2 className="font-montserrat font-bold text-xl text-slate-900 tracking-tight">
+            <h2 className="font-serif-clinical font-normal tracking-tight text-xl text-slate-900 tracking-tight">
               {step === 1 ? '¿Olvidaste tu contraseña?' : 'Nueva Contraseña'}
             </h2>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -168,7 +168,7 @@ export const ForgotPasswordPage = ({ onNavigateLogin }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 py-3.5 px-4 rounded-xl font-montserrat font-bold text-sm text-white bg-gradient-to-r from-[#00687a] via-[#007b90] to-[#008b9e] hover:from-[#005564] hover:to-[#007485] shadow-lg shadow-[#00687a]/20 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
+                className="w-full mt-2 py-3.5 px-4 rounded-xl font-sans-clinical font-bold text-sm text-white bg-gradient-to-r from-[#00687a] via-[#007b90] to-[#008b9e] hover:from-[#005564] hover:to-[#007485] shadow-lg shadow-[#00687a]/20 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
               >
                 {isLoading ? (
                   <>
@@ -266,7 +266,7 @@ export const ForgotPasswordPage = ({ onNavigateLogin }) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 py-3.5 px-4 rounded-xl font-montserrat font-bold text-sm text-white bg-gradient-to-r from-[#00687a] via-[#007b90] to-[#008b9e] hover:from-[#005564] hover:to-[#007485] shadow-lg shadow-[#00687a]/20 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
+                className="w-full mt-2 py-3.5 px-4 rounded-xl font-sans-clinical font-bold text-sm text-white bg-gradient-to-r from-[#00687a] via-[#007b90] to-[#008b9e] hover:from-[#005564] hover:to-[#007485] shadow-lg shadow-[#00687a]/20 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
               >
                 {isLoading ? (
                   <>

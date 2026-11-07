@@ -262,7 +262,7 @@ export function AppointmentBookingModal({
               <Calendar className="w-5 h-5 text-cyan-200" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-base leading-tight">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base leading-tight">
                 Programar Cita Médica
               </h3>
               <p className="text-xs text-cyan-100/80">
@@ -327,7 +327,7 @@ export function AppointmentBookingModal({
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-montserrat font-bold text-slate-900 text-sm">
+                        <span className="font-sans-clinical font-bold text-slate-900 text-sm">
                           {selectedPatient ? `${selectedPatient.nombres} ${selectedPatient.apellidos}` : 'Cargando tus datos...'}
                         </span>
                         <span className="text-[10px] font-bold bg-[#00687a] text-white px-2 py-0.5 rounded-md uppercase tracking-wider">
@@ -402,7 +402,7 @@ export function AppointmentBookingModal({
                           {selectedPatient.nombres?.charAt(0)}{selectedPatient.apellidos?.charAt(0)}
                         </div>
                         <div>
-                          <span className="font-montserrat font-bold text-slate-900 text-sm block">
+                          <span className="font-sans-clinical font-bold text-slate-900 text-sm block">
                             {selectedPatient.nombres} {selectedPatient.apellidos}
                           </span>
                           <p className="text-[11px] text-slate-600 mt-0.5">
@@ -732,7 +732,7 @@ export function AppointmentBookingModal({
                 <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
                   ¡Cita Programada Exitosamente!
                 </span>
-                <h4 className="font-montserrat font-extrabold text-2xl text-slate-900 mt-1">
+                <h4 className="font-serif-clinical font-normal tracking-tight text-2xl text-slate-900 mt-1">
                   Código: <span className="text-[#00687a]">{createdAppointment.codigo_cita}</span>
                 </h4>
                 <p className="text-xs text-slate-500 mt-1">

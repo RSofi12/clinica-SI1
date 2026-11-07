@@ -256,7 +256,7 @@ export function AppointmentsManager() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold font-montserrat text-slate-900 tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-bold font-serif-clinical font-normal tracking-tight text-slate-900 tracking-tight">
                   Mi Agenda Médica Diaria (CU14)
                 </h1>
                 <span className="text-[11px] font-bold bg-[#00687a]/10 text-[#00687a] px-2 py-0.5 rounded-md uppercase tracking-wider">
@@ -283,7 +283,7 @@ export function AppointmentsManager() {
               <div className="bg-gradient-to-r from-[#004d5a] to-[#00687a] p-5 text-white flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <Printer className="w-5 h-5 text-cyan-200" />
-                  <h3 className="font-bold text-sm font-montserrat">Ticket de Cita Médica</h3>
+                  <h3 className="font-bold text-sm font-serif-clinical font-normal tracking-tight">Ticket de Cita Médica</h3>
                 </div>
                 <button
                   type="button"
@@ -380,7 +380,7 @@ export function AppointmentsManager() {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2.5 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-bold font-montserrat text-slate-900 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-bold font-serif-clinical font-normal tracking-tight text-slate-900 tracking-tight">
                 {role === 'PACIENTE' ? 'Mis Citas Médicas y Agenda' : 'Gestión de Citas Médicas y Agenda'}
               </h1>
               <span className="text-[11px] font-bold bg-[#00687a]/10 text-[#00687a] px-2.5 py-0.5 rounded-md uppercase tracking-wider shrink-0">
@@ -856,7 +856,7 @@ export function AppointmentsManager() {
             <div className="px-6 py-4 bg-gradient-to-r from-[#004d5a] to-[#00687a] text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-cyan-200" />
-                <h3 className="font-bold text-sm font-montserrat">Ticket de Cita Médica</h3>
+                <h3 className="font-bold text-sm font-serif-clinical font-normal tracking-tight">Ticket de Cita Médica</h3>
               </div>
               <button
                 type="button"

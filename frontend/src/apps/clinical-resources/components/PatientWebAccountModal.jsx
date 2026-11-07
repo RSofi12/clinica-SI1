@@ -67,7 +67,7 @@ export function PatientWebAccountModal({ isOpen, onClose, patient, onCreated }) 
               <Globe className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-base">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-base">
                 Habilitar Acceso Web
               </h3>
               <p className="text-xs text-slate-500">

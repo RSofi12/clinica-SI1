@@ -202,7 +202,7 @@ export function PatientsManager() {
               <HeartPulse className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-montserrat font-bold text-slate-900 text-lg">
+              <h2 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-lg">
                 Gestión de Pacientes (CU04)
               </h2>
               <p className="text-xs text-slate-500">
@@ -238,7 +238,7 @@ export function PatientsManager() {
               Total Pacientes
             </span>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-montserrat font-bold text-2xl text-slate-900">
+              <span className="font-sans-clinical font-bold text-2xl text-slate-900">
                 {stats.total}
               </span>
               <span className="text-[10px] text-slate-400">en padrón</span>
@@ -257,7 +257,7 @@ export function PatientsManager() {
               Pacientes Activos
             </span>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-montserrat font-bold text-2xl text-emerald-800">
+              <span className="font-sans-clinical font-bold text-2xl text-emerald-800">
                 {stats.activos}
               </span>
               <span className="text-[10px] text-emerald-600 font-medium">aptos para citas</span>
@@ -279,7 +279,7 @@ export function PatientsManager() {
               <Baby className="w-3.5 h-3.5 text-sky-500" />
             </div>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-montserrat font-bold text-2xl text-sky-900">
+              <span className="font-sans-clinical font-bold text-2xl text-sky-900">
                 {stats.pediatricos}
               </span>
               <span className="text-[10px] text-sky-600 font-medium">Pediatría</span>
@@ -301,7 +301,7 @@ export function PatientsManager() {
               <HeartHandshake className="w-3.5 h-3.5 text-indigo-500" />
             </div>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-montserrat font-bold text-2xl text-indigo-900">
+              <span className="font-sans-clinical font-bold text-2xl text-indigo-900">
                 {stats.geriatricos}
               </span>
               <span className="text-[10px] text-indigo-600 font-medium">Geriatría</span>
@@ -415,7 +415,7 @@ export function PatientsManager() {
                       {/* Avatar y Nombre Completo */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-[#00687a]/10 text-[#00687a] flex items-center justify-center font-bold text-xs shrink-0 font-montserrat">
+                          <div className="w-9 h-9 rounded-xl bg-[#00687a]/10 text-[#00687a] flex items-center justify-center font-bold text-xs shrink-0 font-sans-clinical">
                             {patient.nombres?.[0]}
                             {patient.apellidos?.[0]}
                           </div>

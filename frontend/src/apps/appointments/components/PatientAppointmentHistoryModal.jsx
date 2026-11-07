@@ -175,7 +175,7 @@ export function PatientAppointmentHistoryModal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base font-montserrat">Historial de Citas Médicas</h3>
+                <h3 className="font-bold text-base font-serif-clinical font-normal tracking-tight">Historial de Citas Médicas</h3>
                 <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-md uppercase">
                   CU15 / RF12
                 </span>

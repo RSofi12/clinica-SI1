@@ -75,7 +75,7 @@ export function BlockModal({ isOpen, onClose, doctors = [], onBlockCreated, defa
               <Calendar className="w-5 h-5 text-cyan-200" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-base leading-tight">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base leading-tight">
                 Registrar Bloqueo o Feriado
               </h3>
               <p className="text-xs text-cyan-100/80">

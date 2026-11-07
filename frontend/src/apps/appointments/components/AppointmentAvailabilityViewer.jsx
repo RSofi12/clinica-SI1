@@ -147,7 +147,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="font-montserrat font-bold text-xl text-slate-900">
+                <h1 className="font-serif-clinical font-normal tracking-tight text-xl text-slate-900">
                   Consulta de Disponibilidad de Horarios
                 </h1>
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-100 text-[#00687a]">
@@ -299,7 +299,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
                 <span className="text-[11px] font-bold text-[#00687a] uppercase tracking-wider">
                   Profesional Evaluado
                 </span>
-                <h2 className="font-montserrat font-bold text-lg text-slate-900 mt-0.5">
+                <h2 className="font-serif-clinical font-normal tracking-tight text-lg text-slate-900 mt-0.5">
                   {availability.medico?.nombre_completo || 'Médico'}
                 </h2>
                 <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
@@ -355,7 +355,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
               <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center mx-auto mb-3">
                 <Building2 className="w-6 h-6" />
               </div>
-              <h3 className="font-montserrat font-bold text-base text-rose-900 mb-1">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base text-rose-900 mb-1">
                 Fecha no disponible para atención clínica
               </h3>
               <p className="text-xs text-rose-700 max-w-md mx-auto leading-relaxed">
@@ -373,7 +373,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
               <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-3">
                 <CalendarX className="w-6 h-6" />
               </div>
-              <h3 className="font-montserrat font-bold text-base text-amber-900 mb-1">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base text-amber-900 mb-1">
                 El médico no atiende en el día seleccionado
               </h3>
               <p className="text-xs text-amber-700 max-w-md mx-auto leading-relaxed">
@@ -390,7 +390,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
             <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-montserrat font-bold text-base text-slate-900">
+                  <h3 className="font-serif-clinical font-normal tracking-tight text-base text-slate-900">
                     Turnos de Consulta para el {availability.dia_nombre} {availability.fecha}
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">

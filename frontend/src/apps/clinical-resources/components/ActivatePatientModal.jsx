@@ -354,7 +354,7 @@ export function ActivatePatientModal({ isOpen, onClose, onActivated }) {
               <ShieldCheck className="w-8 h-8" />
             </div>
             <div>
-              <h4 className="font-montserrat font-bold text-slate-900 text-lg">
+              <h4 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-lg">
                 ¡Cuenta Activada Satisfactoriamente!
               </h4>
               <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto leading-relaxed">
@@ -367,7 +367,7 @@ export function ActivatePatientModal({ isOpen, onClose, onActivated }) {
                 handleClose();
                 if (onActivated) onActivated();
               }}
-              className="w-full bg-[#00687a] hover:bg-[#004d5a] text-white font-montserrat font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-md shadow-[#00687a]/20 cursor-pointer"
+              className="w-full bg-[#00687a] hover:bg-[#004d5a] text-white font-sans-clinical font-semibold py-2.5 px-4 rounded-xl text-xs transition shadow-md shadow-[#00687a]/20 cursor-pointer"
             >
               Iniciar Sesión Ahora
             </button>

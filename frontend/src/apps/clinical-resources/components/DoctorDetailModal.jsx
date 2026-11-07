@@ -68,7 +68,7 @@ export function DoctorDetailModal({ isOpen, onClose, doctor, onEdit }) {
                 )}
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-montserrat font-bold text-white tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-serif-clinical font-normal tracking-tight text-white tracking-tight">
                 {doctor.nombre_completo || `Dr(a). ${doctor.nombres} ${doctor.apellidos}`}
               </h2>
 

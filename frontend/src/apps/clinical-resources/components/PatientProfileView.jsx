@@ -149,7 +149,7 @@ export function PatientProfileView() {
     return (
       <div className="p-8 text-center bg-white rounded-3xl border border-slate-200">
         <AlertCircle className="w-10 h-10 text-rose-500 mx-auto mb-2" />
-        <h3 className="font-montserrat font-bold text-slate-900 text-base">Ficha no Vinculada</h3>
+        <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-base">Ficha no Vinculada</h3>
         <p className="text-xs text-slate-500 mt-1">
           No se encontró un registro clínico asociado a su cuenta de usuario.
         </p>
@@ -181,7 +181,7 @@ export function PatientProfileView() {
       <div className="bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-[#00687a]/15">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-white/20 border border-white/30 backdrop-blur-md flex items-center justify-center text-2xl font-bold font-montserrat shadow-inner shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-white/20 border border-white/30 backdrop-blur-md flex items-center justify-center text-2xl font-bold font-sans-clinical shadow-inner shrink-0">
               {patient.nombres?.[0]}
               {patient.apellidos?.[0]}
             </div>
@@ -194,7 +194,7 @@ export function PatientProfileView() {
                   {patient.estado_paciente}
                 </span>
               </div>
-              <h2 className="font-montserrat font-bold text-xl sm:text-2xl mt-1 text-white">
+              <h2 className="font-serif-clinical font-normal tracking-tight text-xl sm:text-2xl mt-1 text-white">
                 {patient.nombre_completo}
               </h2>
               <p className="text-xs text-cyan-100/90 flex flex-wrap items-center gap-1.5 font-mono mt-0.5">
@@ -225,7 +225,7 @@ export function PatientProfileView() {
           <form onSubmit={handleSaveContact} className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
               <Phone className="w-4 h-4 text-[#00687a]" />
-              <h3 className="font-montserrat font-bold text-slate-800 text-sm">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-800 text-sm">
                 Canales de Contacto y Ubicación
               </h3>
             </div>
@@ -303,7 +303,7 @@ export function PatientProfileView() {
               <div className="pt-4 border-t border-slate-100 space-y-3">
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-[#00687a]" />
-                  <h4 className="font-montserrat font-bold text-slate-800 text-xs uppercase tracking-wider">
+                  <h4 className="font-serif-clinical font-normal tracking-tight text-slate-800 text-xs uppercase tracking-wider">
                     Contacto de Emergencia
                   </h4>
                 </div>
@@ -379,7 +379,7 @@ export function PatientProfileView() {
           <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <h3 className="font-montserrat font-bold text-slate-800 text-sm">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-800 text-sm">
                 Datos Clínicos Oficiales
               </h3>
             </div>
@@ -431,7 +431,7 @@ export function PatientProfileView() {
           <form onSubmit={handleChangePassword} className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
               <KeyRound className="w-4 h-4 text-[#00687a]" />
-              <h3 className="font-montserrat font-bold text-slate-800 text-sm">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-800 text-sm">
                 Seguridad de la Cuenta
               </h3>
             </div>

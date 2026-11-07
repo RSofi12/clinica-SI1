@@ -329,7 +329,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
               <span className="text-[11px] font-bold text-cyan-300 uppercase tracking-wider block">
                 {formatDateDisplay(selectedDate)}
               </span>
-              <h2 className="text-lg font-bold font-montserrat tracking-tight text-white">
+              <h2 className="text-lg font-bold font-serif-clinical font-normal tracking-tight tracking-tight text-white">
                 Dr. {medico.nombres} {medico.apellidos}
               </h2>
               <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300 mt-0.5">
@@ -405,7 +405,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-[#00687a]" />
-            <h3 className="font-bold text-slate-900 text-sm font-montserrat">
+            <h3 className="font-bold text-slate-900 text-sm font-serif-clinical font-normal tracking-tight">
               Cronograma de Citas de la Jornada
             </h3>
           </div>

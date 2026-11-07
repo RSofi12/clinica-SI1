@@ -102,7 +102,7 @@ export function UserFormModal({ isOpen, onClose, onSaved, initialUser = null, ro
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-base">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-base">
                 {isEditing ? 'Editar Operador de Sistema' : 'Nuevo Operador de Sistema'}
               </h3>
               <p className="text-xs text-slate-500">CU02: Gestión de accesos y perfiles (RF01)</p>

@@ -181,7 +181,7 @@ export function AntecedentesPatientModal({
                     </span>
                   )}
                 </div>
-                <h3 className="text-lg font-bold font-montserrat text-white mt-0.5">
+                <h3 className="text-lg font-bold font-serif-clinical font-normal tracking-tight text-white mt-0.5">
                   Antecedentes Médicos del Paciente
                 </h3>
                 <span className="text-xs text-cyan-100 block">

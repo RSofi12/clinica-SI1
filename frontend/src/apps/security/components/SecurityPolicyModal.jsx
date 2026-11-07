@@ -72,7 +72,7 @@ export function SecurityPolicyModal({ isOpen, onClose, onPolicyUpdated }) {
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-base">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-base">
                 Políticas de Bloqueo de Cuentas
               </h3>
               <p className="text-xs text-slate-500">Protección contra ataques de fuerza bruta</p>
