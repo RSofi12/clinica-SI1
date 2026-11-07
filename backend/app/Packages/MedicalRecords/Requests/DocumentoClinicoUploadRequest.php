@@ -18,8 +18,9 @@ class DocumentoClinicoUploadRequest extends FormRequest
             'tipo_documento' => [
                 'required',
                 'string',
-                'in:FONDO_DE_OJO,TOPOGRAFIA_CORNEAL,OCT,CAMPO_VISUAL,ECOGRAFIA_OCULAR,INFORME_LABORATORIO,INFORME_EXTERNO,CONSENTIMIENTO,OTRO',
+                'in:RADIOGRAFIA,TOMOGRAFIA,RESONANCIA,ECOGRAFIA,MAMOGRAFIA,ELECTROCARDIOGRAMA,ECOCARDIOGRAMA,HOLTER,PRUEBA_ESFUERZO,INFORME_LABORATORIO,HEMOGRAMA,BIOQUIMICA,UROANALISIS,CULTIVO_MICROBIOLOGIA,BIOPSIA_PATOLOGIA,INFORME_CONSULTA,EPICRISIS,HISTORIA_PREVIA,INTERCONSULTA,FONDO_DE_OJO,TOPOGRAFIA_CORNEAL,OCT,CAMPO_VISUAL,ECOGRAFIA_OCULAR,CONSENTIMIENTO,CERTIFICADO_MEDICO,INFORME_EXTERNO,OTRO',
             ],
+            'especialidad' => ['nullable', 'string', 'max:100'],
             'titulo' => ['nullable', 'string', 'max:150'],
             'observaciones' => ['nullable', 'string', 'max:1000'],
             'id_orden' => ['nullable', 'integer', 'exists:ordenes_examenes,id_orden'],

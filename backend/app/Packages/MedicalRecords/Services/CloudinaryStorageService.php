@@ -99,7 +99,9 @@ class CloudinaryStorageService
 
         $endpoint = "https://api.cloudinary.com/v1_1/{$this->cloudName}/{$resourceType}/upload";
 
-        $response = Http::attach(
+        $verifySsl = app()->environment('production');
+
+        $response = Http::withOptions(['verify' => $verifySsl])->attach(
             'file',
             file_get_contents($archivo->getRealPath()),
             $archivo->getClientOriginalName()
@@ -179,7 +181,8 @@ class CloudinaryStorageService
 
         $endpoint = "https://api.cloudinary.com/v1_1/{$this->cloudName}/{$resourceType}/destroy";
 
-        $response = Http::asForm()->post($endpoint, [
+        $verifySsl = app()->environment('production');
+        $response = Http::withOptions(['verify' => $verifySsl])->asForm()->post($endpoint, [
             'api_key' => $this->apiKey,
             'timestamp' => $timestamp,
             'public_id' => $publicId,

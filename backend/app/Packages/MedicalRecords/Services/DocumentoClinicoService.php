@@ -187,7 +187,9 @@ class DocumentoClinicoService
                     }
                 }
 
-                $titulo = !empty($datos['titulo']) ? trim($datos['titulo']) : $datos['tipo_documento'];
+                $titulo = !empty($datos['titulo'])
+                    ? trim($datos['titulo'])
+                    : (!empty($datos['especialidad']) ? "[{$datos['especialidad']}] {$datos['tipo_documento']}" : $datos['tipo_documento']);
                 $descripcion = !empty($datos['observaciones']) ? trim($datos['observaciones']) : ($datos['descripcion'] ?? null);
 
                 $documento = DocumentoClinico::create([
