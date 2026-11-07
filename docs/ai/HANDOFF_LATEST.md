@@ -1,5 +1,26 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Sidebar Aqua Profundo, Acciones en 2 Filas y Notificaciones Push UI)
+- **Rediseño Editorial del Sidebar con `/design-taste-frontend` ([`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx)):**
+  - **Color institucional unificado:** Se convirtió todo el sidebar a un fondo aqua profundo (`#003844` / deep teal médico) con borde sutil `#002830`, eliminando el fondo blanco plano anterior.
+  - **Tipografía Serif en Secciones:** Las opciones de menú seleccionables ("Inicio", "Dashboard Clínico", "Usuarios y Roles", "Disponibilidad y Citas", etc.) ahora usan `.font-serif-clinical` con `text-sm font-medium`, mientras que los encabezados de grupo ("PRINCIPAL", "SEGURIDAD Y AUDITORÍA", etc.) se mantienen en su tipografía sans en mayúsculas pequeñas legibles (`text-cyan-200/50 font-bold text-[10px]`).
+  - **Elemento Activo & Cápsula:** La opción activa se destaca con una cápsula en aqua brillante (`#00687a`) con borde de resplandor `ring-1 ring-cyan-300/30` y sombra sutil.
+  - **Logo e Identidad:** Logo blanco oficial [`logo-full-white.svg`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/assets/logo-full-white.svg) en contenedor translúcido, con subtítulo en celeste hospitalario (`#70cbff`).
+  - **Pie de Usuario:** Tarjeta de perfil y botones de comprimir/salir adaptados con efectos backdrop translúcidos sobre fondo oscuro.
+- **Acciones de Tabla CU10 en 2 Filas ([`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - Botones apilados en dos niveles compactos a la derecha:
+    - *Fila 1 (Operativo):* Check-in / Inasistencia, Ticket oficial de cita e Historial de máquina de estados.
+    - *Fila 2 (Gestión):* Reprogramar cita (CU11) y Cancelar cita médica (CU12).
+  - Ancho de columna reducido de 280px a 210px, otorgando mayor espacio a las columnas de paciente y médico.
+- **Precursor UI para Notificaciones Push ([`NotificationsDropdown.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/NotificationsDropdown.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx)):**
+  - Botón de campana `Bell` en la barra superior con indicador activo.
+  - Panel flotante con estado vacío refinado: "Sin notificaciones pendientes" e informativo de capacidades para Ciclo 2 (CU20 / CU21).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2043 módulos, 13.9s).
+- **Commit en Rama `prueba`:**
+  - `0eb2db7`: `feat(ui): rediseñar sidebar en aqua profundo con font serif, apilar acciones CU10 y agregar precursor de notificaciones`
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Rediseño de Tabla CU10 con /design-taste-frontend y Transiciones Fluidas)
 - **Eliminación de Franja Condicional en Dashboard ([`ClinicalDashboardView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/ClinicalDashboardView.jsx)):**
   - Descartada por completo la franja de `CU27-RES` y `CU28-OPC` que aparecía al final de la matriz de casos de uso.
