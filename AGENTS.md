@@ -17,7 +17,7 @@ Antes de responder, planificar o generar código, consulta estos documentos en o
 6. **[`docs/IMPLEMENTATION_PHASES.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/IMPLEMENTATION_PHASES.md):** Checklist oficial de Casos de Uso por ciclos y fases de prueba.
 7. **[`docs/CU_ESPECIFICACION_SISTEMA.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/CU_ESPECIFICACION_SISTEMA.md):** Los 23 Casos de Uso oficiales y su asignación por ciclo.
 8. **[`docs/Ex_Parcial_2_sistemas-1.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/Ex_Parcial_2_sistemas-1.md):** Enunciado oficial del examen (requisitos funcionales RF01-RF13 y pruebas mínimas).
-9. **[`docs/ai/ARCHITECTURE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/ARCHITECTURE.md):** Organización en los 6 paquetes y convenciones de rutas anidadas.
+9. **[`docs/ARCHITECTURE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ARCHITECTURE.md):** Organización en los 6 paquetes y convenciones de rutas anidadas.
 10. **[`docs/ai/DECISIONS_LOG.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/DECISIONS_LOG.md):** Histórico de decisiones ya acordadas que **NO** deben reabrirse sin justificación.
 11. **[`docs/ai/sessions/*.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/sessions/):** Bitácoras de sesiones anteriores para mantener continuidad.
 

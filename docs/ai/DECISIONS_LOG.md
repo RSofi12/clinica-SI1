@@ -135,7 +135,7 @@
   1. Enriquecer el alcance clínico real del sistema integrando el ciclo completo asistencial: Consulta (CU16) -> Orden de Exámenes (CU25) -> Custodia de Resultados Externos Adjuntos (CU26).
   2. Absorber la exportación a PDF como flujo alternativo natural de CU18/CU19 para no saturar el catálogo con micro-funciones y mantener exactamente 26 Casos de Uso oficiales.
   3. Respetar estrictamente los 13 Casos de Uso del Ciclo 1 ya probados y validados al 100%, asignando las nuevas funcionalidades al Ciclo 2 con simetría total en los 6 paquetes de arquitectura.
-* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ai/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo oficial queda fijado en 26 Casos de Uso (+ 2 reservas).
+* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo oficial queda fijado en 26 Casos de Uso (+ 2 reservas).
 
 ### Registro 20: 2026-11-05
 * **Decisión:** Dockerización del monorepo mediante arquitectura multi-contenedor con `docker-compose`: Nginx (proxy inverso), PHP 8.3 FPM (Laravel), PostgreSQL 16 Alpine y Node 22 (React + Vite).

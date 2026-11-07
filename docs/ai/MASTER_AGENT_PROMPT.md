@@ -5,7 +5,7 @@
 > **Antes de modificar, diseñar o crear código**, debes leer obligatoriamente:
 > 1. `docs/ai/MASTER_AGENT_PROMPT.md` (Este manifiesto)
 > 2. `docs/ai/PROJECT_VISION.md` (Objetivo del sistema y reglas PUDS/examen)
-> 3. `docs/ai/ARCHITECTURE.md` (Diseño por capas, paquetes y enrutamiento anidado)
+> 3. `docs/ARCHITECTURE.md` (Diseño por capas, paquetes y enrutamiento anidado)
 > 4. `docs/ai/CURRENT_STATE.md` (Estado exacto de avance y qué se completó)
 > 5. `docs/ai/NEXT_STEPS.md` (Siguiente tarea prioritaria)
 
