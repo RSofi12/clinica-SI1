@@ -1,4 +1,4 @@
-# Bitácora de Sesión: Implementación Backend de CU17 (Gestionar Antecedentes Médicos — Extra / §3.4)
+# Bitácora de Sesión: Implementación Full-Stack de CU17 (Gestionar Antecedentes Médicos — Extra / §3.4)
 **Fecha:** 07 de Noviembre de 2026  
 **Autor:** Antigravity (AI Pair Programmer)  
 **Paquete:** Paquete 4 — Historial Clínico y Consultas  
@@ -8,7 +8,7 @@
 
 ## 1. Solicitud / Caso de Uso Implementado
 - **CU17: Gestionar Antecedentes Médicos (Extra / §3.4).**
-- Implementar la arquitectura backend completa para registrar, clasificar (Patológicos, Quirúrgicos, Alérgicos, Familiares, Farmacológicos), editar y dar de baja lógica antecedentes clínicos vinculados a la historia clínica del paciente, con resiliencia automática, scoping RBAC y auditoría inmutable.
+- Implementar la arquitectura full-stack completa para registrar, clasificar (Patológicos, Quirúrgicos, Alérgicos, Familiares, Farmacológicos), editar y dar de baja lógica antecedentes clínicos vinculados a la historia clínica del paciente, con resiliencia automática, scoping RBAC, advertencias alérgicas en tiempo real y auditoría inmutable.
 
 ---
 
@@ -36,19 +36,27 @@
 
 ---
 
-## 3. Comandos de Verificación
-- Verificación sintáctica PHP:
-  `php -l backend/app/Packages/MedicalRecords/Models/Antecedente.php`
-  `php -l backend/app/Packages/MedicalRecords/Requests/AntecedenteCreateRequest.php`
-  `php -l backend/app/Packages/MedicalRecords/Requests/AntecedenteUpdateRequest.php`
-  `php -l backend/app/Packages/MedicalRecords/Services/AntecedenteService.php`
-  `php -l backend/app/Packages/MedicalRecords/Controllers/AntecedentesController.php`
-  `php -l backend/routes/api.php`
-  -> **0 errores de sintaxis.**
+## 3. Cambios en Frontend (React + Tailwind CSS)
+1. **Servicio API (`frontend/src/apps/medical-records/services/antecedenteService.js`):**
+   - Métodos transaccionales: `fetchPatientAntecedentes`, `createAntecedente`, `updateAntecedente`, `toggleAntecedenteStatus`.
+2. **Modal de Creación y Edición (`AntecedenteFormModal.jsx`):**
+   - Selector estilizado de las 5 categorías oficiales con badges semánticos e iconos contextuales.
+   - Chips rápidos de autocompletado para alergias críticas (Penicilina, AINEs, Látex, Mariscos) y patologías comunes (HTA, Diabetes, Asma).
+   - Contador de caracteres (3-1000) y validación en tiempo real.
+3. **Modal Gestor Integral de Antecedentes (`AntecedentesPatientModal.jsx`):**
+   - Filtro por pestañas de categorías con conteo de registros y chip de alertas.
+   - Banner prominente de advertencia para antecedentes alérgicos activos.
+   - Interruptor de filtro Activos/Inactivos para baja lógica RN11.
+   - Acciones seguras de edición y alternancia de estado (baja lógica / reactivación).
+4. **Integraciones en Flujos Médicos y Clínicos:**
+   - **`ConsultaRegistroModal.jsx`:** Acceso directo a `[Gestionar Antecedentes]` durante la consulta activa; recarga automática de alertas alérgicas en tiempo real.
+   - **`ConsultasManager.jsx`:** Botón contextual en tabla de consultas y tarjetas móviles para revisar y gestionar antecedentes del paciente.
+   - **`PatientsManager.jsx`:** Botón directo en la columna de acciones de cada paciente para gestionar su historial médico.
 
 ---
 
-## 4. Próximos Pasos (Frontend)
-- Implementar `antecedenteService.js` en el frontend.
-- Crear componente `AntecedentesPatientView.jsx` y modal `AntecedenteFormModal.jsx`.
-- Integrar banner de advertencia alérgica reactivo en la consulta médica (`ConsultaRegistroModal.jsx`).
+## 4. Verificaciones y Pruebas Realizadas
+- Verificación sintáctica PHP: `php -l` en todos los archivos del backend (0 errores).
+- Verificación de compilación Frontend: `npm run build` en `frontend/` ejecutado con éxito (0 errores).
+- Casos de prueba de caja negra documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md` (casos `CN-CU17-01` a `CN-CU17-10`).
+

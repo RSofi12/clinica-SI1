@@ -4,6 +4,7 @@ import { patientService } from '../services/patientService';
 import { PatientFormModal } from './PatientFormModal';
 import { PatientDetailModal } from './PatientDetailModal';
 import { PatientWebAccountModal } from './PatientWebAccountModal';
+import { AntecedentesPatientModal } from '../../medical-records/components/AntecedentesPatientModal';
 import {
   Users,
   Search,
@@ -48,6 +49,7 @@ export function PatientsManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isWebAccountOpen, setIsWebAccountOpen] = useState(false);
+  const [patientForAntecedentes, setPatientForAntecedentes] = useState(null);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [webAccountPatient, setWebAccountPatient] = useState(null);
   const [actionLoadingId, setActionLoadingId] = useState(null);

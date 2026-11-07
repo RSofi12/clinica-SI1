@@ -78,7 +78,7 @@
 ## 🌟 Ruta de Trabajo Inmediata para Ciclo 2 (Desarrollo Funcional)
 1. [x] **CU11:** Reprogramar Cita Médica (RF08) con nueva fecha/hora, anti-colisión transaccional y modal reactivo con `/frontend-design` (Completado al 100% — 05/11/2026).
 2. [x] **CU13:** Registrar Asistencia y Cambio de Estado de Cita Médica (RF10) — Programada → Confirmada (Check-in) → Atendida / Inasistencia con máquina de estados, modal reactivo y trazabilidad cronológica (Completado al 100% — 06/11/2026).
-3. [ ] **CU17 (En Progreso - Backend Completado):** Gestionar Antecedentes Médicos (Extra / §3.4) — Backend 100% operativo; pendiente interfaz y modal en Frontend.
+3. [x] **CU17:** Gestionar Antecedentes Médicos (Extra / §3.4) — 5 categorías oficiales, modal con chips rápidos, gestor integral con filtros y baja lógica RN11, e integración reactiva con alertas alérgicas en consultas médicas (Completado al 100% — 07/11/2026).
 4. [ ] **CU18 - CU19, CU25, CU26:** Expediente Clínico Digital, Recetas Estructuradas, Órdenes de Exámenes y Documentos Adjuntos.
 4. [ ] **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
 5. [ ] **CU22 - CU24:** Reportes Gerenciales con Filtros Dinámicos (RF13), Dictado por Voz con IA y Dashboard Ejecutivo de KPIs.

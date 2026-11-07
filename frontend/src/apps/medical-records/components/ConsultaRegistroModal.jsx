@@ -16,7 +16,9 @@ import {
   Weight,
   Ruler,
   Droplets,
+  ShieldAlert,
 } from 'lucide-react';
+import { AntecedentesPatientModal } from './AntecedentesPatientModal';
 import { consultaService } from '../services/consultaService';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -127,6 +129,15 @@ function DiagnosticoItem({ item, index, onChange, onRemove, canRemove }) {
 export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistrada }) {
   const [contexto, setContexto] = useState(null);
   const [loadingContexto, setLoadingContexto] = useState(false);
+  const [isAntecedentesModalOpen, setIsAntecedentesModalOpen] = useState(false);
+
+  const recargarContexto = useCallback(() => {
+    if (!cita?.id_cita) return;
+    consultaService
+      .prepararConsulta(cita.id_cita)
+      .then((res) => setContexto(res?.data || res))
+      .catch(() => {});
+  }, [cita?.id_cita]);
 
   // Formulario
   const [form, setForm] = useState({
@@ -294,11 +305,24 @@ export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistr
             <>
               {/* ── Sección 1: Cabecera del Paciente ───────────────────── */}
               <div className="bg-slate-50/60 rounded-xl border border-slate-100 p-4 space-y-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <User className="w-4 h-4 text-[#00687a]" />
-                  <span className="font-bold text-slate-700 text-xs uppercase tracking-wider">
-                    Datos del Paciente
-                  </span>
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-[#00687a]" />
+                    <span className="font-bold text-slate-700 text-xs uppercase tracking-wider">
+                      Datos del Paciente
+                    </span>
+                  </div>
+                  {paciente && (
+                    <button
+                      type="button"
+                      onClick={() => setIsAntecedentesModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-lg transition cursor-pointer"
+                      title="Ver y Gestionar Antecedentes Médicos (CU17)"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
+                      Gestionar Antecedentes
+                    </button>
+                  )}
                 </div>
 
                 {tieneAlergias && (
@@ -609,6 +633,16 @@ export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistr
           </div>
         )}
       </div>
+
+      {/* Modal de Gestión de Antecedentes Médicos (CU17) */}
+      {isAntecedentesModalOpen && paciente && (
+        <AntecedentesPatientModal
+          isOpen={isAntecedentesModalOpen}
+          patient={paciente}
+          onClose={() => setIsAntecedentesModalOpen(false)}
+          onAntecedentesUpdated={recargarContexto}
+        />
+      )}
     </div>
   );
 }

@@ -160,7 +160,7 @@
   - Integrar métodos en `appointmentService.js`.
   - Crear modal interactivo `AppointmentStatusModal.jsx` y botones de acción rápida en mostrador (`AppointmentsManager.jsx`) y agenda médica (`DoctorAgendaView.jsx`).
 
-### 11. CU17: Gestionar Antecedentes Médicos (Extra / §3.4) — Backend Operativo (07/Noviembre/2026)
+### 11. CU17: Gestionar Antecedentes Médicos (Extra / §3.4) — 100% Full-Stack Operativo (07/Noviembre/2026)
 - **Backend:**
   - Modelo: `Antecedente.php` con 5 tipos formales y scopes.
   - Requests: `AntecedenteCreateRequest.php` y `AntecedenteUpdateRequest.php`.
@@ -171,8 +171,10 @@
     - `POST /api/medical-records/patients/{patientId}/antecedentes`
     - `PUT /api/medical-records/antecedentes/{id}`
     - `PATCH /api/medical-records/antecedentes/{id}/toggle-status`
-  - Verificación: Sintaxis PHP 100% limpia comproba con `php -l`.
-- **Pendiente Inmediato Frontend:**
-  - Servicio API `antecedenteService.js`.
-  - Vista/modal de gestión categorizada de antecedentes (`AntecedentesPatientView.jsx` / `AntecedenteFormModal.jsx`).
-  - Integración del banner de advertencia de alergias en `ConsultaRegistroModal.jsx` (CU16) y ficha del paciente.
+  - Verificación: Sintaxis PHP 100% limpia comprobada con `php -l`.
+- **Frontend:**
+  - Servicio API: `antecedenteService.js`.
+  - Modales: `AntecedenteFormModal.jsx` (chips rápidos y categorías oficiales) y `AntecedentesPatientModal.jsx` (pestañas, alergias destacadas, baja lógica RN11).
+  - Integraciones: `ConsultaRegistroModal.jsx` (gestión directa en consulta activa y recarga de alertas alérgicas), `ConsultasManager.jsx` y `PatientsManager.jsx`.
+  - Verificación: Compilación de producción con `npm run build` exitosa (0 errores).
+  - Pruebas: Casos `CN-CU17-01` a `CN-CU17-10` documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md`.

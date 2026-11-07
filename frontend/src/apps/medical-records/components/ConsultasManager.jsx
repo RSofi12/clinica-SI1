@@ -12,7 +12,9 @@ import {
   Clock,
   Stethoscope,
   User,
+  ShieldAlert,
 } from 'lucide-react';
+import { AntecedentesPatientModal } from './AntecedentesPatientModal';
 import { consultaService } from '../services/consultaService';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -28,6 +30,8 @@ function KpiCard({ label, value, icon: Icon, colorClass = 'text-[#00687a]', bord
         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">{label}</span>
         <span className={`text-2xl font-extrabold ${colorClass} leading-none mt-0.5 block`}>{value}</span>
       </div>
+
+
     </div>
   );
 }
@@ -68,6 +72,7 @@ export function ConsultasManager() {
   const [search, setSearch] = useState('');
   const [fecha, setFecha] = useState('');
   const [page, setPage] = useState(1);
+  const [selectedPatientForAntecedentes, setSelectedPatientForAntecedentes] = useState(null);
 
   const debounceRef = useRef(null);
 
@@ -350,15 +355,28 @@ export function ConsultasManager() {
 
                         {/* Acciones */}
                         <td className="px-5 py-3.5 text-right">
-                          <button
-                            type="button"
-                            onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
-                            title="Ver detalle de la consulta"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                            Ver Detalle
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            {c.paciente && (
+                              <button
+                                type="button"
+                                onClick={() => setSelectedPatientForAntecedentes(c.paciente)}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-lg transition cursor-pointer"
+                                title="Ver y Gestionar Antecedentes Médicos (CU17)"
+                              >
+                                <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
+                                Antecedentes
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
+                              title="Ver detalle de la consulta"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              Ver Detalle
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -392,14 +410,26 @@ export function ConsultasManager() {
                         <span className="text-xs text-slate-700 truncate">{diag.descripcion}</span>
                       </div>
                     )}
-                    <button
-                      type="button"
-                      onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
-                      className="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      Ver Detalle
-                    </button>
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {c.paciente && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedPatientForAntecedentes(c.paciente)}
+                          className="flex items-center justify-center gap-1 px-2.5 py-1.5 text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-lg transition cursor-pointer"
+                        >
+                          <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
+                          Antecedentes
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
+                        className="flex items-center justify-center gap-1 px-2.5 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        Ver Detalle
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -434,6 +464,15 @@ export function ConsultasManager() {
           </>
         )}
       </div>
+
+      {/* Modal de Antecedentes Médicos (CU17) */}
+      {selectedPatientForAntecedentes && (
+        <AntecedentesPatientModal
+          isOpen={Boolean(selectedPatientForAntecedentes)}
+          patient={selectedPatientForAntecedentes}
+          onClose={() => setSelectedPatientForAntecedentes(null)}
+        />
+      )}
     </div>
   );
 }

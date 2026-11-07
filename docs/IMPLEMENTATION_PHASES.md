@@ -322,10 +322,10 @@ pm run build exitoso).
 - [x] **Frontend:** Formulario clínico de atención para el médico (`ConsultaRegistroModal.jsx`).
 - [x] **Fase de Pruebas:** Transición inmediata de cita a atendida tras guardar consulta médica.
 
-#### ⏳ CU17: Gestionar Antecedentes Médicos (Extra)
+#### ✅ CU17: Gestionar Antecedentes Médicos (Extra)
 - [x] **Backend:** Catálogo y registro de antecedentes en 5 categorías (Patológicos, Quirúrgicos, Alérgicos, Familiares, Farmacológicos) con resiliencia de historia clínica, validación anti-duplicados, baja lógica (RN11), scoping RBAC/anti-IDOR y auditoría inmutable en `bitacora`.
-- [ ] **Frontend:** Resumen clínico de alertas (ej. alergia a penicilina destacada en rojo).
-- [ ] **Fase de Pruebas:** Persistencia en ficha permanente del paciente.
+- [x] **Frontend:** Servicio `antecedenteService.js`, modal de formulario `AntecedenteFormModal.jsx` con chips rápidos y 5 categorías, gestor integral `AntecedentesPatientModal.jsx` con filtrado por pestañas y baja lógica RN11, e integración reactiva con alertas alérgicas en `ConsultaRegistroModal.jsx`, `ConsultasManager.jsx` y `PatientsManager.jsx`.
+- [x] **Fase de Pruebas:** Persistencia en ficha permanente del paciente, reactividad de advertencias de alergias en tiempo real, 10 casos de prueba documentados (`CN-CU17-01` a `CN-CU17-10`).
 
 #### ⏳ CU18: Gestionar Expediente Clínico Digital (Extra)
 - [ ] **Backend:** Notas de evolución médica, recetas estructuradas y órdenes de laboratorio.

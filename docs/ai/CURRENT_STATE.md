@@ -330,10 +330,20 @@
   - ✅ **Agenda Médica (`DoctorAgendaView.jsx`):** Integración en el cronograma timeline diario.
   - ✅ **Compilación:** Verificada con `npm run build` limpia al 100%.
 
-### 12. Implementación de CU17 (Gestionar Antecedentes Médicos — Extra / §3.4) — Backend Completado
+### 12. Implementación de CU17 (Gestionar Antecedentes Médicos — Extra / §3.4) — 100% Operativo (Full-Stack)
 - **Backend (`backend/app/Packages/MedicalRecords/`):**
   - ✅ **Modelo de Dominio (`Antecedente.php`):** Constantes de tipo (`PATOLOGICO`, `QUIRURGICO`, `ALERGICO`, `FAMILIAR`, `FARMACOLOGICO`), estados (`ACTIVO`, `INACTIVO`), scopes (`activos`, `porTipo`, `alergicos`) y método `esAlergico()`.
   - ✅ **FormRequests (`AntecedenteCreateRequest.php` y `AntecedenteUpdateRequest.php`):** Validación rigurosa de categorías permitidas y longitud de descripción en español.
   - ✅ **Servicio Transaccional (`AntecedenteService.php`):** Consulta con scoping RBAC/anti-IDOR (paciente solo ve sus antecedentes, recepcionista bloqueada por confidencialidad), resiliencia de historia clínica (`firstOrCreate`), descarte de duplicados idénticos activos, baja lógica reversible (`RN11`) y auditoría inmutable en `bitacora` (CU03).
   - ✅ **Controlador (`AntecedentesController.php`):** Endpoints REST paginados/filtrados por paciente, alta, edición y `toggle-status`.
   - ✅ **Rutas (`routes/api.php`):** Registradas bajo prefijo `medical-records` protegidas por roles con middleware `EnsureUserRole`.
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio (`antecedenteService.js`):** Métodos `fetchPatientAntecedentes`, `createAntecedente`, `updateAntecedente`, `toggleAntecedenteStatus`.
+  - ✅ **Modal Formulario (`AntecedenteFormModal.jsx`):** Selector semántico de categorías, chips rápidos de autocompletado (Alergias a Penicilina, AINEs, Látex, HTA, Asma, Diabetes) y validación en tiempo real.
+  - ✅ **Modal Gestor (`AntecedentesPatientModal.jsx`):** Vista integral por pestañas de categorías, alertas prominentes en rojo/ámbar para alergias activas, filtro de activos/inactivos para baja lógica RN11 y edición fluida.
+  - ✅ **Integraciones Reactivas:**
+    - `ConsultaRegistroModal.jsx`: Acceso directo para el médico durante la consulta con refresco instantáneo de advertencias alérgicas.
+    - `ConsultasManager.jsx`: Botón contextual de antecedentes en tabla y vista móvil.
+    - `PatientsManager.jsx`: Botón de antecedentes por paciente en el padrón de pacientes.
+  - ✅ **Compilación:** `npm run build` exitoso con 0 errores.
+- **Pruebas:** 10 casos de prueba de caja negra documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md` (`CN-CU17-01` a `CN-CU17-10`).
