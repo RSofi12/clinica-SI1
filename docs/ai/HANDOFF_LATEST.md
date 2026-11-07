@@ -1,5 +1,17 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Fix: Modal Activar Paciente Fijo en Viewport con createPortal y Scroll-Lock)
+- **Corrección en [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx):**
+  - **Eliminación del desplazamiento por scroll:** Se implementó `createPortal` hacia `document.body` y se desacopló el modal del contenedor con animación `transform` (`animate-view-fade`), eliminando el problema por el cual el modal se movía con el scroll vertical de la página de inicio.
+  - **Bloqueo del scroll del body:** `document.body.style.overflow = 'hidden'` mientras el modal permanezca activo, restaurándose limpiamente al cerrarlo.
+  - **Cierre por interacción exterior y teclado:** Se habilitó el cierre al hacer clic sobre el backdrop oscuro exterior (`e.target === e.currentTarget`) y al presionar la tecla `Escape`.
+  - **Centrado vertical responsivo:** Uso de `my-auto` en el panel principal para garantizar que quede centrado en el viewport sin importar la resolución.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2043 módulos, 11.8s).
+- **Commit en Rama `prueba`:**
+  - `5c4fe1b`: `fix(auth): corregir modal de activacion de paciente con createPortal, scroll-lock y cierre en backdrop`
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Sidebar Aqua Profundo, Acciones en 2 Filas y Notificaciones Push UI)
 - **Rediseño Editorial del Sidebar con `/design-taste-frontend` ([`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx)):**
   - **Color institucional unificado:** Se convirtió todo el sidebar a un fondo aqua profundo (`#003844` / deep teal médico) con borde sutil `#002830`, eliminando el fondo blanco plano anterior.
