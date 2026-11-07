@@ -408,10 +408,10 @@ pm run build exitoso).
   - [x] Dictado: *"Citas canceladas de este mes"*, *"Atenciones de hoy"*, *"Balance de la semana pasada"* resolviendo fechas y filtros en PostgreSQL.
   - [x] Fallback de escritura manual cuando no hay permisos de micrófono.
 
-#### ⏳ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
-- [ ] **Backend:** Endpoint de agregación analítica en tiempo real (citas por estado, ocupación médica, ingresos estimados).
-- [ ] **Frontend:** Panel visual ejecutivo (`DashboardView.jsx`) con tarjetas de métricas interactivas y gráficos de tendencia.
-- [ ] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en base de datos.
+#### ✅ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
+- [x] **Backend:** Endpoint de agregación analítica en tiempo real (`DashboardController.php` - `GET /api/analytics/dashboard-kpis`) con scoping por rol y filtros temporales (`hoy`, `7d`, `30d`, `mes`, custom).
+- [x] **Frontend:** Panel visual ejecutivo (`ClinicalDashboardView.jsx` y `InicioPanelView.jsx`) con tarjetas KPI, selector de períodos, desglose de estados y operativo diario.
+- [x] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en PostgreSQL (`clinica_db`), compilación limpia con Vite.
 
 #### 🟡 CU27-RES: Exportar Expediente Clínico y Receta en PDF (Reserva Condicional / Subfunción CU18-19)
 - [ ] Generación de documentos descargables con membrete oficial e impresión.

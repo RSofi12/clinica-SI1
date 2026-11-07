@@ -12,7 +12,7 @@
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **2 completados de 13 (+2) (CU11, CU23)**. Total Global: **15 de 26 (+2) completados (57.7%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **3 completados de 13 (+2) (CU11, CU23, CU24)**. Total Global: **16 de 26 (+2) completados (61.5%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -290,14 +290,21 @@
 - **Frontend (`frontend/src/apps/analytics/`):**
   - ✅ Servicio `analyticsService.js`: consumo de endpoints y exportador a CSV estándar del navegador.
   - ✅ Componente `VoiceReportAssistant.jsx`:
-    - Diseño adaptado a la identidad visual de la clínica con paleta `#004d5a`, `#00687a`, `#008b9e` y directrices `/frontend-design`.
-    - Micrófono interactivo con Web Speech API (`window.webkitSpeechRecognition`), animación de ondas de audio (ecualizador en vivo) y pulso de escucha activa.
+    - Diseño adaptado a la identidad visual de la clínica con paleta `#004d5a`, `#00687a`, `#008b9e` y directrices `/design-taste-frontend` con micro-interacciones suaves (`hover:-translate-y-0.5`, transiciones fluidas de 300ms sin saltos abruptos).
+    - Micrófono interactivo con Web Speech API optimizado para escritorio y celular:
+      - Solicitud previa y explícita de hardware vía `navigator.mediaDevices.getUserMedia({ audio: true })` para activar los permisos nativos del navegador.
+      - Modo `continuous = true` con watchdog de silencio (3.5s) que previene el apagado prematuro a los 2 segundos por pausas breves al hablar.
+      - Idioma estandarizado a `es-419` (Español Latinoamericano universal) con alta compatibilidad en motores de voz sin fallos de red.
+      - Detección de orígenes seguros (`isSecureContext`) para orientar a usuarios móviles si acceden por IP local.
     - Transcripción en tiempo real con campo editable y fallback manual por teclado ante navegadores sin soporte o permisos denegados.
     - Chips con consultas de ejemplo dictables (*"Citas canceladas de este mes"*, *"Atenciones de hoy"*, etc.).
     - Cajón desplegable de consultas recientes para reejecución en 1 clic.
     - 4 Tarjetas KPI interactivas (Total, Atendidas, Canceladas, Tasa de Asistencia).
     - Tabla detallada con badges estilizados según estado y buscador dinámico integrado.
-    - Botón de exportación instantánea a CSV.
+    - **Trío de Exportadores Oficiales:**
+      - 📄 **Exportar PDF:** Documento institucional apaisado con membrete del Centro Médico La Cruz, tabla formateada e impresión nativa del navegador.
+      - 📊 **Exportar Excel (`.xls`):** Hoja de cálculo con encabezados, KPIs y tabla de registros formateada con estilos nativos.
+      - 📑 **Exportar CSV:** Archivo estándar UTF-8 con BOM para visualización universal.
   - ✅ Integración en `Sidebar.jsx` (grupo "Reportes y Analítica (P6)") y renderizado condicional en `App.jsx`.
   - ✅ Compilación de producción exitosa con Vite (`npm run build` en 52.15s, 0 errores).
 

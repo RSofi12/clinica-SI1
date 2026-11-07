@@ -152,4 +152,12 @@
   2. Cumplir con los requerimientos de auditoría y ciclo de vida (RF08) asegurando que cualquier cambio quede formalmente versionado en migraciones Laravel y documentado en bitácoras.
 * **Impacto:** Todo ajuste técnico en la base de datos se implementa en migraciones versionadas de Laravel, se sincroniza en `DDL_Database_Clinica_LaCruz.sql` y se refleja en `diagrama_de_clases.puml`.
 
+### Registro 22: 2026-11-07
+* **Decisión:** Desacoplamiento de la pantalla inicial en dos vistas principales: **`Inicio del panel`** (orientada al operador/actor con saludo, estado de cuenta y accesos rápidos a CUs) y **`Dashboard Clínico`** (orientada a KPIs ejecutivos, operativa del día y distribución de estados en tiempo real según CU24).
+* **Motivo:**
+  1. Separar la experiencia de bienvenida y despacho de tareas del análisis cuantitativo y métricas gerenciales.
+  2. Eliminar la sobrecarga cognitiva del panel previo (bloques densos de texto) y sustituirlo por un dashboard limpio, filtrable por fechas (`Hoy`, `7d`, `30d`, `Mes`) con KPIs visuales de ocupación y atención.
+  3. Preservar la trazabilidad de los 24 Casos de Uso del examen en un cajón colapsable para auditoría docente sin saturar la vista operativa.
+* **Impacto:** Creación de `InicioPanelView.jsx`, `ClinicalDashboardView.jsx` y `DashboardController.php` con ruta `/api/analytics/dashboard-kpis`. Incorporación de `Inicio` y `Dashboard Clínico` en la navegación principal del `Sidebar.jsx`.
+
 
