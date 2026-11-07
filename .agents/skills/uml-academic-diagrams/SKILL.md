@@ -6,28 +6,44 @@ description: Guía y estándares obligatorios para la generación de Diagramas U
 # 📐 Estándar Oficial de Diagramas UML (PUDS / RUP / BCE)
 ### Clínica Vida Salud — Centro Médico La Cruz
 
-Este documento define las reglas estrictas de modelado, diseño visual, nomenclatura y sintaxis técnica para generar diagramas de **Secuencia**, **Comunicación** y **Análisis de Clases** fieles al código fuente del sistema.
+Este documento define las reglas estrictas de modelado, diseño visual, nomenclatura, estructura relacional y sintaxis técnica para generar diagramas de **Secuencia**, **Comunicación** y **Análisis de Clases** bajo los más altos estándares académicos y de ingeniería de software.
 
 ---
 
-## 1. 🏛️ Arquitectura BCE y Distribución Canónica
+## 1. 🏛️ Arquitectura BCE y Principios de Elaboración
 
-Todos los diagramas de comportamiento y análisis deben respetar el patrón **BCE (Boundary - Control - Entity)** y ordenarse de izquierda a derecha en **distribución horizontal**:
+### 1.1. Fuente de Verdad para la Elaboración de Diagramas
+* **Caso de Uso ya Implementado (Fuente Primaria: Código Real):**  
+  La elaboración de los diagramas UML se realiza **principalmente y con total fidelidad a partir del código ya implementado** en el sistema:
+  - Métodos y rutas en controladores (`app/Http/Controllers/...`).
+  - Servicios transaccionales y de dominio (`app/Services/...`).
+  - FormRequests y reglas de validación (`app/Http/Requests/...`).
+  - Modelos Eloquent en singular y relaciones en español (`app/Models/...`).
+  - Tablas de base de datos (`docs/database/DDL_Database_Clinica_LaCruz.sql`).
+  - Vistas y componentes modales React (`resources/js/...`).
+* **Caso de Uso No Implementado (Plan de Implementación Previo):**  
+  Si el usuario solicita generar los diagramas cuando el Caso de Uso **aún no está codificado**, se diagraman como un **plan de implementación previo completo, riguroso y detallado**, tomando obligatoriamente como fuentes de verdad:
+  - Documentos de contexto (`docs/ai/ARCHITECTURE.md`, `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/Ex_Parcial_2_sistemas-1.md`).
+  - Modelo general de clases y base de datos (`docs/database/diagrama_de_clases.puml`, `DDL_Database_Clinica_LaCruz.sql`).
+  - Requerimientos, reglas de negocio e información funcional específica provista por el usuario.
+
+### 1.2. Patrón Canónico Horizontal BCE
+Todos los diagramas deben respetar el patrón **BCE (Boundary - Control - Entity)** y ordenarse de izquierda a derecha en **distribución horizontal continua**:
 
 ```text
-[Actor / Actores] ──► [Boundary / Pantalla] ──► [Controlador] ──► [Entidades de Dominio]
+[Actor / Actores] ──► [Boundary / Interfaz] ──► [Controlador / Control] ──► [Entidades de Dominio]
 ```
 
 ### Reglas Estructurales Obligatorias:
-1. **Actor:** Humano iniciador (ej. `Administrador`, `Recepcionista`, `Médico`, `Paciente`). Si varios actores ejecutan exactamente la misma función en el CU, se separan con barra: `Recepcionista / Paciente`.
-2. **Boundary (Interfaz/Pantalla):** Componente React o vista (`:NombreModal`, `:NombreView`, `[:NombreBoundary]`).
-3. **Controller (Controlador):** Controlador de Laravel (`:NombreController`). Toda la lógica, bifurcaciones y validaciones se centralizan aquí.
-4. **Entities (Entidades):** Modelos de dominio Eloquent / tablas PostgreSQL (`:Cita`, `:Medico`, `:Paciente`, `:Bitacora`, etc.).
-5. **Aislamiento de Entidades:**
-   - Las entidades **NUNCA** se envían mensajes entre ellas.
-   - Las entidades **NUNCA** devuelven mensajes a otras entidades.
-   - En el diagrama de comunicación, las entidades **NO** envían mensajes de regreso al controlador (las respuestas de datos las orquesta el controller).
-6. **Validaciones en Controlador:** Si el código ejecuta validaciones internas (ej. verificar horarios, anti-colisión, reglas de negocio), se modelan como mensajes reflexivos hacia sí mismo (`self-call` en el Controller).
+1. **Actor:** Humano iniciador (ej. `Administrador`, `Recepcionista`, `Médico`, `Paciente`). Si dos actores ejecutan idéntica interacción en el CU, se unifican con barra: `Recepcionista / Paciente`.
+2. **Boundary (Interfaz / Pantalla):** Componente de frontend o vista (`:ConsultaRegistroModal`, `:AppointmentsManager`, `:PatientProfileView`).
+3. **Control (Controlador):** Controlador de Laravel (`:ConsultasController`, `:AppointmentsController`). Toda la lógica, orquestación, transacciones (`DB::transaction`) y validaciones se centralizan aquí.
+4. **Entity (Entidades de Dominio):** Modelos Eloquent / tablas PostgreSQL (`:Cita`, `:ConsultaMedica`, `:Diagnostico`, `:Bitacora`, etc.).
+5. **Aislamiento Estricto de Entidades:**
+   - Las entidades **NUNCA** se envían mensajes entre sí.
+   - Las entidades **NUNCA** devuelven respuestas a otras entidades.
+   - En el diagrama de comunicación, las entidades **NO** envían mensajes de regreso a los controladores (las respuestas de datos las orquesta el controller).
+6. **Validaciones en Controlador:** Si el código ejecuta validaciones internas (reglas de negocio, chequeos anti-colisión, unicidad), se modelan como mensajes reflexivos hacia sí mismo (`self-call` en el Controller).
 
 ---
 
@@ -41,50 +57,114 @@ Todos los diagramas de comportamiento y análisis deben respetar el patrón **BC
   - Trazado de **línea de vida (lifeline)** visible y continua para cada componente, incluyendo el actor.
 * **Mensajes y Funciones:**
   - Numeración jerárquica estricta: `1`, `1.1`, `1.2`, `1.2.1`, `2`, `2.1`, etc.
-  - Nombres reales del código fuente (métodos de servicios, controladores, FormRequests, llamadas REST GET/POST y consultas Eloquent).
+  - Nombres reales del código fuente (métodos de controladores, servicios, FormRequests, llamadas REST GET/POST y consultas Eloquent).
   - **Convención de Parámetros:** Funciones sin parámetros `metodo()` o con 1 parámetro `metodo(id)`. Si el método en el código recibe múltiples argumentos, **dejar los paréntesis vacíos `metodo()`**.
-  - **Retornos:** Mostrar flechas de retorno discontinuas (`dash`) únicamente hacia el controlador o la pantalla si el código tiene una respuesta explícita.
+  - **Enlaces Direccionales y Retornos:**
+    - Los mensajes secuenciales van en su link con flecha hacia adelante (`→`).
+    - Los retornos van en su link separado con flecha hacia atrás (`←`) y línea discontinua (`dash`), únicamente hacia el controlador o la pantalla cuando el código tiene retorno explícito.
 * **Fragmentos Combinados (UML 2.5+):**
-  - **`alt` (Bifurcaciones / Decisiones):** Máximo **3 fragmentos `alt`** por diagrama para mantenerlo limpio y legible. Añadir más solo si la lógica central del CU lo exige indispensablemente.
-  - **`opt` (Opcionales):** Para pasos condicionales sin rama alternativa (ej. registrar auditoría si la configuración lo activa, enviar email opcional).
-  - **`loop` (Iteraciones):** Para bucles de procesamiento (ej. generación de slots de turnos, iteración de detalles de receta).
+  - **`alt` (Bifurcaciones / Decisiones):** Máximo **3 fragmentos `alt`** por diagrama para mantenerlo limpio y legible.
+  - **`opt` (Opcionales):** Para pasos condicionales sin rama alternativa (ej. auditoría opcional, envío de notificación).
+  - **`loop` (Iteraciones):** Para bucles de procesamiento (ej. iterar detalles de diagnóstico, recetas o slots).
+  - **Comentarios Obligatorios de Rango de Mensajes:** En todo script JScript, antes de declarar cada fragmento (`alt`, `opt`, `loop`), es **obligatorio escribir en los comentarios desde qué mensaje y hasta qué mensaje abarca**:
+    ```javascript
+    // FRAGMENTO ALT [Guardia / Condicion]: Abarca desde Mensaje X.X hasta Y.Y
+    // FRAGMENTO LOOP [Iteracion]: Abarca desde Mensaje Z.1 hasta Z.N
+    // FRAGMENTO OPT [Condicion]: Abarca Mensaje W.W
+    ```
   - Prohibido el uso de fragmentos redundantes o decorativos. Evitar cruces de líneas.
 
 ---
 
-## 3. 💬 Diagrama de Comunicación (Draw.io / JScript)
+## 3. 💬 Diagrama de Comunicación
 
-* **Formato:** Archivo `.drawio` (XML estructurado) o Script `.js` para EA.
-* **Correspondencia 1:1 con Secuencia:** Debe incluir exactamente los mismos participantes, mismos nombres de clases y mismo orden de mensajes que el diagrama de secuencia del mismo CU.
-* **Iconos Canónicos:** A diferencia del de secuencia, en el diagrama de comunicación **SÍ se utilizan los iconos formales de estereotipos BCE**:
-  - `Boundary`: Círculo con barra vertical a la izquierda.
-  - `Control`: Círculo con flecha curva superior derecha.
-  - `Entity`: Círculo con barra inferior horizontal.
+El Diagrama de Comunicación resalta la arquitectura y organización espacial de los objetos que colaboran en el CU.
+
+* **Correspondencia 1:1 con Secuencia:** Debe incluir exactamente los mismos participantes y el mismo orden/numeración de mensajes que el diagrama de secuencia del mismo CU.
+* **Iconos Canónicos BCE:** En este diagrama **SÍ se utilizan los iconos formales de estereotipos BCE**:
+  - `Boundary`: Círculo con barra vertical a la izquierda (`shape=umlBoundary`).
+  - `Control`: Círculo con flecha curva superior derecha (`shape=umlControl`).
+  - `Entity`: Círculo con barra inferior horizontal (`shape=umlEntity`).
 * **Nombres:** Sin prefijo de estereotipo en el texto visible; solo el nombre del objeto (`:AppointmentsController`, `:Cita`).
-* **Líneas y Mensajes:**
-  - **Relación individual por mensaje:** Cada mensaje cuenta con su **relación individual entre los componentes** (facilitando acomodar y distribuir visualmente cada interacción con holgura), con una **flecha direccional señalando hacia el componente destino**.
-  - Numeración secuencial y nombres de funciones fieles al código: `1.1: processVoiceCommand(request) ➔`.
-  - **Validaciones en Controlador:** Si el código contiene validaciones internas o verificaciones lógicas, se muestran explícitamente en el Controller mediante mensajes reflexivos hacia sí mismo.
-  - Las entidades **NO** envían mensajes de regreso a los controladores.
+
+### 3.1. Estándar de Diseño para Draw.io (`.drawio`)
+En Draw.io, el diagrama debe mantener holgura visual y máxima claridad estética:
+1. **Flecha Arriba de Cada Mensaje (No a un Lado):**  
+   Cada mensaje se compone de **dos celdas (`mxCell`) independientes**:
+   - Una celda de texto para la etiqueta del método (ej. `1.1: index()`).
+   - Una celda tipo arista/flecha (`edge`) colocada **directamente encima de la celda de texto**, orientada horizontalmente hacia el componente receptor.
+2. **Posición Respecto a la Línea de Relación:**
+   - **Llamadas Secuenciales (Invocaciones):** Se ubican **ARRIBA** de la línea continua de relación con flecha continua (`endArrow=classic`).
+   - **Retornos de Datos (Respuestas):** Se ubican **ABAJO** de la línea de relación con flecha a rayas / discontinua (`dashed=1;` / `<------`) orientada de regreso hacia el emisor.
+3. **Diferenciación Cromática de Flujos (Paleta Oficial de Colores Oscuros):**  
+   Cada flujo principal de interacción (determinado por su número raíz: Flujo 1, Flujo 2, Flujo 3...) debe distinguirse visualmente en el texto del mensaje y en su flecha asociada utilizando la siguiente paleta formal:
+   - **Flujo 1 (Principal / Listado / Consulta):** Negro (`#000000`) o Azul Marino Oscuro (`#003366`).
+   - **Flujo 2 (Creación / Filtros / Catálogo):** Verde Bosque Oscuro (`#005522`).
+   - **Flujo 3 (Actualización / Métricas / Edición):** Púrpura / Morado Oscuro (`#4B0082`).
+   - **Flujo 4 (Eliminación / Detalle / Estado):** Azul Marino Oscuro (`#003366`).
+4. **Validaciones Reflexivas en Controlador:** Se representan con una auto-relación curva sobre el Controller con los mensajes de validación apilados a la izquierda o derecha del bucle.
+
+### 3.2. Estándar para JScript (Enterprise Architect)
+Enterprise Architect gestiona las flechas y mensajes mediante conectores de comunicación:
+* **Separación Obligatoria en 2 Conectores (Llamadas vs. Retornos):**
+  - **Prohibido unificar llamadas y retornos en una sola asociación.**
+  - **Conector 1 (Llamadas Secuenciales / Forward):**
+    - Creado desde el participante origen hacia el destino (`origen -> destino`).
+    - Tipo: `"Communication"` (o `"Association"`).
+    - Dirección explícita: `con.Direction = "Source -> Destination";` (garantiza flecha visible hacia el destino).
+    - Métodos con sufijo direccional: `1: solicitar() →`.
+  - **Conector 2 (Retornos / Respuestas):**
+    - Creado desde el participante receptor de regreso hacia el emisor (`destino -> origen`).
+    - Tipo: `"Communication"`.
+    - Dirección explícita: `con.Direction = "Source -> Destination";` (garantiza flecha visible hacia el emisor original).
+    - Estereotipo: `con.Stereotype = "return";`
+    - Métodos con prefijo direccional: `← 1.14: 201 Created (consulta)`.
+* **Conectores hacia Entidades:** Siempre **unidireccionales** desde el Controlador hacia las Entidades (`Direction = "Source -> Destination"`). Las entidades jamás retornan mensajes ni se conectan entre sí.
 
 ---
 
 ## 4. 📊 Diagrama de Análisis de Clases (Draw.io)
 
+El Diagrama de Análisis de Clases (VOPC - *View of Participating Classes*) describe las clases del dominio y las fronteras arquitectónicas que participan en la realización de un Caso de Uso.
+
 * **Formato:** Archivo `.drawio` en `docsUML/CUanalisisClase/CUxx_Nombre_CU.drawio`.
-* **Participantes:**
+* **Geometría de Cajas Rectas (Sin Redondeado):**  
+  Todas las clases e interfaces se dibujan como **rectángulos con esquinas rectas (`rounded=0;`)**, sin bordes redondeados (`rounded=1` o `curved=1` estrictamente prohibido en los vértices de las clases).
+* **Estructura de Componentes:**
   - `Actor`: `shape=umlActor`.
   - `<<Interface>> [Boundary]`: Atributos de estado (`isListening: Boolean`, `loading: Boolean`) y métodos de eventos (`handleSubmit(): void`).
   - `<<Controller>> [Controller]`: Métodos REST del controlador Laravel con su tipo de retorno (`process(): JsonResponse`).
-  - `<<Entity>> [Modelos]`: Atributos reales con tipos PostgreSQL (`Long [PK]`, `String`, `DateTime`, `Boolean`, `Jsonb`) y relaciones Eloquent tipadas (`citas(): List`, `usuario(): User`).
+  - `<<Entity>> [Modelos]`: Atributos reales con tipos PostgreSQL (`Long [PK]`, `String`, `DateTime`, `Boolean`, `Decimal`) y relaciones Eloquent tipadas (`citas(): List`, `usuario(): User`).
 * **⚠️ REGLA DE ORO DE RELACIONES Y CARDINALIDADES (INVIOLABLE):**
-  - Las relaciones formales UML (**Composición**, **Agregación**, **Herencia / Generalización**, **Asociación**) y sus respectivas cardinalidades (`+1`, `+0..1`, `+0..*`, `+1..*`) se diagraman **ÚNICAMENTE ENTRE ENTIDADES**.
+  - Las relaciones formales UML (**Composición**, **Agregación**, **Herencia / Generalización**, **Asociación**) y sus respectivas cardinalidades (`1`, `0..1`, `0..*`, `1..*`) se diagraman **ÚNICAMENTE ENTRE ENTIDADES**.
   - Las conexiones entre `Actor ➔ Interface`, `Interface ➔ Controller` y `Controller ➔ Entities` se trazan con líneas simples de navegación/dependencia (`endArrow=none;endFill=0`), **SIN cardinalidades ni multiplicidades**.
+
+### 4.1. Regla UML VOPC: Entidades Participantes vs. Conexión con el Controller
+* **¿Por qué hay entidades que NO se conectan directamente al Controller?**  
+  En la especificación oficial de UML y el Proceso Unificado (PUDS/RUP), el diagrama de análisis de clases representa la **Vista de Clases Participantes (VOPC)** del Caso de Uso. Aquellas entidades que forman parte del agregado del dominio o cuyo ciclo de vida está subordinado a una entidad raíz (por ejemplo, `Diagnostico` respecto a `ConsultaMedica`, o `HistoriaClinica` respecto a `Paciente` y `ConsultaMedica`):
+  - **NO requieren ni deben conectarse directamente con una línea artificial al Controller** si el controlador interactúa con ellas a través de la entidad raíz o mediante relaciones Eloquent en cascada.
+  - Su presencia en el diagrama es fundamental porque **participan conceptual y estructuralmente** en los datos afectados por el Caso de Uso.
+* **No Exigir Paridad 1:1 con Diagramas de Interacción:**  
+  Los diagramas de interacción (Secuencia y Comunicación) modelan el **flujo dinámico de mensajes en tiempo de ejecución**, por lo que solo muestran los objetos que reciben o envían llamadas en ese escenario puntual. En cambio, el diagrama de análisis de clases modela la **estructura estática y contexto conceptual**, incluyendo entidades relacionadas que proporcionan el marco de integridad del dominio.
 
 ---
 
-## 5. 🚫 Regla de Memoria Multi-Agente para Diagramas
-Al trabajar exclusivamente en la generación o corrección de diagramas (`.drawio`, `.js` en `docsUML/`, `.puml`):
+## 5. 📂 Archivos de Referencia y Ejemplos de la Skill
+
+La carpeta de la skill almacena diagramas modelo de referencia:
+* `.agents/skills/uml-academic-diagrams/examples/`:
+  - `CU03_comm_gestionar_bitacora_auditoria.drawio`: Referencia canónica de diagrama de comunicación Draw.io con consultas paginadas, selectores dinámicos, métricas y fix de paginación sobre el conector.
+  - `CU07_comm_gestionar_especialidades.drawio`: Referencia canónica de diagrama de comunicación con filtros de catálogo y validaciones de unicidad.
+  - `CU16_comm_registrar_consulta_medica.drawio`: Referencia canónica para comunicación con arquitectura BCE limpia (1 Boundary, 1 Controller, múltiples entidades y colores oscuros por flujo).
+  - `cu01_secuencia_autenticar_usuarios.png`: Referencia de renderizado de secuencia EA.
+* `.agents/skills/uml-academic-diagrams/references/`:
+  - `cu04_analisis_gestionar_pacientes.drawio`: Referencia canónica de Análisis de Clases.
+  - `CU06_Gestionar_Medicos.drawio`: Referencia de Análisis de Clases con relaciones estructurales de catálogo.
+
+---
+
+## 6. 🚫 Regla de Memoria Multi-Agente para Diagramas
+Al trabajar exclusivamente en la generación, corrección o documentación de diagramas (`.drawio`, `.js` en `docsUML/`, `.puml`):
 * **NO crear sesiones en `docs/ai/sessions/`.**
-* **NO modificar los archivos de relevo (`CURRENT_STATE.md`, `HANDOFF_LATEST.md`, etc.).**
-* La memoria viva se reserva exclusivamente para modificaciones en el código fuente o esquema de base de datos.
+* **NO modificar los archivos de relevo (`CURRENT_STATE.md`, `HANDOFF_LATEST.md`, `NEXT_STEPS.md`).**
+* La memoria viva persistente se reserva de forma estricta para modificaciones en el código fuente, lógica de negocio o esquema de base de datos.
