@@ -20,6 +20,7 @@ import ClinicalDashboardView from './apps/analytics/components/ClinicalDashboard
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
+import { NotificationsDropdown } from './components/NotificationsDropdown';
 import {
   Stethoscope,
   Calendar,
@@ -121,11 +122,13 @@ export default function App() {
 
   if (currentView === 'home' && !isAuthenticated) {
     return (
-      <div key="home-view" className="animate-view-fade">
-        <HomePage
-          onNavigateLogin={() => navigateTo('login')}
-          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
-        />
+      <>
+        <div key="home-view" className="animate-view-fade">
+          <HomePage
+            onNavigateLogin={() => navigateTo('login')}
+            onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+          />
+        </div>
         <ActivatePatientModal
           isOpen={isActivatePatientOpen}
           onClose={() => setIsActivatePatientOpen(false)}
@@ -134,25 +137,27 @@ export default function App() {
             navigateTo('login');
           }}
         />
-      </div>
+      </>
     );
   }
 
   if (currentView === 'login' && !isAuthenticated) {
     return (
-      <div key="login-view" className="animate-view-fade">
-        <LoginPage
-          onNavigateHome={() => navigateTo('home')}
-          onLoginSuccess={() => navigateTo('dashboard')}
-          onNavigateForgotPassword={() => navigateTo('forgot-password')}
-          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
-        />
+      <>
+        <div key="login-view" className="animate-view-fade">
+          <LoginPage
+            onNavigateHome={() => navigateTo('home')}
+            onLoginSuccess={() => navigateTo('dashboard')}
+            onNavigateForgotPassword={() => navigateTo('forgot-password')}
+            onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+          />
+        </div>
         <ActivatePatientModal
           isOpen={isActivatePatientOpen}
           onClose={() => setIsActivatePatientOpen(false)}
           onActivated={() => setIsActivatePatientOpen(false)}
         />
-      </div>
+      </>
     );
   }
 
@@ -197,6 +202,8 @@ export default function App() {
           : 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
       case 'patient-profile':
         return role === 'PACIENTE' ? 'Mi Perfil de Paciente (CU05)' : 'Inicio';
+      case 'documentos-clinicos':
+        return 'Documentos Clínicos Adjuntos & Visor DICOM (CU26)';
       default:
         return 'Inicio';
     }
@@ -261,8 +268,11 @@ export default function App() {
               </div>
             </div>
 
-            {/* Derecha: Badge de Usuario y Salir */}
-            <div className="flex items-center gap-3">
+            {/* Derecha: Notificaciones, Badge de Usuario y Salir */}
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              {/* Precursor UI Notificaciones Push (CU20/CU21) */}
+              <NotificationsDropdown />
+
               <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-xl border border-slate-200">
                 <Shield className="w-3.5 h-3.5 text-[#00687a]" />
                 <span className="text-xs font-semibold text-slate-700 hidden sm:inline">{user?.username}</span>
@@ -309,6 +319,8 @@ export default function App() {
             <AppointmentsManager />
           ) : dashboardTab === 'expediente' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
             <ExpedienteClinicoView />
+          ) : dashboardTab === 'documentos-clinicos' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+            <ExpedienteClinicoView defaultTab="documentos" />
           ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
             <ConsultasManager />
           ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (

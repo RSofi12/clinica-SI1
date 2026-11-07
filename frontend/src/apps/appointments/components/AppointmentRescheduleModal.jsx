@@ -213,8 +213,8 @@ export function AppointmentRescheduleModal({
     !isSubmitting;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-modal-backdrop">
+      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col animate-modal-panel">
         
         {/* Cabecera con degradado distintivo de la clínica */}
         <div className="px-5 py-4 bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] text-white flex items-center justify-between shrink-0 shadow-xs">

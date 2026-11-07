@@ -886,20 +886,6 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
                 );
               })}
             </div>
-
-            {/* Franja de Casos en Reserva Condicional */}
-            <div className="p-4 rounded-xl bg-white border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-                <span className="font-semibold text-slate-800">Casos de Uso en Reserva Condicional (Ciclo 2):</span>
-                <span className="text-slate-500">
-                  <strong>CU27-RES</strong> (Exportar PDF en CU18/19) & <strong>CU28-OPC</strong> (Diagnóstico asistido por IA).
-                </span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-400 shrink-0">
-                Capacidades de soporte asistencial
-              </span>
-            </div>
           </div>
         )}
       </div>

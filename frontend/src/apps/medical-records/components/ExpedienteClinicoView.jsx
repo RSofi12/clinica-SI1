@@ -21,20 +21,22 @@ import {
   FolderOpen,
   Info,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Paperclip
 } from 'lucide-react';
 import { expedienteService } from '../services/expedienteService';
 import { patientService } from '../../clinical-resources/services/patientService';
 import { useAuth } from '../../../context/AuthContext';
 import RecetaDetailModal from './RecetaDetailModal';
 import { AntecedentesPatientModal } from './AntecedentesPatientModal';
+import ClinicalDocumentsSection from './ClinicalDocumentsSection';
 
 /**
  * Vista Integral de Expediente Clínico Digital y Línea de Tiempo (CU19)
  * Paquete 4: Historial Clínico y Consultas
  * Estándar de Diseño: /frontend-design — Metodología PUDS / RUP
  */
-export function ExpedienteClinicoView({ initialPatientId = null }) {
+export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 'timeline' }) {
   const { user } = useAuth();
   const role = (user?.rol || user?.tipo_usuario || '').toUpperCase();
   const isPatient = role === 'PACIENTE';
@@ -52,8 +54,15 @@ export function ExpedienteClinicoView({ initialPatientId = null }) {
   const [timeline, setTimeline] = useState([]);
 
   // Pestaña activa
-  const [activeTab, setActiveTab] = useState('timeline'); // 'timeline' | 'consultas' | 'recetas' | 'antecedentes' | 'contactos'
+  const [activeTab, setActiveTab] = useState(defaultTab); // 'timeline' | 'consultas' | 'recetas' | 'antecedentes' | 'documentos' | 'contactos'
   const [expandedConsultas, setExpandedConsultas] = useState({});
+  const [docsCount, setDocsCount] = useState(0);
+
+  useEffect(() => {
+    if (defaultTab) {
+      setActiveTab(defaultTab);
+    }
+  }, [defaultTab]);
 
   // Modales secundarios de detalle
   const [selectedReceta, setSelectedReceta] = useState(null);
@@ -480,6 +489,18 @@ export function ExpedienteClinicoView({ initialPatientId = null }) {
               </button>
 
               <button
+                onClick={() => setActiveTab('documentos')}
+                className={`flex items-center gap-2 py-3 px-4 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
+                  activeTab === 'documentos'
+                    ? 'border-indigo-600 text-indigo-800 bg-indigo-50/50 rounded-t-lg'
+                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300'
+                }`}
+              >
+                <Paperclip className="w-4 h-4" />
+                Documentos Adjuntos {docsCount > 0 ? `(${docsCount})` : ''}
+              </button>
+
+              <button
                 onClick={() => setActiveTab('contactos')}
                 className={`flex items-center gap-2 py-3 px-4 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
                   activeTab === 'contactos'
@@ -829,6 +850,15 @@ export function ExpedienteClinicoView({ initialPatientId = null }) {
                     </div>
                   )}
                 </div>
+              )}
+
+              {/* 6. PESTAÑA: DOCUMENTOS CLÍNICOS ADJUNTOS (CU26) */}
+              {activeTab === 'documentos' && (
+                <ClinicalDocumentsSection
+                  historialId={historiaClinica?.id_historia}
+                  historialEstado={historiaClinica?.estado || 'ACTIVO'}
+                  onDocumentChange={(docs) => setDocsCount(docs.length)}
+                />
               )}
 
               {/* 5. PESTAÑA: CONTACTOS DE EMERGENCIA */}

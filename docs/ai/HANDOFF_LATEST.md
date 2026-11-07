@@ -1,5 +1,80 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU26: Gestionar Documentos Clínicos Adjuntos con Cloudinary y Visor DICOM)
+- **Implementación Full-Stack de CU26 (Gestionar Documentos Clínicos Adjuntos):**
+  - **Backend (`backend/app/Packages/MedicalRecords/`):**
+    - Migración `2026_11_07_000002_add_cloudinary_and_tracking_to_documentos_clinicos_table.php` ejecutada.
+    - `DocumentoClinico.php`: Modelo con relaciones foráneas y accessors `es_dicom` y `tamanio_legible`.
+    - `CloudinaryStorageService.php`: Carga remota en Cloudinary (`image` y `raw` para DICOM/PDF) con fallback resiliente.
+    - `DocumentoClinicoService.php`: Soporte dual (autónomo y conectado a CU25 cambiando estado de orden a `CON_RESULTADOS`), Anti-IDOR y auditoría inmutable en `Bitacora.php`.
+    - `DocumentosClinicosController.php` y FormRequest `DocumentoClinicoUploadRequest.php` (límite 15 MB).
+  - **Frontend (`frontend/src/apps/medical-records/`):**
+    - `documentoClinicoService.js`: Integración API con progreso de carga multipart.
+    - `ClinicalDocumentsSection.jsx`: Componente idéntico a la referencia visual con formulario desplegable, badges (`PNG`, `PDF`, `DCM`), barra de progreso porcentual, previsualización de imágenes/PDF y asistente para visor DICOM externo (`https://www.imaios.com/es/imaios-dicom-viewer`).
+    - Integrado en `ExpedienteClinicoView.jsx` (pestaña "Documentos Adjuntos"), `Sidebar.jsx` (ítem bajo P4) y `App.jsx`.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2045 módulos, 13.77s).
+  - **Casos de Prueba:** Registrados `CN-CU26-01` a `CN-CU26-08` en `docs/informes/PRUEBAS_CAJA_NEGRA.md`.
+  - **Commit de Backend:** `635b166`: `feat(medical-records): implementar backend de documentos clinicos adjuntos CU26 con cloudinary y soporte cu25`.
+
+---
+
+## Estado de Relevo al 07/11/2026 (Fix: Modal Activar Paciente Fijo en Viewport con createPortal y Scroll-Lock)
+- **Corrección en [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx):**
+  - **Eliminación del desplazamiento por scroll:** Se implementó `createPortal` hacia `document.body` y se desacopló el modal del contenedor con animación `transform` (`animate-view-fade`), eliminando el problema por el cual el modal se movía con el scroll vertical de la página de inicio.
+  - **Bloqueo del scroll del body:** `document.body.style.overflow = 'hidden'` mientras el modal permanezca activo, restaurándose limpiamente al cerrarlo.
+  - **Cierre por interacción exterior y teclado:** Se habilitó el cierre al hacer clic sobre el backdrop oscuro exterior (`e.target === e.currentTarget`) y al presionar la tecla `Escape`.
+  - **Centrado vertical responsivo:** Uso de `my-auto` en el panel principal para garantizar que quede centrado en el viewport sin importar la resolución.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2043 módulos, 11.8s).
+- **Commit en Rama `prueba`:**
+  - `5c4fe1b`: `fix(auth): corregir modal de activacion de paciente con createPortal, scroll-lock y cierre en backdrop`
+
+---
+
+## Estado de Relevo al 07/11/2026 (Sidebar Aqua Profundo, Acciones en 2 Filas y Notificaciones Push UI)
+- **Rediseño Editorial del Sidebar con `/design-taste-frontend` ([`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx)):**
+  - **Color institucional unificado:** Se convirtió todo el sidebar a un fondo aqua profundo (`#003844` / deep teal médico) con borde sutil `#002830`, eliminando el fondo blanco plano anterior.
+  - **Tipografía Serif en Secciones:** Las opciones de menú seleccionables ("Inicio", "Dashboard Clínico", "Usuarios y Roles", "Disponibilidad y Citas", etc.) ahora usan `.font-serif-clinical` con `text-sm font-medium`, mientras que los encabezados de grupo ("PRINCIPAL", "SEGURIDAD Y AUDITORÍA", etc.) se mantienen en su tipografía sans en mayúsculas pequeñas legibles (`text-cyan-200/50 font-bold text-[10px]`).
+  - **Elemento Activo & Cápsula:** La opción activa se destaca con una cápsula en aqua brillante (`#00687a`) con borde de resplandor `ring-1 ring-cyan-300/30` y sombra sutil.
+  - **Logo e Identidad:** Logo blanco oficial [`logo-full-white.svg`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/assets/logo-full-white.svg) en contenedor translúcido, con subtítulo en celeste hospitalario (`#70cbff`).
+  - **Pie de Usuario:** Tarjeta de perfil y botones de comprimir/salir adaptados con efectos backdrop translúcidos sobre fondo oscuro.
+- **Acciones de Tabla CU10 en 2 Filas ([`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - Botones apilados en dos niveles compactos a la derecha:
+    - *Fila 1 (Operativo):* Check-in / Inasistencia, Ticket oficial de cita e Historial de máquina de estados.
+    - *Fila 2 (Gestión):* Reprogramar cita (CU11) y Cancelar cita médica (CU12).
+  - Ancho de columna reducido de 280px a 210px, otorgando mayor espacio a las columnas de paciente y médico.
+- **Precursor UI para Notificaciones Push ([`NotificationsDropdown.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/NotificationsDropdown.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx)):**
+  - Botón de campana `Bell` en la barra superior con indicador activo.
+  - Panel flotante con estado vacío refinado: "Sin notificaciones pendientes" e informativo de capacidades para Ciclo 2 (CU20 / CU21).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2043 módulos, 13.9s).
+- **Commit en Rama `prueba`:**
+  - `0eb2db7`: `feat(ui): rediseñar sidebar en aqua profundo con font serif, apilar acciones CU10 y agregar precursor de notificaciones`
+
+---
+
+## Estado de Relevo al 07/11/2026 (Rediseño de Tabla CU10 con /design-taste-frontend y Transiciones Fluidas)
+- **Eliminación de Franja Condicional en Dashboard ([`ClinicalDashboardView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/ClinicalDashboardView.jsx)):**
+  - Descartada por completo la franja de `CU27-RES` y `CU28-OPC` que aparecía al final de la matriz de casos de uso.
+- **Rediseño Editorial de la Tabla de Citas CU10 ([`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - **Resolución del problema de compresión de columnas:** Se aplicó un ancho base de `min-w-[1080px]` con scroll horizontal responsivo suave, evitando que las columnas de datos clínicos se quiebren verticalmente.
+  - **Columna Paciente:** Avatar redondeado con inicial del paciente, nombre completo destacado en seminegrita, línea horizontal con `Doc: {CI}` · `HC: {historia}` y botón estilizado de acceso directo a historial clínico (CU15).
+  - **Columna Médico / Especialidad:** Nombre del profesional con icono de estetoscopio y badge estilizado `#00687a` para la especialidad médica.
+  - **Columna Acciones:** Encabezado corregido a `Acciones` (reemplazando `Ticket`), agrupamiento ordenado de botones contextuales (`Check-in`, `Inasistencia`, `Ticket`, `Reprogramar`, `Cancelar`, `Historial`) con micro-interacciones suaves (`hover:shadow-xs`, `active:scale-95`).
+- **Transiciones Fluidas en Todo el Módulo de Citas:**
+  - Vistas con entrada suave `.animate-view-fade` en `AppointmentsManager.jsx`, `AppointmentAvailabilityViewer.jsx` y `DoctorAgendaView.jsx`.
+  - Modales estandarizados con backdrop blur progresivo (`.animate-modal-backdrop`) y elevación sin saltos bruscos (`.animate-modal-panel`) en:
+    - [`AppointmentBookingModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx)
+    - [`AppointmentRescheduleModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentRescheduleModal.jsx)
+    - [`AppointmentCancelModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentCancelModal.jsx)
+    - [`AppointmentStatusModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentStatusModal.jsx)
+    - [`PatientAppointmentHistoryModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/PatientAppointmentHistoryModal.jsx)
+    - Modal oficial de Ticket de Cita en `AppointmentsManager.jsx`.
+- **Verificación Técnica:** `npm --prefix frontend run build` verificado exitosamente (11.59s, 0 errores, 2042 módulos).
+- **Commits en Rama `prueba`:**
+  - `eefa6be`: `refactor(analytics): eliminar seccion de casos de uso condicionales en dashboard clinico`
+  - `a279ba8`: `feat(appointments): optimizar anchos de tabla de citas CU10 y agregar transiciones fluidas en modulo de citas`
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Perfeccionamiento de CU23 — Exportación PDF/Excel y Micrófono Móvil/Web Speech)
 - **Mejoras en CU23: Asistente de Reportes por Voz con IA ([`VoiceReportAssistant.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/VoiceReportAssistant.jsx)):**
   - **Resolución de Reconocimiento de Voz (Web Speech API):**

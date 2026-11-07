@@ -94,8 +94,8 @@ export function AppointmentCancelModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-rose-200/80 overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-modal-backdrop">
+      <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-rose-200/80 overflow-hidden flex flex-col animate-modal-panel">
         {/* Cabecera del Modal */}
         <div className="px-6 py-4 bg-gradient-to-r from-rose-600 to-rose-700 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
