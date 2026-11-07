@@ -16,6 +16,7 @@ use App\Packages\Appointments\Controllers\AppointmentsController;
 use App\Packages\MedicalRecords\Controllers\ConsultasController;
 use App\Packages\MedicalRecords\Controllers\AntecedentesController;
 use App\Packages\MedicalRecords\Controllers\RecetasController;
+use App\Packages\MedicalRecords\Controllers\ExpedienteController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
 
 /*
@@ -161,6 +162,11 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
     Route::post('/recetas', [RecetasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/recetas/{id}/anular', [RecetasController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
+
+    // CU19: Consultar Expediente Médico y Antecedentes Clínicos
+    Route::get('/expediente/mi-expediente', [ExpedienteController::class, 'miExpediente'])->middleware('role:PACIENTE');
+    Route::get('/expediente/paciente/{idPaciente}', [ExpedienteController::class, 'showByPatient'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/expediente/paciente/{idPaciente}/timeline', [ExpedienteController::class, 'timeline'])->middleware('role:ADMIN,MEDICO,PACIENTE');
 });
 
 // CU23: Generar reporte personalizado por voz con IA (Paquete 6: Reportes y Analítica)

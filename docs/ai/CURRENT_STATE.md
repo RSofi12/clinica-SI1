@@ -366,3 +366,21 @@
   - ✅ **Modal de Anulación (`RecetaAnularModal.jsx`):** Baja lógica permanente con motivo obligatorio mínimo de 5 caracteres (RN11).
   - ✅ **Gestor Integral (`RecetasManager.jsx`):** 3 tarjetas de KPIs, buscador en tiempo real, filtros por estado y fecha, paginación e integración en `Sidebar.jsx` (grupo P4) y `App.jsx`.
   - ✅ **Compilación:** Verificada con `npm run build` (0 errores en 22.45s).
+
+
+### 24. Implementación del Backend de CU19 (Consultar Expediente Médico y Antecedentes) (07/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Servicio Transaccional (`ExpedienteService.php`):**
+    - Scoping RBAC / Anti-IDOR estricto: Bloqueo explícito a recepcionistas (403 Forbidden por confidencialidad asistencial y secreto médico); pacientes estrictamente limitados a su propio expediente (`$usuario->paciente->id_paciente === $idPaciente`); médicos y administradores autorizados.
+    - Resiliencia de historia clínica: `HistoriaClinica::firstOrCreate` para garantizar apertura automática si el paciente carece de consultas previas.
+    - Carga relacional integral: `paciente.contactosEmergencia`, `antecedentes` (CU17), `consultas.diagnosticos` (CIE-10) y `consultas.medico` (CU16), `recetas.detalles` (CU18).
+    - Agregación y síntesis de alto valor clínico: alertas alérgicas activas con severidad, patológicos crónicos, métricas de atenciones/recetas activas y último triaje con IMC.
+    - Método `obtenerMiExpediente`: Resolución automática del paciente en sesión para el portal de autoservicio.
+    - Método `obtenerTimeline`: Cronología clínica descendente que unifica consultas presenciales, recetas emitidas y antecedentes registrados.
+    - Auditoría inmutable en `Bitacora.php` (`CONSULTAR_EXPEDIENTE`, módulo `HISTORIAL_CLINICO`).
+  - ✅ **Controlador REST (`ExpedienteController.php`):**
+    - `miExpediente(Request $request)`: Retorna el expediente del paciente autenticado.
+    - `showByPatient(Request $request, int $idPaciente)`: Consulta médica/administrativa protegida.
+    - `timeline(Request $request, int $idPaciente)`: Retorna la línea de tiempo cronológica integral.
+  - ✅ **Rutas API (`backend/routes/api.php`):** 3 endpoints registrados bajo prefijo `medical-records/expediente` protegidos con middleware `EnsureUserRole`.
+  - ✅ **Verificación:** Sintaxis PHP 100% limpia sin errores (`php -l`).

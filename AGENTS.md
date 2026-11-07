@@ -111,14 +111,14 @@ Al generar o corregir diagramas para cualquier Caso de Uso (`CUxx`), es obligato
 * **Iconos BCE:** En este diagrama **SÍ se utilizan los iconos formales** (`boundary`, `control`, `entity`).
 * **Nombres:** Sin prefijo de estereotipo en el texto visible, solo el nombre (`:AppointmentsController`, `:Cita`).
 * **Líneas y Mensajes:** Cada mensaje cuenta con su **relación individual entre los componentes** (facilitando acomodar los mensajes con holgura), con una **flecha direccional señalando al componente destino**.
-* **Paleta de Colores por Flujo:** Flujo 1 estrictamente negro (`#000000`), Flujo 2 verde bosque oscuro (`#005522`), Flujo 3 morado oscuro (`#4B0082`), Flujo 4 rojo óxido (`#8B0000`) o azul marino (`#003366`).
+* **Paleta de Colores por Flujo:** El texto de los mensajes/funciones permanece **siempre en negro (`#000000`)**; **únicamente las flechas superiores se colorean** por flujo: Flujo 1 negro (`#000000`) o azul marino oscuro (`#003366`), Flujo 2 verde bosque oscuro (`#005522`), Flujo 3 morado oscuro (`#4B0082`), Flujo 4 azul marino oscuro (`#003366`).
 * **Mensajes entre Boundary y Controller:** Por convención académica UML 2.5+, se emplean los nombres de los métodos reales del Controller en el código (`index()`, `store()`, etc.) en lugar de endpoints de red HTTP.
 * **Validaciones en Controlador:** Si el código contiene validaciones internas o verificaciones lógicas, se muestran explícitamente en el Controller como mensajes reflexivos hacia sí mismo (`self-call`).
 * **Aislamiento:** Las entidades **no** retornan mensajes a los controladores ni se comunican entre sí.
 
 ### 5.4. Diagrama de Análisis de Clases (Draw.io)
 * **Formato:** Archivo `.drawio` en `docsUML/CUanalisisClase/CUxx_*.drawio`.
-* **Estructura:** Actor (`shape=umlActor`) ➔ `<<Interface>>` ➔ `<<Controller>>` ➔ `<<Entity>>`.
+* **Estructura:** Actor (`shape=umlActor`) ➔ `<<Interface>>` ➔ `<<Controller>>` ➔ `<<Entity>>`. Si participan varios actores (ej. Médico y Administrador), diagramarlos como **actores separados por individual** conectados a la Interface.
 * **⚠️ REGLA DE ORO DE RELACIONES Y CARDINALIDADES (INVIOLABLE):**
   - Las relaciones formales UML (**composición, agregación, herencia / generalización, asociación**) y las cardinalidades (`1`, `0..1`, `0..*`, `1..*`) se diagraman **ÚNICAMENTE ENTRE ENTIDADES**.
   - Las conexiones entre `Actor ➔ Interface`, `Interface ➔ Controller` y `Controller ➔ Entities` se trazan con líneas simples de navegación/dependencia (`endArrow=none;endFill=0`), **SIN cardinalidades ni multiplicidades**.

@@ -348,7 +348,7 @@ pm run build exitoso).
   - [x] **P18.5:** Compilación limpia en Vite (`npm run build` en 22.45s, 0 errores).
 
 #### ⏳ CU19: Consultar Expediente Médico y Antecedentes (3.4)
-- [ ] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes.
+- [x] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes (ExpedienteService + ExpedienteController).
 - [ ] **Frontend:** Vista de expediente en solo lectura para el portal del paciente.
 - [ ] **Fase de Pruebas:** Intentar consultar expediente de otro paciente por ID (HTTP 403 Forbidden).
 
