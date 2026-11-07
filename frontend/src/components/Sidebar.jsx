@@ -18,6 +18,7 @@
   Mic,
   ClipboardList,
   Pill,
+  FileText,
 } from 'lucide-react';
 import logoColor from '../assets/logo-color.svg';
 
@@ -114,6 +115,14 @@ export function Sidebar({
         {
       group: 'Historial Clínico y Consultas (P4)',
       items: [
+        {
+          id: 'expediente',
+          label: role === 'PACIENTE' ? 'Mi Expediente Clínico' : 'Expediente Clínico Digital',
+          subtitle: role === 'PACIENTE' ? 'Historial, recetas y antecedentes' : 'Visor integral de historias clínicas',
+          tag: 'CU19 / §3.4',
+          icon: FileText,
+          requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE'],
+        },
         {
           id: 'consultas',
           label: 'Consultas Médicas y Triaje',

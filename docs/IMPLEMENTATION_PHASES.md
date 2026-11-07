@@ -349,8 +349,8 @@ pm run build exitoso).
 
 #### ⏳ CU19: Consultar Expediente Médico y Antecedentes (3.4)
 - [x] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes (ExpedienteService + ExpedienteController).
-- [ ] **Frontend:** Vista de expediente en solo lectura para el portal del paciente.
-- [ ] **Fase de Pruebas:** Intentar consultar expediente de otro paciente por ID (HTTP 403 Forbidden).
+- [x] **Frontend:** Vista de expediente en solo lectura para portal de pacientes y visor clínico integral para personal médico/admin (`ExpedienteClinicoView.jsx` con transiciones fluidas, timeline cronológico y `@media print`).
+- [x] **Fase de Pruebas:** Scoping RBAC / Anti-IDOR validado (HTTP 403 Forbidden para pacientes consultando expedientes ajenos o recepcionistas) y compilación limpia en producción (`npm run build` en 27.44s, 0 errores).
 
 #### ⏳ CU25: Emitir Órdenes de Exámenes Auxiliares (Extra)
 - [ ] **Backend:** Modelo `ordenes_examenes`, generación de código correlativo `ORD-XXXX`, validación de tipo de estudio (laboratorio/imagen) e indicaciones.

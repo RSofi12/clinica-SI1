@@ -368,7 +368,7 @@
   - ✅ **Compilación:** Verificada con `npm run build` (0 errores en 22.45s).
 
 
-### 24. Implementación del Backend de CU19 (Consultar Expediente Médico y Antecedentes) (07/11/2026)
+### 24. Implementación Full-Stack de CU19 (Consultar Expediente Médico y Antecedentes) (07/11/2026)
 - **Backend (`backend/app/Packages/MedicalRecords/`):**
   - ✅ **Servicio Transaccional (`ExpedienteService.php`):**
     - Scoping RBAC / Anti-IDOR estricto: Bloqueo explícito a recepcionistas (403 Forbidden por confidencialidad asistencial y secreto médico); pacientes estrictamente limitados a su propio expediente (`$usuario->paciente->id_paciente === $idPaciente`); médicos y administradores autorizados.
@@ -384,3 +384,17 @@
     - `timeline(Request $request, int $idPaciente)`: Retorna la línea de tiempo cronológica integral.
   - ✅ **Rutas API (`backend/routes/api.php`):** 3 endpoints registrados bajo prefijo `medical-records/expediente` protegidos con middleware `EnsureUserRole`.
   - ✅ **Verificación:** Sintaxis PHP 100% limpia sin errores (`php -l`).
+
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio API (`expedienteService.js`):** Métodos `fetchMiExpediente`, `fetchExpedienteByPaciente`, `fetchTimeline`.
+  - ✅ **Componente Principal (`ExpedienteClinicoView.jsx`):**
+    - Construido bajo directrices de `/frontend-design` con identidad visual médica diferenciada, tipografía clínica con números tabulares para signos vitales y transiciones fluidas.
+    - Cabecera con tarjeta de identidad del paciente, N° Historia, CI, grupo sanguíneo y edad.
+    - Banner destacado de Alertas Médicas (alergias activas en rose/amber y crónicos).
+    - Widget de signos vitales y triaje con semáforo OMS de IMC (Bajo peso, Normal, Sobrepeso, Obesidad).
+    - 5 pestañas de navegación: Línea de Tiempo (timeline vertical conectada con iconos temáticos), Consultas Médicas (acordeón con diagnósticos CIE-10), Prescripciones (con visor de receta membretada), Antecedentes y Contactos de Emergencia.
+    - Soporte completo para impresión oficial (`@media print`) omitiendo elementos interactivos.
+  - ✅ **Integración en Navegación:**
+    - `Sidebar.jsx`: Ítem "Expediente Digital" / "Mi Expediente Clínico" (P4) bajo icono `FileText`.
+    - `App.jsx`: Pestaña `expediente` y tarjeta interactiva de acceso rápido en el dashboard de bienvenida.
+  - ✅ **Compilación:** Verificada con `npm run build` en 27.44s sin errores (0 warnings bloqueantes).

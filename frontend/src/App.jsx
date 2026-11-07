@@ -13,6 +13,7 @@ import { AppointmentsManager } from './apps/appointments/components/Appointments
 import { VoiceReportAssistant } from './apps/analytics/components/VoiceReportAssistant';
 import { ConsultasManager } from './apps/medical-records/components/ConsultasManager';
 import { RecetasManager } from './apps/medical-records/components/RecetasManager';
+import { ExpedienteClinicoView } from './apps/medical-records/components/ExpedienteClinicoView';
 
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
@@ -292,6 +293,8 @@ export default function App() {
             <SchedulesManager />
           ) : dashboardTab === 'appointments' ? (
             <AppointmentsManager />
+          ) : dashboardTab === 'expediente' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+            <ExpedienteClinicoView />
           ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
             <ConsultasManager />
           ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
@@ -589,6 +592,28 @@ export default function App() {
                         </div>
                         <p className="text-xs text-slate-600 mt-1">
                           Consulte disponibilidad de turnos libres y reserve sus citas médicas personales con anti-colisión (RF06, RF07).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU19: Expediente Clínico Digital */}
+                  {['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('expediente')}
+                      className="p-4 rounded-xl border bg-emerald-50/60 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-emerald-800 uppercase">CU19: Expediente Clínico Digital</span>
+                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-md">
+                            {role === 'PACIENTE' ? 'Mi Expediente →' : 'Ver Fichas →'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          {role === 'PACIENTE'
+                            ? 'Consulte su línea de tiempo médica, alertas alérgicas, diagnósticos y recetas en un solo visor.'
+                            : 'Visor integral de historias clínicas, antecedentes, triaje, diagnósticos y prescripciones (CU19).'}
                         </p>
                       </div>
                     </div>
