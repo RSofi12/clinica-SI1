@@ -187,7 +187,7 @@ export function DoctorFormModal({ isOpen, onClose, doctorToEdit, onSaved }) {
               <Stethoscope className="w-5 h-5 text-[#70cbff]" />
             </div>
             <div>
-              <h2 className="text-lg font-montserrat font-bold">
+              <h2 className="text-lg font-serif-clinical font-normal tracking-tight">
                 {isEditing ? 'Modificar Datos del Médico' : 'Registrar Nuevo Profesional Médico'}
               </h2>
               <p className="text-xs text-cyan-100/80">

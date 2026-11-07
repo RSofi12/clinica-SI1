@@ -161,7 +161,7 @@ export function PatientFormModal({ isOpen, onClose, onSaved, initialPatient }) {
               <HeartPulse className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-lg">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-lg">
                 {isEditing ? 'Editar Ficha del Paciente' : 'Registrar Nuevo Paciente'}
               </h3>
               <p className="text-xs text-slate-500">

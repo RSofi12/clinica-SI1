@@ -53,7 +53,7 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
           </button>
 
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 border border-white/30 backdrop-blur-md flex items-center justify-center text-xl font-bold font-montserrat shadow-inner shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-white/20 border border-white/30 backdrop-blur-md flex items-center justify-center text-xl font-bold font-sans-clinical shadow-inner shrink-0">
               {patient.nombres?.[0]}
               {patient.apellidos?.[0]}
             </div>
@@ -70,7 +70,7 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
                   {patient.estado_paciente}
                 </span>
               </div>
-              <h3 className="font-montserrat font-bold text-lg sm:text-xl text-white mt-1">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-lg sm:text-xl text-white mt-1">
                 {patient.nombre_completo || `${patient.nombres} ${patient.apellidos}`}
               </h3>
               <p className="text-xs text-cyan-100 flex items-center gap-1.5 font-mono">

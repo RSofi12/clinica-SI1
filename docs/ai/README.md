@@ -13,7 +13,7 @@ Antes de proponer soluciones, generar código o modificar la base de datos, debe
 
 1. **[`MASTER_AGENT_PROMPT.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/MASTER_AGENT_PROMPT.md):** Reglas inviolables del sistema (Actor Médico Unificado, no usar TypeScript, transacciones atómicas anti-colisión, baja lógica RN11 y nombres en español).
 2. **[`PROJECT_VISION.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/PROJECT_VISION.md):** Visión clínica institucional, alcance oficial de los 23 Casos de Uso y principios PUDS/RUP.
-3. **[`ARCHITECTURE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/ARCHITECTURE.md):** Directrices de organización simétrica en los 6 paquetes de dominio (Backend `app/Packages/` y Frontend `src/apps/`).
+3. **[`ARCHITECTURE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ARCHITECTURE.md):** Directrices de organización simétrica en los 6 paquetes de dominio (Backend `app/Packages/` y Frontend `src/apps/`).
 4. **[`CURRENT_STATE.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/CURRENT_STATE.md):** El estado consolidado y verificado hasta hoy.
 5. **[`HANDOFF_LATEST.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/HANDOFF_LATEST.md):** Relevo operativo inmediato entre sesiones (tu brújula de partida).
 6. **[`NEXT_STEPS.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/NEXT_STEPS.md):** Ruta priorizada de los siguientes Casos de Uso por implementar.

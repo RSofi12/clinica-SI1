@@ -143,7 +143,7 @@ export function AuditLogViewer() {
         <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Eventos Totales Hoy</p>
-            <p className="text-2xl font-bold font-montserrat text-slate-900 mt-0.5">
+            <p className="text-2xl font-bold font-sans-clinical text-slate-900 mt-0.5">
               {stats?.total_hoy ?? '—'}
             </p>
           </div>
@@ -155,7 +155,7 @@ export function AuditLogViewer() {
         <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Inicios Exitosos</p>
-            <p className="text-2xl font-bold font-montserrat text-emerald-700 mt-0.5">
+            <p className="text-2xl font-bold font-sans-clinical text-emerald-700 mt-0.5">
               {stats?.logins_exitosos_hoy ?? '—'}
             </p>
           </div>
@@ -167,7 +167,7 @@ export function AuditLogViewer() {
         <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Intentos Fallidos / Bloqueos</p>
-            <p className="text-2xl font-bold font-montserrat text-rose-600 mt-0.5">
+            <p className="text-2xl font-bold font-sans-clinical text-rose-600 mt-0.5">
               {stats?.intentos_fallidos_hoy ?? '—'}
             </p>
           </div>
@@ -179,7 +179,7 @@ export function AuditLogViewer() {
         <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Cambios Administrativos</p>
-            <p className="text-2xl font-bold font-montserrat text-sky-700 mt-0.5">
+            <p className="text-2xl font-bold font-sans-clinical text-sky-700 mt-0.5">
               {stats?.operaciones_admin_hoy ?? '—'}
             </p>
           </div>
@@ -196,7 +196,7 @@ export function AuditLogViewer() {
             <History className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="font-montserrat font-bold text-slate-900 text-lg">
+            <h2 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-lg">
               Bitácora de Auditoría del Sistema (CU03)
             </h2>
             <p className="text-xs text-slate-500">

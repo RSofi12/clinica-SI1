@@ -239,7 +239,7 @@ export function AppointmentStatusModal({
                     {appointment.codigo_cita}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold font-montserrat text-white mt-0.5">
+                <h3 className="text-lg font-bold font-serif-clinical font-normal tracking-tight text-white mt-0.5">
                   Gestión de Asistencia y Estado
                 </h3>
               </div>

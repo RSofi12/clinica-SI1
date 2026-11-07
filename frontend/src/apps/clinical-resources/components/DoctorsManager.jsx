@@ -127,7 +127,7 @@ export function DoctorsManager() {
             <div className="p-2 rounded-xl bg-[#00687a]/10 text-[#00687a]">
               <Stethoscope className="w-5 h-5 text-[#00687a]" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-montserrat font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-serif-clinical font-normal tracking-tight text-slate-900 tracking-tight">
               Gestión de Médicos y Especialidades
             </h1>
           </div>
@@ -153,7 +153,7 @@ export function DoctorsManager() {
             <span className="text-xs font-medium">Total Plantel</span>
             <Users className="w-4 h-4 text-[#00687a]" />
           </div>
-          <div className="text-2xl font-montserrat font-bold text-slate-900">
+          <div className="text-2xl font-sans-clinical font-bold text-slate-900">
             {stats.total || 0}
           </div>
           <span className="text-[11px] text-slate-400">Médicos registrados</span>
@@ -164,7 +164,7 @@ export function DoctorsManager() {
             <span className="text-xs font-medium">En Servicio</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="text-2xl font-montserrat font-bold text-emerald-700">
+          <div className="text-2xl font-sans-clinical font-bold text-emerald-700">
             {stats.activos || 0}
           </div>
           <span className="text-[11px] text-emerald-600 font-medium">Habilitados para citas (RN04)</span>
@@ -175,7 +175,7 @@ export function DoctorsManager() {
             <span className="text-xs font-medium">Bajas Lógicas</span>
             <XCircle className="w-4 h-4 text-rose-500" />
           </div>
-          <div className="text-2xl font-montserrat font-bold text-slate-700">
+          <div className="text-2xl font-sans-clinical font-bold text-slate-700">
             {stats.inactivos || 0}
           </div>
           <span className="text-[11px] text-slate-400">Histórico preservado (RN11)</span>
@@ -186,7 +186,7 @@ export function DoctorsManager() {
             <span className="text-xs font-medium">Especialidades</span>
             <Award className="w-4 h-4 text-[#00687a]" />
           </div>
-          <div className="text-2xl font-montserrat font-bold text-[#00687a]">
+          <div className="text-2xl font-sans-clinical font-bold text-[#00687a]">
             {specialties.length || 0}
           </div>
           <span className="text-[11px] text-[#00687a]/80 font-medium">Catálogo activo (CU07)</span>

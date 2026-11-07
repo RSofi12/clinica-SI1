@@ -268,7 +268,7 @@ export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistr
               <Stethoscope className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-bold text-base font-montserrat leading-tight">
+              <h2 className="font-bold text-base font-serif-clinical font-normal tracking-tight leading-tight">
                 Registrar Consulta Médica
               </h2>
               <span className="text-xs text-cyan-100 font-mono">

@@ -307,7 +307,7 @@ export function SchedulesManager() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="font-montserrat font-bold text-xl text-slate-900">
+                <h1 className="font-serif-clinical font-normal tracking-tight text-xl text-slate-900">
                   Gestión de Horarios de Atención Médica
                 </h1>
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-100 text-[#00687a]">
@@ -487,7 +487,7 @@ export function SchedulesManager() {
                         >
                           {dia.id}
                         </span>
-                        <span className="font-montserrat font-bold text-sm text-slate-800">
+                        <span className="font-sans-clinical font-bold text-sm text-slate-800">
                           {dia.nombre}
                         </span>
                       </div>
@@ -651,7 +651,7 @@ export function SchedulesManager() {
           {/* Barra Superior con Botón de Alta */}
           <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 className="font-montserrat font-bold text-base text-slate-900">
+              <h2 className="font-serif-clinical font-normal tracking-tight text-base text-slate-900">
                 Feriados Institucionales y Licencias Médicas
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">

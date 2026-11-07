@@ -7,12 +7,12 @@
 - ✅ Definición del caso condicional en reserva `CU27-OPC` para ser evaluado en el Ciclo 2.
 - ✅ Alcance del proyecto (Sección 1.4) alineado a los 13 requerimientos funcionales del examen (`RF01` al `RF13`) y el perfil del paciente (§3.4).
 - ✅ Unificación del actor **Médico** (se descarta duplicar con Especialista).
-- ✅ Aprobada la Arquitectura por Paquetes de Dominio: Backend (`app/Packages/`) y Frontend (`src/apps/`) simétricos para los 6 paquetes documentada en `docs/ai/ARCHITECTURE.md`.
+- ✅ Aprobada la Arquitectura por Paquetes de Dominio: Backend (`app/Packages/`) y Frontend (`src/apps/`) simétricos para los 6 paquetes documentada en `docs/ARCHITECTURE.md`.
 - ✅ Guía y directrices de contexto para agentes formalizadas en `AGENTS.md` y `docs/ai/MASTER_AGENT_PROMPT.md` con la regla de oro de guiarse por `DDL_Database_Clinica_LaCruz.sql` y `diagrama_de_clases.puml`.
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **2 completados de 13 (+2) (CU11, CU23)**. Total Global: **15 de 26 (+2) completados (57.7%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **3 completados de 13 (+2) (CU11, CU23, CU24)**. Total Global: **16 de 26 (+2) completados (61.5%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -290,14 +290,21 @@
 - **Frontend (`frontend/src/apps/analytics/`):**
   - ✅ Servicio `analyticsService.js`: consumo de endpoints y exportador a CSV estándar del navegador.
   - ✅ Componente `VoiceReportAssistant.jsx`:
-    - Diseño adaptado a la identidad visual de la clínica con paleta `#004d5a`, `#00687a`, `#008b9e` y directrices `/frontend-design`.
-    - Micrófono interactivo con Web Speech API (`window.webkitSpeechRecognition`), animación de ondas de audio (ecualizador en vivo) y pulso de escucha activa.
+    - Diseño adaptado a la identidad visual de la clínica con paleta `#004d5a`, `#00687a`, `#008b9e` y directrices `/design-taste-frontend` con micro-interacciones suaves (`hover:-translate-y-0.5`, transiciones fluidas de 300ms sin saltos abruptos).
+    - Micrófono interactivo con Web Speech API optimizado para escritorio y celular:
+      - Solicitud previa y explícita de hardware vía `navigator.mediaDevices.getUserMedia({ audio: true })` para activar los permisos nativos del navegador.
+      - Modo `continuous = true` con watchdog de silencio (3.5s) que previene el apagado prematuro a los 2 segundos por pausas breves al hablar.
+      - Idioma estandarizado a `es-419` (Español Latinoamericano universal) con alta compatibilidad en motores de voz sin fallos de red.
+      - Detección de orígenes seguros (`isSecureContext`) para orientar a usuarios móviles si acceden por IP local.
     - Transcripción en tiempo real con campo editable y fallback manual por teclado ante navegadores sin soporte o permisos denegados.
     - Chips con consultas de ejemplo dictables (*"Citas canceladas de este mes"*, *"Atenciones de hoy"*, etc.).
     - Cajón desplegable de consultas recientes para reejecución en 1 clic.
     - 4 Tarjetas KPI interactivas (Total, Atendidas, Canceladas, Tasa de Asistencia).
     - Tabla detallada con badges estilizados según estado y buscador dinámico integrado.
-    - Botón de exportación instantánea a CSV.
+    - **Trío de Exportadores Oficiales:**
+      - 📄 **Exportar PDF:** Documento institucional apaisado con membrete del Centro Médico La Cruz, tabla formateada e impresión nativa del navegador.
+      - 📊 **Exportar Excel (`.xls`):** Hoja de cálculo con encabezados, KPIs y tabla de registros formateada con estilos nativos.
+      - 📑 **Exportar CSV:** Archivo estándar UTF-8 con BOM para visualización universal.
   - ✅ Integración en `Sidebar.jsx` (grupo "Reportes y Analítica (P6)") y renderizado condicional en `App.jsx`.
   - ✅ Compilación de producción exitosa con Vite (`npm run build` en 52.15s, 0 errores).
 
@@ -366,3 +373,35 @@
   - ✅ **Modal de Anulación (`RecetaAnularModal.jsx`):** Baja lógica permanente con motivo obligatorio mínimo de 5 caracteres (RN11).
   - ✅ **Gestor Integral (`RecetasManager.jsx`):** 3 tarjetas de KPIs, buscador en tiempo real, filtros por estado y fecha, paginación e integración en `Sidebar.jsx` (grupo P4) y `App.jsx`.
   - ✅ **Compilación:** Verificada con `npm run build` (0 errores en 22.45s).
+
+
+### 24. Implementación Full-Stack de CU19 (Consultar Expediente Médico y Antecedentes) (07/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Servicio Transaccional (`ExpedienteService.php`):**
+    - Scoping RBAC / Anti-IDOR estricto: Bloqueo explícito a recepcionistas (403 Forbidden por confidencialidad asistencial y secreto médico); pacientes estrictamente limitados a su propio expediente (`$usuario->paciente->id_paciente === $idPaciente`); médicos y administradores autorizados.
+    - Resiliencia de historia clínica: `HistoriaClinica::firstOrCreate` para garantizar apertura automática si el paciente carece de consultas previas.
+    - Carga relacional integral: `paciente.contactosEmergencia`, `antecedentes` (CU17), `consultas.diagnosticos` (CIE-10) y `consultas.medico` (CU16), `recetas.detalles` (CU18).
+    - Agregación y síntesis de alto valor clínico: alertas alérgicas activas con severidad, patológicos crónicos, métricas de atenciones/recetas activas y último triaje con IMC.
+    - Método `obtenerMiExpediente`: Resolución automática del paciente en sesión para el portal de autoservicio.
+    - Método `obtenerTimeline`: Cronología clínica descendente que unifica consultas presenciales, recetas emitidas y antecedentes registrados.
+    - Auditoría inmutable en `Bitacora.php` (`CONSULTAR_EXPEDIENTE`, módulo `HISTORIAL_CLINICO`).
+  - ✅ **Controlador REST (`ExpedienteController.php`):**
+    - `miExpediente(Request $request)`: Retorna el expediente del paciente autenticado.
+    - `showByPatient(Request $request, int $idPaciente)`: Consulta médica/administrativa protegida.
+    - `timeline(Request $request, int $idPaciente)`: Retorna la línea de tiempo cronológica integral.
+  - ✅ **Rutas API (`backend/routes/api.php`):** 3 endpoints registrados bajo prefijo `medical-records/expediente` protegidos con middleware `EnsureUserRole`.
+  - ✅ **Verificación:** Sintaxis PHP 100% limpia sin errores (`php -l`).
+
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio API (`expedienteService.js`):** Métodos `fetchMiExpediente`, `fetchExpedienteByPaciente`, `fetchTimeline`.
+  - ✅ **Componente Principal (`ExpedienteClinicoView.jsx`):**
+    - Construido bajo directrices de `/frontend-design` con identidad visual médica diferenciada, tipografía clínica con números tabulares para signos vitales y transiciones fluidas.
+    - Cabecera con tarjeta de identidad del paciente, N° Historia, CI, grupo sanguíneo y edad.
+    - Banner destacado de Alertas Médicas (alergias activas en rose/amber y crónicos).
+    - Widget de signos vitales y triaje con semáforo OMS de IMC (Bajo peso, Normal, Sobrepeso, Obesidad).
+    - 5 pestañas de navegación: Línea de Tiempo (timeline vertical conectada con iconos temáticos), Consultas Médicas (acordeón con diagnósticos CIE-10), Prescripciones (con visor de receta membretada), Antecedentes y Contactos de Emergencia.
+    - Soporte completo para impresión oficial (`@media print`) omitiendo elementos interactivos.
+  - ✅ **Integración en Navegación:**
+    - `Sidebar.jsx`: Ítem "Expediente Digital" / "Mi Expediente Clínico" (P4) bajo icono `FileText`.
+    - `App.jsx`: Pestaña `expediente` y tarjeta interactiva de acceso rápido en el dashboard de bienvenida.
+  - ✅ **Compilación:** Verificada con `npm run build` en 27.44s sin errores (0 warnings bloqueantes).

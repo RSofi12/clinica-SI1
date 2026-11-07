@@ -1,5 +1,85 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Perfeccionamiento de CU23 — Exportación PDF/Excel y Micrófono Móvil/Web Speech)
+- **Mejoras en CU23: Asistente de Reportes por Voz con IA ([`VoiceReportAssistant.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/VoiceReportAssistant.jsx)):**
+  - **Resolución de Reconocimiento de Voz (Web Speech API):**
+    - Se solucionó el corte a los 2 segundos: se activó `continuous = true` con temporizador inteligente de silencio de 3.5 segundos para no abortar ante vacilaciones o pausas breves al hablar.
+    - Se configuró el idioma universal `es-419` (Español Latinoamericano) con alta disponibilidad en todos los navegadores.
+    - Solicitud explícita y transparente de permisos de hardware con `navigator.mediaDevices.getUserMedia({ audio: true })` antes de iniciar SpeechRecognition, asegurando que móviles (Chrome, Safari) y navegadores de escritorio muestren el diálogo nativo de permisos.
+    - Detección de orígenes seguros (`isSecureContext`) para orientar a usuarios si acceden desde celular por red local HTTP.
+  - **Trío Completo de Exportación en [`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js):**
+    - 📄 **Exportar PDF:** Documento institucional apaisado con membrete del Centro Médico La Cruz, interpretación semántica, KPIs y tabla de registros formateada con `window.print()` nativo.
+    - 📊 **Exportar Excel (`.xls`):** Hoja de cálculo con estilos, resumen de métricas y tabla de datos completa compatible con Microsoft Excel, LibreOffice y Google Sheets.
+    - 📑 **Exportar CSV:** Descarga estándar con codificación UTF-8 y BOM para compatibilidad universal.
+  - **Diseño y Micro-interacciones (`/design-taste-frontend`):**
+    - Eliminados los saltos abruptos de maquetación: transiciones suaves de `300ms`, micro-elevación (`hover:-translate-y-0.5`), pulso de escucha activa y ondas de audio fluidas.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2042 módulos transformados).
+
+---
+
+## Estado de Relevo al 07/11/2026 (Pantalla de Inicio por Rol y Dashboard Clínico CU24)
+- **Nueva Pantalla de Inicio del Panel ([`InicioPanelView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/InicioPanelView.jsx)):**
+  - Saludo contextual según la hora, fecha actual en vivo en español y espacio de trabajo de la clínica.
+  - Tarjeta *"Tu Cuenta"* con iniciales de usuario, rol, badge activo, identificador/correo y fecha del último acceso.
+  - Matriz de *Accesos Rápidos* dinámica para cada actor (`ADMIN`, `MEDICO`, `RECEPCIONISTA`, `PACIENTE`) con enlaces directos a sus respectivos Casos de Uso.
+- **Rediseño Ejecutivo del Dashboard Clínico ([`ClinicalDashboardView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/ClinicalDashboardView.jsx)):**
+  - Eliminado el exceso de texto estático del panel anterior.
+  - Barra de filtros temporales (`Hoy`, `7d`, `30d`, `Mes`) y rango personalizado `Desde` / `Hasta`.
+  - 4 KPIs principales: *Pacientes Activos*, *Citas del Período* (% atención), *Atendidas* y *Tasa de Cancelación*.
+  - Grilla de distribución mensual de estados de citas con badges de color.
+  - Operativo de hoy con métricas del día y agenda de pacientes de la jornada.
+  - Trazabilidad académica colapsable con los módulos y CUs del examen (CU01-CU24).
+- **Backend Analytics (CU24):**
+  - Controlador [`DashboardController.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/Analytics/Controllers/DashboardController.php) y ruta `GET /api/analytics/dashboard-kpis` con soporte multicriterio y scoping de rol.
+- **Sidebar y Navegación:**
+  - Grupo *Principal* en [`Sidebar.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/Sidebar.jsx) con **`Inicio`** (vista por defecto) y **`Dashboard Clínico`**.
+  - `npm --prefix frontend run build` verificado exitosamente con **0 errores** (2042 módulos).
+
+---
+
+## Estado de Relevo al 07/11/2026 (Rediseño Editorial Frontend, Slider & Unificación Tipográfica)
+- **Frontend Refactorizado y Modernizado:**
+  - **Tipografía Editorial Unificada (`Fraunces` + `Plus Jakarta Sans`):**
+    - Banner `"Bienvenido, {usuario}"` en `App.jsx`, cabeceras de sección (`{getSectionTitle()}`), cabecera del `Sidebar.jsx` ("Centro Médico") y modales ahora usan `.font-serif-clinical` con estilo sobrio y elegante.
+    - Los 6 paquetes asistenciales (`src/apps/security/`, `src/apps/clinical-resources/`, `src/apps/appointments/`, `src/apps/medical-records/`, `src/apps/analytics/` y `ForgotPasswordPage.jsx`) actualizados al 100%: eliminada toda presencia de `font-montserrat` en favor de `font-serif-clinical` (títulos) y `font-sans-clinical` (métricas, botones, etiquetas).
+    - Regla defensiva en [`index.css`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/index.css) con fallback para `.font-montserrat`.
+  - **Hero Slider Autónomo & Deslizamiento Continuo:** 4 pantallas deslizantes con riel flex y avance automático cada **10 segundos**:
+    1. *Cuerpo Médico:* Imagen exclusiva del plantel médico (`doctors-clinica.jpg`) con tira de acreditación sanitaria.
+    2. *Especialidades & Familia:* Dúo visual de pediatría (`clinica-pediatria.png`) y medicina familiar/geriatría (`doctor-geriatric.jpg`).
+    3. *Portal del Paciente:* Gestión digital de citas, historial y recetas con C.I.
+    4. *Guardia 24/7 & Emergencias:* Comité clínico de guardia ininterrumpida en Equipetrol (`sesiones-clinicas.jpg`).
+  - **Altura Uniforme & Responsive:** Todas las pantallas comparten contenedor `min-h-[480px] lg:min-h-[510px]` para eliminar saltos de maquetación (CLS).
+  - **12 Especialidades Oficiales:** Actualizada la sección `#especialidades` en cuadrícula responsive sincronizada con los seeders de la base de datos.
+  - **Flujo Estructural:** `Especialidades Médicas` reubicado inmediatamente debajo del Hero Slider y encima de `Servicios Rápidos para Pacientes`.
+  - **Unificación de Activos Vectoriales:** Eliminados PNGs obsoletos; uso exclusivo de [`logo-color.svg`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/assets/logo-color.svg) y [`logo-full-white.svg`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/assets/logo-full-white.svg).
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con 0 errores (Vite v8.3.4, 2040 módulos transformados).
+
+---
+
+## Estado de Relevo al 07/11/2026 (Población Integral de Base de Datos)
+- **Seeder Maestro Implementado:** [ComprehensivePopulationSeeder.php](file:///c:/Users/PERSONAL/clinica-SI1/backend/database/seeders/ComprehensivePopulationSeeder.php), integrado en [DatabaseSeeder.php](file:///c:/Users/PERSONAL/clinica-SI1/backend/database/seeders/DatabaseSeeder.php).
+- **Métricas Oficiales en PostgreSQL (clinica_db):**
+  - **Usuarios Totales:** 51 (ADMIN: 1, RECEPCIONISTA: 3, MEDICO: 16, PACIENTE: 31 con cuenta web activa).
+  - **Catálogo de Especialidades:** 12 especialidades oficiales (incorporadas Gastroenterología, Neurología, Otorrinolaringología y Endocrinología y Metabolismo).
+  - **Plantel de Médicos:** 16 médicos activos, 7 de ellos con multiespecialidad formal en medico_especialidad.
+  - **Disponibilidades Horarias:** 176 turnos semanales activos cubriendo lunes a sábado (mañanas y tardes).
+  - **Padrón de Pacientes:** 40 pacientes registrados con sus respectivos contactos de emergencia (contactos_emergencia).
+  - **Historias Clínicas:** 40 historias clínicas aperturadas (historias_clinicas), cubriendo el 100% de los pacientes.
+  - **Antecedentes Médicos:** 10 pacientes con antecedentes patológicos, quirúrgicos, alérgicos y familiares en antecedentes.
+  - **Citas Médicas:** 110 citas médicas distribuidas en las últimas 4 semanas y próximos 7 días:
+    - 35 pacientes recurrentes con >= 3 citas cada uno.
+    - 5 pacientes nuevos (IDs 36 al 40) con exactamente 1 cita cada uno.
+    - Estados: 85 ATENDIDA, 7 PROGRAMADA, 6 CONFIRMADA, 3 PENDIENTE, 4 CANCELADA (con motivo y fecha), 4 NO_ASISTIO y 1 INASISTENCIA.
+  - **Consultas Médicas y Expediente Digital:**
+    - 83 consultas médicas con signos vitales y tratamiento registrado (consultas_medicas).
+    - 83 diagnósticos clínicos con codificación CIE-10 (diagnosticos).
+    - 83 notas de evolución médica (evoluciones).
+    - 83 recetas médicas emitidas (recetas) con sus detalles farmacológicos (receta_detalles).
+  - **Permisos RBAC:** 16 permisos granulares oficiales asignados.
+  - **Secuencias PostgreSQL:** Sincronizadas al 100% mediante setval para evitar colisiones de IDs en mutaciones posteriores.
+
+---
+
 ## Estado de Relevo al 22/10/2026
 
 ### 1. Avances Consolidados en esta Sesión

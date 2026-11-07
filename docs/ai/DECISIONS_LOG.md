@@ -135,7 +135,7 @@
   1. Enriquecer el alcance clínico real del sistema integrando el ciclo completo asistencial: Consulta (CU16) -> Orden de Exámenes (CU25) -> Custodia de Resultados Externos Adjuntos (CU26).
   2. Absorber la exportación a PDF como flujo alternativo natural de CU18/CU19 para no saturar el catálogo con micro-funciones y mantener exactamente 26 Casos de Uso oficiales.
   3. Respetar estrictamente los 13 Casos de Uso del Ciclo 1 ya probados y validados al 100%, asignando las nuevas funcionalidades al Ciclo 2 con simetría total en los 6 paquetes de arquitectura.
-* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ai/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo oficial queda fijado en 26 Casos de Uso (+ 2 reservas).
+* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo oficial queda fijado en 26 Casos de Uso (+ 2 reservas).
 
 ### Registro 20: 2026-11-05
 * **Decisión:** Dockerización del monorepo mediante arquitectura multi-contenedor con `docker-compose`: Nginx (proxy inverso), PHP 8.3 FPM (Laravel), PostgreSQL 16 Alpine y Node 22 (React + Vite).
@@ -151,5 +151,13 @@
   1. La metodología PUDS / RUP es iterativa e incremental: el modelo de datos evoluciona armónicamente en cada ciclo sin anclarse a un esquema estático que impida la trazabilidad de negocio.
   2. Cumplir con los requerimientos de auditoría y ciclo de vida (RF08) asegurando que cualquier cambio quede formalmente versionado en migraciones Laravel y documentado en bitácoras.
 * **Impacto:** Todo ajuste técnico en la base de datos se implementa en migraciones versionadas de Laravel, se sincroniza en `DDL_Database_Clinica_LaCruz.sql` y se refleja en `diagrama_de_clases.puml`.
+
+### Registro 22: 2026-11-07
+* **Decisión:** Desacoplamiento de la pantalla inicial en dos vistas principales: **`Inicio del panel`** (orientada al operador/actor con saludo, estado de cuenta y accesos rápidos a CUs) y **`Dashboard Clínico`** (orientada a KPIs ejecutivos, operativa del día y distribución de estados en tiempo real según CU24).
+* **Motivo:**
+  1. Separar la experiencia de bienvenida y despacho de tareas del análisis cuantitativo y métricas gerenciales.
+  2. Eliminar la sobrecarga cognitiva del panel previo (bloques densos de texto) y sustituirlo por un dashboard limpio, filtrable por fechas (`Hoy`, `7d`, `30d`, `Mes`) con KPIs visuales de ocupación y atención.
+  3. Preservar la trazabilidad de los 24 Casos de Uso del examen en un cajón colapsable para auditoría docente sin saturar la vista operativa.
+* **Impacto:** Creación de `InicioPanelView.jsx`, `ClinicalDashboardView.jsx` y `DashboardController.php` con ruta `/api/analytics/dashboard-kpis`. Incorporación de `Inicio` y `Dashboard Clínico` en la navegación principal del `Sidebar.jsx`.
 
 

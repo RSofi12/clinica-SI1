@@ -54,7 +54,7 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
   };
 
   return (
-    <div className="relative min-h-screen text-white flex items-center justify-center p-4 sm:p-6 lg:p-10 selection:bg-[#70cbff] selection:text-[#01171d] font-montserrat overflow-hidden">
+    <div className="relative min-h-screen text-white flex items-center justify-center p-4 sm:p-6 lg:p-10 selection:bg-[#70cbff] selection:text-[#01171d] font-sans-clinical overflow-hidden">
       <BackgroundGlow />
 
       {/* Botón flotante para volver en esquina superior */}
@@ -89,9 +89,9 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
             </div>
 
             <div className="text-left">
-              <h1 className="font-montserrat font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+              <h1 className="font-serif-clinical font-normal text-3xl sm:text-4xl text-white tracking-normal leading-tight">
                 Centro Médico <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-[#70cbff]">
+                <span className="text-[#70cbff] italic font-light">
                   La Cruz
                 </span>
               </h1>
@@ -180,7 +180,7 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
             </div>
 
             <div className="mb-5">
-              <h2 className="font-montserrat font-bold text-xl text-slate-900 tracking-tight">
+              <h2 className="font-serif-clinical font-normal text-2xl sm:text-3xl text-[#003844] tracking-tight">
                 Iniciar Sesión
               </h2>
               <p className="text-xs text-slate-500 mt-1">
@@ -280,7 +280,7 @@ export const LoginPage = ({ onNavigateHome, onLoginSuccess, onNavigateForgotPass
               <button
                 type="submit"
                 disabled={isLoading || isSuccess}
-                className="w-full mt-2 py-3.5 px-4 rounded-xl font-montserrat font-bold text-sm text-white bg-gradient-to-r from-[#00687a] via-[#007b90] to-[#008b9e] hover:from-[#005564] hover:to-[#007485] shadow-lg shadow-[#00687a]/20 hover:shadow-xl hover:shadow-[#00687a]/30 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80 cursor-pointer flex items-center justify-center gap-2"
+                className="w-full mt-2 py-3.5 px-4 rounded-xl font-sans-clinical font-semibold text-sm text-white bg-gradient-to-r from-[#00687a] via-[#007b90] to-[#008b9e] hover:from-[#005564] hover:to-[#007485] shadow-md shadow-[#00687a]/20 hover:shadow-lg hover:shadow-[#00687a]/30 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-80 cursor-pointer flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>

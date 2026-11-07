@@ -16,7 +16,7 @@ Antes de generar cualquier código o plan, debes consultar obligatoriamente como
 2. `docs/CU_ESPECIFICACION_SISTEMA.md` (Definición oficial del CU, ciclo PUDS asignado, actores y paquetes).
 3. `docs/Ex_Parcial_2_sistemas-1.md` (Requisitos funcionales RF01-RF13, reglas de negocio RN01-RN14 y las 10 pruebas mínimas).
 4. `docs/database/diagrama_de_clases.puml` y `docs/database/DDL_Database_Clinica_LaCruz.sql` (Esquema relacional y tipos de datos en PostgreSQL).
-5. `docs/ai/ARCHITECTURE.md` (Estructura de paquetes en backend `app/Packages/` y frontend `src/apps/`).
+5. `docs/ARCHITECTURE.md` (Estructura de paquetes en backend `app/Packages/` y frontend `src/apps/`).
 6. `docs/IMPLEMENTATION_PHASES.md` (Checklist de avance y fases de prueba).
 
 ---

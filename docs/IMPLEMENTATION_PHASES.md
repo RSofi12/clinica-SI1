@@ -348,9 +348,9 @@ pm run build exitoso).
   - [x] **P18.5:** Compilación limpia en Vite (`npm run build` en 22.45s, 0 errores).
 
 #### ⏳ CU19: Consultar Expediente Médico y Antecedentes (3.4)
-- [ ] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes.
-- [ ] **Frontend:** Vista de expediente en solo lectura para el portal del paciente.
-- [ ] **Fase de Pruebas:** Intentar consultar expediente de otro paciente por ID (HTTP 403 Forbidden).
+- [x] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes (ExpedienteService + ExpedienteController).
+- [x] **Frontend:** Vista de expediente en solo lectura para portal de pacientes y visor clínico integral para personal médico/admin (`ExpedienteClinicoView.jsx` con transiciones fluidas, timeline cronológico y `@media print`).
+- [x] **Fase de Pruebas:** Scoping RBAC / Anti-IDOR validado (HTTP 403 Forbidden para pacientes consultando expedientes ajenos o recepcionistas) y compilación limpia en producción (`npm run build` en 27.44s, 0 errores).
 
 #### ⏳ CU25: Emitir Órdenes de Exámenes Auxiliares (Extra)
 - [ ] **Backend:** Modelo `ordenes_examenes`, generación de código correlativo `ORD-XXXX`, validación de tipo de estudio (laboratorio/imagen) e indicaciones.
@@ -408,10 +408,10 @@ pm run build exitoso).
   - [x] Dictado: *"Citas canceladas de este mes"*, *"Atenciones de hoy"*, *"Balance de la semana pasada"* resolviendo fechas y filtros en PostgreSQL.
   - [x] Fallback de escritura manual cuando no hay permisos de micrófono.
 
-#### ⏳ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
-- [ ] **Backend:** Endpoint de agregación analítica en tiempo real (citas por estado, ocupación médica, ingresos estimados).
-- [ ] **Frontend:** Panel visual ejecutivo (`DashboardView.jsx`) con tarjetas de métricas interactivas y gráficos de tendencia.
-- [ ] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en base de datos.
+#### ✅ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
+- [x] **Backend:** Endpoint de agregación analítica en tiempo real (`DashboardController.php` - `GET /api/analytics/dashboard-kpis`) con scoping por rol y filtros temporales (`hoy`, `7d`, `30d`, `mes`, custom).
+- [x] **Frontend:** Panel visual ejecutivo (`ClinicalDashboardView.jsx` y `InicioPanelView.jsx`) con tarjetas KPI, selector de períodos, desglose de estados y operativo diario.
+- [x] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en PostgreSQL (`clinica_db`), compilación limpia con Vite.
 
 #### 🟡 CU27-RES: Exportar Expediente Clínico y Receta en PDF (Reserva Condicional / Subfunción CU18-19)
 - [ ] Generación de documentos descargables con membrete oficial e impresión.
