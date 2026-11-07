@@ -60,6 +60,14 @@ class Patient extends Model
     }
 
     /**
+     * Expediente clínico / Historia Clínica digital (Paquete 4 - CU16, CU19)
+     */
+    public function historiaClinica(): HasOne
+    {
+        return $this->hasOne(\App\Packages\MedicalRecords\Models\HistoriaClinica::class, 'id_paciente', 'id_paciente');
+    }
+
+    /**
      * Alias de relación: user
      */
     public function user(): BelongsTo

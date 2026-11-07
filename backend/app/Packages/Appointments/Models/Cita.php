@@ -38,6 +38,8 @@ class Cita extends Model
         'motivo_breve', // Homologación DDL / Sección 7.1
         'motivo_cancelacion',
         'cancelada_en',
+        'reprogramada_en',
+        'motivo_reprogramacion',
         'creada_por',
     ];
 
@@ -45,6 +47,7 @@ class Cita extends Model
         'fecha_hora_inicio' => 'datetime',
         'fecha_hora_fin' => 'datetime',
         'cancelada_en' => 'datetime',
+        'reprogramada_en' => 'datetime',
         'duracion_minutos' => 'integer',
     ];
 
@@ -180,6 +183,103 @@ class Cita extends Model
         $this->motivo_cancelacion = $motivo;
         $this->cambiarEstado('CANCELADA', $idUsuario, "Cancelada por motivo: {$motivo}");
         return true;
+    }
+
+    /**
+     * Determina si la cita se encuentra en estado apto para reprogramación (CU11 / RF08)
+     */
+    public function puedeReprogramarse(): bool
+    {
+        return in_array($this->estado, ['PROGRAMADA', 'CONFIRMADA'], true);
+    }
+
+    /**
+     * Reprograma la cita con nueva fecha/hora y motivo obligatorio (CU11 / RF08)
+     */
+    public function reprogramar(\Carbon\Carbon $nuevaFechaHoraInicio, \Carbon\Carbon $nuevaFechaHoraFin, string $motivo, int $idUsuario): bool
+    {
+        $anteriorInicio = $this->fecha_hora_inicio?->format('d/m/Y H:i');
+        $this->fecha_hora_inicio = $nuevaFechaHoraInicio;
+        $this->fecha_hora_fin = $nuevaFechaHoraFin;
+        $this->motivo_reprogramacion = $motivo;
+        $this->reprogramada_en = now();
+        $this->save();
+
+        CitaEstadoHistorial::registrarCambio(
+            $this->id_cita,
+            $this->estado,
+            $this->estado,
+            $idUsuario,
+            "Cita reprogramada del {$anteriorInicio} al {$nuevaFechaHoraInicio->format('d/m/Y H:i')}. Motivo: {$motivo}"
+        );
+
+        return true;
+    }
+
+    // =========================================================================
+    // CONSTANTES Y MÁQUINA DE ESTADOS (CU13 / RF10 / RN10)
+    // =========================================================================
+
+    public const ESTADO_PROGRAMADA = 'PROGRAMADA';
+    public const ESTADO_CONFIRMADA = 'CONFIRMADA';
+    public const ESTADO_ATENDIDA = 'ATENDIDA';
+    public const ESTADO_CANCELADA = 'CANCELADA';
+    public const ESTADO_INASISTENCIA = 'INASISTENCIA';
+
+    public const ESTADOS_VALIDOS = [
+        self::ESTADO_PROGRAMADA,
+        self::ESTADO_CONFIRMADA,
+        self::ESTADO_ATENDIDA,
+        self::ESTADO_CANCELADA,
+        self::ESTADO_INASISTENCIA,
+    ];
+
+    /**
+     * Matriz oficial de transiciones permitidas (Máquina de estados RF10)
+     */
+    public const TRANSICIONES_VALIDAS = [
+        self::ESTADO_PROGRAMADA => [
+            self::ESTADO_CONFIRMADA,
+            self::ESTADO_CANCELADA,
+            self::ESTADO_INASISTENCIA,
+        ],
+        self::ESTADO_CONFIRMADA => [
+            self::ESTADO_ATENDIDA,
+            self::ESTADO_CANCELADA,
+            self::ESTADO_INASISTENCIA,
+        ],
+        self::ESTADO_ATENDIDA => [],     // Terminal
+        self::ESTADO_CANCELADA => [],    // Terminal
+        self::ESTADO_INASISTENCIA => [], // Terminal
+    ];
+
+    /**
+     * Determina si la cita se encuentra en un estado terminal (inmutable)
+     */
+    public function esEstadoTerminal(): bool
+    {
+        return in_array($this->estado, [
+            self::ESTADO_ATENDIDA,
+            self::ESTADO_CANCELADA,
+            self::ESTADO_INASISTENCIA,
+        ], true);
+    }
+
+    /**
+     * Retorna las transiciones válidas disponibles para el estado actual
+     */
+    public function obtenerTransicionesPermitidas(): array
+    {
+        return self::TRANSICIONES_VALIDAS[$this->estado] ?? [];
+    }
+
+    /**
+     * Evalúa si una transición hacia un nuevo estado es legal
+     */
+    public function puedeTransicionarA(string $nuevoEstado): bool
+    {
+        $permitidas = $this->obtenerTransicionesPermitidas();
+        return in_array($nuevoEstado, $permitidas, true);
     }
 
     /**

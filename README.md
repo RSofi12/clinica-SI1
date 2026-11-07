@@ -22,6 +22,11 @@ Sistema web integral para la administración hospitalaria y clínica del **Centr
 
 ```text
 clinica-SI1/
+├── docker/                   # Configuración de contenedores
+│   ├── php/Dockerfile        # PHP 8.3 FPM + extensiones PostgreSQL + Composer
+│   ├── nginx/default.conf    # Proxy inverso Nginx para Laravel
+│   └── frontend/Dockerfile   # Node 22 para desarrollo y build de React
+├── docker-compose.yml        # Orquestador multi-contenedor (postgres, backend, web, frontend)
 ├── backend/                  # API REST en Laravel (PHP)
 │   ├── app/                  # Modelos, Controladores y Lógica de negocio
 │   ├── config/               # Configuraciones (CORS, BD, sesión, etc.)
@@ -137,6 +142,49 @@ cd frontend
    npm run dev
    ```
    *El sistema web estará disponible en:* **`http://localhost:5173`**
+
+---
+
+### 4. Levantamiento Alternativo con Docker & Docker Compose (Recomendado para Nube / Contenedores)
+
+Si cuentas con Docker y Docker Desktop instalados, puedes levantar todo el stack (`PostgreSQL 16`, `PHP 8.3 FPM`, `Nginx` y `React Vite`) con un solo comando desde la raíz del proyecto:
+
+1. **Asegurar archivo de entorno en backend:**
+   ```powershell
+   copy backend\.env.example backend\.env
+   ```
+   *(No necesitas cambiar `DB_HOST`; Docker inyecta automáticamente `DB_HOST=postgres` para la red de contenedores).*
+
+2. **Construir e iniciar los 4 contenedores:**
+   ```powershell
+   docker compose up -d --build
+   ```
+
+3. **Ejecutar migraciones y seeders dentro del contenedor backend:**
+   ```powershell
+   docker compose exec backend php artisan key:generate
+   docker compose exec backend php artisan migrate --seed
+   ```
+
+4. **Acceder a los servicios:**
+   - **Frontend (React + Vite):** `http://localhost:5173`
+   - **Backend API (Nginx Proxy):** `http://localhost:8000/api`
+   - **Base de Datos (PostgreSQL):** `localhost:5432` (usuario: `postgres`, base: `clinica_db`, pass: `postgres`)
+
+5. **Comandos útiles de gestión:**
+   ```powershell
+   # Ver estado de los contenedores
+   docker compose ps
+
+   # Ver logs en tiempo real
+   docker compose logs -f
+
+   # Detener los contenedores sin borrar los datos
+   docker compose down
+
+   # Detener y reiniciar
+   docker compose restart
+   ```
 
 ---
 

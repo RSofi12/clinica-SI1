@@ -3,8 +3,8 @@
 ## Estado Actual al 21/10/2026
 
 ### 1. Documentación Base y Especificación Aprobada
-- ✅ Definición formal de los **23 Casos de Uso** oficiales del sistema en `docs/CU_ESPECIFICACION_SISTEMA.md`.
-- ✅ Definición del caso condicional en reserva `CU24-OPC` para ser evaluado en el Ciclo 2.
+- ✅ Definición formal de los **26 Casos de Uso** oficiales del sistema en `docs/CU_ESPECIFICACION_SISTEMA.md`.
+- ✅ Definición del caso condicional en reserva `CU27-OPC` para ser evaluado en el Ciclo 2.
 - ✅ Alcance del proyecto (Sección 1.4) alineado a los 13 requerimientos funcionales del examen (`RF01` al `RF13`) y el perfil del paciente (§3.4).
 - ✅ Unificación del actor **Médico** (se descarta duplicar con Especialista).
 - ✅ Aprobada la Arquitectura por Paquetes de Dominio: Backend (`app/Packages/`) y Frontend (`src/apps/`) simétricos para los 6 paquetes documentada en `docs/ai/ARCHITECTURE.md`.
@@ -12,7 +12,7 @@
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 10 CUs + 1 Opcional):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe y reportes con voz) + `CU24-OPC` condicional en reserva. Estado: **0 completados de 10 (+1)**. Total Global: **13 de 23 (+1) completados (56.5%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **2 completados de 13 (+2) (CU11, CU23)**. Total Global: **15 de 26 (+2) completados (57.7%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -219,3 +219,150 @@
   10. Validación de datos inválidos HTTP 422 tipados (Transversal) ✅
 - 🔜 **Próximo Paso Inmediato:** Planificar y dar inicio al **Ciclo 2: Clínico, Pagos y Analítica** (`CU11` Reprogramar Cita Médica, `CU13` Registro de Asistencia y cambio de estado, `CU16-CU19` Expediente Clínico Digital, `CU20-CU23` Notificaciones, Pagos y Reportes).
 
+---
+
+### 19. Dockerización del Monorepo y Preparación para Despliegue en la Nube (05/11/2026)
+- ✅ **Arquitectura Multi-Contenedor (`docker-compose.yml`):**
+  - **`clinica_backend` (`docker/php/Dockerfile`):** Imagen basada en `php:8.3-fpm-alpine` con extensiones oficiales (`pdo_pgsql`, `pgsql`, `mbstring`, `zip`, `bcmath`, `intl`, `opcache`) y Composer 2 integrado.
+  - **`clinica_nginx` (`docker/nginx/default.conf`):** Servidor web proxy inverso con timeouts extendidos (300s) y reescritura FastCGI hacia `backend:9000`.
+  - **`clinica_postgres` (`postgres:16-alpine`):** Base de datos relacional con volumen persistente `pgdata`.
+  - **`clinica_frontend` (`docker/frontend/Dockerfile`):** Imagen basada en `node:22-alpine` para servir el SPA de React + Vite en desarrollo y producción.
+- ✅ **Compatibilidad Híbrida Zero-Touch:**
+  - El orquestador inyecta `DB_HOST=postgres` en el contenedor backend, permitiendo que el archivo `backend/.env` local (`DB_HOST=127.0.0.1`) funcione tanto de manera nativa en Windows como en contenedores sin necesidad de alterar variables.
+- ✅ **Documentación Operativa:**
+  - `README.md` actualizado con comandos de arranque (`docker compose up -d --build`), migraciones y seeders dentro del contenedor.
+
+
+---
+
+### 20. Implementación Integral de CU11 (Reprogramar Cita Médica — RF08) (05/11/2026)
+- **Backend (`backend/app/Packages/Appointments/`):**
+  - ✅ Migración `2026_11_05_000001_add_reprogramacion_fields_to_citas_table.php`: campos `reprogramada_en` (timestamp) y `motivo_reprogramacion` (varchar 255) en tabla `citas`. Sincronizado en `DDL_Database_Clinica_LaCruz.sql`.
+  - ✅ Modelo `Cita.php`: `$fillable` y `$casts` actualizados, métodos `puedeReprogramarse(): bool` (solo en estado PROGRAMADA o CONFIRMADA) y `reprogramar($nuevaFechaHora, $nuevaFechaHoraFin, $duracion, $motivo, $idUsuario)`.
+  - ✅ FormRequest `AppointmentRescheduleRequest.php`: validación estricta de fecha futura (`YYYY-MM-DD`, `after_or_equal:today`), hora de inicio (`H:i`), duración (15-120 min) y motivo obligatorio (min: 5, max: 500).
+  - ✅ Servicio Transaccional `AppointmentRescheduleService.php`:
+    - `DB::transaction()` y `lockForUpdate()` sobre la cita.
+    - Validación de estado activo del médico (RN04) y fecha futura (RN06).
+    - Verificación de agenda semanal (RN05) y bloqueos/feriados en `bloqueos_horario`.
+    - Algoritmo anti-colisión con exclusión de la propia cita (`id_cita != $cita->id_cita`) evitando auto-colisiones (RF07).
+    - Auditoría inmutable en `Bitacora.php` (CU03) y registro en `cita_estado_historial`.
+  - ✅ Controlador `AppointmentsController::reschedule()` y ruta `PATCH /api/appointments/{id}/reschedule` con RBAC para `ADMIN`, `RECEPCIONISTA` y `PACIENTE` (médico bloqueado según PUDS).
+- **Frontend (`frontend/src/apps/appointments/`):**
+  - ✅ Servicio `appointmentService.js`: método `rescheduleAppointment(id, data)` (PATCH).
+  - ✅ Componente `AppointmentRescheduleModal.jsx`:
+    - Estilo guiado por `/frontend-design` con paleta institucional (#004d5a, #00687a, #70cbff, #e8f7f9), micro-transiciones fluidas y fondo difuminado `backdrop-blur-xs`.
+    - Visualización del resumen de la cita (paciente, médico, especialidad).
+    - Tarjeta comparativa visual del cambio de turno: **Horario Actual ➔ Nuevo Horario Elegido**.
+    - Selector dinámico de fecha con consulta en tiempo real al motor de disponibilidad (`CU09`).
+    - Grilla interactiva de turnos libres con selector verde esmeralda y feedback de ocupación/bloqueos.
+    - Textarea con contador dinámico y validación reactiva de motivo justificado (mínimo 5 caracteres).
+  - ✅ Integración en `AppointmentsManager.jsx`:
+    - Botón de acción 'Reprogramar' para citas activas (`PROGRAMADA`, `CONFIRMADA`) visible para roles autorizados.
+    - Indicador visual tipo pill `Reprogramada` en listados de citas con tooltip de motivo y fecha.
+  - ✅ Integración en `PatientAppointmentHistoryModal.jsx`:
+    - Acción de reprogramación disponible desde la ficha de historial del paciente.
+    - Bloque de trazabilidad mostrando fecha y motivo de reprogramaciones históricas.
+  - ✅ Compilación limpia con Vite (`npm run build` en 18.28s, 0 errores).
+- **Pruebas de Caja Negra (`docs/informes/PRUEBAS_CAJA_NEGRA.md`):**
+  - 11 casos de prueba exhaustivos documentados (`CN-CU11-01` a `CN-CU11-11`) cubriendo reprogramación exitosa, colisiones (HTTP 409), motivos cortos (HTTP 422), fechas pasadas, citas atendidas/canceladas y protección IDOR.
+
+
+---
+
+### 21. Implementación Integral de CU23 (Generar Reporte Personalizado por Voz con IA — RF13 / Extra) (05/11/2026)
+- **Backend (`backend/app/Packages/Analytics/`):**
+  - ✅ Tabla PostgreSQL `reportes_ia` migrada con campos `id_reporte`, `id_usuario`, `comando_texto`, `filtros_json` (JSONB) y `tipo_reporte`.
+  - ✅ Modelo `ReporteIa.php` con cast `array` a `filtros_json`, relaciones con `User` y scope de usuario.
+  - ✅ FormRequest `ProcessVoiceReportRequest.php` para validación y sanitización estricta de la consulta dictada.
+  - ✅ Motor Híbrido de NLP `VoiceCommandParserService.php`:
+    - Procesamiento determinístico en PHP con latencia 0 ms, 100% offline y costo $0.
+    - Detección precisa de intenciones y estados de cita (`CANCELADA`, `ATENDIDA`, `PROGRAMADA`, `INASISTENCIA`).
+    - Detección de rangos temporales dinámicos con Carbon (*"hoy"*, *"este mes"*, *"semana pasada"*, *"este año"*, *"octubre"*).
+    - Mapeo de entidades contra catálogos relacionales de médicos y especialidades con normalización fonética y sin diacríticos.
+    - Soporte opcional y desacoplado para enriquecimiento vía Gemini API (`GEMINI_API_KEY`) con fallback transparente.
+  - ✅ Servicio Transaccional `VoiceReportService.php`:
+    - Construcción de consultas dinámicas en PostgreSQL sobre `citas` y `pacientes`.
+    - Cálculo de métricas agregadas (total de citas, atendidas, canceladas, tasa de asistencia porcentual).
+    - Persistencia en tabla `reportes_ia` y auditoría inmutable en `Bitacora.php` (CU03).
+    - Scoping automático para rol `MEDICO` (restringido a sus propios pacientes) y control global para `ADMIN`.
+  - ✅ Controlador `VoiceReportController.php` y rutas `/api/analytics/voice-report`, `/voice-history` y `/voice-stats`.
+  - ✅ Prueba de Caja Negra Automatizada `VoiceReportTest.php` validando parsing de estados y rangos temporales.
+- **Frontend (`frontend/src/apps/analytics/`):**
+  - ✅ Servicio `analyticsService.js`: consumo de endpoints y exportador a CSV estándar del navegador.
+  - ✅ Componente `VoiceReportAssistant.jsx`:
+    - Diseño adaptado a la identidad visual de la clínica con paleta `#004d5a`, `#00687a`, `#008b9e` y directrices `/frontend-design`.
+    - Micrófono interactivo con Web Speech API (`window.webkitSpeechRecognition`), animación de ondas de audio (ecualizador en vivo) y pulso de escucha activa.
+    - Transcripción en tiempo real con campo editable y fallback manual por teclado ante navegadores sin soporte o permisos denegados.
+    - Chips con consultas de ejemplo dictables (*"Citas canceladas de este mes"*, *"Atenciones de hoy"*, etc.).
+    - Cajón desplegable de consultas recientes para reejecución en 1 clic.
+    - 4 Tarjetas KPI interactivas (Total, Atendidas, Canceladas, Tasa de Asistencia).
+    - Tabla detallada con badges estilizados según estado y buscador dinámico integrado.
+    - Botón de exportación instantánea a CSV.
+  - ✅ Integración en `Sidebar.jsx` (grupo "Reportes y Analítica (P6)") y renderizado condicional en `App.jsx`.
+  - ✅ Compilación de producción exitosa con Vite (`npm run build` en 52.15s, 0 errores).
+
+---
+
+### 22. Implementación de Backend para CU16 (Registrar Consulta Médica y Triaje) (06/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ Modelo `ConsultaMedica.php`: Accessors calculados para IMC y clasificación clínica según la OMS, mapeo de relaciones con `Cita`, `HistoriaClinica`, `Medico` y `Diagnostico`.
+  - ✅ Modelo `Patient.php` y `User.php`: Relaciones agregadas para vincular directamente la ficha médica y cuenta de usuario con el expediente.
+  - ✅ FormRequest `ConsultaCreateRequest.php`: Validaciones biológicas rigurosas para constantes vitales (peso, talla, temperatura, pulso, presión) y diagnósticos (`PRESUNTIVO`/`DEFINITIVO`).
+  - ✅ Servicio Transaccional `ConsultaMedicaService.php`:
+    - Operación dentro de `DB::transaction()` con bloqueo pesimista `lockForUpdate()`.
+    - Validación Anti-IDOR para verificar que el médico autenticado es el titular de la cita.
+    - Aseguramiento/creación automática de la `HistoriaClinica` para el paciente.
+    - Transición atómica de `citas.estado = 'ATENDIDA'` y registro en `cita_estado_historial`.
+    - Asentamiento de auditoría inmutable en `Bitacora.php` (CU03).
+  - ✅ Controlador `ConsultasController.php` y rutas `/api/medical-records/consultas` y `/api/medical-records/citas/{id}/preparar`.
+
+### 11. Implementación de CU13 (Registrar Asistencia y Estado de Cita — RF10) — 100% Operativo
+- **Backend (`backend/app/Packages/Appointments/`):**
+  - ✅ **Máquina de Estados en Dominio (`Cita.php`):** Constantes de estado (`PROGRAMADA`, `CONFIRMADA`, `ATENDIDA`, `CANCELADA`, `INASISTENCIA`), matriz canónica de `TRANSICIONES_VALIDAS`, y métodos de evaluación (`esEstadoTerminal()`, `obtenerTransicionesPermitidas()`, `puedeTransicionarA()`).
+  - ✅ **Servicio Transaccional (`AppointmentStatusService.php`):** Bloqueo pesimista `lockForUpdate()` en `DB::transaction()`, control RBAC por rol (médico solo actualiza sus pacientes hacia atendida/inasistencia; recepción/admin confirma check-in e inasistencia; paciente bloqueado 403), validación temporal (rechazo de inasistencia en citas futuras) y auditoría inmutable en `bitacora` (CU03) y `cita_estado_historial`.
+  - ✅ **FormRequest (`AppointmentChangeStatusRequest.php`):** Validación estricta de estados y mensajes en español.
+  - ✅ **Controlador (`AppointmentsController.php`):** Endpoints `PATCH /api/appointments/{id}/status` y `GET /api/appointments/{id}/status-history` con scoping anti-IDOR.
+  - ✅ **Rutas (`routes/api.php`):** Registradas bajo middleware de roles `role:ADMIN,RECEPCIONISTA,MEDICO`.
+- **Frontend (`frontend/src/apps/appointments/`):**
+  - ✅ **Servicio (`appointmentService.js`):** Integración de `updateStatus` y `fetchStatusHistory`.
+  - ✅ **Modal (`AppointmentStatusModal.jsx`):** Modal responsivo bajo directrices de `/frontend-design` con comparativa Antes ➔ Después, selección de estados disponibles según rol, campo de observación justificada y pestaña de línea de tiempo con trazabilidad de `cita_estado_historial`.
+  - ✅ **Panel Gestor (`AppointmentsManager.jsx`):** Acciones rápidas de Check-in en mostrador, marcación de inasistencia y botón de trazabilidad.
+  - ✅ **Agenda Médica (`DoctorAgendaView.jsx`):** Integración en el cronograma timeline diario.
+  - ✅ **Compilación:** Verificada con `npm run build` limpia al 100%.
+
+### 12. Implementación de CU17 (Gestionar Antecedentes Médicos — Extra / §3.4) — 100% Operativo (Full-Stack)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Modelo de Dominio (`Antecedente.php`):** Constantes de tipo (`PATOLOGICO`, `QUIRURGICO`, `ALERGICO`, `FAMILIAR`, `FARMACOLOGICO`), estados (`ACTIVO`, `INACTIVO`), scopes (`activos`, `porTipo`, `alergicos`) y método `esAlergico()`.
+  - ✅ **FormRequests (`AntecedenteCreateRequest.php` y `AntecedenteUpdateRequest.php`):** Validación rigurosa de categorías permitidas y longitud de descripción en español.
+  - ✅ **Servicio Transaccional (`AntecedenteService.php`):** Consulta con scoping RBAC/anti-IDOR (paciente solo ve sus antecedentes, recepcionista bloqueada por confidencialidad), resiliencia de historia clínica (`firstOrCreate`), descarte de duplicados idénticos activos, baja lógica reversible (`RN11`) y auditoría inmutable en `bitacora` (CU03).
+  - ✅ **Controlador (`AntecedentesController.php`):** Endpoints REST paginados/filtrados por paciente, alta, edición y `toggle-status`.
+  - ✅ **Rutas (`routes/api.php`):** Registradas bajo prefijo `medical-records` protegidas por roles con middleware `EnsureUserRole`.
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio (`antecedenteService.js`):** Métodos `fetchPatientAntecedentes`, `createAntecedente`, `updateAntecedente`, `toggleAntecedenteStatus`.
+  - ✅ **Modal Formulario (`AntecedenteFormModal.jsx`):** Selector semántico de categorías, chips rápidos de autocompletado (Alergias a Penicilina, AINEs, Látex, HTA, Asma, Diabetes) y validación en tiempo real.
+  - ✅ **Modal Gestor (`AntecedentesPatientModal.jsx`):** Vista integral por pestañas de categorías, alertas prominentes en rojo/ámbar para alergias activas, filtro de activos/inactivos para baja lógica RN11 y edición fluida.
+  - ✅ **Integraciones Reactivas:**
+    - `ConsultaRegistroModal.jsx`: Acceso directo para el médico durante la consulta con refresco instantáneo de advertencias alérgicas.
+    - `ConsultasManager.jsx`: Botón contextual de antecedentes en tabla y vista móvil.
+    - `PatientsManager.jsx`: Botón de antecedentes por paciente en el padrón de pacientes.
+  - ✅ **Compilación:** `npm run build` exitoso con 0 errores.
+- **Pruebas:** 10 casos de prueba de caja negra documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md` (`CN-CU17-01` a `CN-CU17-10`).
+
+---
+
+### 23. Implementación Full-Stack de CU18 (Prescripción Médica y Recetas Digitales) (07/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Modelos de Dominio (`Receta.php` y `RecetaDetalle.php`):** Constantes de estado (`ACTIVO`, `ANULADO`), scopes de consulta (`activas`, `delMedico`) y relaciones directas con `HistoriaClinica`, `ConsultaMedica`, `Medico` y `RecetaDetalle`.
+  - ✅ **Migración:** `2026_11_07_000001_add_motivo_anulacion_to_recetas_table.php` incorporando `motivo_anulacion` (`varchar(500)`) y `anulado_en` (`timestamptz`).
+  - ✅ **FormRequests (`RecetaCreateRequest.php` y `RecetaAnularRequest.php`):** Validación estricta de medicamentos requeridos con dosis, frecuencia y duración obligatorios, y motivo de anulación mínimo de 5 caracteres.
+  - ✅ **Servicio Transaccional (`RecetaService.php`):** Operaciones atómicas en `DB::transaction()`, control Anti-IDOR para restringir la prescripción exclusivamente al médico tratante de la consulta o Admin, filtros multicriterio con métricas (`total`, `activas`, `anuladas`), anulación inmutable con baja lógica (`RN11`) y auditoría en `Bitacora.php` (`EMITIR_RECETA`, `ANULAR_RECETA`).
+  - ✅ **Controlador REST (`RecetasController.php`):** Endpoints `index`, `show`, `byConsulta`, `store` y `anular`.
+  - ✅ **Rutas API (`routes/api.php`):** 5 rutas protegidas bajo middleware `EnsureUserRole` en `/api/medical-records/recetas`.
+  - ✅ **Verificación:** Sintaxis PHP 100% libre de errores verificada con `php -l`.
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio API (`recetaService.js`):** Métodos `fetchRecetas`, `fetchRecetaById`, `fetchRecetasByConsulta`, `emitirReceta` y `anularReceta`.
+  - ✅ **Modal de Prescripción (`RecetaPrescripcionModal.jsx`):** Diseñado con `/frontend-design`, agregador dinámico de medicamentos, atajos de dosis/frecuencia/duración, y banner prominente de advertencia para antecedentes alérgicos (CU17).
+  - ✅ **Modal Membretado Oficial (`RecetaDetailModal.jsx`):** Recetario institucional con formato oficial, RP (℞), datos del facultativo, soporte para impresión directa (`@media print`), exportación y marca de agua en recetas anuladas.
+  - ✅ **Modal de Anulación (`RecetaAnularModal.jsx`):** Baja lógica permanente con motivo obligatorio mínimo de 5 caracteres (RN11).
+  - ✅ **Gestor Integral (`RecetasManager.jsx`):** 3 tarjetas de KPIs, buscador en tiempo real, filtros por estado y fecha, paginación e integración en `Sidebar.jsx` (grupo P4) y `App.jsx`.
+  - ✅ **Compilación:** Verificada con `npm run build` (0 errores en 22.45s).

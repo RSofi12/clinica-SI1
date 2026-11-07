@@ -1,4 +1,4 @@
-@startuml DiagramaClases_ClinicaPrivada_Metodos
+﻿@startuml DiagramaClases_ClinicaPrivada_Metodos
 skinparam classAttributeIconSize 0
 skinparam linetype ortho
 skinparam shadowing false
@@ -15,11 +15,12 @@ skinparam class {
   FontSize 11
 }
 hide circle
+hide stereotype
 
 ' =============================================================================
 ' 1. SEGURIDAD Y AUDITORÍA (AZUL PASTEL - #DAE8FC)
 ' =============================================================================
-class Usuarios <<seg>> {
+class Usuario <<seg>> {
   + id_usuario: Long [PK]
   + username: String [UNIQUE]
   + email: String [UNIQUE]
@@ -39,31 +40,31 @@ class Usuarios <<seg>> {
   + actualizarUltimoAcceso(): Void
 }
 
-class Roles <<seg>> {
+class Rol <<seg>> {
   + id_rol: Long [PK]
   + nombre: String [UNIQUE]
   --
   + asignarPermiso(id_p: Long): Void
 }
 
-class Permisos <<seg>> {
+class Permiso <<seg>> {
   + id_permiso: Long [PK]
   + nombre: String [UNIQUE]
   --
   + verificarPermiso(cod: String): Boolean
 }
 
-class UsuarioRol <<seg>> {
+class UsuarioRol as "UsuarioRol\n<size:9><b>«Clase Asociación»</b></size>" <<seg>> {
   + id_usuario: Long [PK, FK]
   + id_rol: Long [PK, FK]
 }
 
-class RolPermiso <<seg>> {
+class RolPermiso as "RolPermiso\n<size:9><b>«Clase Asociación»</b></size>" <<seg>> {
   + id_rol: Long [PK, FK]
   + id_permiso: Long [PK, FK]
 }
 
-class TokensRecuperacion <<seg>> {
+class TokenRecuperacion <<seg>> {
   + id_token: Long [PK]
   + id_usuario: Long [FK]
   + token_hash: String
@@ -106,7 +107,7 @@ class Bitacora <<seg>> {
 ' =============================================================================
 ' 2. DATOS MAESTROS Y RECURSOS CLÍNICOS (VERDE PASTEL - #D5E8D4)
 ' =============================================================================
-class Especialidades <<mae>> {
+class Especialidad <<mae>> {
   + id_especialidad: Long [PK]
   + nombre: String
   + nombre_normalizado: String [UNIQUE]
@@ -120,7 +121,7 @@ class Especialidades <<mae>> {
   + cambiarEstado(est: String): Void
 }
 
-class Medicos <<mae>> {
+class Medico <<mae>> {
   + id_medico: Long [PK]
   + id_usuario: Long [FK, UNIQUE]
   + codigo_profesional: String [UNIQUE]
@@ -135,13 +136,13 @@ class Medicos <<mae>> {
   + cambiarEstado(activo: Boolean): Void
 }
 
-class MedicoEspecialidad <<mae>> {
+class MedicoEspecialidad as "MedicoEspecialidad\n<size:9><b>«Clase Asociación»</b></size>" <<mae>> {
   + id_medico: Long [PK, FK]
   + id_especialidad: Long [PK, FK]
   + es_principal: Boolean
 }
 
-class Disponibilidades <<mae>> {
+class Disponibilidad <<mae>> {
   + id_disponibilidad: Long [PK]
   + id_medico: Long [FK]
   + dia_semana: Int (1-7)
@@ -154,7 +155,7 @@ class Disponibilidades <<mae>> {
   + verificarHorario(hora: Time): Boolean
 }
 
-class BloqueosHorario <<mae>> {
+class BloqueoHorario <<mae>> {
   + id_bloqueo: Long [PK]
   + id_medico: Long [FK] [0..1]
   + fecha: Date
@@ -169,7 +170,7 @@ class BloqueosHorario <<mae>> {
 ' =============================================================================
 ' 3. PACIENTES (AMARILLO PASTEL - #FFF2CC)
 ' =============================================================================
-class Pacientes <<pac>> {
+class Paciente <<pac>> {
   + id_paciente: Long [PK]
   + id_usuario: Long [FK, UNIQUE, 0..1]
   + numero_historia: String [UNIQUE]
@@ -191,7 +192,7 @@ class Pacientes <<pac>> {
   + actualizarContacto(): Void
 }
 
-class ContactosEmergencia <<pac>> {
+class ContactoEmergencia <<pac>> {
   + id_contacto: Long [PK]
   + id_paciente: Long [FK]
   + nombre: String
@@ -204,14 +205,14 @@ class ContactosEmergencia <<pac>> {
 ' =============================================================================
 ' 4. GESTIÓN DE CITAS MÉDICAS (NARANJA PASTEL - #FFE6CC)
 ' =============================================================================
-class TiposCita <<cit>> {
+class TipoCita <<cit>> {
   + id_tipo_cita: Long [PK]
   + nombre: String [UNIQUE]
   --
   + obtenerNombre(): String
 }
 
-class Citas <<cit>> {
+class Cita <<cit>> {
   + id_cita: Long [PK]
   + codigo_cita: String [UNIQUE]
   + id_paciente: Long [FK]
@@ -252,7 +253,7 @@ class CitaEstadoHistorial <<cit>> {
 ' =============================================================================
 ' 5. HISTORIAL CLÍNICO Y CONSULTAS (MORADO PASTEL - #E1D5E7)
 ' =============================================================================
-class HistoriasClinicas <<cli>> {
+class HistoriaClinica <<cli>> {
   + id_historia_clinica: Long [PK]
   + id_paciente: Long [FK, UNIQUE]
   + fecha_apertura: Date
@@ -262,7 +263,7 @@ class HistoriasClinicas <<cli>> {
   + archivar(motivo: String): Void
 }
 
-class ConsultasMedicas <<cli>> {
+class ConsultaMedica <<cli>> {
   + id_consulta: Long [PK]
   + id_cita: Long [FK, UNIQUE]
   + id_historia_clinica: Long [FK]
@@ -282,7 +283,7 @@ class ConsultasMedicas <<cli>> {
   + finalizarConsulta(): Void
 }
 
-class Antecedentes <<cli>> {
+class Antecedente <<cli>> {
   + id_antecedente: Long [PK]
   + id_historia_clinica: Long [FK]
   + tipo_antecedente: String
@@ -294,7 +295,7 @@ class Antecedentes <<cli>> {
   + clasificarPorTipo(t: String): Void
 }
 
-class Diagnosticos <<cli>> {
+class Diagnostico <<cli>> {
   + id_diagnostico: Long [PK]
   + id_historia_clinica: Long [FK]
   + id_consulta: Long [FK]
@@ -307,7 +308,7 @@ class Diagnosticos <<cli>> {
   + cambiarATipoDefinitivo(): Void
 }
 
-class Evoluciones <<cli>> {
+class Evolucion <<cli>> {
   + id_evolucion: Long [PK]
   + id_historia_clinica: Long [FK]
   + id_medico: Long [FK]
@@ -317,7 +318,7 @@ class Evoluciones <<cli>> {
   + agregarNota(n: Text): Void
 }
 
-class Recetas <<cli>> {
+class Receta <<cli>> {
   + id_receta: Long [PK]
   + id_historia_clinica: Long [FK]
   + id_consulta: Long [FK]
@@ -330,7 +331,7 @@ class Recetas <<cli>> {
   + anularReceta(): Void
 }
 
-class RecetaDetalles <<cli>> {
+class RecetaDetalle <<cli>> {
   + id_detalle: Long [PK]
   + id_receta: Long [FK]
   + medicamento: String
@@ -342,7 +343,7 @@ class RecetaDetalles <<cli>> {
   + validarPosologia(): Boolean
 }
 
-class AnalisisClinicos <<cli>> {
+class AnalisisClinico <<cli>> {
   + id_analisis: Long [PK]
   + id_historia_clinica: Long [FK]
   + id_medico: Long [FK]
@@ -355,10 +356,46 @@ class AnalisisClinicos <<cli>> {
   + detectarAlertas(): JSON
 }
 
+class OrdenExamen <<cli>> {
+  + id_orden: Long [PK]
+  + codigo_orden: String [UNIQUE]
+  + id_consulta: Long [FK]
+  + id_historia_clinica: Long [FK]
+  + id_medico: Long [FK]
+  + tipo_estudio: String
+  + nombre_estudio: String
+  + indicaciones_preparacion: Text [0..1]
+  + diagnostico_presuntivo: String [0..1]
+  + estado: String
+  + fecha_emision: DateTime
+  --
+  + emitirOrden(tipo: String, nombre: String): OrdenesExamenes
+  + actualizarEstado(est: String): Void
+}
+
+class DocumentoClinico <<cli>> {
+  + id_documento: Long [PK]
+  + id_historia_clinica: Long [FK]
+  + id_consulta: Long [FK, 0..1]
+  + id_orden: Long [FK, 0..1]
+  + id_medico: Long [FK]
+  + titulo: String
+  + tipo_documento: String
+  + descripcion: Text [0..1]
+  + ruta_archivo: String
+  + mime_type: String
+  + tamanio_bytes: Long
+  + fecha_subida: DateTime
+  + estado: String
+  --
+  + subirArchivo(ruta: String, tipo: String): DocumentosClinicos
+  + archivar(): Void
+}
+
 ' =============================================================================
 ' 6. PAGOS, NOTIFICACIONES Y REPORTES IA (ROSA PASTEL - #F8CECC)
 ' =============================================================================
-class Pagos <<ext>> {
+class Pago <<ext>> {
   + id_pago: Long [PK]
   + id_cita: Long [FK]
   + id_paciente: Long [FK]
@@ -372,7 +409,7 @@ class Pagos <<ext>> {
   + confirmarPago(): Void
 }
 
-class Notificaciones <<ext>> {
+class Notificacion <<ext>> {
   + id_notificacion: Long [PK]
   + id_usuario: Long [FK]
   + id_cita: Long [FK] [0..1]
@@ -387,7 +424,7 @@ class Notificaciones <<ext>> {
   + programarAviso(f: DateTime): Void
 }
 
-class PushSuscripciones <<ext>> {
+class PushSuscripcion <<ext>> {
   + id_suscripcion: Long [PK]
   + id_usuario: Long [FK]
   + endpoint: Text
@@ -398,7 +435,7 @@ class PushSuscripciones <<ext>> {
   + activarSuscripcion(): Void
 }
 
-class ReportesIA <<ext>> {
+class ReporteIA <<ext>> {
   + id_reporte: Long [PK]
   + id_usuario: Long [FK]
   + comando_texto: Text
@@ -411,45 +448,64 @@ class ReportesIA <<ext>> {
 }
 
 ' =============================================================================
-' RELACIONES (LÍNEAS SIN FLECHAS + CARDINALIDADES)
+' RELACIONES UML RIGUROSAS (ASOCIACIONES, COMPOSICIONES REALES Y CLASES ASOCIACIÓN)
 ' =============================================================================
-Usuarios "1" -- "0..*" UsuarioRol : tiene
-Roles "1" -- "0..*" UsuarioRol : asigna
-Roles "1" -- "0..*" RolPermiso : tiene
-Permisos "1" -- "0..*" RolPermiso : otorga
-Usuarios "1" -- "0..*" TokensRecuperacion : solicita
-Usuarios "1" -- "0..*" Bitacora : registra
-Usuarios "1" -- "0..1" Medicos : es
-Usuarios "1" -- "0..1" Pacientes : cuenta de
 
-Medicos "1" -- "1..*" MedicoEspecialidad : ejerce
-Especialidades "1" -- "0..*" MedicoEspecialidad : agrupa
-Medicos "1" -- "0..*" Disponibilidades : atiende en
-Medicos "0..1" -- "0..*" BloqueosHorario : bloquea
+' --- 1. SEGURIDAD Y AUDITORÍA ---
+Usuario "1" *-- "0..*" TokenRecuperacion : posee (ON DELETE CASCADE)
+Usuario "1" -- "0..*" Bitacora : genera
+Usuario "0..1" -- "0..*" ConfiguracionSeguridad : actualiza
+Usuario "1" -- "0..1" Medico : vinculado a
+Usuario "1" -- "0..1" Paciente : cuenta web de
 
-Pacientes "1" -- "0..*" ContactosEmergencia : tiene
-Pacientes "1" -- "0..*" Citas : asiste
-Medicos "1" -- "0..*" Citas : atiende
-Especialidades "1" -- "0..*" Citas : pertenece
-TiposCita "1" -- "0..*" Citas : clasifica
-Citas "0..1" -- "0..1" Citas : reprograma
-Citas "1" -- "0..*" CitaEstadoHistorial : cambia
-Citas "1" -- "0..1" Pagos : se paga
-Pacientes "1" -- "0..*" Pagos : realiza
+' Tablas Intermedias / Clases Asociación N:M puras
+Usuario "1" -- "0..*" UsuarioRol : posee
+Rol "1" -- "0..*" UsuarioRol : asigna
+Rol "1" -- "0..*" RolPermiso : tiene
+Permiso "1" -- "0..*" RolPermiso : otorga
 
-Pacientes "1" -- "1" HistoriasClinicas : posee
-Citas "1" -- "0..1" ConsultasMedicas : genera
-HistoriasClinicas "1" -- "0..*" ConsultasMedicas : registra
-HistoriasClinicas "1" -- "0..*" Antecedentes : contiene
-HistoriasClinicas "1" -- "0..*" Diagnosticos : contiene
-ConsultasMedicas "1" -- "0..*" Diagnosticos : produce
-HistoriasClinicas "1" -- "0..*" Evoluciones : contiene
-HistoriasClinicas "1" -- "0..*" Recetas : contiene
-ConsultasMedicas "1" -- "0..*" Recetas : emite
-Recetas "1" -- "1..*" RecetaDetalles : especifica
-HistoriasClinicas "1" -- "0..*" AnalisisClinicos : analiza
+' --- 2. RECURSOS CLÍNICOS Y PACIENTES ---
+' Composición Real: Contacto de emergencia no tiene sentido de existencia sin su Paciente
+Paciente "1" *-- "0..*" ContactoEmergencia : compone
 
-Usuarios "1" -- "0..*" Notificaciones : recibe
-Usuarios "1" -- "0..*" PushSuscripciones : registra
-Usuarios "1" -- "0..*" ReportesIA : solicita
+' Clase Asociación N:M con atributo propio ('es_principal')
+Medico "1" -- "1..*" MedicoEspecialidad : ejerce
+Especialidad "1" -- "0..*" MedicoEspecialidad : agrupa
+
+' Asociaciones 1:N
+Medico "1" *-- "0..*" Disponibilidad : define (ON DELETE CASCADE)
+Medico "0..1" *-- "0..*" BloqueoHorario : aplica (ON DELETE CASCADE)
+
+' --- 3. GESTIÓN DE CITAS MÉDICAS ---
+Paciente "1" -- "0..*" Cita : reserva
+Medico "1" -- "0..*" Cita : atiende
+Especialidad "1" -- "0..*" Cita : pertenece a
+TipoCita "1" -- "0..*" Cita : clasifica
+Cita "0..1" -- "0..1" Cita : reprograma origen/destino
+
+' Composición Real: El historial de cambios de estado depende exclusivamente de la Cita
+Cita "1" *-- "0..*" CitaEstadoHistorial : audita estados de
+
+' --- 4. HISTORIAL CLÍNICO Y CONSULTAS ---
+Paciente "1" -- "1" HistoriaClinica : posee
+Cita "1" -- "0..1" ConsultaMedica : origina
+HistoriaClinica "1" -- "0..*" ConsultaMedica : registra
+ConsultaMedica "1" *-- "0..*" Diagnostico : evalÃºa
+ConsultaMedica "1" -- "0..*" Receta : prescribe
+ConsultaMedica "1" -- "0..*" OrdenExamen : prescribe
+HistoriaClinica "1" -- "0..*" DocumentoClinico : custodia
+OrdenExamen "0..1" -- "0..*" DocumentoClinico : respalda
+
+' Composiciones Reales (Dependencia ontológica y de ciclo de vida)
+HistoriaClinica "1" *-- "0..*" Antecedente : compone
+HistoriaClinica "1" *-- "0..*" Evolucion : compone
+HistoriaClinica "1" *-- "0..*" AnalisisClinico : genera
+Receta "1" *-- "1..*" RecetaDetalle : compone (ON DELETE CASCADE)
+
+' --- 5. INTEGRACIONES, PAGOS Y REPORTES ---
+Cita "1" -- "0..1" Pago : se paga con
+Paciente "1" -- "0..*" Pago : realiza
+Usuario "1" *-- "0..*" Notificacion : recibe (ON DELETE CASCADE)
+Usuario "1" *-- "0..*" PushSuscripcion : suscribe (ON DELETE CASCADE)
+Usuario "1" -- "0..*" ReporteIA : solicita por voz
 @enduml

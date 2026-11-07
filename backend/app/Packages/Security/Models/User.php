@@ -188,4 +188,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bitacora::class, 'id_usuario', 'id_usuario');
     }
+
+    public function medico()
+    {
+        return $this->hasOne(\App\Packages\ClinicalResources\Models\Medico::class, 'id_usuario', 'id_usuario');
+    }
+
+    public function paciente()
+    {
+        return $this->hasOne(\App\Packages\ClinicalResources\Models\Paciente::class, 'id_usuario', 'id_usuario');
+    }
 }

@@ -13,6 +13,10 @@ use App\Packages\ClinicalResources\Controllers\SpecialtiesController;
 use App\Packages\ClinicalResources\Controllers\SchedulesController;
 use App\Packages\Appointments\Controllers\AvailabilityController;
 use App\Packages\Appointments\Controllers\AppointmentsController;
+use App\Packages\MedicalRecords\Controllers\ConsultasController;
+use App\Packages\MedicalRecords\Controllers\AntecedentesController;
+use App\Packages\MedicalRecords\Controllers\RecetasController;
+use App\Packages\Analytics\Controllers\VoiceReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,12 +131,45 @@ Route::prefix('appointments')->middleware('web')->group(function () {
     // CU15: Historial cronológico de citas (con scoping)
     Route::get('/patient-history/{id}', [AppointmentsController::class, 'patientHistory'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
 
-    // CU10 / CU12: Gestión general, Programación, Detalle y Cancelación
+    // CU10 / CU11 / CU12 / CU13: Gestión general, Programación, Reprogramación, Detalle, Cancelación y Estados
     Route::get('/', [AppointmentsController::class, 'index'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
     Route::post('/', [AppointmentsController::class, 'store'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
     Route::get('/{id}', [AppointmentsController::class, 'show'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::patch('/{id}/reschedule', [AppointmentsController::class, 'reschedule'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
     Route::post('/{id}/cancel', [AppointmentsController::class, 'cancel'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::patch('/{id}/status', [AppointmentsController::class, 'updateStatus'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
+    Route::get('/{id}/status-history', [AppointmentsController::class, 'statusHistory'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
 });
+
+// CU16 / CU17: Historial Clínico, Consultas Médicas y Antecedentes (Paquete 4)
+Route::prefix('medical-records')->middleware('web')->group(function () {
+    // CU16: Consultas Médicas y Triaje
+    Route::get('/consultas', [ConsultasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::get('/consultas/{id}', [ConsultasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::get('/citas/{id_cita}/preparar', [ConsultasController::class, 'preparar'])->middleware('role:ADMIN,MEDICO');
+    Route::post('/consultas', [ConsultasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+
+    // CU17: Gestionar Antecedentes Médicos
+    Route::get('/patients/{patientId}/antecedentes', [AntecedentesController::class, 'indexByPatient'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::post('/patients/{patientId}/antecedentes', [AntecedentesController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+    Route::put('/antecedentes/{id}', [AntecedentesController::class, 'update'])->middleware('role:ADMIN,MEDICO');
+    Route::patch('/antecedentes/{id}/toggle-status', [AntecedentesController::class, 'toggleStatus'])->middleware('role:ADMIN,MEDICO');
+
+    // CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas
+    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::post('/recetas', [RecetasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+    Route::patch('/recetas/{id}/anular', [RecetasController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
+});
+
+// CU23: Generar reporte personalizado por voz con IA (Paquete 6: Reportes y Analítica)
+Route::prefix('analytics')->middleware('web')->group(function () {
+    Route::post('/voice-report', [VoiceReportController::class, 'processVoiceCommand'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/voice-stats', [VoiceReportController::class, 'stats'])->middleware('role:ADMIN');
+});
+
 
 
 

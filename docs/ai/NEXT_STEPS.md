@@ -57,10 +57,31 @@
 - [x] Estandarización de estados de cita con `INASISTENCIA` en modelos, migraciones, seeders y componentes frontend.
 - [x] Parámetros Mailtrap Sandbox SMTP documentados en `.env.example` y `.env`.
 
+### Fase 7: Dockerización y Despliegue en la Nube
+- [x] Dockerfile para PHP 8.3-fpm-alpine con extensiones oficiales (`pdo_pgsql`, `pgsql`, etc.) y Composer 2.
+- [x] Configuración Nginx proxy inverso con FastCGI y timeouts extendidos (`docker/nginx/default.conf`).
+- [x] Dockerfile para Frontend React + Vite con Node 22 (`docker/frontend/Dockerfile`).
+- [x] Orquestador `docker-compose.yml` multi-contenedor con inyección transparente de `DB_HOST=postgres`.
+- [x] Documentación de comandos de construcción y arranque en `README.md`.
+
 ---
 
-## 🌟 Ruta de Trabajo para Ciclo 2 (Clínico, Pagos y Analítica)
-1. **CU11:** Reprogramar Cita Médica (RF08) con nueva fecha/hora y liberación atómica del cupo anterior.
-2. **CU13:** Registrar Asistencia y Estado de Cita (RF10 — *Programada* → *Confirmada* → *Atendida* / *Inasistencia*).
-3. **CU16 - CU19:** Expediente Clínico Digital, Triaje, Recetas y Consultas Médicas.
-4. **CU20 - CU23:** Notificaciones y Recordatorios automáticos, Pagos Stripe Sandbox y Reportes Gerenciales con Filtros Dinámicos (RF13).
+### Fase 8: Esquema Físico y Modelos de Dominio del Ciclo 2 (Completada — 05/11/2026)
+- [x] Migración Paquete 4 (`historial_clinico`): 10 tablas (`historias_clinicas`, `consultas_medicas`, `antecedentes`, `diagnosticos`, `evoluciones`, `recetas`, `receta_detalles`, `ordenes_examenes`, `documentos_clinicos`, `analisis_clinicos`).
+- [x] Migración Paquete 5 (`pagos_notificaciones`): 3 tablas (`pagos`, `notificaciones`, `push_suscripciones`).
+- [x] Migración Paquete 6 (`reportes_ia`): 1 tabla (`reportes_ia`).
+- [x] 14 Modelos Eloquent en español en `app/Packages/` con relaciones y casts completos.
+- [x] Verificación sintáctica `php -l` al 100% (0 errores).
+
+---
+
+## 🌟 Ruta de Trabajo Inmediata para Ciclo 2 (Desarrollo Funcional)
+1. [x] **CU11:** Reprogramar Cita Médica (RF08) con nueva fecha/hora, anti-colisión transaccional y modal reactivo con `/frontend-design` (Completado al 100% — 05/11/2026).
+2. [x] **CU13:** Registrar Asistencia y Cambio de Estado de Cita Médica (RF10) — Programada → Confirmada (Check-in) → Atendida / Inasistencia con máquina de estados, modal reactivo y trazabilidad cronológica (Completado al 100% — 06/11/2026).
+3. [x] **CU16:** Registrar Consulta Médica y Triaje Clínico (Extra) — Formulario de atención, signos vitales, cálculo de IMC, diagnósticos CIE-10 y transición a ATENDIDA (Completado al 100% — 06/11/2026).
+4. [x] **CU17:** Gestionar Antecedentes Médicos (Extra / §3.4) — 5 categorías oficiales, modal con chips rápidos, gestor integral con filtros y baja lógica RN11, e integración reactiva con alertas alérgicas en consultas médicas (Completado al 100% — 07/11/2026).
+5. [x] **CU18:** Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas (Extra) — Full-Stack 100% operativo con prescripción estructurada, alertas de alergias (CU17), vista membretada imprimible (@media print), anulación lógica RN11 y gestor con KPIs (Completado al 100% — 07/11/2026).
+6. [ ] **CU22:** Generar Reportes con Filtros Dinámicos (RF13 — Requisito Obligatorio del Examen Oficial) con los 7 reportes gerenciales, filtros y exportación CSV/PDF.
+7. [ ] **CU19, CU25, CU26:** Consulta de Expediente Digital, Órdenes de Exámenes Auxiliares y Documentos Adjuntos.
+8. [ ] **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
+9. [ ] **CU24:** Dashboard Ejecutivo de KPIs Clínicos y Financieros.

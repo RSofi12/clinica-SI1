@@ -10,6 +10,10 @@ import { PatientsManager } from './apps/clinical-resources/components/PatientsMa
 import { DoctorsManager } from './apps/clinical-resources/components/DoctorsManager';
 import { SchedulesManager } from './apps/clinical-resources/components/SchedulesManager';
 import { AppointmentsManager } from './apps/appointments/components/AppointmentsManager';
+import { VoiceReportAssistant } from './apps/analytics/components/VoiceReportAssistant';
+import { ConsultasManager } from './apps/medical-records/components/ConsultasManager';
+import { RecetasManager } from './apps/medical-records/components/RecetasManager';
+
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
@@ -172,6 +176,10 @@ export default function App() {
         return role === 'ADMIN' ? 'Plantel Médico y Especialidades (CU06 / CU07)' : 'Panel General';
       case 'schedules':
         return role === 'ADMIN' ? 'Gestión de Horarios y Disponibilidad Médica (CU08)' : 'Panel General';
+            case 'voice-reports':
+        return ['ADMIN', 'MEDICO'].includes(role)
+          ? 'Asistente de Reportes por Voz con IA (CU23)'
+          : 'Panel General';
       case 'appointments':
         return role === 'MEDICO'
           ? 'Mi Agenda Médica Diaria (CU14 / CU15)'
@@ -284,6 +292,13 @@ export default function App() {
             <SchedulesManager />
           ) : dashboardTab === 'appointments' ? (
             <AppointmentsManager />
+          ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+            <ConsultasManager />
+          ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
+            <RecetasManager currentUser={user} />
+          ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
+            <VoiceReportAssistant />
+
           ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
             <PatientProfileView />
           ) : (
@@ -574,6 +589,28 @@ export default function App() {
                         </div>
                         <p className="text-xs text-slate-600 mt-1">
                           Consulte disponibilidad de turnos libres y reserve sus citas médicas personales con anti-colisión (RF06, RF07).
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CU18: Prescripciones y Recetas Médicas */}
+                  {['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) && (
+                    <div
+                      onClick={() => setDashboardTab('recetas')}
+                      className="p-4 rounded-xl border bg-teal-50/60 border-teal-200/80 hover:bg-teal-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-teal-800 uppercase">CU18: Recetas Médicas</span>
+                          <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-1.5 py-0.5 rounded-md">
+                            {role === 'PACIENTE' ? 'Mis Recetas →' : 'Recetario →'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1">
+                          {role === 'PACIENTE'
+                            ? 'Consulte sus prescripciones emitidas con posología y descargue la receta membretada oficial.'
+                            : 'Emisión estructurada de recetas médicas, posología tipada y archivo legal inmutable (CU18).'}
                         </p>
                       </div>
                     </div>

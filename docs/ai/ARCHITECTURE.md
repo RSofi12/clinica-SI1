@@ -32,9 +32,9 @@ La lógica no se dispersa en carpetas monolíticas planas. Se organiza en **6 pa
 | **P1: Seguridad y Auditoría** | `app/Packages/Security/` | `src/apps/security/` | **CU01, CU02, CU03** | `usuarios`, `roles`, `permisos`, `usuario_rol`, `rol_permiso`, `tokens_recuperacion`, `bitacora` |
 | **P2: Recursos Clínicos y Pacientes** | `app/Packages/ClinicalResources/` | `src/apps/clinical-resources/` | **CU04, CU05, CU06, CU07, CU08** | `pacientes`, `contactos_emergencia`, `especialidades`, `medicos`, `medico_especialidad`, `disponibilidades`, `bloqueos_horario` |
 | **P3: Gestión de Citas Médicas** | `app/Packages/Appointments/` | `src/apps/appointments/` | **CU09, CU10, CU11, CU12, CU13, CU14, CU15** | `tipos_cita`, `citas`, `cita_estado_historial` (Índice único anti-solapamiento RF07) |
-| **P4: Historial Clínico y Consultas** | `app/Packages/MedicalRecords/` | `src/apps/medical-records/` | **CU16, CU17, CU18, CU19** *(y `CU24-OPC`)* | `historias_clinicas`, `consultas_medicas`, `antecedentes`, `diagnosticos`, `evoluciones`, `recetas`, `receta_detalles` |
+| **P4: Historial Clínico y Consultas** | `app/Packages/MedicalRecords/` | `src/apps/medical-records/` | **CU16, CU17, CU18, CU19, CU25, CU26** *(Reservas: `CU27-RES`, `CU28-OPC`)* | `historias_clinicas`, `consultas_medicas`, `antecedentes`, `diagnosticos`, `evoluciones`, `recetas`, `receta_detalles`, `ordenes_examenes`, `documentos_clinicos` |
 | **P5: Integraciones y Pagos** | `app/Packages/Integrations/` | `src/apps/payments/` | **CU20, CU21** | `pagos`, `notificaciones`, `push_suscripciones` |
-| **P6: Reportes y Analítica** | `app/Packages/Analytics/` | `src/apps/analytics/` | **CU22, CU23** | `reportes_ia` (Consultas analíticas sobre citas, médicos y pacientes) |
+| **P6: Reportes y Analítica** | `app/Packages/Analytics/` | `src/apps/analytics/` | **CU22, CU23, CU24** | `reportes_ia` (Consultas analíticas sobre citas, médicos, pacientes y KPIs de dashboard) |
 
 ---
 

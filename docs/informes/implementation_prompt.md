@@ -29,6 +29,18 @@ La revisión general debe estructurarse estrictamente en las siguientes 7 seccio
 - **Objetivo funcional:** Explicación clara de qué resuelve este CU y con qué requerimiento funcional del examen (`RF01-RF13` o §3.4) se alinea.
 - **Actores involucrados:** Definir actor gestor y actores participantes. Aplicar estrictamente la regla de **Actor Médico Unificado** (nunca crear un rol separado `ESPECIALISTA`, la especialidad es un atributo/relación del médico).
 - **Alcance del ciclo:** Indicar a qué ciclo de entrega corresponde (Ciclo 1: Presentación 1 — Cita de Punta a Punta; Ciclo 2: Presentación 2 — Clínico, Integraciones y Analítica).
+- **Tabla de Detalle del Caso de Uso (2 columnas obligatoria):**
+  | Campo | Descripción |
+  | :--- | :--- |
+  | **Nombre de CU** | [Código y nombre formal, ej. CU11: Reprogramar Cita Médica] |
+  | **Propósito** | [Finalidad del caso de uso] |
+  | **Resumen** | [Descripción concisa del proceso] |
+  | **Actores** | [Actores involucrados con su rol] |
+  | **Actor iniciador** | [Actor que dispara la acción] |
+  | **Precondición** | [Condiciones obligatorias antes de ejecutar] |
+  | **Flujo principal** | 1. Paso uno.<br>2. Paso dos.<br>3. Paso tres. |
+  | **Postcondición** | [Resultado en el sistema tras completarse con éxito] |
+  | **Excepciones** | - Tipo de excepción -> Resultado / Manejo de la excepción |
 
 #### 2. 🗄️ Modelo de Datos y Tablas (PostgreSQL / DDL)
 - **Diagrama Mermaid ER:** Diagrama entidad-relación representativo del CU con sus relaciones de cardinalidad (1:1, 1:N, N:M).
@@ -62,12 +74,15 @@ Debe situarse en su subdirectorio simétrico (`frontend/src/apps/[paquete]/`).
 - Manejo de concurrencia y protección contra condiciones de carrera.
 
 #### 6. 🧪 Plan y Matriz de Pruebas Específicas
-- Tabla detallada con los casos de prueba obligatorios para este CU:
-  - Pruebas de Camino Feliz (Happy Path).
-  - Pruebas de Validación / Datos Inválidos (HTTP 422).
-  - Pruebas de Seguridad y Control de Acceso (RBAC / HTTP 401 / HTTP 403).
-  - Pruebas de Reglas de Negocio y Bajas Lógicas.
-  - Vinculación con las **10 Pruebas Mínimas** del Examen oficial cuando corresponda.
+- **Formato Obligatorio:** Pruebas de Caja Negra (Black-Box Testing) estructuradas en tabla con:
+  - `ID`: Identificador único (ej. `CN-CU11-01`).
+  - `Caso de Prueba`: Descripción del escenario evaluado.
+  - `Técnica`: Partición de Equivalencia (Válida/Inválida), Valores Límite, Transición de Estados o Tabla de Decisión.
+  - `Datos de Entrada`: Payload o parámetros específicos ingresados.
+  - `Resultado Esperado`: Código HTTP esperado, mensaje y estado final del sistema.
+  - `Tipo`: Camino Feliz / Validación / Seguridad (RBAC / Anti-IDOR) / Regla de Negocio.
+- **Registro en Repositorio:** Documentar y volcar obligatoriamente los casos de prueba ejecutados en el archivo consolidado `docs/informes/PRUEBAS_CAJA_NEGRA.md`.
+- **Vinculación:** Marcar concordancia con las 10 pruebas mínimas del examen oficial cuando aplique.
 
 #### 7. 📋 Documentos de Control a Actualizar al Finalizar
 - `docs/IMPLEMENTATION_PHASES.md` (Marcar checkboxes `[x]`).

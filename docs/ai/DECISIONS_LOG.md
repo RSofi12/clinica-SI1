@@ -124,4 +124,32 @@
 * **Motivo:** Evitar sorpresas o fugas de interfaz donde a un usuario le aparezcan opciones que no corresponden a su rol, garantizando una segregación de funciones (SoD) total tanto en la UI como en el Backend.
 * **Impacto:** Segregación perfecta y comprobada de Casos de Uso por actor en todo el frontend y backend.
 
+### Registro 19: 2026-11-05
+* **Decisión:** Ampliación formal del catálogo a **26 Casos de Uso oficiales** (+ 2 Reservas Condicionales en `CU27-RES` y `CU28-OPC`) para el Ciclo 2, incorporando:
+  1. **CU24:** Consultar Dashboard Administrativo y KPIs (Paquete 6: Reportes y Analítica).
+  2. **CU25:** Emitir Órdenes de Exámenes Auxiliares — Laboratorio e Imagenología (Paquete 4: Historial Clínico y Consultas).
+  3. **CU26:** Gestionar Documentos Clínicos Adjuntos (Paquete 4: Historial Clínico y Consultas).
+  4. Fijación de **CU27-RES** (Exportar Expediente y Receta en PDF) como caso de uso en reserva condicional / capacidad embebida en CU18 y CU19.
+  5. Mantenimiento de **CU28-OPC** (Diagnóstico Asistido por IA) en reserva.
+* **Motivo:**
+  1. Enriquecer el alcance clínico real del sistema integrando el ciclo completo asistencial: Consulta (CU16) -> Orden de Exámenes (CU25) -> Custodia de Resultados Externos Adjuntos (CU26).
+  2. Absorber la exportación a PDF como flujo alternativo natural de CU18/CU19 para no saturar el catálogo con micro-funciones y mantener exactamente 26 Casos de Uso oficiales.
+  3. Respetar estrictamente los 13 Casos de Uso del Ciclo 1 ya probados y validados al 100%, asignando las nuevas funcionalidades al Ciclo 2 con simetría total en los 6 paquetes de arquitectura.
+* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ai/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo oficial queda fijado en 26 Casos de Uso (+ 2 reservas).
+
+### Registro 20: 2026-11-05
+* **Decisión:** Dockerización del monorepo mediante arquitectura multi-contenedor con `docker-compose`: Nginx (proxy inverso), PHP 8.3 FPM (Laravel), PostgreSQL 16 Alpine y Node 22 (React + Vite).
+* **Motivo:**
+  1. Estandarizar el entorno de ejecución eliminando discrepancias entre sistemas operativos de desarrollo (Windows) y los entornos de nube (Render, Railway, AWS EC2, Azure VM).
+  2. Proveer un servidor web Nginx dedicado frente a PHP-FPM para atender peticiones HTTP y traducir tráfico FastCGI con cabeceras de seguridad y timeout extendido (300s).
+  3. Desacoplamiento total y compatibilidad híbrida: en `docker-compose.yml` se inyecta `DB_HOST=postgres`, permitiendo que el archivo `backend/.env` local (`DB_HOST=127.0.0.1`) funcione en modo nativo sin tener que modificar variables al alternar entre desarrollo con o sin Docker.
+* **Impacto:** Creación de `docker/php/Dockerfile`, `docker/nginx/default.conf`, `docker/frontend/Dockerfile`, `docker-compose.yml` y actualización de documentación de instalación en `README.md`.
+
+### Registro 21: 2026-11-05
+* **Decisión:** Flexibilidad arquitectónica controlada sobre el esquema relacional base (`DDL_Database_Clinica_LaCruz.sql`). El archivo DDL funge como guía base y modelo inicial de referencia; no obstante, se aprueba formalmente extender o ajustar tablas, columnas relacionales (ej. `id_cita_origen` reflexiva para trazabilidad de reprogramaciones en CU11) y restricciones cuando los Casos de Uso, la lógica de negocio o los requerimientos funcionales del examen lo justifiquen.
+* **Motivo:**
+  1. La metodología PUDS / RUP es iterativa e incremental: el modelo de datos evoluciona armónicamente en cada ciclo sin anclarse a un esquema estático que impida la trazabilidad de negocio.
+  2. Cumplir con los requerimientos de auditoría y ciclo de vida (RF08) asegurando que cualquier cambio quede formalmente versionado en migraciones Laravel y documentado en bitácoras.
+* **Impacto:** Todo ajuste técnico en la base de datos se implementa en migraciones versionadas de Laravel, se sincroniza en `DDL_Database_Clinica_LaCruz.sql` y se refleja en `diagrama_de_clases.puml`.
+
 
