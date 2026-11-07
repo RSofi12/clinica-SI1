@@ -492,7 +492,7 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                 onClick={() => setActiveTab('documentos')}
                 className={`flex items-center gap-2 py-3 px-4 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
                   activeTab === 'documentos'
-                    ? 'border-indigo-600 text-indigo-800 bg-indigo-50/50 rounded-t-lg'
+                    ? 'border-teal-700 text-teal-800 bg-teal-50/50 rounded-t-lg'
                     : 'border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300'
                 }`}
               >
@@ -515,7 +515,8 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
 
             {/* CUERPO DE LAS PESTAÑAS */}
             <div className="p-6">
-              {/* 1. LÍNEA DE TIEMPO (TIMELINE) */}
+              <div key={activeTab} className="animate-view-fade">
+                {/* 1. LÍNEA DE TIEMPO (TIMELINE) */}
               {activeTab === 'timeline' && (
                 <div className="space-y-6">
                   {timeline.length === 0 ? (
@@ -855,7 +856,7 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
               {/* 6. PESTAÑA: DOCUMENTOS CLÍNICOS ADJUNTOS (CU26) */}
               {activeTab === 'documentos' && (
                 <ClinicalDocumentsSection
-                  historialId={historiaClinica?.id_historia}
+                  historialId={historiaClinica?.id_historia_clinica || historiaClinica?.id_historia}
                   historialEstado={historiaClinica?.estado || 'ACTIVO'}
                   onDocumentChange={(docs) => setDocsCount(docs.length)}
                 />
@@ -890,6 +891,7 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                   )}
                 </div>
               )}
+              </div>
             </div>
           </div>
         </>

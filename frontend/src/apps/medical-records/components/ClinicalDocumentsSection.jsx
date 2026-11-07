@@ -17,10 +17,7 @@ import {
   LoaderCircle,
   Eye,
   Info,
-  SlidersHorizontal,
   Check,
-  Calendar,
-  Layers,
   ArrowUpRight
 } from 'lucide-react';
 import { documentoClinicoService } from '../services/documentoClinicoService';
@@ -84,13 +81,16 @@ export default function ClinicalDocumentsSection({
   const [dicomModalDoc, setDicomModalDoc] = useState(null);
   const [previewModalDoc, setPreviewModalDoc] = useState(null);
 
-  // Cargar documentos y órdenes pendientes
+  // Cargar documentos y órdenes pendientes de forma robusta
   useEffect(() => {
     if (historialId) {
       loadDocuments();
       if (isStaff) {
         loadOrdenesPendientes();
       }
+    } else {
+      setLoading(false);
+      setDocuments([]);
     }
   }, [historialId]);
 
@@ -118,11 +118,19 @@ export default function ClinicalDocumentsSection({
   }, [dicomModalDoc, previewModalDoc, deleteCandidate]);
 
   const loadDocuments = async () => {
+    if (!historialId) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setLoadError(null);
     try {
       const res = await documentoClinicoService.fetchDocumentos(historialId);
-      const docs = res?.data || [];
+      const raw = res?.data;
+      const docs = Array.isArray(raw)
+        ? raw
+        : (Array.isArray(raw?.data) ? raw.data : (Array.isArray(res?.data?.items) ? res.data.items : []));
+      
       setDocuments(docs);
       if (onDocumentChange) {
         onDocumentChange(docs);
@@ -130,12 +138,14 @@ export default function ClinicalDocumentsSection({
     } catch (err) {
       console.error('Error cargando documentos clínicos:', err);
       setLoadError(err?.message || 'No se pudieron cargar los documentos clínicos.');
+      setDocuments([]);
     } finally {
       setLoading(false);
     }
   };
 
   const loadOrdenesPendientes = async () => {
+    if (!historialId) return;
     try {
       const res = await documentoClinicoService.fetchOrdenesPendientes(historialId);
       setOrdenesPendientes(res?.data || []);
@@ -236,19 +246,22 @@ export default function ClinicalDocumentsSection({
     let dicoms = 0;
     let ordenes = 0;
 
-    documents.forEach((d) => {
-      const fmt = d.formato_archivo?.toUpperCase();
-      if (['JPG', 'JPEG', 'PNG'].includes(fmt)) images++;
-      if (fmt === 'PDF') pdfs++;
-      if (fmt === 'DCM') dicoms++;
-      if (d.id_orden) ordenes++;
-    });
+    if (Array.isArray(documents)) {
+      documents.forEach((d) => {
+        const fmt = d.formato_archivo?.toUpperCase();
+        if (['JPG', 'JPEG', 'PNG'].includes(fmt)) images++;
+        if (fmt === 'PDF') pdfs++;
+        if (fmt === 'DCM') dicoms++;
+        if (d.id_orden) ordenes++;
+      });
+    }
 
-    return { total: documents.length, images, pdfs, dicoms, ordenes };
+    return { total: documents.length || 0, images, pdfs, dicoms, ordenes };
   }, [documents]);
 
   // Documentos filtrados
   const filteredDocuments = useMemo(() => {
+    if (!Array.isArray(documents)) return [];
     if (activeFilter === 'IMAGE') {
       return documents.filter((d) => ['JPG', 'JPEG', 'PNG'].includes(d.formato_archivo?.toUpperCase()));
     }
@@ -363,16 +376,16 @@ export default function ClinicalDocumentsSection({
 
   return (
     <div className="space-y-6 animate-view-fade">
-      {/* 1. CABECERA EDITORIAL DE LA SECCIÓN */}
+      {/* 1. CABECERA CON PALETA INSTITUCIONAL TEAL/AQUA */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
         <div className="flex items-start gap-3">
-          <span className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-700 border border-indigo-100/80 shadow-2xs shrink-0">
-            <Paperclip className="w-5 h-5" />
+          <span className="p-2.5 rounded-2xl bg-teal-50 text-teal-800 border border-teal-200/70 shadow-2xs shrink-0">
+            <Paperclip className="w-5 h-5 text-teal-700" />
           </span>
           <div>
-            <div className="text-[11px] font-bold text-indigo-700 tracking-wider uppercase flex items-center gap-1.5">
+            <div className="text-[11px] font-bold text-teal-800 tracking-wider uppercase flex items-center gap-1.5">
               <span>CU26 · Archivo Documental</span>
-              <span className="w-1 h-1 rounded-full bg-indigo-400"></span>
+              <span className="w-1 h-1 rounded-full bg-teal-500"></span>
               <span className="text-slate-400 font-medium lowercase">cloud storage</span>
             </div>
             <h3 className="text-lg font-serif-clinical font-semibold text-slate-900 tracking-tight">
@@ -395,9 +408,9 @@ export default function ClinicalDocumentsSection({
             onClick={loadDocuments}
             disabled={loading}
             title="Actualizar documentos"
-            className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 active:scale-95 transition-all shadow-2xs disabled:opacity-50 cursor-pointer"
+            className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-teal-800 hover:bg-teal-50 hover:border-teal-200 active:scale-95 transition-all shadow-2xs disabled:opacity-50 cursor-pointer"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-teal-700' : ''}`} />
           </button>
 
           {isStaff && !isArchived && (
@@ -412,7 +425,7 @@ export default function ClinicalDocumentsSection({
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-white transition-all shadow-sm active:scale-95 cursor-pointer ${
                 formOpen
                   ? 'bg-slate-700 hover:bg-slate-800'
-                  : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-200'
+                  : 'bg-teal-700 hover:bg-teal-800 active:bg-teal-900 hover:shadow-teal-200'
               }`}
             >
               {formOpen ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
@@ -422,7 +435,7 @@ export default function ClinicalDocumentsSection({
         </div>
       </div>
 
-      {/* 2. MENSAJES DE ESTADO FLUIDOS */}
+      {/* 2. MENSAJES DE ESTADO */}
       {success && (
         <div className="p-4 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center justify-between gap-3 animate-view-fade">
           <div className="flex items-center gap-2.5">
@@ -445,14 +458,14 @@ export default function ClinicalDocumentsSection({
         </div>
       )}
 
-      {/* 3. FORMULARIO FLUIDO CON DRAG & DROP Y TRANSICIÓN SUAVE */}
+      {/* 3. FORMULARIO DESPLEGABLE CON TEAL CLÍNICO Y DRAG & DROP */}
       {formOpen && isStaff && !isArchived && (
         <form
           onSubmit={handleSubmit}
-          className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-indigo-50/50 via-white to-slate-50 border border-indigo-100 shadow-sm space-y-5 animate-view-fade"
+          className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-teal-50/40 via-white to-slate-50 border border-teal-200/70 shadow-sm space-y-5 animate-view-fade"
         >
-          <div className="flex items-center gap-2.5 pb-3 border-b border-indigo-100/70">
-            <UploadCloud className="w-5 h-5 text-indigo-600" />
+          <div className="flex items-center gap-2.5 pb-3 border-b border-teal-100/80">
+            <UploadCloud className="w-5 h-5 text-teal-700" />
             <div>
               <h4 className="text-sm font-serif-clinical font-semibold text-slate-900">
                 Nuevo documento clínico
@@ -481,7 +494,7 @@ export default function ClinicalDocumentsSection({
                 onChange={(e) => setDocumentType(e.target.value)}
                 required
                 disabled={uploading}
-                className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 shadow-2xs transition"
+                className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 shadow-2xs transition"
               >
                 <option value="">Selecciona una categoría</option>
                 {DOCUMENT_CATEGORIES.map((cat) => (
@@ -492,7 +505,7 @@ export default function ClinicalDocumentsSection({
               </select>
             </div>
 
-            {/* Selector de Archivo con Drag & Drop Interactivo */}
+            {/* Selector de Archivo con Drag & Drop */}
             <div>
               <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Archivo <span className="text-rose-500">*</span>
@@ -503,10 +516,10 @@ export default function ClinicalDocumentsSection({
                 onDrop={handleDrop}
                 className={`p-3 rounded-xl border-2 transition-all flex items-center gap-3 ${
                   isDragging
-                    ? 'border-indigo-500 bg-indigo-50/80 ring-2 ring-indigo-200 scale-[1.01]'
+                    ? 'border-teal-500 bg-teal-50/80 ring-2 ring-teal-200 scale-[1.01]'
                     : selectedFile
                     ? 'border-emerald-300 bg-emerald-50/30'
-                    : 'border-dashed border-slate-300 bg-white hover:border-indigo-400'
+                    : 'border-dashed border-slate-300 bg-white hover:border-teal-400'
                 }`}
               >
                 <input
@@ -550,7 +563,7 @@ export default function ClinicalDocumentsSection({
               value={selectedOrdenId}
               onChange={(e) => setSelectedOrdenId(e.target.value)}
               disabled={uploading}
-              className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 shadow-2xs transition"
+              className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 shadow-2xs transition"
             >
               <option value="">-- Archivo autónomo / independiente (Sin orden previa) --</option>
               {ordenesPendientes.map((orden) => (
@@ -559,7 +572,7 @@ export default function ClinicalDocumentsSection({
                 </option>
               ))}
             </select>
-            <p className="text-[10px] text-indigo-700/80 mt-1">
+            <p className="text-[10px] text-teal-800/80 mt-1">
               💡 Si este estudio corresponde a una orden previa emitida en la clínica, selecciónala para actualizar automáticamente su estado a <strong>CON RESULTADOS</strong>.
             </p>
           </div>
@@ -581,23 +594,23 @@ export default function ClinicalDocumentsSection({
               rows={3}
               disabled={uploading}
               placeholder="Ej.: hallazgos principales, resultado del estudio o conclusión del especialista."
-              className="w-full px-3.5 py-2.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 resize-none font-sans text-slate-800 placeholder:text-slate-400 shadow-2xs transition"
+              className="w-full px-3.5 py-2.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 resize-none font-sans text-slate-800 placeholder:text-slate-400 shadow-2xs transition"
             />
           </div>
 
           {/* Barra de Progreso durante la Carga */}
           {uploading && (
-            <div className="space-y-1.5 p-3 rounded-xl bg-indigo-50/80 border border-indigo-200/60 animate-view-fade">
-              <div className="flex items-center justify-between text-xs text-indigo-900 font-semibold">
+            <div className="space-y-1.5 p-3 rounded-xl bg-teal-50/80 border border-teal-200/70 animate-view-fade">
+              <div className="flex items-center justify-between text-xs text-teal-900 font-semibold">
                 <span className="flex items-center gap-1.5">
-                  <LoaderCircle className="w-3.5 h-3.5 animate-spin text-indigo-600" />
+                  <LoaderCircle className="w-3.5 h-3.5 animate-spin text-teal-700" />
                   Transmitiendo estudio a Cloudinary...
                 </span>
                 <span className="font-mono">{uploadProgress}%</span>
               </div>
-              <div className="w-full bg-indigo-200/50 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-teal-200/50 rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-2 rounded-full transition-all duration-200 ease-out"
+                  className="bg-teal-700 h-2 rounded-full transition-all duration-200 ease-out"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -617,7 +630,7 @@ export default function ClinicalDocumentsSection({
             <button
               type="submit"
               disabled={uploading}
-              className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 active:scale-95 rounded-xl transition shadow-sm disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-5 py-2 text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 active:bg-teal-900 active:scale-95 rounded-xl transition shadow-sm disabled:opacity-50 cursor-pointer"
             >
               {uploading ? (
                 <>
@@ -635,7 +648,7 @@ export default function ClinicalDocumentsSection({
         </form>
       )}
 
-      {/* 4. PESTAÑAS DE FILTRO POR TIPO / FORMATO (BARRA FLUIDA) */}
+      {/* 4. PESTAÑAS DE FILTRO POR TIPO / FORMATO */}
       {documents.length > 0 && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
           <button
@@ -684,7 +697,7 @@ export default function ClinicalDocumentsSection({
               onClick={() => setActiveFilter('DICOM')}
               className={`px-3 py-1.5 rounded-xl font-semibold transition-all shrink-0 cursor-pointer ${
                 activeFilter === 'DICOM'
-                  ? 'bg-purple-600 text-white shadow-2xs'
+                  ? 'bg-teal-800 text-white shadow-2xs'
                   : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
               }`}
             >
@@ -708,15 +721,15 @@ export default function ClinicalDocumentsSection({
         </div>
       )}
 
-      {/* 5. LISTADO DE DOCUMENTOS CON TARJETAS ELEVABLES (HOUSE RULE 5) */}
+      {/* 5. LISTADO DE DOCUMENTOS CON TARJETAS ELEVABLES */}
       {loading ? (
         <div className="py-12 text-center text-slate-500">
-          <LoaderCircle className="w-7 h-7 text-indigo-600 animate-spin mx-auto mb-2" />
+          <LoaderCircle className="w-7 h-7 text-teal-700 animate-spin mx-auto mb-2" />
           <p className="text-xs font-semibold text-slate-700">Cargando documentos clínicos...</p>
         </div>
       ) : filteredDocuments.length === 0 ? (
         <div className="py-16 text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center mx-auto mb-3 border border-indigo-100">
+          <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center mx-auto mb-3 border border-teal-100">
             <Paperclip className="w-6 h-6" />
           </div>
           <h4 className="text-sm font-bold text-slate-800">
@@ -740,14 +753,14 @@ export default function ClinicalDocumentsSection({
             return (
               <div
                 key={doc.id_documento}
-                className="group p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-indigo-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex flex-col sm:flex-row sm:items-start justify-between gap-4"
+                className="group p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-teal-300 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex flex-col sm:flex-row sm:items-start justify-between gap-4"
               >
                 <div className="flex items-start gap-3.5 min-w-0">
-                  {/* Icono de Formato con micro-animación en hover */}
+                  {/* Icono de Formato */}
                   <span
                     className={`p-3 rounded-2xl shrink-0 border transition-transform duration-200 group-hover:scale-105 ${
                       isDicom
-                        ? 'bg-purple-50 text-purple-700 border-purple-200'
+                        ? 'bg-teal-50 text-teal-800 border-teal-200'
                         : isPdf
                         ? 'bg-rose-50 text-rose-700 border-rose-200'
                         : 'bg-sky-50 text-sky-700 border-sky-200'
@@ -773,7 +786,7 @@ export default function ClinicalDocumentsSection({
                       <span
                         className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border uppercase ${
                           isDicom
-                            ? 'bg-purple-100/70 text-purple-800 border-purple-300'
+                            ? 'bg-teal-100/70 text-teal-800 border-teal-300'
                             : isPdf
                             ? 'bg-rose-100/70 text-rose-800 border-rose-300'
                             : 'bg-sky-100/70 text-sky-800 border-sky-300'
@@ -784,7 +797,7 @@ export default function ClinicalDocumentsSection({
 
                       {/* Badge de Orden CU25 (si está asociado) */}
                       {doc.id_orden && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-200 flex items-center gap-1">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 flex items-center gap-1">
                           <Check className="w-3 h-3 text-teal-600" />
                           Orden #{doc.id_orden}
                           {doc.orden_examen?.nombre_examen ? `: ${doc.orden_examen.nombre_examen}` : ''}
@@ -822,7 +835,7 @@ export default function ClinicalDocumentsSection({
                   </div>
                 </div>
 
-                {/* Botones de Acción con efecto Step & Press (House Rule 5) */}
+                {/* Botones de Acción */}
                 <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
                   {/* Botón Ver / Inspeccionar */}
                   {isDicom ? (
@@ -830,7 +843,7 @@ export default function ClinicalDocumentsSection({
                       type="button"
                       onClick={() => setDicomModalDoc(doc)}
                       title="Abrir asistente de visualización DICOM"
-                      className="p-2 rounded-xl text-purple-600 hover:text-purple-800 hover:bg-purple-50 border border-slate-200 transition active:scale-95 cursor-pointer"
+                      className="p-2 rounded-xl text-teal-800 hover:text-teal-900 hover:bg-teal-50 border border-slate-200 transition active:scale-95 cursor-pointer"
                     >
                       <ExternalLink className="w-4 h-4" />
                     </button>
@@ -839,7 +852,7 @@ export default function ClinicalDocumentsSection({
                       type="button"
                       onClick={() => setPreviewModalDoc(doc)}
                       title="Vista previa del documento"
-                      className="p-2 rounded-xl text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 border border-slate-200 transition active:scale-95 cursor-pointer"
+                      className="p-2 rounded-xl text-slate-600 hover:text-teal-700 hover:bg-teal-50 border border-slate-200 transition active:scale-95 cursor-pointer"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
@@ -852,7 +865,7 @@ export default function ClinicalDocumentsSection({
                     target="_blank"
                     rel="noopener noreferrer"
                     title="Descargar archivo a tu dispositivo"
-                    className="p-2 rounded-xl text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 border border-slate-200 transition active:scale-95 cursor-pointer"
+                    className="p-2 rounded-xl text-slate-600 hover:text-teal-700 hover:bg-teal-50 border border-slate-200 transition active:scale-95 cursor-pointer"
                   >
                     <Download className="w-4 h-4" />
                   </a>
@@ -947,8 +960,8 @@ export default function ClinicalDocumentsSection({
             >
               <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2.5">
-                  <span className="p-2.5 rounded-xl bg-purple-50 text-purple-700 border border-purple-200">
-                    <FileArchive className="w-5 h-5" />
+                  <span className="p-2.5 rounded-xl bg-teal-50 text-teal-800 border border-teal-200">
+                    <FileArchive className="w-5 h-5 text-teal-700" />
                   </span>
                   <div>
                     <h4 className="text-sm font-serif-clinical font-bold text-slate-900">
@@ -967,16 +980,16 @@ export default function ClinicalDocumentsSection({
                 </button>
               </div>
 
-              <div className="p-4 rounded-xl bg-purple-50/70 border border-purple-100 text-xs text-purple-900 space-y-2">
-                <p className="font-semibold flex items-center gap-1.5">
-                  <Info className="w-4 h-4 text-purple-600 shrink-0" />
+              <div className="p-4 rounded-xl bg-teal-50/70 border border-teal-100 text-xs text-teal-950 space-y-2">
+                <p className="font-semibold flex items-center gap-1.5 text-teal-900">
+                  <Info className="w-4 h-4 text-teal-700 shrink-0" />
                   Visualización especializada en visor médico externo
                 </p>
-                <p className="text-purple-800 leading-relaxed text-[11px]">
+                <p className="text-slate-700 leading-relaxed text-[11px]">
                   Los archivos <strong>DICOM (.dcm)</strong> almacenan secuencias de tomografía computarizada, resonancias y cortes volumétricos de alta precisión que requieren herramientas de ventana, contraste y calibración espacial.
                 </p>
-                <ol className="list-decimal pl-4 space-y-1 text-purple-800 text-[11px]">
-                  <li>Descarga el archivo <code>.dcm</code> con el botón morado.</li>
+                <ol className="list-decimal pl-4 space-y-1 text-slate-700 text-[11px]">
+                  <li>Descarga el archivo <code>.dcm</code> con el botón de descarga.</li>
                   <li>Abre el Visor DICOM web (IMAIOS).</li>
                   <li>Arrastra el archivo sobre la ventana del visor para examinar los cortes clínicos.</li>
                 </ol>
@@ -987,11 +1000,11 @@ export default function ClinicalDocumentsSection({
                   href={EXTERNAL_DICOM_VIEWER_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-xl hover:bg-purple-100 active:scale-95 transition shadow-2xs cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 rounded-xl hover:bg-teal-100 active:scale-95 transition shadow-2xs cursor-pointer"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   Abrir Visor DICOM (IMAIOS)
-                  <ArrowUpRight className="w-3 h-3 text-purple-500" />
+                  <ArrowUpRight className="w-3 h-3 text-teal-600" />
                 </a>
 
                 <a
@@ -999,7 +1012,7 @@ export default function ClinicalDocumentsSection({
                   download={dicomModalDoc.nombre_archivo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-purple-700 hover:bg-purple-800 active:bg-purple-900 active:scale-95 rounded-xl transition shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 active:bg-teal-900 active:scale-95 rounded-xl transition shadow-xs cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   Descargar .dcm ({dicomModalDoc.tamanio_legible || 'Archivo'})
@@ -1026,7 +1039,7 @@ export default function ClinicalDocumentsSection({
             >
               <div className="flex items-center justify-between p-4 border-b border-slate-100">
                 <div className="flex items-center gap-2.5">
-                  <span className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700">
+                  <span className="p-1.5 rounded-lg bg-teal-50 text-teal-700">
                     <Eye className="w-4 h-4" />
                   </span>
                   <div>
