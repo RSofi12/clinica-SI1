@@ -20,6 +20,7 @@ import ClinicalDashboardView from './apps/analytics/components/ClinicalDashboard
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
+import { NotificationsDropdown } from './components/NotificationsDropdown';
 import {
   Stethoscope,
   Calendar,
@@ -261,8 +262,11 @@ export default function App() {
               </div>
             </div>
 
-            {/* Derecha: Badge de Usuario y Salir */}
-            <div className="flex items-center gap-3">
+            {/* Derecha: Notificaciones, Badge de Usuario y Salir */}
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              {/* Precursor UI Notificaciones Push (CU20/CU21) */}
+              <NotificationsDropdown />
+
               <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-xl border border-slate-200">
                 <Shield className="w-3.5 h-3.5 text-[#00687a]" />
                 <span className="text-xs font-semibold text-slate-700 hidden sm:inline">{user?.username}</span>
