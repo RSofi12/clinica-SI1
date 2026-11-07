@@ -197,5 +197,8 @@ class DatabaseSeeder extends Seeder
 
         // 11. Poblar catálogo extendido integral (16 permisos, 3 recepcionistas, 12 especialidades, 16 médicos, 40 pacientes, historias y consultas)
         $this->call(ComprehensivePopulationSeeder::class);
+
+        // 12. Poblar módulos de apoyo clínico y financiero (bloqueos, órdenes, DICOM, pagos y reportes IA)
+        $this->call(OperationalClinicalSeeder::class);
     }
 }
