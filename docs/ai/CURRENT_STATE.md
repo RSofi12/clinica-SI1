@@ -329,3 +329,11 @@
   - ✅ **Panel Gestor (`AppointmentsManager.jsx`):** Acciones rápidas de Check-in en mostrador, marcación de inasistencia y botón de trazabilidad.
   - ✅ **Agenda Médica (`DoctorAgendaView.jsx`):** Integración en el cronograma timeline diario.
   - ✅ **Compilación:** Verificada con `npm run build` limpia al 100%.
+
+### 12. Implementación de CU17 (Gestionar Antecedentes Médicos — Extra / §3.4) — Backend Completado
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Modelo de Dominio (`Antecedente.php`):** Constantes de tipo (`PATOLOGICO`, `QUIRURGICO`, `ALERGICO`, `FAMILIAR`, `FARMACOLOGICO`), estados (`ACTIVO`, `INACTIVO`), scopes (`activos`, `porTipo`, `alergicos`) y método `esAlergico()`.
+  - ✅ **FormRequests (`AntecedenteCreateRequest.php` y `AntecedenteUpdateRequest.php`):** Validación rigurosa de categorías permitidas y longitud de descripción en español.
+  - ✅ **Servicio Transaccional (`AntecedenteService.php`):** Consulta con scoping RBAC/anti-IDOR (paciente solo ve sus antecedentes, recepcionista bloqueada por confidencialidad), resiliencia de historia clínica (`firstOrCreate`), descarte de duplicados idénticos activos, baja lógica reversible (`RN11`) y auditoría inmutable en `bitacora` (CU03).
+  - ✅ **Controlador (`AntecedentesController.php`):** Endpoints REST paginados/filtrados por paciente, alta, edición y `toggle-status`.
+  - ✅ **Rutas (`routes/api.php`):** Registradas bajo prefijo `medical-records` protegidas por roles con middleware `EnsureUserRole`.

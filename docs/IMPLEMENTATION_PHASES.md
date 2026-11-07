@@ -317,13 +317,13 @@ pm run build exitoso).
 
 ### 📦 Paquete 4: Historial Clínico y Consultas (P4)
 
-#### ⏳ CU16: Registrar Consulta Médica (Extra)
-- [ ] **Backend:** Registro de motivo, triaje/signos vitales, diagnóstico CIE y conducta. Transición automática de cita a *Atendida*.
-- [ ] **Frontend:** Formulario clínico de atención para el médico.
-- [ ] **Fase de Pruebas:** Transición inmediata de cita a atendida tras guardar consulta médica.
+#### ✅ CU16: Registrar Consulta Médica (Extra)
+- [x] **Backend:** Registro de motivo, triaje/signos vitales, diagnóstico CIE y conducta. Transición automática de cita a *Atendida*.
+- [x] **Frontend:** Formulario clínico de atención para el médico (`ConsultaRegistroModal.jsx`).
+- [x] **Fase de Pruebas:** Transición inmediata de cita a atendida tras guardar consulta médica.
 
 #### ⏳ CU17: Gestionar Antecedentes Médicos (Extra)
-- [ ] **Backend:** Catálogo y registro de antecedentes patológicos, quirúrgicos, alérgicos y farmacológicos.
+- [x] **Backend:** Catálogo y registro de antecedentes en 5 categorías (Patológicos, Quirúrgicos, Alérgicos, Familiares, Farmacológicos) con resiliencia de historia clínica, validación anti-duplicados, baja lógica (RN11), scoping RBAC/anti-IDOR y auditoría inmutable en `bitacora`.
 - [ ] **Frontend:** Resumen clínico de alertas (ej. alergia a penicilina destacada en rojo).
 - [ ] **Fase de Pruebas:** Persistencia en ficha permanente del paciente.
 

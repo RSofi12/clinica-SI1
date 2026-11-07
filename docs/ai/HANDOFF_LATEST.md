@@ -159,3 +159,20 @@
 - **Pendiente Inmediato Frontend:**
   - Integrar métodos en `appointmentService.js`.
   - Crear modal interactivo `AppointmentStatusModal.jsx` y botones de acción rápida en mostrador (`AppointmentsManager.jsx`) y agenda médica (`DoctorAgendaView.jsx`).
+
+### 11. CU17: Gestionar Antecedentes Médicos (Extra / §3.4) — Backend Operativo (07/Noviembre/2026)
+- **Backend:**
+  - Modelo: `Antecedente.php` con 5 tipos formales y scopes.
+  - Requests: `AntecedenteCreateRequest.php` y `AntecedenteUpdateRequest.php`.
+  - Servicio: `AntecedenteService.php` con resiliencia de historia clínica, anti-duplicados, baja lógica (RN11) y auditoría inmutable.
+  - Controlador: `AntecedentesController.php` (`indexByPatient`, `store`, `update`, `toggleStatus`).
+  - Rutas:
+    - `GET /api/medical-records/patients/{patientId}/antecedentes`
+    - `POST /api/medical-records/patients/{patientId}/antecedentes`
+    - `PUT /api/medical-records/antecedentes/{id}`
+    - `PATCH /api/medical-records/antecedentes/{id}/toggle-status`
+  - Verificación: Sintaxis PHP 100% limpia comproba con `php -l`.
+- **Pendiente Inmediato Frontend:**
+  - Servicio API `antecedenteService.js`.
+  - Vista/modal de gestión categorizada de antecedentes (`AntecedentesPatientView.jsx` / `AntecedenteFormModal.jsx`).
+  - Integración del banner de advertencia de alergias en `ConsultaRegistroModal.jsx` (CU16) y ficha del paciente.
