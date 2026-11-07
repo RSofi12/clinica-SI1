@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Calendar,
   Clock,
@@ -213,7 +213,7 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
   const disponibilidades = agendaData?.disponibilidades || [];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-view-fade">
       {/* Barra Superior: Selector de MÃ©dico, Fecha y Filtros */}
       <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
         {/* Selector de MÃ©dico (si no es mÃ©dico) */}

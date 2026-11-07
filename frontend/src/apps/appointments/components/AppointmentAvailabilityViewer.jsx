@@ -137,7 +137,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-view-fade">
       {/* Cabecera del Módulo */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
