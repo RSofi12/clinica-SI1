@@ -1,5 +1,23 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU26: Gestionar Documentos Clínicos Adjuntos con Cloudinary y Visor DICOM)
+- **Implementación Full-Stack de CU26 (Gestionar Documentos Clínicos Adjuntos):**
+  - **Backend (`backend/app/Packages/MedicalRecords/`):**
+    - Migración `2026_11_07_000002_add_cloudinary_and_tracking_to_documentos_clinicos_table.php` ejecutada.
+    - `DocumentoClinico.php`: Modelo con relaciones foráneas y accessors `es_dicom` y `tamanio_legible`.
+    - `CloudinaryStorageService.php`: Carga remota en Cloudinary (`image` y `raw` para DICOM/PDF) con fallback resiliente.
+    - `DocumentoClinicoService.php`: Soporte dual (autónomo y conectado a CU25 cambiando estado de orden a `CON_RESULTADOS`), Anti-IDOR y auditoría inmutable en `Bitacora.php`.
+    - `DocumentosClinicosController.php` y FormRequest `DocumentoClinicoUploadRequest.php` (límite 15 MB).
+  - **Frontend (`frontend/src/apps/medical-records/`):**
+    - `documentoClinicoService.js`: Integración API con progreso de carga multipart.
+    - `ClinicalDocumentsSection.jsx`: Componente idéntico a la referencia visual con formulario desplegable, badges (`PNG`, `PDF`, `DCM`), barra de progreso porcentual, previsualización de imágenes/PDF y asistente para visor DICOM externo (`https://www.imaios.com/es/imaios-dicom-viewer`).
+    - Integrado en `ExpedienteClinicoView.jsx` (pestaña "Documentos Adjuntos"), `Sidebar.jsx` (ítem bajo P4) y `App.jsx`.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2045 módulos, 13.77s).
+  - **Casos de Prueba:** Registrados `CN-CU26-01` a `CN-CU26-08` en `docs/informes/PRUEBAS_CAJA_NEGRA.md`.
+  - **Commit de Backend:** `635b166`: `feat(medical-records): implementar backend de documentos clinicos adjuntos CU26 con cloudinary y soporte cu25`.
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Fix: Modal Activar Paciente Fijo en Viewport con createPortal y Scroll-Lock)
 - **Corrección en [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) y [`App.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/App.jsx):**
   - **Eliminación del desplazamiento por scroll:** Se implementó `createPortal` hacia `document.body` y se desacopló el modal del contenedor con animación `transform` (`animate-view-fade`), eliminando el problema por el cual el modal se movía con el scroll vertical de la página de inicio.

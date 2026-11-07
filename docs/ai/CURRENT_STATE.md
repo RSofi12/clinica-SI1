@@ -406,7 +406,7 @@
     - `App.jsx`: Pestaña `expediente` y tarjeta interactiva de acceso rápido en el dashboard de bienvenida.
   - ✅ **Compilación:** Verificada con `npm run build` en 27.44s sin errores (0 warnings bloqueantes).
 
-### 25. Implementación del Backend de CU26 (Gestionar Documentos Clínicos Adjuntos) (07/11/2026)
+### 25. Implementación Full-Stack de CU26 (Gestionar Documentos Clínicos Adjuntos) (07/11/2026)
 - **Backend (`backend/app/Packages/MedicalRecords/`):**
   - ✅ **Migración Incremental (`2026_11_07_000002_add_cloudinary_and_tracking_to_documentos_clinicos_table.php`):**
     - Incorpora `nombre_archivo`, `formato_archivo` (`JPG, PNG, PDF, DCM`), amplía `ruta_archivo` a 500 caracteres, agrega `cloudinary_public_id`, `subido_por` (FK a `usuarios`) y flexibiliza `id_medico` nullable.
@@ -424,3 +424,20 @@
   - ✅ **Controlador REST (`DocumentosClinicosController.php`):** Endpoints `index`, `store`, `ordenesPendientes` y `destroy`.
   - ✅ **Rutas API (`backend/routes/api.php`):** 4 endpoints bajo `/api/medical-records/historias/{idHistoria}/documentos` protegidos por roles.
   - ✅ **Verificación:** Sintaxis PHP 100% limpia sin errores (`php -l`).
+
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio API (`documentoClinicoService.js`):** Métodos `fetchDocumentos`, `fetchOrdenesPendientes`, `uploadDocumento` (con `onUploadProgress` multipart) y `deleteDocumento`.
+  - ✅ **Componente Principal (`ClinicalDocumentsSection.jsx`):**
+    - Diseñado fiel a la interfaz de referencia con paleta índigo/clínica, contador de archivos y cabecera con `Paperclip`.
+    - Formulario desplegable con selector de categoría clínica, input para archivos (máx 15 MB) y selector de vinculación opcional a órdenes de exámenes de CU25.
+    - Textarea con contador de caracteres (`0/1000`) para notas y conclusiones médicas.
+    - Barra de progreso porcentual durante la transmisión a Cloudinary.
+    - Tarjetas de documentos con diferenciación por formato (badges `PNG`, `PDF`, `DCM`), previsualización de imágenes y visor embebido para PDFs.
+    - **Modal de Asistencia DICOM:** Instrucciones de tomografía, botón de apertura directa a visor externo (`IMAIOS DICOM Viewer`) y descarga segura del archivo `.dcm`.
+    - Modal de confirmación para eliminación con advertencia de borrado en Cloudinary.
+  - ✅ **Integración en Navegación y Expediente:**
+    - `ExpedienteClinicoView.jsx`: Incorporada la pestaña `Documentos Adjuntos` con contador en vivo y soporte de acceso directo mediante `defaultTab="documentos"`.
+    - `Sidebar.jsx`: Nuevo acceso `Documentos Adjuntos (CU26)` en el grupo P4.
+    - `App.jsx`: Enrutamiento y breadcrumbs para `documentos-clinicos`.
+  - ✅ **Compilación:** `npm run build` exitoso con 0 errores (13.77s).
+- **Pruebas:** 8 casos de prueba de caja negra documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md` (`CN-CU26-01` a `CN-CU26-08`).

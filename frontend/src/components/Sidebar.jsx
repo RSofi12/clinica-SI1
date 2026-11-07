@@ -20,6 +20,7 @@ import {
   ClipboardList,
   Pill,
   FileText,
+  Paperclip,
 } from 'lucide-react';
 import logoWhite from '../assets/logo-full-white.svg';
 
@@ -146,6 +147,14 @@ export function Sidebar({
           tag: 'CU18 / Extra',
           icon: Pill,
           requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'],
+        },
+        {
+          id: 'documentos-clinicos',
+          label: 'Documentos Adjuntos',
+          subtitle: 'Estudios, informes y visor DICOM',
+          tag: 'CU26 / Extra',
+          icon: Paperclip,
+          requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE'],
         },
       ],
     },

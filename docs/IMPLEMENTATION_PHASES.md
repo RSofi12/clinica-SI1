@@ -357,10 +357,10 @@ pm run build exitoso).
 - [ ] **Frontend:** Formulario médico de prescripción de estudios dentro de la consulta médica y vista de órdenes pendientes.
 - [ ] **Fase de Pruebas:** Emisión exitosa de orden y enlace relacional con la consulta y el paciente.
 
-#### ⏳ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
+#### ✅ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
 - [x] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG, DICOM) con Cloudinary, Anti-IDOR y enlace opcional a órdenes auxiliares CU25 (DocumentoClinicoService + DocumentosClinicosController).
-- [ ] **Frontend:** Componente de carga de archivos adjuntos con visor previo integrado.
-- [ ] **Fase de Pruebas:** Subida de archivo y descarga protegida por RBAC.
+- [x] **Frontend:** `ClinicalDocumentsSection.jsx` y `documentoClinicoService.js` con soporte dual (autónomo / CU25), barra de progreso multipart, previsualización de imágenes/PDF y asistente para visor DICOM externo (`IMAIOS`).
+- [x] **Fase de Pruebas:** Subida a Cloudinary, descarga segura, enlace con CU25 (`CON_RESULTADOS`), protección Anti-IDOR y registro inmutable en Bitácora (pruebas `CN-CU26-01` a `CN-CU26-08`).
 
 ---
 
