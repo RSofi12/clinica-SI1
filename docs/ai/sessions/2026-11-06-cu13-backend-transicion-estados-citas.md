@@ -1,4 +1,4 @@
-# Bitácora de Sesión: Implementación Backend de CU13 (Registrar Asistencia y Estado de Cita — RF10)
+# Bitácora de Sesión: Implementación Full-Stack de CU13 (Registrar Asistencia y Estado de Cita — RF10)
 **Fecha:** 06 de Noviembre de 2026  
 **Autor:** Antigravity (AI Pair Programmer)  
 **Paquete:** Paquete 3 — Gestión de Citas Médicas  
@@ -8,7 +8,7 @@
 
 ## 1. Solicitud / Caso de Uso Implementado
 - **CU13: Registrar Asistencia y Estado de Cita Médica (RF10).**
-- Implementar el motor de máquina de estados formal, validaciones de transiciones de ciclo de vida de la cita (`PROGRAMADA` ➔ `CONFIRMADA` ➔ `ATENDIDA` / `INASISTENCIA`), protección contra saltos ilegales, scoping RBAC y auditoría inmutable en `cita_estado_historial` y `bitacora`.
+- Implementar el motor de máquina de estados formal, validaciones de transiciones de ciclo de vida de la cita (`PROGRAMADA` ➔ `CONFIRMADA` ➔ `ATENDIDA` / `INASISTENCIA`), protección contra saltos ilegales, scoping RBAC, trazabilidad histórica y una interfaz reactiva responsiva con micro-transiciones fluidas bajo `/frontend-design`.
 
 ---
 
@@ -41,7 +41,28 @@
 
 ---
 
-## 3. Comandos de Verificación
+## 3. Cambios en Frontend (React + JavaScript con Tailwind CSS)
+1. **Servicio API (`src/apps/appointments/services/appointmentService.js`):**
+   - Método `updateStatus(id, { nuevo_estado, observacion })` (`PATCH /api/appointments/{id}/status`).
+   - Método `fetchStatusHistory(id)` (`GET /api/appointments/{id}/status-history`).
+2. **Modal Interactivo de Estado y Trazabilidad (`src/apps/appointments/components/AppointmentStatusModal.jsx`):**
+   - Diseñado bajo directrices de `/frontend-design` con identidad médica y estética clínica cuidada.
+   - Pestaña de Transición con comparativa visual interactiva: `[ Estado Actual ] ────► [ Nuevo Estado ]`.
+   - Botones táctiles de selección con descripciones de contexto operacional.
+   - Campo de observación justificada con contador dinámico (máximo 255 caracteres).
+   - Bloqueo y orientación informativa si la cita se encuentra en un estado terminal (`ATENDIDA`, `CANCELADA`, `INASISTENCIA`).
+   - Pestaña de Trazabilidad: Línea de tiempo cronológica vertical que recupera todo el historial de eventos desde `cita_estado_historial` con timestamps, usuario operador, rol y observaciones registradas.
+3. **Integración en Panel Gestor (`src/apps/appointments/components/AppointmentsManager.jsx`):**
+   - Botón contextual de acceso rápido **"Check-in"** para recepcionistas en citas `PROGRAMADA` / `PENDIENTE` (pasa a `CONFIRMADA`).
+   - Botón de **"Inasistencia"** para citas en espera (`CONFIRMADA`).
+   - Botón de **"Trazabilidad"** (`History`) para inspeccionar la máquina de estados.
+   - Badges de estado actualizados: `CONFIRMADA` destacada en ámbar pulsante (*En Espera*), `ATENDIDA` en verde esmeralda y `INASISTENCIA` en rojo carmesí.
+4. **Integración en Agenda Médica Diaria (`src/apps/appointments/components/DoctorAgendaView.jsx`):**
+   - Acciones de Check-in, marcación de inasistencia y visualización de trazabilidad integradas directamente en el timeline de citas de la jornada.
+
+---
+
+## 4. Comandos de Verificación
 - Verificación sintáctica PHP:
   `php -l backend/app/Packages/Appointments/Requests/AppointmentChangeStatusRequest.php`
   `php -l backend/app/Packages/Appointments/Services/AppointmentStatusService.php`
@@ -49,9 +70,6 @@
   `php -l backend/app/Packages/Appointments/Controllers/AppointmentsController.php`
   `php -l backend/routes/api.php`
   -> **0 errores de sintaxis.**
-
----
-
-## 4. Próximos Pasos (Frontend)
-- Implementar `AppointmentStatusModal.jsx` y botones de acción rápida en mostrador (`AppointmentsManager.jsx`) y agenda médica diaria (`DoctorAgendaView.jsx`).
-- Conectar `appointmentService.updateAppointmentStatus(id, data)` y `fetchAppointmentStatusHistory(id)`.
+- Verificación de compilación Frontend:
+  `npm run build` en `frontend/`
+  -> **✓ built in 31.49s (0 errores, 2030 módulos transformados limpiamente).**

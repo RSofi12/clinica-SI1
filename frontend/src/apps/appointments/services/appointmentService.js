@@ -102,4 +102,21 @@ export const appointmentService = {
     const queryString = query.toString();
     return await apiFetch(`/appointments/patient-history/${patientId}${queryString ? `?${queryString}` : ''}`);
   },
+
+  /**
+   * Actualizar estado de la cita médica según la máquina de estados oficial (CU13 / RF10)
+   */
+  async updateStatus(id, { nuevo_estado, observacion = null }) {
+    return await apiFetch(`/appointments/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ nuevo_estado, observacion }),
+    });
+  },
+
+  /**
+   * Consultar historial cronológico de cambios de estado de una cita médica (CU13 / RF10)
+   */
+  async fetchStatusHistory(id) {
+    return await apiFetch(`/appointments/${id}/status-history`);
+  },
 };

@@ -316,10 +316,16 @@
     - Asentamiento de auditoría inmutable en `Bitacora.php` (CU03).
   - ✅ Controlador `ConsultasController.php` y rutas `/api/medical-records/consultas` y `/api/medical-records/citas/{id}/preparar`.
 
-### 11. Implementación de CU13 (Registrar Asistencia y Estado de Cita — RF10) — Backend Completado
+### 11. Implementación de CU13 (Registrar Asistencia y Estado de Cita — RF10) — 100% Operativo
 - **Backend (`backend/app/Packages/Appointments/`):**
   - ✅ **Máquina de Estados en Dominio (`Cita.php`):** Constantes de estado (`PROGRAMADA`, `CONFIRMADA`, `ATENDIDA`, `CANCELADA`, `INASISTENCIA`), matriz canónica de `TRANSICIONES_VALIDAS`, y métodos de evaluación (`esEstadoTerminal()`, `obtenerTransicionesPermitidas()`, `puedeTransicionarA()`).
   - ✅ **Servicio Transaccional (`AppointmentStatusService.php`):** Bloqueo pesimista `lockForUpdate()` en `DB::transaction()`, control RBAC por rol (médico solo actualiza sus pacientes hacia atendida/inasistencia; recepción/admin confirma check-in e inasistencia; paciente bloqueado 403), validación temporal (rechazo de inasistencia en citas futuras) y auditoría inmutable en `bitacora` (CU03) y `cita_estado_historial`.
   - ✅ **FormRequest (`AppointmentChangeStatusRequest.php`):** Validación estricta de estados y mensajes en español.
   - ✅ **Controlador (`AppointmentsController.php`):** Endpoints `PATCH /api/appointments/{id}/status` y `GET /api/appointments/{id}/status-history` con scoping anti-IDOR.
   - ✅ **Rutas (`routes/api.php`):** Registradas bajo middleware de roles `role:ADMIN,RECEPCIONISTA,MEDICO`.
+- **Frontend (`frontend/src/apps/appointments/`):**
+  - ✅ **Servicio (`appointmentService.js`):** Integración de `updateStatus` y `fetchStatusHistory`.
+  - ✅ **Modal (`AppointmentStatusModal.jsx`):** Modal responsivo bajo directrices de `/frontend-design` con comparativa Antes ➔ Después, selección de estados disponibles según rol, campo de observación justificada y pestaña de línea de tiempo con trazabilidad de `cita_estado_historial`.
+  - ✅ **Panel Gestor (`AppointmentsManager.jsx`):** Acciones rápidas de Check-in en mostrador, marcación de inasistencia y botón de trazabilidad.
+  - ✅ **Agenda Médica (`DoctorAgendaView.jsx`):** Integración en el cronograma timeline diario.
+  - ✅ **Compilación:** Verificada con `npm run build` limpia al 100%.

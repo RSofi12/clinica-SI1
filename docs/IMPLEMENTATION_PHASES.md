@@ -298,7 +298,7 @@ pm run build exitoso).
   - [ ] **P11.1:** Reprogramar cita a fecha libre futura (éxito y cupo previo liberado).
   - [ ] **P11.2:** Intentar reprogramar una cita ya atendida (bloqueado por regla de negocio).
 
-#### ⏳ CU13: Registrar Asistencia y Estado de Cita (RF10)
+#### ✅ CU13: Registrar Asistencia y Estado de Cita (RF10)
 - [x] **Backend:**
   - [x] Máquina de estados: *Programada* → *Confirmada* → *Atendida* / *Inasistencia*.
   - [x] Constantes y matriz oficial de transiciones en `Cita.php` (`TRANSICIONES_VALIDAS`, `esEstadoTerminal()`, `puedeTransicionarA()`).

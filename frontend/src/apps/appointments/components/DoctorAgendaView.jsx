@@ -21,12 +21,15 @@ import {
   Info,
   History,
   ClipboardList,
+  UserCheck,
+  UserX,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { appointmentService } from '../services/appointmentService';
 import { doctorService } from '../../clinical-resources/services/doctorService';
 import { AppointmentCancelModal } from './AppointmentCancelModal';
 import { ConsultaRegistroModal } from '../../medical-records/components/ConsultaRegistroModal';
+import { AppointmentStatusModal } from './AppointmentStatusModal';
 
 const DIAS_SEMANA_MAP = {
   1: 'Lunes',
@@ -63,6 +66,8 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
 
   // Modal de registro de consulta (CU16)
   const [consultaCita, setConsultaCita] = useState(null);
+  const [statusModalAppointment, setStatusModalAppointment] = useState(null);
+  const [statusModalAction, setStatusModalAction] = useState(null);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
@@ -534,6 +539,22 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                       </button>
                     )}
 
+                    {/* Botón Check-in en mostrador si recepcionista o admin consulta la agenda (CU13) */}
+                    {role !== 'MEDICO' && ['PENDIENTE', 'PROGRAMADA'].includes(cita.estado) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setStatusModalAppointment(cita);
+                          setStatusModalAction('CONFIRMADA');
+                        }}
+                        className="px-2.5 py-1 text-[11px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition flex items-center gap-1 cursor-pointer"
+                        title="Confirmar asistencia / Check-in en mostrador (CU13 / RF10)"
+                      >
+                        <UserCheck className="w-3 h-3 text-amber-600" />
+                        <span>Check-in</span>
+                      </button>
+                    )}
+
                     {/* Atender Consulta (CU16) — solo MEDICO sobre citas PENDIENTE o CONFIRMADA */}
                     {role === 'MEDICO' && ['PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
                       <button
@@ -546,6 +567,35 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
                         <span>Atender</span>
                       </button>
                     )}
+
+                    {/* Marcar Inasistencia para Médico o Recepción (CU13) */}
+                    {['PENDIENTE', 'PROGRAMADA', 'CONFIRMADA'].includes(cita.estado) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setStatusModalAppointment(cita);
+                          setStatusModalAction('INASISTENCIA');
+                        }}
+                        className="px-2 py-1 text-[11px] font-medium text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg transition flex items-center gap-1 cursor-pointer"
+                        title="Registrar inasistencia del paciente (CU13 / RF10)"
+                      >
+                        <UserX className="w-3 h-3 text-rose-500" />
+                        <span className="hidden sm:inline">Inasistencia</span>
+                      </button>
+                    )}
+
+                    {/* Trazabilidad de Estados (CU13) */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStatusModalAppointment(cita);
+                        setStatusModalAction('HISTORIAL');
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-[#00687a] hover:bg-[#00687a]/10 rounded-lg transition cursor-pointer"
+                      title="Ver historial de cambios de estado (CU13)"
+                    >
+                      <History className="w-3.5 h-3.5" />
+                    </button>
 
                     {/* Ver Ticket */}
                     {onOpenTicket && (
@@ -590,6 +640,23 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
           loadAgenda();
         }}
       />
+      {/* Modal de Registro de Asistencia y Máquina de Estados (CU13 / RF10) */}
+      <AppointmentStatusModal
+        isOpen={Boolean(statusModalAppointment)}
+        onClose={() => {
+          setStatusModalAppointment(null);
+          setStatusModalAction(null);
+        }}
+        appointment={statusModalAppointment}
+        initialAction={statusModalAction}
+        currentRole={role}
+        onStatusUpdated={() => {
+          setStatusModalAppointment(null);
+          setStatusModalAction(null);
+          loadAgenda();
+        }}
+      />
+
       {/* Modal de CancelaciÃ³n (CU12) */}
       <AppointmentCancelModal
         isOpen={Boolean(cancellingAppointment)}

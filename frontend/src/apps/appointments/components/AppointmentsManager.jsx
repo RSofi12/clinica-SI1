@@ -26,6 +26,8 @@ import {
   Layers,
   Ban,
   History,
+  UserCheck,
+  UserX,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { appointmentService } from '../services/appointmentService';
@@ -36,6 +38,7 @@ import { DoctorAgendaView } from './DoctorAgendaView';
 import { AppointmentCancelModal } from './AppointmentCancelModal';
 import { AppointmentRescheduleModal } from './AppointmentRescheduleModal';
 import { PatientAppointmentHistoryModal } from './PatientAppointmentHistoryModal';
+import { AppointmentStatusModal } from './AppointmentStatusModal';
 import { patientProfileService } from '../../clinical-resources/services/patientProfileService';
 
 /**
@@ -71,6 +74,8 @@ export function AppointmentsManager() {
   const [cancellingAppointment, setCancellingAppointment] = useState(null);
   const [reschedulingAppointment, setReschedulingAppointment] = useState(null);
   const [selectedPatientForHistory, setSelectedPatientForHistory] = useState(null);
+  const [statusModalAppointment, setStatusModalAppointment] = useState(null);
+  const [statusModalAction, setStatusModalAction] = useState(null);
 
   // Cargar lista de médicos para filtro
   useEffect(() => {
@@ -197,15 +202,15 @@ export function AppointmentsManager() {
         );
       case 'CONFIRMADA':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-            Confirmada
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200" title="Paciente presente en sala de espera (CU13)">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+            En Espera
           </span>
         );
       case 'ATENDIDA':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-50 text-cyan-700 border border-cyan-200">
-            <BadgeCheck className="w-3.5 h-3.5 text-cyan-600" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" />
             Atendida
           </span>
         );
@@ -218,8 +223,8 @@ export function AppointmentsManager() {
         );
       case 'INASISTENCIA':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-            <Ban className="w-3.5 h-3.5 text-amber-500" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200">
+            <Ban className="w-3.5 h-3.5 text-rose-600" />
             Inasistencia
           </span>
         );
@@ -714,6 +719,38 @@ export function AppointmentsManager() {
                           {/* Acciones */}
                           <td className="px-5 py-3.5 text-right whitespace-nowrap">
                             <div className="flex items-center justify-end gap-1.5">
+                              {/* Botón Check-in de Recepción (CU13 / RF10) */}
+                              {role !== 'MEDICO' && ['PROGRAMADA', 'PENDIENTE'].includes(cita.estado) && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setStatusModalAppointment(cita);
+                                    setStatusModalAction('CONFIRMADA');
+                                  }}
+                                  className="px-2.5 py-1 text-[11px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition inline-flex items-center gap-1 cursor-pointer shadow-2xs"
+                                  title="Registrar llegada del paciente / Check-in a sala de espera (CU13 / RF10)"
+                                >
+                                  <UserCheck className="w-3 h-3 text-amber-600" />
+                                  <span>Check-in</span>
+                                </button>
+                              )}
+
+                              {/* Botón Inasistencia si estaba en espera (CU13 / RF10) */}
+                              {role !== 'MEDICO' && cita.estado === 'CONFIRMADA' && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setStatusModalAppointment(cita);
+                                    setStatusModalAction('INASISTENCIA');
+                                  }}
+                                  className="px-2.5 py-1 text-[11px] font-bold text-rose-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition inline-flex items-center gap-1 cursor-pointer"
+                                  title="Registrar inasistencia o abandono de sala de espera (CU13 / RF10)"
+                                >
+                                  <UserX className="w-3 h-3 text-rose-600" />
+                                  <span>Inasistencia</span>
+                                </button>
+                              )}
+
                               <button
                                 type="button"
                                 onClick={() => setTicketModalAppointment(cita)}
@@ -723,6 +760,21 @@ export function AppointmentsManager() {
                                 <Printer className="w-3 h-3" />
                                 <span>Ticket</span>
                               </button>
+
+                              {/* Ver Trazabilidad / Historial de Estados (CU13) */}
+                              {role !== 'PACIENTE' && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setStatusModalAppointment(cita);
+                                    setStatusModalAction('HISTORIAL');
+                                  }}
+                                  className="p-1 text-slate-400 hover:text-[#00687a] hover:bg-[#00687a]/10 rounded-lg transition cursor-pointer"
+                                  title="Consultar trazabilidad de máquina de estados de la cita (CU13 / RF10)"
+                                >
+                                  <History className="w-3.5 h-3.5" />
+                                </button>
+                              )}
                               {role !== 'MEDICO' && ['PROGRAMADA', 'PENDIENTE', 'CONFIRMADA'].includes(cita.estado) && (
                                 <button
                                   type="button"
@@ -931,6 +983,23 @@ export function AppointmentsManager() {
         onClose={() => setSelectedPatientForHistory(null)}
         patientInitial={selectedPatientForHistory}
         onOpenTicket={setTicketModalAppointment}
+      />
+
+      {/* Modal de Registro de Asistencia y Máquina de Estados (CU13 / RF10) */}
+      <AppointmentStatusModal
+        isOpen={Boolean(statusModalAppointment)}
+        onClose={() => {
+          setStatusModalAppointment(null);
+          setStatusModalAction(null);
+        }}
+        appointment={statusModalAppointment}
+        initialAction={statusModalAction}
+        currentRole={role}
+        onStatusUpdated={() => {
+          setStatusModalAppointment(null);
+          setStatusModalAction(null);
+          loadAppointments(pagination.current_page);
+        }}
       />
     </div>
   );
