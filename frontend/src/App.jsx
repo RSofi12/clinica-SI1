@@ -122,11 +122,13 @@ export default function App() {
 
   if (currentView === 'home' && !isAuthenticated) {
     return (
-      <div key="home-view" className="animate-view-fade">
-        <HomePage
-          onNavigateLogin={() => navigateTo('login')}
-          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
-        />
+      <>
+        <div key="home-view" className="animate-view-fade">
+          <HomePage
+            onNavigateLogin={() => navigateTo('login')}
+            onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+          />
+        </div>
         <ActivatePatientModal
           isOpen={isActivatePatientOpen}
           onClose={() => setIsActivatePatientOpen(false)}
@@ -135,25 +137,27 @@ export default function App() {
             navigateTo('login');
           }}
         />
-      </div>
+      </>
     );
   }
 
   if (currentView === 'login' && !isAuthenticated) {
     return (
-      <div key="login-view" className="animate-view-fade">
-        <LoginPage
-          onNavigateHome={() => navigateTo('home')}
-          onLoginSuccess={() => navigateTo('dashboard')}
-          onNavigateForgotPassword={() => navigateTo('forgot-password')}
-          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
-        />
+      <>
+        <div key="login-view" className="animate-view-fade">
+          <LoginPage
+            onNavigateHome={() => navigateTo('home')}
+            onLoginSuccess={() => navigateTo('dashboard')}
+            onNavigateForgotPassword={() => navigateTo('forgot-password')}
+            onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+          />
+        </div>
         <ActivatePatientModal
           isOpen={isActivatePatientOpen}
           onClose={() => setIsActivatePatientOpen(false)}
           onActivated={() => setIsActivatePatientOpen(false)}
         />
-      </div>
+      </>
     );
   }
 
@@ -198,6 +202,8 @@ export default function App() {
           : 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
       case 'patient-profile':
         return role === 'PACIENTE' ? 'Mi Perfil de Paciente (CU05)' : 'Inicio';
+      case 'documentos-clinicos':
+        return 'Documentos Clínicos Adjuntos & Visor DICOM (CU26)';
       default:
         return 'Inicio';
     }
@@ -313,6 +319,8 @@ export default function App() {
             <AppointmentsManager />
           ) : dashboardTab === 'expediente' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
             <ExpedienteClinicoView />
+          ) : dashboardTab === 'documentos-clinicos' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+            <ExpedienteClinicoView defaultTab="documentos" />
           ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
             <ConsultasManager />
           ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
