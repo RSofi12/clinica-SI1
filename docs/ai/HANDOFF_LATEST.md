@@ -1,5 +1,29 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Rediseño de Tabla CU10 con /design-taste-frontend y Transiciones Fluidas)
+- **Eliminación de Franja Condicional en Dashboard ([`ClinicalDashboardView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/ClinicalDashboardView.jsx)):**
+  - Descartada por completo la franja de `CU27-RES` y `CU28-OPC` que aparecía al final de la matriz de casos de uso.
+- **Rediseño Editorial de la Tabla de Citas CU10 ([`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - **Resolución del problema de compresión de columnas:** Se aplicó un ancho base de `min-w-[1080px]` con scroll horizontal responsivo suave, evitando que las columnas de datos clínicos se quiebren verticalmente.
+  - **Columna Paciente:** Avatar redondeado con inicial del paciente, nombre completo destacado en seminegrita, línea horizontal con `Doc: {CI}` · `HC: {historia}` y botón estilizado de acceso directo a historial clínico (CU15).
+  - **Columna Médico / Especialidad:** Nombre del profesional con icono de estetoscopio y badge estilizado `#00687a` para la especialidad médica.
+  - **Columna Acciones:** Encabezado corregido a `Acciones` (reemplazando `Ticket`), agrupamiento ordenado de botones contextuales (`Check-in`, `Inasistencia`, `Ticket`, `Reprogramar`, `Cancelar`, `Historial`) con micro-interacciones suaves (`hover:shadow-xs`, `active:scale-95`).
+- **Transiciones Fluidas en Todo el Módulo de Citas:**
+  - Vistas con entrada suave `.animate-view-fade` en `AppointmentsManager.jsx`, `AppointmentAvailabilityViewer.jsx` y `DoctorAgendaView.jsx`.
+  - Modales estandarizados con backdrop blur progresivo (`.animate-modal-backdrop`) y elevación sin saltos bruscos (`.animate-modal-panel`) en:
+    - [`AppointmentBookingModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx)
+    - [`AppointmentRescheduleModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentRescheduleModal.jsx)
+    - [`AppointmentCancelModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentCancelModal.jsx)
+    - [`AppointmentStatusModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentStatusModal.jsx)
+    - [`PatientAppointmentHistoryModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/PatientAppointmentHistoryModal.jsx)
+    - Modal oficial de Ticket de Cita en `AppointmentsManager.jsx`.
+- **Verificación Técnica:** `npm --prefix frontend run build` verificado exitosamente (11.59s, 0 errores, 2042 módulos).
+- **Commits en Rama `prueba`:**
+  - `eefa6be`: `refactor(analytics): eliminar seccion de casos de uso condicionales en dashboard clinico`
+  - `a279ba8`: `feat(appointments): optimizar anchos de tabla de citas CU10 y agregar transiciones fluidas en modulo de citas`
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Perfeccionamiento de CU23 — Exportación PDF/Excel y Micrófono Móvil/Web Speech)
 - **Mejoras en CU23: Asistente de Reportes por Voz con IA ([`VoiceReportAssistant.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/VoiceReportAssistant.jsx)):**
   - **Resolución de Reconocimiento de Voz (Web Speech API):**

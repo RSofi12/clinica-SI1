@@ -85,4 +85,4 @@
 7. [x] **CU19:** Consultar Expediente Médico y Antecedentes Clínicos (§3.4) — Full-Stack 100% operativo con Anti-IDOR, timeline cronológico, visor clínico con `/frontend-design` e impresión `@media print` (Completado — 07/11/2026).
 8. [ ] **CU25, CU26:** Órdenes de Exámenes Auxiliares y Documentos Adjuntos.
 8. [ ] **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
-9. [ ] **CU24:** Dashboard Ejecutivo de KPIs Clínicos y Financieros.
+10. [x] **CU24:** Dashboard Ejecutivo de KPIs Clínicos y Financieros (Completado con DashboardController.php, ClinicalDashboardView.jsx e InicioPanelView.jsx).
