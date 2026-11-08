@@ -22,14 +22,18 @@ import {
   Info,
   CheckCircle2,
   AlertCircle,
-  Paperclip
+  Paperclip,
+  FlaskConical,
+  Trash2
 } from 'lucide-react';
 import { expedienteService } from '../services/expedienteService';
+import { ordenExamenService } from '../services/ordenExamenService';
 import { patientService } from '../../clinical-resources/services/patientService';
 import { useAuth } from '../../../context/AuthContext';
 import RecetaDetailModal from './RecetaDetailModal';
 import { AntecedentesPatientModal } from './AntecedentesPatientModal';
 import ClinicalDocumentsSection from './ClinicalDocumentsSection';
+import OrdenExamenFormModal from './OrdenExamenFormModal';
 
 /**
  * Vista Integral de Expediente Clínico Digital y Línea de Tiempo (CU19)
@@ -68,6 +72,11 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
   const [selectedReceta, setSelectedReceta] = useState(null);
   const [isRecetaModalOpen, setIsRecetaModalOpen] = useState(false);
   const [isAntecedentesModalOpen, setIsAntecedentesModalOpen] = useState(false);
+  const [isOrdenModalOpen, setIsOrdenModalOpen] = useState(false);
+  const [ordenParaCancelar, setOrdenParaCancelar] = useState(null);
+  const [motivoCancelacion, setMotivoCancelacion] = useState('');
+  const [isSubmittingCancel, setIsSubmittingCancel] = useState(false);
+  const [cancelError, setCancelError] = useState(null);
 
   // 1. Cargar lista de pacientes si es Personal Médico / Admin
   useEffect(() => {
@@ -136,6 +145,30 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
   const antecedentes = expediente?.antecedentes || [];
   const consultas = expediente?.consultas || [];
   const recetas = expediente?.recetas || [];
+  const ordenes = expediente?.ordenes || [];
+
+  const handleAnularOrden = async (e) => {
+    e.preventDefault();
+    if (!ordenParaCancelar) return;
+    if (!motivoCancelacion.trim() || motivoCancelacion.trim().length < 5) {
+      setCancelError('El motivo de cancelación debe tener al menos 5 caracteres (RN11).');
+      return;
+    }
+
+    setIsSubmittingCancel(true);
+    setCancelError(null);
+    try {
+      await ordenExamenService.anularOrden(ordenParaCancelar.id_orden, motivoCancelacion.trim());
+      setOrdenParaCancelar(null);
+      setMotivoCancelacion('');
+      await loadExpedienteData();
+    } catch (err) {
+      console.error('Error al anular orden médica:', err);
+      setCancelError(err?.message || 'No se pudo cancelar la orden médica.');
+    } finally {
+      setIsSubmittingCancel(false);
+    }
+  };
 
   // Toggle acordeón de consultas
   const toggleConsulta = (id) => {
@@ -477,6 +510,18 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
               </button>
 
               <button
+                onClick={() => setActiveTab('ordenes')}
+                className={`flex items-center gap-2 py-3 px-4 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
+                  activeTab === 'ordenes'
+                    ? 'border-teal-700 text-teal-800 bg-teal-50/50 rounded-t-lg'
+                    : 'border-transparent text-slate-600 hover:text-slate-900 hover:border-slate-300'
+                }`}
+              >
+                <FlaskConical className="w-4 h-4" />
+                Órdenes de Exámenes ({ordenes.length})
+              </button>
+
+              <button
                 onClick={() => setActiveTab('antecedentes')}
                 className={`flex items-center gap-2 py-3 px-4 text-xs font-bold border-b-2 transition-all whitespace-nowrap ${
                   activeTab === 'antecedentes'
@@ -530,6 +575,7 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                         const isConsulta = evt.tipo === 'CONSULTA';
                         const isReceta = evt.tipo === 'RECETA';
                         const isAntecedente = evt.tipo === 'ANTECEDENTE';
+                        const isOrden = evt.tipo === 'ORDEN_EXAMEN';
 
                         return (
                           <div key={idx} className="relative pb-6 last:pb-0">
@@ -540,12 +586,15 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                                   ? 'bg-teal-600'
                                   : isReceta
                                   ? 'bg-purple-600'
+                                  : isOrden
+                                  ? 'bg-cyan-600'
                                   : 'bg-amber-600'
                               }`}
                             >
                               {isConsulta && <Stethoscope className="w-2.5 h-2.5" />}
                               {isReceta && <Pill className="w-2.5 h-2.5" />}
                               {isAntecedente && <FolderOpen className="w-2.5 h-2.5" />}
+                              {isOrden && <FlaskConical className="w-2.5 h-2.5" />}
                             </div>
 
                             {/* Contenedor del evento */}
@@ -594,6 +643,31 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                                       {m}
                                     </span>
                                   ))}
+                                </div>
+                              )}
+
+                              {isOrden && evt.detalles && (
+                                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-cyan-50 text-cyan-800 border border-cyan-200">
+                                    {evt.detalles.codigo_orden}
+                                  </span>
+                                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+                                    {evt.detalles.tipo_estudio}
+                                  </span>
+                                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
+                                    evt.detalles.estado === 'CON_RESULTADOS'
+                                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                      : evt.detalles.estado === 'CANCELADA'
+                                      ? 'bg-slate-100 text-slate-600 border-slate-200'
+                                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                                  }`}>
+                                    {evt.detalles.estado}
+                                  </span>
+                                  {evt.detalles.total_documentos > 0 && (
+                                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-teal-50 text-teal-700 border border-teal-200">
+                                      📎 {evt.detalles.total_documentos} archivo(s)
+                                    </span>
+                                  )}
                                 </div>
                               )}
                             </div>
@@ -853,6 +927,179 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                 </div>
               )}
 
+              {/* 3.1 PESTAÑA: ÓRDENES DE EXÁMENES AUXILIARES (CU25) */}
+              {activeTab === 'ordenes' && (
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-800 font-serif-clinical flex items-center gap-2">
+                        <FlaskConical className="w-4 h-4 text-[#00687a]" />
+                        Órdenes de Exámenes Auxiliares (CU25)
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        Prescripciones de estudios de laboratorio, rayos X y diagnósticos complementarios vinculados a CU26.
+                      </p>
+                    </div>
+
+                    {isStaff && consultas.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setIsOrdenModalOpen(true)}
+                        className="px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#003844] to-[#00687a] hover:from-[#002b34] hover:to-[#005564] shadow-xs flex items-center gap-2 transition-all self-start sm:self-auto cursor-pointer"
+                      >
+                        <FlaskConical className="w-3.5 h-3.5 text-cyan-300" />
+                        + Prescribir Examen
+                      </button>
+                    )}
+                  </div>
+
+                  {ordenes.length === 0 ? (
+                    <div className="py-12 text-center text-slate-500">
+                      <FlaskConical className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="text-xs font-medium">No se han emitido órdenes de exámenes auxiliares para este paciente.</p>
+                      {isStaff && consultas.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setIsOrdenModalOpen(true)}
+                          className="mt-3 text-xs text-[#00687a] font-semibold hover:underline"
+                        >
+                          Emitir la primera orden médica
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {ordenes.map((o) => {
+                        const tipoBadge = {
+                          LABORATORIO: 'bg-amber-50 text-amber-800 border-amber-200',
+                          IMAGENOLOGIA: 'bg-cyan-50 text-cyan-800 border-cyan-200',
+                          CARDIOLOGIA: 'bg-rose-50 text-rose-800 border-rose-200',
+                          OTROS: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+                        }[o.tipo_estudio] || 'bg-slate-100 text-slate-700 border-slate-200';
+
+                        const isPendiente = o.estado === 'PENDIENTE';
+                        const isConResultados = o.estado === 'CON_RESULTADOS';
+                        const isCancelada = o.estado === 'CANCELADA';
+
+                        return (
+                          <div
+                            key={o.id_orden}
+                            className={`p-4 rounded-xl border bg-white shadow-2xs transition-all ${
+                              isCancelada ? 'opacity-70 border-slate-200 bg-slate-50/50' : 'border-slate-200 hover:border-slate-300'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono font-bold text-xs text-[#003844] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                                  {o.codigo_orden}
+                                </span>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${tipoBadge}`}>
+                                  {o.tipo_estudio}
+                                </span>
+                              </div>
+                              <span
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                  isConResultados
+                                    ? 'bg-emerald-100 text-emerald-800'
+                                    : isPendiente
+                                    ? 'bg-amber-100 text-amber-800'
+                                    : 'bg-slate-200 text-slate-700'
+                                }`}
+                              >
+                                {o.estado}
+                              </span>
+                            </div>
+
+                            <h4 className="text-sm font-bold text-slate-900 mb-1">
+                              {o.nombre_estudio}
+                            </h4>
+
+                            <div className="text-xs text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+                              <span>Dr(a). {o.medico?.nombres} {o.medico?.apellidos}</span>
+                              <span>·</span>
+                              <span className="flex items-center gap-1 font-mono text-[11px]">
+                                <Calendar className="w-3 h-3 text-slate-400" />
+                                {o.fecha_emision ? new Date(o.fecha_emision).toLocaleDateString('es-ES') : '—'}
+                              </span>
+                            </div>
+
+                            {o.diagnostico_presuntivo && (
+                              <div className="mb-2 p-2 rounded-lg bg-slate-50 border border-slate-200/60 text-xs text-slate-700">
+                                <span className="font-semibold text-slate-800">Justificación: </span>
+                                {o.diagnostico_presuntivo}
+                              </div>
+                            )}
+
+                            {o.indicaciones_preparacion && (
+                              <div className="mb-2.5 p-2 rounded-lg bg-teal-50/60 border border-teal-200/60 text-xs text-teal-900 flex items-start gap-1.5">
+                                <Clock className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
+                                <div>
+                                  <span className="font-semibold">Preparación: </span>
+                                  {o.indicaciones_preparacion}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Resultados en Cloudinary (CU26) */}
+                            {o.documentos_adjuntos && o.documentos_adjuntos.length > 0 && (
+                              <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between">
+                                <span className="text-[11px] font-medium text-emerald-700 flex items-center gap-1">
+                                  <CheckCircle2 className="w-3.5 h-3.5" />
+                                  {o.documentos_adjuntos.length} resultado(s) adjunto(s)
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveTab('documentos')}
+                                  className="text-[11px] text-[#00687a] font-semibold hover:underline"
+                                >
+                                  Ver documentos ➔
+                                </button>
+                              </div>
+                            )}
+
+                            {/* Motivo de Cancelación */}
+                            {isCancelada && o.motivo_cancelacion && (
+                              <div className="mt-2 p-2 rounded-lg bg-rose-50 border border-rose-200/60 text-[11px] text-rose-800">
+                                <span className="font-semibold">Cancelada: </span>
+                                {o.motivo_cancelacion}
+                              </div>
+                            )}
+
+                            {/* Acciones para estado PENDIENTE */}
+                            {isPendiente && (
+                              <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveTab('documentos')}
+                                  className="px-2.5 py-1 rounded-lg text-xs font-semibold text-[#00687a] bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors flex items-center gap-1 cursor-pointer"
+                                >
+                                  <Paperclip className="w-3 h-3" />
+                                  Adjuntar Resultados
+                                </button>
+
+                                {isStaff && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setOrdenParaCancelar(o);
+                                      setMotivoCancelacion('');
+                                      setCancelError(null);
+                                    }}
+                                    className="px-2.5 py-1 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                  >
+                                    Cancelar orden
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* 6. PESTAÑA: DOCUMENTOS CLÍNICOS ADJUNTOS (CU26) */}
               {activeTab === 'documentos' && (
                 <ClinicalDocumentsSection
@@ -914,6 +1161,85 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
         patient={paciente}
         onUpdated={() => loadExpedienteData()}
       />
+
+      {/* MODAL EMISIÓN DE ORDEN DE EXAMEN AUXILIAR (CU25) */}
+      <OrdenExamenFormModal
+        consulta={consultas[0] || null}
+        isOpen={isOrdenModalOpen}
+        onClose={() => setIsOrdenModalOpen(false)}
+        onSuccess={() => loadExpedienteData()}
+      />
+
+      {/* MODAL ANULACIÓN LÓGICA DE ORDEN MÉDICA (RN11) */}
+      {ordenParaCancelar && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto animate-modal-backdrop cursor-pointer"
+          onClick={() => {
+            if (!isSubmittingCancel) setOrdenParaCancelar(null);
+          }}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 w-full max-w-md my-auto overflow-hidden animate-modal-panel cursor-default p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 text-rose-600">
+              <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200">
+                <Trash2 className="w-5 h-5 text-rose-600" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 text-base">Cancelar Orden Médica</h3>
+                <p className="text-xs text-slate-500 font-mono">{ordenParaCancelar.codigo_orden} — {ordenParaCancelar.nombre_estudio}</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600">
+              Según la regla de negocio <strong>RN11</strong>, la orden no se eliminará físicamente de la base de datos pero pasará a estado <strong>CANCELADA</strong> con registro del motivo en auditoría.
+            </p>
+
+            {cancelError && (
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs">
+                {cancelError}
+              </div>
+            )}
+
+            <form onSubmit={handleAnularOrden} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Motivo de Cancelación <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  value={motivoCancelacion}
+                  onChange={(e) => setMotivoCancelacion(e.target.value)}
+                  placeholder="Justifique el motivo clínico o administrativo de la anulación (mínimo 5 caracteres)..."
+                  required
+                  minLength={5}
+                  maxLength={255}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  disabled={isSubmittingCancel}
+                  onClick={() => setOrdenParaCancelar(null)}
+                  className="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                >
+                  Volver
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingCancel}
+                  className="px-4 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition shadow-xs disabled:opacity-50"
+                >
+                  {isSubmittingCancel ? 'Cancelando...' : 'Confirmar Cancelación'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

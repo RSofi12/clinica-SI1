@@ -7,6 +7,7 @@ use App\Packages\MedicalRecords\Models\Antecedente;
 use App\Packages\MedicalRecords\Models\ConsultaMedica;
 use App\Packages\MedicalRecords\Models\HistoriaClinica;
 use App\Packages\MedicalRecords\Models\Receta;
+use App\Packages\MedicalRecords\Models\OrdenExamen;
 use App\Packages\Security\Models\Bitacora;
 use App\Packages\Security\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -94,6 +95,15 @@ class ExpedienteService
             ];
         }
 
+        // 7.1 Órdenes de Exámenes Auxiliares (CU25)
+        $ordenes = OrdenExamen::with([
+            'medico:id_medico,nombres,apellidos,codigo_profesional',
+            'documentosAdjuntos:id_documento,id_orden,titulo,tipo_documento,ruta_archivo,mime_type,tamanio_bytes,fecha_subida',
+        ])
+        ->where('id_historia_clinica', $historia->id_historia_clinica)
+        ->latest('fecha_emision')
+        ->get();
+
         // 8. Trazabilidad inmutable en Bitácora (CU03)
         Bitacora::registrar(
             $usuario->id_usuario,
@@ -114,12 +124,15 @@ class ExpedienteService
                 'total_consultas' => $consultas->count(),
                 'total_recetas' => $recetas->count(),
                 'total_recetas_activas' => $recetas->where('estado', 'EMITIDA')->count(),
+                'total_ordenes' => $ordenes->count(),
+                'total_ordenes_pendientes' => $ordenes->where('estado', 'PENDIENTE')->count(),
                 'ultima_consulta' => $ultimaConsulta,
                 'ultimo_triaje' => $ultimoTriaje,
             ],
             'antecedentes' => $antecedentes,
             'consultas' => $consultas,
             'recetas' => $recetas,
+            'ordenes' => $ordenes,
         ];
     }
 
@@ -228,6 +241,32 @@ class ExpedienteService
                     'estado' => $a->estado,
                 ],
                 'id_referencia' => $a->id_antecedente,
+            ];
+        }
+
+        // Órdenes de Exámenes Auxiliares (CU25)
+        $ordenesExamenes = OrdenExamen::with(['medico.usuario', 'documentosAdjuntos'])
+            ->where('id_historia_clinica', $historia->id_historia_clinica)
+            ->get();
+
+        foreach ($ordenesExamenes as $oe) {
+            $medicoNombre = $oe->medico?->usuario?->name ?? 'Médico Tratante';
+            $eventos[] = [
+                'tipo' => 'ORDEN_EXAMEN',
+                'icono' => 'flask',
+                'fecha' => $oe->fecha_emision ? $oe->fecha_emision->format('Y-m-d H:i') : null,
+                'timestamp' => $oe->fecha_emision ? $oe->fecha_emision->timestamp : 0,
+                'titulo' => "Orden de Examen: {$oe->nombre_estudio}",
+                'subtitulo' => "Tipo: {$oe->tipo_estudio} • Estado: {$oe->estado} • Dr(a). {$medicoNombre}",
+                'descripcion' => $oe->indicaciones_preparacion ?: 'Sin preparación especial requerida.',
+                'detalles' => [
+                    'codigo_orden' => $oe->codigo_orden,
+                    'tipo_estudio' => $oe->tipo_estudio,
+                    'estado' => $oe->estado,
+                    'diagnostico_presuntivo' => $oe->diagnostico_presuntivo,
+                    'total_documentos' => $oe->documentosAdjuntos->count(),
+                ],
+                'id_referencia' => $oe->id_orden,
             ];
         }
 
