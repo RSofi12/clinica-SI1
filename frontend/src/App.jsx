@@ -214,7 +214,7 @@ export default function App() {
 
   // Vista de Dashboard Clínico con Barra Lateral Fija y Contenido con Scroll Independiente a la Derecha
   return (
-    <div key="dashboard-view" className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800 font-sans animate-view-fade">
+    <div key="dashboard-view" className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800 font-sans animate-view-fade print:h-auto print:w-auto print:overflow-visible print:bg-white">
       {/* 1. Barra Lateral a la Izquierda (Sidebar fija con su propio scroll) */}
       <Sidebar
         activeTab={dashboardTab}
@@ -232,9 +232,9 @@ export default function App() {
       />
 
       {/* 2. Área de Contenido Principal a la Derecha (con scroll vertical independiente) */}
-      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden print:h-auto print:overflow-visible">
         {/* Barra Superior Limpia (Header fijo) */}
-        <header className="border-b border-slate-200 bg-white shrink-0 z-30 shadow-xs h-16">
+        <header className="border-b border-slate-200 bg-white shrink-0 z-30 shadow-xs h-16 print:hidden">
           <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             {/* Izquierda: Botón Hamburguesa Móvil + Botón Colapso Desktop + Breadcrumb */}
             <div className="flex items-center gap-3">
@@ -300,7 +300,7 @@ export default function App() {
         </header>
 
         {/* 3. Contenedor de la Vista Activa con Scroll Independiente a la Derecha */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-transparent">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-transparent print:p-0 print:m-0 print:max-w-none print:overflow-visible print:h-auto">
           <div key={dashboardTab} className="animate-view-fade">
             {dashboardTab === 'inicio' ? (
               <InicioPanelView

@@ -262,7 +262,11 @@ export function DynamicReportsView() {
 
   return (
     <div className="space-y-6 animate-view-fade">
-      {/* 1. Cabecera Institucional */}
+      {/* =========================================================================
+          SECCIÓN 1: VISTA DE PANTALLA INTERACTIVA (Oculta al imprimir en PDF)
+          ========================================================================= */}
+      <div className="print:hidden space-y-6">
+        {/* 1. Cabecera Institucional */}
       <div className="bg-gradient-to-r from-[#003844] via-[#004e5f] to-[#00687a] rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial from-cyan-400/10 to-transparent pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -809,35 +813,247 @@ export function DynamicReportsView() {
           </div>
         </div>
       </div>
+      </div>
 
-      {/* 7. Vista Oculta para Impresión Oficial en PDF (@media print) */}
-      <div id="print-official-container" className="hidden print:block text-slate-900 bg-white p-4">
-        <div className="border-b-2 border-slate-900 pb-4 mb-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold font-serif-clinical">CENTRO MÉDICO LA CRUZ</h1>
-            <p className="text-xs text-slate-600">Sistema Integral de Atención Primaria • Clínica Vida Salud</p>
+      {/* =========================================================================
+          SECCIÓN 2: DOCUMENTO OFICIAL DE IMPRESIÓN Y EXPORTACIÓN A PDF (@media print)
+          Solo visible en la vista previa de impresión (window.print() / Guardar como PDF)
+          ========================================================================= */}
+      <div id="print-official-container" className="hidden print:block text-slate-900 bg-white p-2">
+        {/* Membrete Institucional Oficial */}
+        <div className="border-b-2 border-[#003844] pb-4 mb-5 flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-[#003844] text-white flex items-center justify-center font-bold text-lg font-serif-clinical shrink-0">
+              LC
+            </div>
+            <div>
+              <h1 className="text-xl font-bold font-serif-clinical tracking-tight text-slate-900">
+                CENTRO MÉDICO LA CRUZ — VIDA SALUD
+              </h1>
+              <p className="text-xs text-slate-600 font-medium">
+                Clínica de Atención Primaria Integral • Sistema de Información I (RF13)
+              </p>
+              <p className="text-[10px] text-slate-500">
+                Av. Principal Los Próceres #124 • Santa Cruz de la Sierra, Bolivia • Tel: +591 (3) 345-6789
+              </p>
+            </div>
           </div>
           <div className="text-right text-xs">
-            <p className="font-bold">{reportData?.titulo}</p>
-            <p className="text-slate-500">Emisión: {reportData?.generado_en}</p>
-            <p className="text-slate-500">Emisor: {reportData?.generado_por}</p>
+            <span className="inline-block px-2 py-0.5 rounded bg-slate-100 font-mono text-[9px] font-bold text-slate-700 uppercase mb-1 border border-slate-200">
+              REPORTE OFICIAL CU22
+            </span>
+            <p className="font-bold text-slate-900 text-sm">{reportData?.titulo || 'Reporte Gerencial'}</p>
+            <p className="text-slate-500 text-[10px]">Emisión: {reportData?.generado_en || new Date().toLocaleString()}</p>
+            <p className="text-slate-500 text-[10px]">Emisor: <strong className="text-slate-700">{reportData?.generado_por || user?.username} ({role})</strong></p>
           </div>
         </div>
 
+        {/* Criterios y Parámetros del Reporte */}
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 text-xs grid grid-cols-4 gap-2">
+          <div>
+            <span className="text-[9px] font-bold text-slate-400 uppercase block">Período</span>
+            <span className="font-semibold text-slate-800">
+              {periodoPreset === 'custom'
+                ? `${fechaDesde || 'Inicio'} al ${fechaHasta || 'Hoy'}`
+                : periodoPreset === 'hoy'
+                ? 'Hoy'
+                : periodoPreset === '7d'
+                ? 'Últimos 7 días'
+                : periodoPreset === '30d'
+                ? 'Últimos 30 días'
+                : 'Mes en Curso'}
+            </span>
+          </div>
+          <div>
+            <span className="text-[9px] font-bold text-slate-400 uppercase block">Médico</span>
+            <span className="font-semibold text-slate-800 truncate block">
+              {medicoSeleccionado === 'TODOS'
+                ? 'Todos los Médicos'
+                : catalogs.medicos?.find((m) => String(m.id_medico) === String(medicoSeleccionado))?.nombre_completo || 'Médico'}
+            </span>
+          </div>
+          <div>
+            <span className="text-[9px] font-bold text-slate-400 uppercase block">Especialidad</span>
+            <span className="font-semibold text-slate-800 truncate block">
+              {especialidadSeleccionada === 'TODOS'
+                ? 'Todas'
+                : catalogs.especialidades?.find((e) => String(e.id_especialidad) === String(especialidadSeleccionada))?.nombre || 'Especialidad'}
+            </span>
+          </div>
+          <div>
+            <span className="text-[9px] font-bold text-slate-400 uppercase block">Estado</span>
+            <span className="font-semibold text-slate-800">
+              {estadoSeleccionado === 'TODOS' ? 'Todos los Estados' : estadoSeleccionado}
+            </span>
+          </div>
+        </div>
+
+        {/* Resumen de KPIs / Métricas */}
         {reportData?.metricas && (
-          <div className="grid grid-cols-4 gap-2 mb-4 border border-slate-200 p-2 text-xs">
-            {Object.entries(reportData.metricas).slice(0, 4).map(([k, v]) => (
-              <div key={k}>
-                <span className="text-[10px] text-slate-500 uppercase">{k.replace(/_/g, ' ')}:</span>
-                <p className="font-bold text-sm">{v}</p>
-              </div>
-            ))}
+          <div className="mb-5">
+            <h3 className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Indicadores Ejecutivos del Período
+            </h3>
+            <div className="grid grid-cols-6 gap-2">
+              {Object.entries(reportData.metricas).slice(0, 6).map(([k, v]) => {
+                const label = k.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+                const esDinero = k.includes('ingresos') || k.includes('ticket');
+                const esPorcentaje = k.includes('tasa') || k.includes('porcentaje');
+                return (
+                  <div key={k} className="p-2 rounded-lg border border-slate-200 bg-white text-center">
+                    <span className="text-[8px] text-slate-400 font-medium block truncate uppercase">{label}</span>
+                    <span className="text-xs font-bold text-slate-900 block mt-0.5">
+                      {esDinero ? `Bs. ${Number(v).toFixed(2)}` : esPorcentaje ? `${v}%` : v}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
-        <div className="mt-8 pt-6 border-t border-slate-300 flex justify-between text-xs text-slate-500">
-          <div>Reporte Oficial generado bajo norma PUDS / RUP • Examen Parcial II (RF13)</div>
-          <div>Firma / Sello de Auditoría: _________________________</div>
+        {/* Desglose Específico para Citas por Especialidad (Reporte 3) */}
+        {tipoReporte === 'citas-especialidad' && reportData?.resumen_agrupado && (
+          <div className="mb-5 break-inside-avoid">
+            <h3 className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Distribución de Demanda y Facturación por Especialidad
+            </h3>
+            <table className="w-full text-left border-collapse text-[10px] border border-slate-200">
+              <thead>
+                <tr className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase">
+                  <th className="py-1.5 px-3">Especialidad</th>
+                  <th className="py-1.5 px-3 text-center">Total Citas</th>
+                  <th className="py-1.5 px-3 text-center">Atendidas</th>
+                  <th className="py-1.5 px-3 text-center">% Demanda</th>
+                  <th className="py-1.5 px-3 text-right">Facturación Estimada</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {reportData.resumen_agrupado.map((item) => (
+                  <tr key={item.id_especialidad}>
+                    <td className="py-1 px-3 font-semibold text-slate-800">{item.especialidad}</td>
+                    <td className="py-1 px-3 text-center">{item.total_citas}</td>
+                    <td className="py-1 px-3 text-center">{item.atendidas}</td>
+                    <td className="py-1 px-3 text-center font-bold text-[#00687a]">{item.participacion_porcentaje}%</td>
+                    <td className="py-1 px-3 text-right font-mono font-bold text-slate-900">
+                      Bs. {Number(item.ingresos_estimados || 0).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Desglose Específico para Citas por Estado (Reporte 4) */}
+        {tipoReporte === 'citas-estado' && reportData?.distribucion_estados && (
+          <div className="mb-5 break-inside-avoid">
+            <h3 className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Desglose de Estados de Citas
+            </h3>
+            <table className="w-full text-left border-collapse text-[10px] border border-slate-200">
+              <thead>
+                <tr className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase">
+                  <th className="py-1.5 px-3">Estado</th>
+                  <th className="py-1.5 px-3 text-center">Cantidad</th>
+                  <th className="py-1.5 px-3 text-center">Porcentaje (%)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {reportData.distribucion_estados.map((item, idx) => (
+                  <tr key={idx}>
+                    <td className="py-1 px-3 font-semibold text-slate-800">{item.estado}</td>
+                    <td className="py-1 px-3 text-center">{item.cantidad}</td>
+                    <td className="py-1 px-3 text-center font-bold text-[#00687a]">{item.porcentaje}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Desglose Específico para Padrón Etario (Reporte 5) */}
+        {tipoReporte === 'pacientes-edad' && reportData?.censo_etario && (
+          <div className="mb-5 break-inside-avoid">
+            <h3 className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              Censo Poblacional por Grupos Etarios (RF04)
+            </h3>
+            <table className="w-full text-left border-collapse text-[10px] border border-slate-200">
+              <thead>
+                <tr className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase">
+                  <th className="py-1.5 px-3">Grupo Etario</th>
+                  <th className="py-1.5 px-3">Rango de Edad</th>
+                  <th className="py-1.5 px-3 text-center">Pacientes</th>
+                  <th className="py-1.5 px-3 text-center">Porcentaje (%)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {reportData.censo_etario.map((g, idx) => (
+                  <tr key={idx}>
+                    <td className="py-1 px-3 font-semibold text-slate-800">{g.grupo}</td>
+                    <td className="py-1 px-3 text-slate-600">{g.rango}</td>
+                    <td className="py-1 px-3 text-center">{g.total}</td>
+                    <td className="py-1 px-3 text-center font-bold text-[#00687a]">{g.porcentaje}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Tabla Detallada de Registros (Sin paginación, muestra el universo completo del reporte) */}
+        <div className="mb-6">
+          <h3 className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Registro Cronológico y Nominal ({reportData?.registros?.length || 0} registros)
+          </h3>
+          <table className="w-full text-left border-collapse text-[9px] border border-slate-200">
+            <thead>
+              <tr className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase">
+                <th className="py-1.5 px-2">Código</th>
+                <th className="py-1.5 px-2">Fecha / Hora</th>
+                <th className="py-1.5 px-2">Paciente</th>
+                <th className="py-1.5 px-2">Documento / HC</th>
+                <th className="py-1.5 px-2">Médico</th>
+                <th className="py-1.5 px-2">Especialidad</th>
+                <th className="py-1.5 px-2 text-center">Estado</th>
+                <th className="py-1.5 px-2 text-right">Monto (Bs.)</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200">
+              {reportData?.registros?.map((row, idx) => (
+                <tr key={idx} className="break-inside-avoid">
+                  <td className="py-1 px-2 font-mono font-bold text-slate-900">{row.codigo_cita || row.codigo_historia || `#${idx + 1}`}</td>
+                  <td className="py-1 px-2 text-slate-700">{row.fecha} {row.hora_inicio ? `(${row.hora_inicio})` : ''}</td>
+                  <td className="py-1 px-2 font-medium text-slate-900">{row.paciente || row.nombre_completo}</td>
+                  <td className="py-1 px-2 font-mono text-slate-600">{row.numero_documento || row.historia_clinica}</td>
+                  <td className="py-1 px-2 text-slate-700">{row.medico}</td>
+                  <td className="py-1 px-2 text-slate-700">{row.especialidad}</td>
+                  <td className="py-1 px-2 text-center font-bold text-[8px] uppercase">{row.estado}</td>
+                  <td className="py-1 px-2 text-right font-mono font-bold text-slate-900">
+                    Bs. {Number(row.monto_pago || 70).toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Firmas Institucionales y Sello de Auditoría */}
+        <div className="mt-8 pt-6 border-t-2 border-slate-300 break-inside-avoid">
+          <div className="grid grid-cols-2 gap-10 mb-6 text-center text-xs">
+            <div className="pt-8 border-t border-slate-400">
+              <p className="font-bold text-slate-800">Firma y Sello del Director Médico</p>
+              <p className="text-[10px] text-slate-500">Centro Médico La Cruz — Vida Salud</p>
+            </div>
+            <div className="pt-8 border-t border-slate-400">
+              <p className="font-bold text-slate-800">Responsable de Auditoría / Sistemas</p>
+              <p className="text-[10px] text-slate-500">Trazabilidad Inmutable CU03 / RF13</p>
+            </div>
+          </div>
+          <div className="flex justify-between text-[8px] text-slate-400 uppercase tracking-wider">
+            <span>Metodología PUDS / RUP • Examen Parcial II • Sistemas de Información I</span>
+            <span>Documento generado oficialmente el {new Date().toLocaleDateString()} a las {new Date().toLocaleTimeString()}</span>
+          </div>
         </div>
       </div>
     </div>

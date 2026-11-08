@@ -187,7 +187,7 @@ export function Sidebar({
 
       {/* Barra Lateral / Sidebar (Diseño Editorial Aqua Profundo) */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-[#003844] border-r border-[#002830] text-white shadow-xl transition-all duration-300 ease-in-out md:sticky md:top-0 h-screen max-h-screen shrink-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-[#003844] border-r border-[#002830] text-white shadow-xl transition-all duration-300 ease-in-out md:sticky md:top-0 h-screen max-h-screen shrink-0 print:hidden ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         } ${isCollapsed ? 'md:w-20' : 'md:w-64'} w-72`}
       >

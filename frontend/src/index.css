@@ -155,3 +155,43 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   Estilos Oficiales de Impresión y Exportación a PDF (@media print)
+   ========================================================================== */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 12mm 12mm 15mm 12mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ocultar elementos interactivos de la aplicación web */
+  header, aside, nav, button, .print-hidden, [role="navigation"] {
+    display: none !important;
+  }
+
+  /* Liberar scroll y contenedor rígido de la aplicación */
+  html, body, #root, [key="dashboard-view"], main {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Evitar saltos de página en bloques importantes */
+  .break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}
