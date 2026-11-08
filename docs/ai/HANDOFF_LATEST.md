@@ -39,21 +39,62 @@
 
 ---
 
-## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU26: Gestionar Documentos Clínicos Adjuntos con Cloudinary y Visor DICOM)
-- **Implementación Full-Stack de CU26 (Gestionar Documentos Clínicos Adjuntos):**
-  - **Backend (`backend/app/Packages/MedicalRecords/`):**
-    - Migración `2026_11_07_000002_add_cloudinary_and_tracking_to_documentos_clinicos_table.php` ejecutada.
-    - `DocumentoClinico.php`: Modelo con relaciones foráneas y accessors `es_dicom` y `tamanio_legible`.
-    - `CloudinaryStorageService.php`: Carga remota en Cloudinary (`image` y `raw` para DICOM/PDF) con fallback resiliente.
-    - `DocumentoClinicoService.php`: Soporte dual (autónomo y conectado a CU25 cambiando estado de orden a `CON_RESULTADOS`), Anti-IDOR y auditoría inmutable en `Bitacora.php`.
-    - `DocumentosClinicosController.php` y FormRequest `DocumentoClinicoUploadRequest.php` (límite 15 MB).
-  - **Frontend (`frontend/src/apps/medical-records/`):**
-    - `documentoClinicoService.js`: Integración API con progreso de carga multipart.
-    - `ClinicalDocumentsSection.jsx`: Componente idéntico a la referencia visual con formulario desplegable, badges (`PNG`, `PDF`, `DCM`), barra de progreso porcentual, previsualización de imágenes/PDF y asistente para visor DICOM externo (`https://www.imaios.com/es/imaios-dicom-viewer`).
-    - Integrado en `ExpedienteClinicoView.jsx` (pestaña "Documentos Adjuntos"), `Sidebar.jsx` (ítem bajo P4) y `App.jsx`.
-  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2045 módulos, 13.77s).
-  - **Casos de Prueba:** Registrados `CN-CU26-01` a `CN-CU26-08` en `docs/informes/PRUEBAS_CAJA_NEGRA.md`.
-  - **Commit de Backend:** `635b166`: `feat(medical-records): implementar backend de documentos clinicos adjuntos CU26 con cloudinary y soporte cu25`.
+## Estado de Relevo al 07/11/2026 (Fix Crítico: Error de Hooks en Activación de Paciente con CI)
+- **Causa Raíz de "Rendered more hooks than during the previous render":**
+  - En [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) existía una salida temprana `if (!isOpen) return null;` previa a la invocación de `useEffect(...)`.
+  - Cuando el modal estaba cerrado, el componente registraba 6 hooks (`useState`). Al hacer clic en "Activar Cuenta CI" en el Homepage, `isOpen` pasaba a `true`, ejecutando el `useEffect` posterior (hook #7), lo que violaba la regla estricta de React sobre orden e invariabilidad en la cuenta de hooks por render.
+- **Solución:**
+  - Se eliminó el early return condicional y el `useEffect` manual, migrando [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) al componente estándar [`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx).
+  - Todos los hooks (`useState`) quedan arriba de forma incondicional, mientras que el portal encapsula el bloqueo de scroll y el listener de `Escape` en un ciclo de vida aislado sin rupturas.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 34.78s).
+- **Commit en Rama `prueba`:** `7d90a0b`: `fix(auth): corregir violacion de reglas de hooks en ActivatePatientModal migrando a ModalPortal`.
+
+---
+
+## Estado de Relevo al 07/11/2026 (Estandarización Universal de Modales con ModalPortal, Viewport Lock y Centrado)
+- **Estandarización de Todos los Modales de la Aplicación:**
+  - **Componente Maestro [`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx):**
+    - Se aisló la renderización de todos los modales mediante `createPortal(..., document.body)`, desacoplándolos de contenedores con `overflow-y-auto` y animaciones `transform` en `<main>` de `App.jsx`.
+    - **Scroll-lock automático en body:** `document.body.style.overflow = 'hidden'` mientras el modal esté abierto, previniendo desplazamiento no deseado de la página de fondo.
+    - **Cierre consistente:** Cierre al hacer clic en el backdrop exterior (`e.target === e.currentTarget`) y al presionar la tecla `Escape`.
+    - **Centrado vertical responsivo:** Uso de `my-auto` en el panel principal para garantizar centrado óptimo en cualquier dispositivo.
+  - **Modales Migrados a ModalPortal:**
+    - Recursos Clínicos: [`PatientFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientFormModal.jsx), [`PatientDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientDetailModal.jsx), [`PatientWebAccountModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/PatientWebAccountModal.jsx), [`DoctorFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/DoctorFormModal.jsx), [`DoctorDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/DoctorDetailModal.jsx), [`BlockModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/BlockModal.jsx), [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx).
+    - Seguridad: [`UserFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/components/UserFormModal.jsx), [`SecurityPolicyModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/components/SecurityPolicyModal.jsx), [`AuditDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/security/components/AuditDetailModal.jsx).
+    - Citas Médicas: [`AppointmentBookingModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentBookingModal.jsx), [`AppointmentRescheduleModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentRescheduleModal.jsx), [`AppointmentCancelModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentCancelModal.jsx), [`AppointmentStatusModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentStatusModal.jsx), [`PatientAppointmentHistoryModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/PatientAppointmentHistoryModal.jsx).
+    - Historia Clínica: [`ConsultaRegistroModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ConsultaRegistroModal.jsx), [`AntecedentesPatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedentesPatientModal.jsx), [`AntecedenteFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedenteFormModal.jsx), [`RecetaPrescripcionModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaPrescripcionModal.jsx), [`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx), [`RecetaAnularModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaAnularModal.jsx).
+    - Landing Page: Modal de agendamiento rápido en [`HomePage.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/pages/HomePage.jsx).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 17.75s).
+- **Bitácora Registrada:** [`docs/ai/sessions/2026-11-07-estandarizacion-modales-modal-portal.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/sessions/2026-11-07-estandarizacion-modales-modal-portal.md).
+
+---
+
+## Estado de Relevo al 07/11/2026 (Refinamiento Full-Stack CU26: Selector Policlínico en Cascada, Visor SAGA DICOM y SSL Cloudinary)
+- **Ajustes y Mejoras en CU26 (Documentos Clínicos Adjuntos & Visor DICOM):**
+  - **Resolución de Error 500 en Subida a Cloudinary:** Se identificó falla de verificación SSL de cURL en entornos locales Windows (`cURL error 60`). Solucionado en [`CloudinaryStorageService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/CloudinaryStorageService.php) con `Http::withOptions(['verify' => app()->environment('production')])`.
+  - **Selector Policlínico por Especialidad en Cascada:**
+    - Creado catálogo exhaustivo clasificado por Especialidad o Área Clínica: *Diagnóstico por Imágenes (TAC, RMN, Rayos X, Ecografía, Mamografía)*, *Cardiología (ECG, Ecocardiograma, Holter, Prueba de Esfuerzo)*, *Laboratorio (Hemograma, Bioquímica, Examen de Orina, Cultivo, Biopsia)*, *Medicina General e Interna (Epicrisis, Consulta, Interconsulta)*, *Oftalmología (Fondo de ojo, Topografía corneal, OCT, Campo visual)* y *Legal / Administrativo (Consentimiento informado, Informe externo)*.
+    - Implementado en [`ClinicalDocumentsSection.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ClinicalDocumentsSection.jsx) mediante selector en cascada (*Área / Especialidad* ➔ *Tipo de Estudio*).
+    - **Cero impacto destructivo en base de datos:** El backend almacena la especialidad como metadato y clasificador estándar en título y observaciones sin requerir nuevas migraciones en `documentos_clinicos`.
+  - **Soporte y Redirección al Visor DICOM SAGA:**
+    - Integrado con la URL oficial de SAGA Viewer: `https://saga-it.com/dicom/viewer/app?datasources=idc`.
+    - Lectura de variables `VITE_DICOM_VIEWER_URL` y fallback automático.
+    - Badges específicos (`DCM` / `DICOM`) y botón de apertura en nueva pestaña para inspección radiológica en visor web profesional.
+  - **Diagnóstico y Retroalimentación de Errores Transparente:**
+    - Implementada función `extractErrorMessage()` para desglosar errores de validación de Laravel, límites de peso o excepciones con mensaje legible para el usuario en lugar de `Request failed with status code 500`.
+  - **Limpieza de UI y Transiciones Fluidas:**
+    - Acceso centralizado exclusivamente a través de "Expediente Clínico Digital" (eliminada ruta duplicada del Sidebar).
+    - Paleta de colores institucional unificada en Teal médico (`#00687a`, `#003844`), eliminando tonos morados.
+    - Animaciones de entrada suave (`animate-view-fade`) tanto en pestañas internas como en cambios de módulo del Sidebar.
+  - **Variables de Entorno Precursoras:**
+    - Registradas en `.env.example` y `.env` para Cloudinary, DICOM y Stripe Sandbox (`STRIPE_KEY`, `STRIPE_SECRET`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_CURRENCY`).
+- **Verificación de Calidad:**
+  - `php -l`: 0 errores de sintaxis en todos los modelos, servicios y controladores.
+  - `npm --prefix frontend run build`: 0 errores en 2045 módulos (15.02s).
+- **Commits en Rama `prueba`:**
+  - `3b1e5e5`: `chore(config): agregar variables de entorno para cloudinary en env.example`
+  - `34d6421`: `fix(medical-records): corregir carga infinita de documentos, unificar paleta teal institucional y agregar transiciones fluidas`
+  - `f987f51`: `feat(medical-records): catalogo policlinico por especialidad soporte visor saga dicom y resolucion ssl cloudinary`
 
 ---
 

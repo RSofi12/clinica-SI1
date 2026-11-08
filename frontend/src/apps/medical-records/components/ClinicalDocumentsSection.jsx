@@ -18,28 +18,96 @@ import {
   Eye,
   Info,
   Check,
-  ArrowUpRight
+  ArrowUpRight,
+  Filter
 } from 'lucide-react';
 import { documentoClinicoService } from '../services/documentoClinicoService';
 import { useAuth } from '../../../context/AuthContext';
 
-const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15 MB
+// Variables de configuración de entorno (con fallback a la URL indicada por el usuario)
+const MAX_FILE_SIZE_MB = Number(import.meta.env.VITE_CLINICAL_DOCUMENT_MAX_SIZE_MB || 15);
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const OBSERVACIONES_MAX_LENGTH = 1000;
-const EXTERNAL_DICOM_VIEWER_URL = 'https://www.imaios.com/es/imaios-dicom-viewer';
+const EXTERNAL_DICOM_VIEWER_URL =
+  import.meta.env.VITE_DICOM_VIEWER_URL ||
+  import.meta.env.NEXT_PUBLIC_DICOM_VIEWER_URL ||
+  'https://saga-it.com/dicom/viewer/app?datasources=idc';
 
+// Especialidades y Áreas Clínicas de la Clínica General
+const SPECIALTIES = [
+  { id: 'ALL', name: 'Todas las áreas clínicas' },
+  { id: 'IMAGENOLOGIA', name: 'Diagnóstico por Imágenes (Radiología / TAC / RMN / DICOM)' },
+  { id: 'LABORATORIO', name: 'Laboratorio Clínico y Patología' },
+  { id: 'CARDIOLOGIA', name: 'Cardiología y Métodos Diagnósticos' },
+  { id: 'MEDICINA_GENERAL', name: 'Medicina General, Interna y Pediatría' },
+  { id: 'OFTALMOLOGIA', name: 'Oftalmología Especializada' },
+  { id: 'ADMINISTRATIVO', name: 'Consentimientos y Legal' },
+];
+
+// Catálogo Integral de Tipos de Documentos por Especialidad
 const DOCUMENT_CATEGORIES = [
-  { value: 'FONDO_DE_OJO', label: 'Fondo de ojo' },
-  { value: 'TOPOGRAFIA_CORNEAL', label: 'Topografía corneal' },
-  { value: 'OCT', label: 'Tomografía de coherencia óptica (OCT)' },
-  { value: 'CAMPO_VISUAL', label: 'Campo visual' },
-  { value: 'ECOGRAFIA_OCULAR', label: 'Ecografía ocular' },
-  { value: 'INFORME_LABORATORIO', label: 'Informe de laboratorio' },
-  { value: 'INFORME_EXTERNO', label: 'Informe externo' },
-  { value: 'CONSENTIMIENTO', label: 'Consentimiento informado' },
-  { value: 'OTRO', label: 'Otro estudio o documento' },
+  // Diagnóstico por Imágenes
+  { value: 'RADIOGRAFIA', label: 'Radiografía (Rayos X)', specialty: 'IMAGENOLOGIA' },
+  { value: 'TOMOGRAFIA', label: 'Tomografía Computarizada (TAC / DICOM)', specialty: 'IMAGENOLOGIA' },
+  { value: 'RESONANCIA', label: 'Resonancia Magnética (RMN / DICOM)', specialty: 'IMAGENOLOGIA' },
+  { value: 'ECOGRAFIA', label: 'Ecografía Diagnóstica', specialty: 'IMAGENOLOGIA' },
+  { value: 'MAMOGRAFIA', label: 'Mamografía Digital', specialty: 'IMAGENOLOGIA' },
+
+  // Cardiología
+  { value: 'ELECTROCARDIOGRAMA', label: 'Electrocardiograma (ECG)', specialty: 'CARDIOLOGIA' },
+  { value: 'ECOCARDIOGRAMA', label: 'Ecocardiograma Doppler', specialty: 'CARDIOLOGIA' },
+  { value: 'HOLTER', label: 'Estudio Holter / Presurometría', specialty: 'CARDIOLOGIA' },
+  { value: 'PRUEBA_ESFUERZO', label: 'Ergometría / Prueba de Esfuerzo', specialty: 'CARDIOLOGIA' },
+
+  // Laboratorio Clínico
+  { value: 'INFORME_LABORATORIO', label: 'Informe de Laboratorio General', specialty: 'LABORATORIO' },
+  { value: 'HEMOGRAMA', label: 'Hemograma Completo', specialty: 'LABORATORIO' },
+  { value: 'BIOQUIMICA', label: 'Bioquímica Clínica y Perfil Lipídico', specialty: 'LABORATORIO' },
+  { value: 'UROANALISIS', label: 'Examen General de Orina', specialty: 'LABORATORIO' },
+  { value: 'CULTIVO_MICROBIOLOGIA', label: 'Cultivo y Antibiograma', specialty: 'LABORATORIO' },
+  { value: 'BIOPSIA_PATOLOGIA', label: 'Biopsia / Anatomía Patológica', specialty: 'LABORATORIO' },
+
+  // Medicina General / Consultas
+  { value: 'INFORME_CONSULTA', label: 'Informe de Consulta Externa', specialty: 'MEDICINA_GENERAL' },
+  { value: 'EPICRISIS', label: 'Epicrisis / Alta Médica', specialty: 'MEDICINA_GENERAL' },
+  { value: 'HISTORIA_PREVIA', label: 'Historia Clínica Externa', specialty: 'MEDICINA_GENERAL' },
+  { value: 'INTERCONSULTA', label: 'Informe de Interconsulta', specialty: 'MEDICINA_GENERAL' },
+
+  // Oftalmología
+  { value: 'FONDO_DE_OJO', label: 'Fondo de Ojo', specialty: 'OFTALMOLOGIA' },
+  { value: 'TOPOGRAFIA_CORNEAL', label: 'Topografía Corneal', specialty: 'OFTALMOLOGIA' },
+  { value: 'OCT', label: 'Tomografía de Coherencia Óptica (OCT)', specialty: 'OFTALMOLOGIA' },
+  { value: 'CAMPO_VISUAL', label: 'Campo Visual Computarizado', specialty: 'OFTALMOLOGIA' },
+  { value: 'ECOGRAFIA_OCULAR', label: 'Ecografía Ocular', specialty: 'OFTALMOLOGIA' },
+
+  // Administrativo / Legal
+  { value: 'CONSENTIMIENTO', label: 'Consentimiento Informado', specialty: 'ADMINISTRATIVO' },
+  { value: 'CERTIFICADO_MEDICO', label: 'Certificado Médico Oficial', specialty: 'ADMINISTRATIVO' },
+  { value: 'INFORME_EXTERNO', label: 'Estudio Externo Particular', specialty: 'ADMINISTRATIVO' },
+  { value: 'OTRO', label: 'Otro Documento o Estudio', specialty: 'ADMINISTRATIVO' },
 ];
 
 const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'pdf', 'dcm'];
+
+/**
+ * Extrae el mensaje de error técnico o de validación concreto devuelto por el servidor
+ */
+function extractErrorMessage(err) {
+  if (err?.response?.data) {
+    const data = err.response.data;
+    if (typeof data === 'string') return data;
+    if (data.message && typeof data.message === 'string') return data.message;
+    if (data.error && typeof data.error === 'string') return data.error;
+    if (data.errors && typeof data.errors === 'object') {
+      const msgs = Object.values(data.errors).flat();
+      if (msgs.length > 0) return msgs.join(' · ');
+    }
+  }
+  if (err?.message && !err.message.includes('code 500') && !err.message.includes('code 422')) {
+    return err.message;
+  }
+  return 'Ocurrió un error en el servidor al subir el archivo. Verifique el peso (máx 15 MB) y formato permitido.';
+}
 
 export default function ClinicalDocumentsSection({
   historialId,
@@ -66,6 +134,7 @@ export default function ClinicalDocumentsSection({
   // Estados del formulario y Drag & Drop
   const [formOpen, setFormOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedSpecialty, setSelectedSpecialty] = useState('ALL');
   const [documentType, setDocumentType] = useState('');
   const [selectedOrdenId, setSelectedOrdenId] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -130,14 +199,14 @@ export default function ClinicalDocumentsSection({
       const docs = Array.isArray(raw)
         ? raw
         : (Array.isArray(raw?.data) ? raw.data : (Array.isArray(res?.data?.items) ? res.data.items : []));
-      
+
       setDocuments(docs);
       if (onDocumentChange) {
         onDocumentChange(docs);
       }
     } catch (err) {
       console.error('Error cargando documentos clínicos:', err);
-      setLoadError(err?.message || 'No se pudieron cargar los documentos clínicos.');
+      setLoadError(extractErrorMessage(err));
       setDocuments([]);
     } finally {
       setLoading(false);
@@ -156,6 +225,7 @@ export default function ClinicalDocumentsSection({
   };
 
   const resetForm = () => {
+    setSelectedSpecialty('ALL');
     setDocumentType('');
     setSelectedOrdenId('');
     setSelectedFile(null);
@@ -174,6 +244,14 @@ export default function ClinicalDocumentsSection({
     setFormOpen(false);
   };
 
+  // Opciones de tipo de documento filtradas según la especialidad seleccionada
+  const availableDocumentCategories = useMemo(() => {
+    if (selectedSpecialty === 'ALL') {
+      return DOCUMENT_CATEGORIES;
+    }
+    return DOCUMENT_CATEGORIES.filter((c) => c.specialty === selectedSpecialty);
+  }, [selectedSpecialty]);
+
   const validateAndSetFile = (file) => {
     setFormError(null);
     if (!file) {
@@ -190,14 +268,14 @@ export default function ClinicalDocumentsSection({
     }
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      setFormError('El archivo supera el límite máximo permitido de 15 MB.');
+      setFormError(`El archivo supera el límite máximo permitido de ${MAX_FILE_SIZE_MB} MB.`);
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       return false;
     }
 
     if (file.size === 0) {
-      setFormError('El archivo seleccionado está vacío.');
+      setFormError('El archivo seleccionado está vacío (0 bytes).');
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       return false;
@@ -288,7 +366,7 @@ export default function ClinicalDocumentsSection({
     }
 
     if (!documentType) {
-      setFormError('Por favor, selecciona una categoría o tipo de documento.');
+      setFormError('Por favor, selecciona el tipo de estudio o documento clínico.');
       return;
     }
 
@@ -299,6 +377,10 @@ export default function ClinicalDocumentsSection({
 
     const formData = new FormData();
     formData.append('tipo_documento', documentType);
+    if (selectedSpecialty !== 'ALL') {
+      const specObj = SPECIALTIES.find((s) => s.id === selectedSpecialty);
+      if (specObj) formData.append('especialidad', specObj.name);
+    }
     formData.append('archivo', selectedFile);
     if (selectedOrdenId) {
       formData.append('id_orden', selectedOrdenId);
@@ -310,15 +392,26 @@ export default function ClinicalDocumentsSection({
     setUploading(true);
     setUploadProgress(0);
 
+    const isUploadingDicom = selectedFile.name.toLowerCase().endsWith('.dcm');
+
     try {
-      await documentoClinicoService.uploadDocumento(historialId, formData, (progressEvent) => {
+      const res = await documentoClinicoService.uploadDocumento(historialId, formData, (progressEvent) => {
         if (progressEvent.total) {
           const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
           setUploadProgress(percent);
         }
       });
 
-      setSuccess('Documento clínico adjuntado correctamente.');
+      const nuevoDoc = res?.data || null;
+
+      if (isUploadingDicom && nuevoDoc) {
+        setSuccess('Estudio DICOM adjuntado correctamente a Cloudinary.');
+        // Abre automáticamente el modal para orientar la apertura en el visor SAGA
+        setDicomModalDoc(nuevoDoc);
+      } else {
+        setSuccess('Documento clínico adjuntado correctamente.');
+      }
+
       resetForm();
       setFormOpen(false);
       await loadDocuments();
@@ -327,7 +420,7 @@ export default function ClinicalDocumentsSection({
       }
     } catch (err) {
       console.error('Error al subir documento clínico:', err);
-      setFormError(err?.message || 'Error al procesar la subida del archivo.');
+      setFormError(extractErrorMessage(err));
     } finally {
       setUploading(false);
     }
@@ -346,7 +439,7 @@ export default function ClinicalDocumentsSection({
       await loadDocuments();
     } catch (err) {
       console.error('Error al eliminar documento:', err);
-      setLoadError(err?.message || 'No se pudo eliminar el documento.');
+      setLoadError(extractErrorMessage(err));
     } finally {
       setDeletingId(null);
     }
@@ -458,7 +551,7 @@ export default function ClinicalDocumentsSection({
         </div>
       )}
 
-      {/* 3. FORMULARIO DESPLEGABLE CON TEAL CLÍNICO Y DRAG & DROP */}
+      {/* 3. FORMULARIO DESPLEGABLE CON ESPECIALIDAD CASCADA Y DRAG & DROP */}
       {formOpen && isStaff && !isArchived && (
         <form
           onSubmit={handleSubmit}
@@ -471,20 +564,47 @@ export default function ClinicalDocumentsSection({
                 Nuevo documento clínico
               </h4>
               <span className="text-[11px] text-slate-500 font-medium">
-                JPG, JPEG, PNG, PDF o DICOM · máximo 15 MB
+                JPG, JPEG, PNG, PDF o DICOM · máximo {MAX_FILE_SIZE_MB} MB
               </span>
             </div>
           </div>
 
+          {/* Mensaje de error concreto */}
           {formError && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2 animate-view-fade">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{formError}</span>
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-start gap-2.5 animate-view-fade">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block text-rose-900">No se pudo adjuntar el documento</strong>
+                <p className="mt-0.5 font-normal">{formError}</p>
+              </div>
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Categoría de Documento */}
+            {/* 1. Selector de Especialidad / Área Clínica (Cascada) */}
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <span>Especialidad o Área Clínica</span>
+                <span className="text-slate-400 font-normal lowercase">(filtra los tipos)</span>
+              </label>
+              <select
+                value={selectedSpecialty}
+                onChange={(e) => {
+                  setSelectedSpecialty(e.target.value);
+                  setDocumentType(''); // Reiniciar tipo para que el usuario elija de la nueva lista
+                }}
+                disabled={uploading}
+                className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 shadow-2xs transition"
+              >
+                {SPECIALTIES.map((spec) => (
+                  <option key={spec.id} value={spec.id}>
+                    {spec.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* 2. Selector de Tipo de Documento */}
             <div>
               <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Tipo de Documento <span className="text-rose-500">*</span>
@@ -496,19 +616,21 @@ export default function ClinicalDocumentsSection({
                 disabled={uploading}
                 className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 shadow-2xs transition"
               >
-                <option value="">Selecciona una categoría</option>
-                {DOCUMENT_CATEGORIES.map((cat) => (
+                <option value="">Selecciona un tipo de estudio o informe</option>
+                {availableDocumentCategories.map((cat) => (
                   <option key={cat.value} value={cat.value}>
                     {cat.label}
                   </option>
                 ))}
               </select>
             </div>
+          </div>
 
-            {/* Selector de Archivo con Drag & Drop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* 3. Selector de Archivo con Drag & Drop Interactivo */}
             <div>
               <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Archivo <span className="text-rose-500">*</span>
+                Archivo Digital <span className="text-rose-500">*</span>
               </label>
               <div
                 onDragOver={handleDragOver}
@@ -544,37 +666,37 @@ export default function ClinicalDocumentsSection({
                 </label>
                 <div className="min-w-0 flex-1">
                   <span className="text-xs text-slate-700 font-medium truncate block">
-                    {selectedFileSummary || (isDragging ? 'Suelta el archivo aquí...' : 'Sin archivos seleccionados')}
+                    {selectedFileSummary || (isDragging ? 'Suelta el archivo aquí...' : 'Sin archivo seleccionado')}
                   </span>
                   <span className="text-[10px] text-slate-400 block truncate">
-                    o arrastra tu archivo a este recuadro
+                    o arrastra tu archivo (JPG, PNG, PDF, DICOM hasta {MAX_FILE_SIZE_MB} MB)
                   </span>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Selector de Orden de Examen Auxiliar (CU25) — Modalidad Dual */}
-          <div>
-            <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Vincular a Orden de Examen Auxiliar (Opcional — CU25)
-            </label>
-            <select
-              value={selectedOrdenId}
-              onChange={(e) => setSelectedOrdenId(e.target.value)}
-              disabled={uploading}
-              className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 shadow-2xs transition"
-            >
-              <option value="">-- Archivo autónomo / independiente (Sin orden previa) --</option>
-              {ordenesPendientes.map((orden) => (
-                <option key={orden.id_orden} value={orden.id_orden}>
-                  Orden #{orden.id_orden} — {orden.nombre_examen} ({orden.fecha_formateada || 'Pendiente'})
-                </option>
-              ))}
-            </select>
-            <p className="text-[10px] text-teal-800/80 mt-1">
-              💡 Si este estudio corresponde a una orden previa emitida en la clínica, selecciónala para actualizar automáticamente su estado a <strong>CON RESULTADOS</strong>.
-            </p>
+            {/* 4. Selector de Orden de Examen Auxiliar (CU25) — Modalidad Dual */}
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                Vincular a Orden de Examen (Opcional — CU25)
+              </label>
+              <select
+                value={selectedOrdenId}
+                onChange={(e) => setSelectedOrdenId(e.target.value)}
+                disabled={uploading}
+                className="w-full px-3 py-2.5 text-xs bg-white border border-slate-200 rounded-xl font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 shadow-2xs transition"
+              >
+                <option value="">-- Archivo autónomo / independiente (Sin orden previa) --</option>
+                {ordenesPendientes.map((orden) => (
+                  <option key={orden.id_orden} value={orden.id_orden}>
+                    Orden #{orden.id_orden} — {orden.nombre_examen} ({orden.fecha_formateada || 'Pendiente'})
+                  </option>
+                ))}
+              </select>
+              <p className="text-[10px] text-teal-800/80 mt-1">
+                💡 Si este estudio corresponde a una orden previa emitida en la clínica, selecciónala para actualizarla automáticamente a <strong>CON RESULTADOS</strong>.
+              </p>
+            </div>
           </div>
 
           {/* Observaciones o Conclusión Clínica */}
@@ -837,15 +959,16 @@ export default function ClinicalDocumentsSection({
 
                 {/* Botones de Acción */}
                 <div className="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
-                  {/* Botón Ver / Inspeccionar */}
+                  {/* Botón Ver / Inspeccionar DICOM */}
                   {isDicom ? (
                     <button
                       type="button"
                       onClick={() => setDicomModalDoc(doc)}
-                      title="Abrir asistente de visualización DICOM"
-                      className="p-2 rounded-xl text-teal-800 hover:text-teal-900 hover:bg-teal-50 border border-slate-200 transition active:scale-95 cursor-pointer"
+                      title="Abrir asistente de visualización DICOM (SAGA Viewer)"
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition active:scale-95 cursor-pointer shadow-2xs"
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      Visor DICOM
                     </button>
                   ) : (
                     <button
@@ -944,7 +1067,7 @@ export default function ClinicalDocumentsSection({
           document.body
         )}
 
-      {/* 7. MODAL DE ASISTENCIA DICOM CON CREATEPORTAL */}
+      {/* 7. MODAL DE ASISTENCIA Y REDIRECCIÓN DICOM CON CREATEPORTAL */}
       {dicomModalDoc &&
         typeof document !== 'undefined' &&
         createPortal(
@@ -980,18 +1103,24 @@ export default function ClinicalDocumentsSection({
                 </button>
               </div>
 
-              <div className="p-4 rounded-xl bg-teal-50/70 border border-teal-100 text-xs text-teal-950 space-y-2">
+              <div className="p-4 rounded-xl bg-teal-50/70 border border-teal-100 text-xs text-teal-950 space-y-2.5">
                 <p className="font-semibold flex items-center gap-1.5 text-teal-900">
                   <Info className="w-4 h-4 text-teal-700 shrink-0" />
-                  Visualización especializada en visor médico externo
+                  Visualización especializada en visor DICOM compatible
                 </p>
                 <p className="text-slate-700 leading-relaxed text-[11px]">
-                  Los archivos <strong>DICOM (.dcm)</strong> almacenan secuencias de tomografía computarizada, resonancias y cortes volumétricos de alta precisión que requieren herramientas de ventana, contraste y calibración espacial.
+                  Los archivos <strong>DICOM (.dcm)</strong> almacenan secuencias de tomografía computarizada (TAC), resonancias (RMN) y cortes volumétricos de alta densidad médica. Para visualizarlos con herramientas clínicas de calibración, zoom y niveles de gris:
                 </p>
-                <ol className="list-decimal pl-4 space-y-1 text-slate-700 text-[11px]">
-                  <li>Descarga el archivo <code>.dcm</code> con el botón de descarga.</li>
-                  <li>Abre el Visor DICOM web (IMAIOS).</li>
-                  <li>Arrastra el archivo sobre la ventana del visor para examinar los cortes clínicos.</li>
+                <ol className="list-decimal pl-4 space-y-1.5 text-slate-700 text-[11px]">
+                  <li>
+                    <strong>Descarga el archivo:</strong> Haz clic en <code>Descargar .dcm</code> para guardar el estudio en tu equipo.
+                  </li>
+                  <li>
+                    <strong>Abre el Visor DICOM:</strong> Pulsa el botón verde para ir a <code>SAGA DICOM Viewer</code> o tu visor preferido.
+                  </li>
+                  <li>
+                    <strong>Arrastra el estudio:</strong> Suelta el archivo descargado sobre la página del visor para examinar los cortes tomográficos.
+                  </li>
                 </ol>
               </div>
 
@@ -1003,7 +1132,7 @@ export default function ClinicalDocumentsSection({
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 rounded-xl hover:bg-teal-100 active:scale-95 transition shadow-2xs cursor-pointer"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  Abrir Visor DICOM (IMAIOS)
+                  Abrir Visor DICOM (SAGA Viewer)
                   <ArrowUpRight className="w-3 h-3 text-teal-600" />
                 </a>
 

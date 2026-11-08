@@ -49,6 +49,7 @@ class DocumentoClinico extends Model
     protected $appends = [
         'es_dicom',
         'tamanio_legible',
+        'tipo_documento_display',
     ];
 
     public function historiaClinica(): BelongsTo
@@ -97,5 +98,44 @@ class DocumentoClinico extends Model
             return number_format($bytes / 1024, 1) . ' KB';
         }
         return $bytes . ' B';
+    }
+
+    /**
+     * Retorna la denominación amigable del tipo de documento según el catálogo policlínico
+     */
+    public function getTipoDocumentoDisplayAttribute(): string
+    {
+        $map = [
+            'RADIOGRAFIA'           => 'Radiografía (Rayos X)',
+            'TOMOGRAFIA'            => 'Tomografía Computarizada (TAC)',
+            'RESONANCIA'            => 'Resonancia Magnética (RMN)',
+            'ECOGRAFIA'             => 'Ecografía Diagnóstica',
+            'MAMOGRAFIA'            => 'Mamografía Digital',
+            'ELECTROCARDIOGRAMA'    => 'Electrocardiograma (ECG)',
+            'ECOCARDIOGRAMA'        => 'Ecocardiograma Doppler',
+            'HOLTER'                => 'Estudio Holter / Presurometría',
+            'PRUEBA_ESFUERZO'       => 'Ergometría / Prueba de Esfuerzo',
+            'INFORME_LABORATORIO'   => 'Informe de Laboratorio General',
+            'HEMOGRAMA'             => 'Hemograma Completo',
+            'BIOQUIMICA'            => 'Bioquímica Clínica',
+            'UROANALISIS'           => 'Examen General de Orina',
+            'CULTIVO_MICROBIOLOGIA' => 'Cultivo y Antibiograma',
+            'BIOPSIA_PATOLOGIA'     => 'Biopsia / Anatomía Patológica',
+            'INFORME_CONSULTA'      => 'Informe de Consulta Externa',
+            'EPICRISIS'             => 'Epicrisis / Alta Médica',
+            'HISTORIA_PREVIA'       => 'Historia Clínica Externa',
+            'INTERCONSULTA'         => 'Informe de Interconsulta',
+            'FONDO_DE_OJO'          => 'Fondo de Ojo',
+            'TOPOGRAFIA_CORNEAL'    => 'Topografía Corneal',
+            'OCT'                   => 'Tomografía de Coherencia Óptica (OCT)',
+            'CAMPO_VISUAL'          => 'Campo Visual Computarizado',
+            'ECOGRAFIA_OCULAR'      => 'Ecografía Ocular',
+            'CONSENTIMIENTO'        => 'Consentimiento Informado',
+            'CERTIFICADO_MEDICO'    => 'Certificado Médico Oficial',
+            'INFORME_EXTERNO'       => 'Estudio Externo Particular',
+            'OTRO'                  => 'Otro Documento o Estudio',
+        ];
+
+        return $map[$this->tipo_documento] ?? str_replace('_', ' ', ucfirst(strtolower($this->tipo_documento ?? 'Documento')));
     }
 }

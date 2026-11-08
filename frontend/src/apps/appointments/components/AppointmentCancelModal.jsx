@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   AlertTriangle,
@@ -94,9 +95,13 @@ export function AppointmentCancelModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-modal-backdrop">
-      <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-rose-200/80 overflow-hidden flex flex-col animate-modal-panel">
-        {/* Cabecera del Modal */}
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={handleClose}
+      maxWidth="max-w-md"
+      panelClassName="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-rose-200/80 overflow-hidden flex flex-col animate-modal-panel my-auto"
+    >
+      {/* Cabecera del Modal */}
         <div className="px-6 py-4 bg-gradient-to-r from-rose-600 to-rose-700 text-white flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Ban className="w-5 h-5 text-rose-200" />
@@ -229,7 +234,6 @@ export function AppointmentCancelModal({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   Calendar,
@@ -253,9 +254,13 @@ export function AppointmentBookingModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-modal-backdrop">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-modal-panel my-8">
-        {/* Cabecera */}
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={onClose}
+      maxWidth="max-w-2xl"
+      panelClassName="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-modal-panel my-auto"
+    >
+      {/* Cabecera */}
         <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#004d5a] to-[#00687a] text-white">
           <div className="flex items-center gap-2.5">
             <div className="p-2 bg-white/10 rounded-xl">
@@ -875,7 +880,6 @@ export function AppointmentBookingModal({
             )}
           </div>
         )}
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

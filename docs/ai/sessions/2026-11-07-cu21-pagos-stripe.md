@@ -77,3 +77,4 @@ npm --prefix frontend run build
 - `npm --prefix frontend run build`: Compilación exitosa en 767ms con 2046 módulos transformados y 0 errores.
 - Conectividad en vivo con la API de Stripe verificada devolviendo HTTP 200 en `/v1/balance`.
 - Auditoría registrada en `Bitacora.php` con tipo `PROCESAR_PAGO_STRIPE`.
+

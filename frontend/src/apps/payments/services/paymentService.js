@@ -51,3 +51,4 @@ export const paymentService = {
     return await apiFetch(`/payments/receipt/${idPago}`);
   },
 };
+

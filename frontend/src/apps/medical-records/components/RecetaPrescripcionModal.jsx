@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { recetaService } from '../services/recetaService';
 import { antecedenteService } from '../services/antecedenteService';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 const ATRIBUTOS_DOSIS = ['500 mg', '1 g', '250 mg', '10 ml', '1 tableta', '1 cápsula', '2 puffs'];
 const ATRIBUTOS_FRECUENCIA = ['Cada 8 horas', 'Cada 12 horas', 'Cada 24 horas', 'En ayunas', 'Antes de dormir', 'PRN / Si hay dolor'];
@@ -123,9 +124,8 @@ export default function RecetaPrescripcionModal({
   if (!isOpen || !consulta) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-4xl my-6 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
-        {/* ENCABEZADO */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-4xl">
+      {/* ENCABEZADO */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-teal-50/70">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-teal-600 text-white shadow-sm">
@@ -409,7 +409,6 @@ export default function RecetaPrescripcionModal({
             </div>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

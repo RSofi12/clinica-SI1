@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, AlertTriangle, ShieldAlert, Ban, Loader2 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 /**
  * Modal de Anulación Lógica de Receta Médica (RN11 / CU18)
@@ -37,9 +38,8 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
   const faltan = Math.max(0, caracteresMinimos - motivo.trim().length);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
-        {/* Cabecera */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md">
+      {/* Cabecera */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-rose-100 bg-rose-50/70">
           <div className="flex items-center gap-2.5 text-rose-800">
             <div className="p-2 rounded-xl bg-rose-100 text-rose-700">
@@ -124,7 +124,6 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

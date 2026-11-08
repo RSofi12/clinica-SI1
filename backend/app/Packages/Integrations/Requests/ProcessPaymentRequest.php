@@ -35,3 +35,4 @@ class ProcessPaymentRequest extends FormRequest
         ];
     }
 }
+

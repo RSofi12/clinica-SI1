@@ -504,3 +504,4 @@ export default function StripePaymentModal({
     ? createPortal(modalContent, document.body)
     : null;
 }
+

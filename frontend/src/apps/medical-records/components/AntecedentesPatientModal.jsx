@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   AlertTriangle,
@@ -155,14 +156,13 @@ export function AntecedentesPatientModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
-        
+    <>
+      <ModalPortal
+        isOpen={isOpen}
+        onClose={onClose}
+        maxWidth="max-w-3xl"
+        panelClassName="bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-modal-panel flex flex-col max-h-[92vh]"
+      >
         {/* Header institucional */}
         <div className="bg-gradient-to-r from-[#003d47] via-[#005a69] to-[#00687a] p-5 sm:p-6 text-white relative shrink-0">
           <div className="flex items-start justify-between gap-4">
@@ -461,7 +461,7 @@ export function AntecedentesPatientModal({
             Cerrar
           </button>
         </div>
-      </div>
+      </ModalPortal>
 
       {/* Modal Secundario de Alta / Edición */}
       <AntecedenteFormModal
@@ -478,6 +478,6 @@ export function AntecedentesPatientModal({
           if (onUpdated) onUpdated();
         }}
       />
-    </div>
+    </>
   );
 }

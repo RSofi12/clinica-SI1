@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ModalPortal } from '../components/ModalPortal';
 import {
   Calendar,
   FileText,
@@ -1092,68 +1093,65 @@ export const HomePage = ({ onNavigateLogin, onOpenActivatePatient }) => {
       </footer>
 
       {/* Modal Fluido: Agendamiento Rápido de Cita */}
-      {isAppointmentModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-[#00171d]/60 backdrop-blur-sm animate-modal-backdrop"
-            onClick={() => setIsAppointmentModalOpen(false)}
-          />
-          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 sm:p-7 z-10 animate-modal-panel">
-            <button
-              onClick={() => setIsAppointmentModalOpen(false)}
-              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
-              aria-label="Cerrar modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
+      <ModalPortal
+        isOpen={isAppointmentModalOpen}
+        onClose={() => setIsAppointmentModalOpen(false)}
+        maxWidth="max-w-md"
+        panelClassName="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 sm:p-7 animate-modal-panel my-auto"
+      >
+        <button
+          onClick={() => setIsAppointmentModalOpen(false)}
+          className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label="Cerrar modal"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-            <div className="w-12 h-12 rounded-xl bg-[#e8f7f9] text-[#00687a] flex items-center justify-center mb-4">
-              <Calendar className="w-6 h-6" />
-            </div>
-
-            <h3 className="font-serif-clinical text-2xl text-[#003844] font-normal mb-2">
-              Reserva de Consulta
-            </h3>
-            <p className="text-sm text-slate-600 leading-relaxed mb-6 font-sans-clinical">
-              Para programar tu cita con el médico de guardia o especialista, puedes ingresar al portal con tu cédula o contactarnos directamente:
-            </p>
-
-            <div className="space-y-3 mb-6 font-sans-clinical">
-              <button
-                onClick={() => {
-                  setIsAppointmentModalOpen(false);
-                  onOpenActivatePatient?.();
-                }}
-                className="w-full flex items-center justify-between p-3.5 rounded-xl border border-[#b2e3ea] bg-[#f8fdfe] hover:bg-[#eefafb] text-left transition-colors group cursor-pointer"
-              >
-                <div>
-                  <div className="text-xs font-semibold text-[#003844]">Soy Paciente Registrado</div>
-                  <div className="text-[11px] text-slate-500">Ingresa o activa tu acceso con tu C.I.</div>
-                </div>
-                <ArrowRight className="w-4 h-4 text-[#00687a] group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <a
-                href="tel:+59133362211"
-                className="w-full flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-[#00687a] bg-white text-left transition-colors group"
-              >
-                <div>
-                  <div className="text-xs font-semibold text-[#003844]">Central Telefónica 24/7</div>
-                  <div className="text-[11px] text-slate-500">+591 (3) 336-2211 · Recepción y Triaje</div>
-                </div>
-                <Phone className="w-4 h-4 text-[#00687a]" />
-              </a>
-            </div>
-
-            <button
-              onClick={() => setIsAppointmentModalOpen(false)}
-              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors cursor-pointer"
-            >
-              Cerrar
-            </button>
-          </div>
+        <div className="w-12 h-12 rounded-xl bg-[#e8f7f9] text-[#00687a] flex items-center justify-center mb-4">
+          <Calendar className="w-6 h-6" />
         </div>
-      )}
+
+        <h3 className="font-serif-clinical text-2xl text-[#003844] font-normal mb-2">
+          Reserva de Consulta
+        </h3>
+        <p className="text-sm text-slate-600 leading-relaxed mb-6 font-sans-clinical">
+          Para programar tu cita con el médico de guardia o especialista, puedes ingresar al portal con tu cédula o contactarnos directamente:
+        </p>
+
+        <div className="space-y-3 mb-6 font-sans-clinical">
+          <button
+            onClick={() => {
+              setIsAppointmentModalOpen(false);
+              onOpenActivatePatient?.();
+            }}
+            className="w-full flex items-center justify-between p-3.5 rounded-xl border border-[#b2e3ea] bg-[#f8fdfe] hover:bg-[#eefafb] text-left transition-colors group cursor-pointer"
+          >
+            <div>
+              <div className="text-xs font-semibold text-[#003844]">Soy Paciente Registrado</div>
+              <div className="text-[11px] text-slate-500">Ingresa o activa tu acceso con tu C.I.</div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-[#00687a] group-hover:translate-x-1 transition-transform" />
+          </button>
+
+          <a
+            href="tel:+59133362211"
+            className="w-full flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-[#00687a] bg-white text-left transition-colors group"
+          >
+            <div>
+              <div className="text-xs font-semibold text-[#003844]">Central Telefónica 24/7</div>
+              <div className="text-[11px] text-slate-500">+591 (3) 336-2211 · Recepción y Triaje</div>
+            </div>
+            <Phone className="w-4 h-4 text-[#00687a]" />
+          </a>
+        </div>
+
+        <button
+          onClick={() => setIsAppointmentModalOpen(false)}
+          className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-xl transition-colors cursor-pointer"
+        >
+          Cerrar
+        </button>
+      </ModalPortal>
     </div>
   );
 };
