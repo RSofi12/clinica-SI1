@@ -214,11 +214,11 @@ export default function StripePaymentModal({
             </div>
             <h2 className="text-xl sm:text-2xl font-bold font-serif-clinical tracking-tight flex items-center gap-2">
               <CreditCard className="w-5 h-5 text-cyan-300" />
-              {step === 'SUCCESS' ? 'Comprobante de Pago' : 'Pagar Cita Médica'}
+              {step === 'SUCCESS' ? '¡Pago Realizado con Éxito!' : 'Pagar Cita Médica'}
             </h2>
             <p className="text-xs text-cyan-100/80 mt-1 max-w-sm">
               {step === 'SUCCESS'
-                ? 'La cita ha sido garantizada y registrada en la contabilidad clínica.'
+                ? 'El cobro ha sido confirmado en Stripe y la cita médica quedó garantizada.'
                 : 'Procesamiento de tarjeta tokenizada y confirmación de reserva médica.'}
             </p>
           </div>
@@ -408,19 +408,20 @@ export default function StripePaymentModal({
         {/* CUERPO PASO 2: RECIBO EXITOSO */}
         {step === 'SUCCESS' && pagoExitoso && (
           <div className="p-6 space-y-5 text-center">
-            <div className="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center mx-auto text-emerald-600 shadow-xs">
-              <CheckCircle2 className="w-9 h-9" />
+            <div className="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-300 flex items-center justify-center mx-auto text-emerald-600 shadow-sm animate-in zoom-in-50 duration-300">
+              <CheckCircle2 className="w-10 h-10" />
             </div>
 
             <div>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                ¡Pago Confirmado en Stripe!
+              <span className="px-3.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300 tracking-wide uppercase inline-flex items-center gap-1.5 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                ¡Pago Realizado con Éxito!
               </span>
               <h3 className="text-xl font-bold font-serif-clinical text-slate-900 mt-2">
-                Cita Médica Garantizada
+                Cita Médica Pagada y Garantizada
               </h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
-                Se ha emitido el recibo electrónico de la clínica y la cita pasó a estado confirmado.
+                El cobro por <strong className="text-slate-800">Bs. {Number(pagoExitoso.monto || montoMostrar).toFixed(2)}</strong> fue procesado satisfactoriamente vía Stripe Sandbox. Se emitió el comprobante electrónico oficial.
               </p>
             </div>
 
@@ -489,9 +490,10 @@ export default function StripePaymentModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#003844] to-[#00687a] text-xs font-bold text-white hover:shadow-md transition-all cursor-pointer"
+                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#003844] to-[#00687a] hover:from-[#002b34] hover:to-[#005564] text-xs font-bold text-white shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center gap-2"
               >
-                Aceptar y Finalizar
+                <CheckCircle2 className="w-4 h-4 text-cyan-300" />
+                <span>Aceptar y Finalizar</span>
               </button>
             </div>
           </div>

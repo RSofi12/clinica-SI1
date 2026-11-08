@@ -1,5 +1,15 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Pantalla de Confirmación y Alerta de Pago Realizado en Stripe — CU21)
+- **Confirmación Visual y Alerta de Pago Realizado (`StripePaymentModal.jsx` y `AppointmentsManager.jsx`):**
+  - **Causa del Cierre Abrupto:** `AppointmentsManager.jsx` invocaba `setPayingAppointment(null)` inmediatamente dentro del callback `onSuccess`, desmontando el modal antes de que el usuario pudiera ver el comprobante y confirmación de pago (`step === 'SUCCESS'`).
+  - **Flujo Visual Corregido:**
+    - Al confirmarse el cobro en Stripe, el modal se mantiene abierto y transiciona con animación al paso de éxito, mostrando de forma prominente: badge `¡PAGO REALIZADO CON ÉXITO!`, check verde, título `Cita Médica Pagada y Garantizada`, desglose formal del recibo institucional `PAG-XXXX`, importe en `Bs.`, enlace a Stripe Sandbox y botón `Imprimir Recibo`.
+    - Al pulsar `Aceptar y Finalizar` o cerrar la ventana, el modal se cierra y la vista principal de citas (`AppointmentsManager.jsx`) despliega una tarjeta de notificación verde esmeralda destacada con el código de cita, recibo emitido y confirmación de estado actualizado a `Confirmada`.
+    - Actualización en segundo plano de las citas médicas sin parpadeos ni recargas invasivas.
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
 - **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
   - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`Matrícula:`, `•`, `Agenda Médica Personal`, `día`, `Miércoles`, `Sábado`, `Consulta Médica`, etc.).

@@ -80,6 +80,16 @@ export function AppointmentsManager() {
   const [statusModalAppointment, setStatusModalAppointment] = useState(null);
   const [statusModalAction, setStatusModalAction] = useState(null);
   const [payingAppointment, setPayingAppointment] = useState(null);
+  const [paymentSuccessAlert, setPaymentSuccessAlert] = useState(null);
+
+  // Auto-descartar alerta de pago tras 8 segundos
+  useEffect(() => {
+    if (!paymentSuccessAlert) return;
+    const timer = setTimeout(() => {
+      setPaymentSuccessAlert(null);
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, [paymentSuccessAlert]);
 
   // Cargar lista de médicos para filtro
   useEffect(() => {
@@ -437,6 +447,39 @@ export function AppointmentsManager() {
           )}
         </div>
       </div>
+
+      {/* Alerta Destacada de Pago Realizado */}
+      {paymentSuccessAlert && (
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/90 shadow-xs flex items-center justify-between gap-3 text-emerald-900 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <div className="text-xs">
+              <div className="font-bold text-sm text-emerald-950 flex items-center gap-2">
+                <span>¡Pago realizado con éxito!</span>
+                {paymentSuccessAlert.codigo_pago && (
+                  <span className="font-mono text-xs px-2 py-0.5 rounded-md bg-emerald-200/70 text-emerald-900 font-bold border border-emerald-300">
+                    {paymentSuccessAlert.codigo_pago}
+                  </span>
+                )}
+              </div>
+              <p className="text-emerald-800 mt-0.5">
+                La cita <strong>{paymentSuccessAlert.codigo_cita}</strong> fue pagada exitosamente por un monto de{' '}
+                <strong>Bs. {Number(paymentSuccessAlert.monto || 0).toFixed(2)}</strong> vía Stripe Sandbox y su estado pasó a <strong>Confirmada</strong>.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPaymentSuccessAlert(null)}
+            className="p-1.5 rounded-lg text-emerald-700 hover:bg-emerald-100 transition cursor-pointer shrink-0"
+            title="Cerrar aviso"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* Pestañas de Navegación: Citas vs Disponibilidad vs Agenda Diaria */}
       <div className="flex border-b border-slate-200 overflow-x-auto scrollbar-none">
@@ -1070,10 +1113,18 @@ export function AppointmentsManager() {
       <StripePaymentModal
         isOpen={Boolean(payingAppointment)}
         cita={payingAppointment}
-        onClose={() => setPayingAppointment(null)}
-        onSuccess={() => {
+        onClose={() => {
           setPayingAppointment(null);
           loadAppointments(pagination.current_page);
+        }}
+        onSuccess={(pagoData) => {
+          // Refrescar la lista de citas en segundo plano
+          loadAppointments(pagination.current_page);
+          setPaymentSuccessAlert({
+            codigo_cita: payingAppointment?.codigo_cita,
+            monto: pagoData?.monto || payingAppointment?.especialidad?.precio_consulta,
+            codigo_pago: pagoData?.codigo_pago,
+          });
         }}
       />
     </div>
