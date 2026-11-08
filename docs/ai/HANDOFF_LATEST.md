@@ -1,5 +1,23 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Homologación Integral de Accesos Rápidos por Rol: Recepción, Médico, Paciente, Admin)
+- **Refinamiento Contextual de la Matriz de Trazabilidad (`ClinicalDashboardView.jsx`):**
+  - **CU01 (Autenticación):** Acción condicional: `Bloqueo →` para Administrador (políticas de seguridad) y `Sesión Activa` para Recepcionista, Médico y Paciente.
+  - **CU09 & CU12:** Agregado rol `MEDICO` para consulta de disponibilidad y cancelaciones por contingencias de fuerza mayor.
+  - **CU13 (Asistencia):** Etiqueta contextual: `Check-in →` para Recepción; `Asistencia →` para Médico y Administrador.
+  - **CU17 (Antecedentes):** Etiqueta contextual: `Mis Antecedentes →` para Paciente; `Ver Ficha →` para Médico y Administrador.
+  - **CU18 (Recetas):** Etiqueta contextual: `Comprobantes →` para Recepción; `Mis Recetas →` para Paciente; `Recetario →` para Médico/Admin.
+  - **CU19 (Expediente):** Etiqueta contextual: `Mi Historia →` para Paciente; `Expediente →` para Médico/Admin.
+  - **CU21 (Stripe):** Etiqueta contextual: `Cobro Caja →` para Recepción; `Pasarela →` para Paciente/Admin.
+  - **CU25 (Órdenes de Exámenes):** Incorporado rol `RECEPCIONISTA` con acción `Órdenes Cita →` redirigiendo a `appointments`.
+- **Enriquecimiento del Portal de Inicio por Rol (`InicioPanelView.jsx`):**
+  - **RECEPCIONISTA:** Ampliado a 12 accesos rápidos directos (Padrón CU04, Citas CU09/10, Agenda Diaria CU14, Check-in CU13, Reprogramar CU11, Historial CU15, Cuentas Web CI CU05, Recetario/Comprobantes CU18, Cobros Stripe CU21, Recordatorios CU20, Reportes Dinámicos CU22, Dashboard Clínico CU24).
+  - **MÉDICO:** Agregadas tarjetas de Antecedentes Médicos (CU17) y Estados de Consulta (CU13).
+  - **PACIENTE:** Agregadas tarjetas de Reprogramar Cita (CU11) y Mis Avisos y Alertas (CU20).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2052 módulos, 861ms) generando bundle `backend/public/assets/index-ynxU0n0B.js`.
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Actualización de Matriz de Trazabilidad y Accesos Rápidos — CU01 a CU26)
 - **Sincronización Total de Casos de Uso en Dashboard (`ClinicalDashboardView.jsx`):**
   - Se actualizaron las tarjetas de Casos de Uso que figuraban como "En desarrollo" (`CU13`, `CU20`, `CU21`, `CU25`, `CU26`) a **`implementado`**, reflejando la completitud oficial del 100% de los 26 Casos de Uso (Ciclos 1 y 2).
