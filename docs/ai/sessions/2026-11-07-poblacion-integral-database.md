@@ -81,3 +81,23 @@ Implementado seeder especializado [`OperationalClinicalSeeder.php`](file:///c:/U
 - **`documentos_clinicos` (8 registros):** Adjuntos digitales con archivos DICOM nativos (`.dcm` de ~8 a 22MB) simulados en Cloudinary y PDFs de laboratorio e interconsultas (CU26).
 - **`reportes_ia` (10 registros):** Histórico de reportes ejecutados por comandos de voz con JSON estructurado (CU23).
 - **Tablas reservadas en 0 registros:** `notificaciones` y `push_suscripciones` (CU20 aún no implementado en frontend) y `analisis_clinicos` (descartada al ser reserva de CU28-OPC).
+
+---
+
+## 6. Historial Clínico Extenso y Antecedentes (Pacientes 41 al 50)
+Implementado [`ExtendedClinicalHistorySeeder.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/database/seeders/ExtendedClinicalHistorySeeder.php):
+- **10 Pacientes Nuevos (IDs 41 al 50):** Con datos demográficos bolivianos verosímiles, contactos de emergencia y cuentas en `usuarios`.
+- **Antecedentes Médicos (28 nuevos antecedentes, 38 en total):** Cardiopatía isquémica, bypass gástrico, EPOC, reemplazo de rodilla, alergia a sulfas y penicilina, tiroiditis de Hashimoto, insuficiencia cardíaca.
+- **Rango Temporal de Citas a 4 Meses (~120 días):** 50 citas nuevas distribuidas de forma escalonada entre 120 días atrás y próximos días con protección anti-colisión horaria.
+- **Consultas Médicas y Triaje:** 44 consultas médicas nuevas con signos vitales, diagnósticos CIE-10 (*I25.9*, *E03.9*, *E11.4*, *J45.0*, *I10*, *K29.4*, *J44.9*, *I50.9*, *G43.0*), evoluciones y recetas.
+- **Órdenes y Documentos Clínicos:** 20 órdenes de exámenes diagnósticos auxiliares (CU25) y 20 documentos clínicos adjuntos incluyendo series de imagenología en estándar **DICOM** (`.dcm`) y PDFs (CU26).
+- **Pagos Transaccionales (CU21):** 44 pagos nuevos en efectivo y QR asociados a las atenciones.
+- **Métricas Consolidadas:**
+  - Pacientes: 50
+  - Historias Clínicas: 50 (100% apertura)
+  - Antecedentes: 38
+  - Citas Médicas: 160
+  - Consultas Médicas / Diagnósticos / Recetas: 127
+  - Órdenes de Exámenes: 64
+  - Documentos Clínicos: 36
+  - Pagos: 142

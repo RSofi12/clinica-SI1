@@ -200,5 +200,8 @@ class DatabaseSeeder extends Seeder
 
         // 12. Poblar módulos de apoyo clínico y financiero (bloqueos, órdenes, DICOM, pagos y reportes IA)
         $this->call(OperationalClinicalSeeder::class);
+
+        // 13. Poblar historial clínico extenso y antecedentes para 10 pacientes en rango de 4 meses (IDs 41 al 50)
+        $this->call(ExtendedClinicalHistorySeeder::class);
     }
 }
