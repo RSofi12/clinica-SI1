@@ -1,5 +1,16 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Documento Oficial Completo de Impresión para Expediente Clínico Digital — CU19 / RF10)
+- **Corrección de Truncamiento en Impresión de Expediente (`ExpedienteClinicoView.jsx`):**
+  - **Diagnóstico:** El contenedor de pestañas interactivas tenía aplicada la clase CSS `print:hidden`, provocando que al pulsar "Imprimir Expediente" la vista previa del navegador solo generara 1 página recortada con la ficha demográfica y los signos vitales, omitiendo todo el historial clínico, antecedentes, consultas y recetas.
+  - **Solución de Diseño Dual:**
+    - La vista web interactiva (selectores, tabs, botones de acción) fue aislada con `print:hidden`.
+    - Se incorporó la sección médica formal `#print-official-expediente` (`hidden print:block`), diseñada específicamente para exportación a PDF o impresión en papel.
+    - Incluye membrete institucional de *Centro Médico La Cruz — Clínica Vida Salud*, ficha demográfica completa, alertas de alergias, antecedentes patológicos y familiares (CU17), constantes vitales/triaje, historial cronológico de consultas con diagnósticos CIE-10 (CU16), recetas con posología (CU18), órdenes de exámenes auxiliares (CU25), bloque legal para firma del paciente/tutor y sello profesional del médico tratante.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2051 módulos, 752ms).
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Ordenamiento Alfabético Universal en Desplegables de Nombres)
 - **Estandarización Alfabética (A-Z) en Selectores y Catálogos:**
   - **Expediente Clínico Digital (`ExpedienteClinicoView.jsx`):** El desplegable de pacientes ahora lista a todos los pacientes en orden alfabético estricto de A a Z por `Apellidos, Nombres` (`Aguilera`, `Baldivieso`, `Barbery`... `Zeballos`), eliminando el orden inverso de ID.

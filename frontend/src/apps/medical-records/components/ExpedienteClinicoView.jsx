@@ -219,8 +219,18 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
     return { label: 'Obesidad', color: 'bg-rose-100 text-rose-800 border-rose-300' };
   };
 
+  const fechaHoy = new Date().toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <>
+      {/* VISTA EN PANTALLA (OCULTA EN IMPRESIÓN) */}
+      <div className="space-y-6 max-w-7xl mx-auto pb-12 print:hidden">
       {/* CABECERA PRINCIPAL Y SELECTOR DE PACIENTE */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 print:border-none print:shadow-none print:p-0">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b border-slate-100 print:border-none">
@@ -1253,7 +1263,423 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
           </div>
         </div>
       )}
-    </div>
+      </div>
+
+      {/* =========================================================================
+          SECCIÓN OFICIAL DE IMPRESIÓN Y EXPORTACIÓN A PDF (@media print)
+          Visible ÚNICAMENTE al imprimir o exportar a PDF (window.print())
+          ========================================================================= */}
+      {paciente && (
+        <div id="print-official-expediente" className="hidden print:block text-slate-900 bg-white p-2 space-y-5">
+          {/* 1. Membrete Institucional Oficial */}
+          <div className="border-b-2 border-[#003844] pb-4 flex items-start justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-[#003844] text-white flex items-center justify-center font-bold text-xl font-serif-clinical shrink-0">
+                +
+              </div>
+              <div>
+                <h1 className="text-xl font-bold font-serif-clinical tracking-tight text-slate-900 leading-tight">
+                  CENTRO MÉDICO LA CRUZ — VIDA SALUD
+                </h1>
+                <p className="text-xs font-semibold text-[#00687a] uppercase tracking-wide">
+                  Clínica de Atención Primaria Integral • Expediente Clínico Digital Único (CU19 / RF10)
+                </p>
+                <p className="text-[10px] text-slate-500">
+                  Av. Principal Los Próceres #124 • Santa Cruz de la Sierra, Bolivia • Tel: +591 (3) 345-6789
+                </p>
+              </div>
+            </div>
+
+            <div className="text-right text-xs">
+              <span className="inline-block px-2.5 py-0.5 rounded bg-slate-100 font-mono text-[9px] font-bold text-slate-800 uppercase mb-1 border border-slate-300">
+                HISTORIAL CLÍNICO OFICIAL
+              </span>
+              <p className="font-bold text-slate-900 text-sm font-mono">
+                {paciente.numero_historia || `HC-${paciente.id_paciente}`}
+              </p>
+              <p className="text-[10px] text-slate-500">Estado: <strong className="text-emerald-700">{paciente.estado_paciente || 'ACTIVO'}</strong></p>
+              <p className="text-[10px] text-slate-400">Emisión: {fechaHoy}</p>
+            </div>
+          </div>
+
+          {/* 2. Ficha de Identificación del Paciente y Contactos */}
+          <div className="border border-slate-300 rounded-lg p-3 bg-slate-50/50 text-xs">
+            <div className="text-[10px] font-bold text-slate-700 uppercase tracking-wider pb-1.5 mb-2 border-b border-slate-200 flex items-center justify-between">
+              <span>Ficha Demográfica del Paciente</span>
+              <span className="font-mono text-slate-500 text-[10px]">Doc: {paciente.numero_documento}</span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-x-4 gap-y-1.5 text-xs">
+              <div className="col-span-2">
+                <span className="text-[10px] text-slate-400 block uppercase">Nombre Completo</span>
+                <span className="text-sm font-bold text-slate-900">{paciente.nombres} {paciente.apellidos}</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 block uppercase">Cédula de Identidad</span>
+                <span className="font-mono font-bold text-slate-800">{paciente.numero_documento}</span>
+              </div>
+
+              <div>
+                <span className="text-[10px] text-slate-400 block uppercase">Edad / Grupo Etario</span>
+                <span className="font-semibold text-slate-800">{paciente.edad} años ({paciente.grupo_etario})</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 block uppercase">Sexo</span>
+                <span className="font-semibold text-slate-800">
+                  {paciente.sexo === 'M' || paciente.sexo === 'MASCULINO' ? 'Masculino' : paciente.sexo === 'F' || paciente.sexo === 'FEMENINO' ? 'Femenino' : paciente.sexo}
+                </span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 block uppercase">Grupo Sanguíneo</span>
+                <span className="font-bold text-slate-900 font-mono">{paciente.tipo_sangre || 'No registrado'}</span>
+              </div>
+
+              <div>
+                <span className="text-[10px] text-slate-400 block uppercase">Teléfono de Contacto</span>
+                <span className="text-slate-800">{paciente.telefono || 'Sin teléfono'}</span>
+              </div>
+              <div className="col-span-2">
+                <span className="text-[10px] text-slate-400 block uppercase">Dirección Domiciliaria</span>
+                <span className="text-slate-800">{paciente.direccion || 'Sin dirección registrada'}</span>
+              </div>
+
+              {paciente.contactos_emergencia?.length > 0 && (
+                <div className="col-span-3 pt-2 mt-1 border-t border-slate-200">
+                  <span className="text-[10px] font-bold text-slate-600 uppercase block mb-1">
+                    Contactos de Emergencia Designados:
+                  </span>
+                  <div className="flex flex-wrap gap-4 text-xs">
+                    {paciente.contactos_emergencia.map((c, i) => (
+                      <span key={c.id_contacto || i} className="text-slate-700">
+                        <strong>{c.nombre}</strong> ({c.parentesco}) — Tel: <strong>{c.telefono}</strong>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 3. Alertas de Alergias y Antecedentes Clínicos (CU17) */}
+          <div className="border border-slate-300 rounded-lg p-3 text-xs space-y-2.5">
+            <div className="text-[10px] font-bold text-slate-700 uppercase tracking-wider pb-1 border-b border-slate-200">
+              Antecedentes Clínicos y Alertas Médicas (CU17)
+            </div>
+
+            {/* Alergias */}
+            {resumen.alertas_alergicas && resumen.alertas_alergicas.length > 0 ? (
+              <div className="p-2.5 rounded bg-rose-50 border border-rose-200">
+                <span className="text-[10px] font-bold text-rose-800 uppercase block mb-1">
+                  ¡Alertas Alérgicas Activas Registradas!
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {resumen.alertas_alergicas.map((a) => (
+                    <span key={a.id_antecedente} className="px-2 py-0.5 rounded bg-white text-rose-700 font-bold border border-rose-300 text-[11px]">
+                      {a.nombre} ({a.severidad || 'ALTA'}) {a.observaciones ? `— ${a.observaciones}` : ''}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-1.5 rounded border border-emerald-200 font-medium">
+                ✔ Sin alergias activas registradas en la historia clínica.
+              </p>
+            )}
+
+            {/* Antecedentes Patológicos y Familiares */}
+            {antecedentes.length > 0 ? (
+              <table className="w-full text-left text-xs border-collapse mt-2">
+                <thead>
+                  <tr className="border-b border-slate-200 text-[10px] text-slate-500 uppercase font-semibold">
+                    <th className="py-1 w-28">Categoría</th>
+                    <th className="py-1">Nombre / Diagnóstico Previo</th>
+                    <th className="py-1">Observaciones / Tratamiento</th>
+                    <th className="py-1 w-24 text-right">Estado</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {antecedentes.map((ant, idx) => (
+                    <tr key={ant.id_antecedente || idx}>
+                      <td className="py-1 font-semibold text-slate-700 text-[10px]">{ant.tipo}</td>
+                      <td className="py-1 font-bold text-slate-900">{ant.nombre}</td>
+                      <td className="py-1 text-slate-600 text-[11px]">{ant.observaciones || '—'}</td>
+                      <td className="py-1 text-right text-[10px] font-mono text-slate-700">{ant.estado || 'ACTIVO'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-slate-400 italic text-[11px]">No se registran antecedentes patológicos ni quirúrgicos previos.</p>
+            )}
+          </div>
+
+          {/* 4. Último Registro de Signos Vitales y Triaje */}
+          {resumen.ultimo_triaje && (
+            <div className="border border-slate-300 rounded-lg p-3 text-xs">
+              <div className="text-[10px] font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center justify-between pb-1 border-b border-slate-200">
+                <span>Último Registro de Constantes Vitales y Triaje Clínico</span>
+                <span className="text-[10px] font-normal text-slate-500 font-mono">Fecha: {resumen.ultimo_triaje.fecha}</span>
+              </div>
+              <div className="grid grid-cols-6 gap-2 text-center text-xs">
+                <div className="p-1.5 bg-slate-50 rounded border border-slate-200">
+                  <span className="text-[9px] text-slate-500 block uppercase">P. Arterial</span>
+                  <span className="font-bold text-slate-900 font-mono">{resumen.ultimo_triaje.presion_arterial || '—'}</span>
+                  <span className="text-[8px] text-slate-400 block">mmHg</span>
+                </div>
+                <div className="p-1.5 bg-slate-50 rounded border border-slate-200">
+                  <span className="text-[9px] text-slate-500 block uppercase">Frec. Cardíaca</span>
+                  <span className="font-bold text-slate-900 font-mono">{resumen.ultimo_triaje.frecuencia_cardiaca || '—'}</span>
+                  <span className="text-[8px] text-slate-400 block">lpm</span>
+                </div>
+                <div className="p-1.5 bg-slate-50 rounded border border-slate-200">
+                  <span className="text-[9px] text-slate-500 block uppercase">Temperatura</span>
+                  <span className="font-bold text-slate-900 font-mono">{resumen.ultimo_triaje.temperatura ? `${resumen.ultimo_triaje.temperatura} °C` : '—'}</span>
+                  <span className="text-[8px] text-slate-400 block">Axilar</span>
+                </div>
+                <div className="p-1.5 bg-slate-50 rounded border border-slate-200">
+                  <span className="text-[9px] text-slate-500 block uppercase">Saturación O₂</span>
+                  <span className="font-bold text-slate-900 font-mono">{resumen.ultimo_triaje.saturacion_oxigeno ? `${resumen.ultimo_triaje.saturacion_oxigeno} %` : '—'}</span>
+                  <span className="text-[8px] text-slate-400 block">SpO₂</span>
+                </div>
+                <div className="p-1.5 bg-slate-50 rounded border border-slate-200">
+                  <span className="text-[9px] text-slate-500 block uppercase">Peso / Talla</span>
+                  <span className="font-bold text-slate-900 font-mono text-[11px]">
+                    {resumen.ultimo_triaje.peso ? `${resumen.ultimo_triaje.peso} kg` : '—'} / {resumen.ultimo_triaje.altura ? `${resumen.ultimo_triaje.altura} cm` : '—'}
+                  </span>
+                  <span className="text-[8px] text-slate-400 block">Antropometría</span>
+                </div>
+                <div className="p-1.5 bg-slate-50 rounded border border-slate-200">
+                  <span className="text-[9px] text-slate-500 block uppercase">IMC</span>
+                  <span className="font-bold text-slate-900 font-mono">{resumen.ultimo_triaje.imc || '—'}</span>
+                  <span className="text-[8px] font-bold text-slate-600 block">{getImcBadge(resumen.ultimo_triaje.imc)?.label || 'Normal'}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 5. Historial de Consultas Médicas Ambulatorias (CU16) */}
+          <div className="space-y-3">
+            <div className="border-b-2 border-slate-300 pb-1 flex items-center justify-between">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Historial de Consultas Médicas y Actos Clínicos ({consultas.length})
+              </h3>
+              <span className="text-[10px] text-slate-500">Paquete 4 · CU16</span>
+            </div>
+
+            {consultas.length === 0 ? (
+              <p className="text-xs text-slate-400 italic p-3 border border-slate-200 rounded-lg">
+                No se registran atenciones clínicas ambulatorias en el historial del paciente.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {consultas.map((c, idx) => (
+                  <div key={c.id_consulta || idx} className="border border-slate-300 rounded-lg p-3 text-xs space-y-2 break-inside-avoid bg-white">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900">Consulta #{c.id_consulta}</span>
+                        <span className="text-slate-400">•</span>
+                        <span className="text-slate-600 font-mono">{c.fecha_consulta || c.created_at}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-bold text-slate-800">
+                          Dr(a). {c.medico ? `${c.medico.nombres} ${c.medico.apellidos}` : 'Médico General'}
+                        </span>
+                        {c.medico?.codigo_profesional && (
+                          <span className="text-[10px] text-slate-500 block font-mono">
+                            Matrícula: {c.medico.codigo_profesional}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Motivo */}
+                    <div>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase block">Motivo de Consulta:</span>
+                      <p className="text-slate-800 font-medium">{c.motivo_consulta || 'Sin motivo especificado'}</p>
+                    </div>
+
+                    {/* Diagnósticos */}
+                    {c.diagnosticos && c.diagnosticos.length > 0 && (
+                      <div className="pt-1 border-t border-slate-100">
+                        <span className="text-[10px] font-bold text-[#00687a] uppercase block mb-1">
+                          Diagnóstico(s) CIE-10:
+                        </span>
+                        <div className="space-y-0.5">
+                          {c.diagnosticos.map((d, di) => (
+                            <div key={d.id_diagnostico || di} className="flex items-center justify-between text-[11px]">
+                              <span>
+                                <strong className="font-mono text-slate-800">{d.codigo_cie10 || 'CIE-10'}</strong> — {d.descripcion}
+                              </span>
+                              <span className="text-[10px] font-semibold text-slate-600">{d.tipo || 'DEFINITIVO'}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Conducta / Plan */}
+                    {c.plan_tratamiento && (
+                      <div className="pt-1 border-t border-slate-100">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Plan Terapéutico y Conducta:</span>
+                        <p className="text-slate-700 whitespace-pre-line text-[11px]">{c.plan_tratamiento}</p>
+                      </div>
+                    )}
+
+                    {/* Observaciones */}
+                    {c.observaciones && (
+                      <div className="pt-1 border-t border-slate-100">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase block">Observaciones y Examen Físico:</span>
+                        <p className="text-slate-600 whitespace-pre-line text-[11px] italic">{c.observaciones}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 6. Historial de Prescripciones Farmacológicas (Recetas - CU18) */}
+          <div className="space-y-3 break-inside-avoid">
+            <div className="border-b-2 border-slate-300 pb-1 flex items-center justify-between">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Prescripciones Médicas y Recetas Emitidas ({recetas.length})
+              </h3>
+              <span className="text-[10px] text-slate-500">Paquete 4 · CU18</span>
+            </div>
+
+            {recetas.length === 0 ? (
+              <p className="text-xs text-slate-400 italic p-3 border border-slate-200 rounded-lg">
+                Sin prescripciones farmacológicas emitidas en el historial.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {recetas.map((r, ri) => (
+                  <div key={r.id_receta || ri} className="border border-slate-300 rounded-lg p-3 text-xs space-y-2 break-inside-avoid bg-white">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
+                      <div>
+                        <span className="font-bold text-slate-900">Receta Médica Nº {r.id_receta}</span>
+                        <span className="text-slate-400 ml-2">•</span>
+                        <span className="text-slate-600 font-mono ml-2">Fecha: {r.fecha_emision}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-semibold text-slate-800">
+                          Dr(a). {r.medico ? `${r.medico.nombres} ${r.medico.apellidos}` : 'Médico Prescriptor'}
+                        </span>
+                        <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 ml-2 border border-slate-200">
+                          {r.estado || 'EMITIDA'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {r.detalles && r.detalles.length > 0 ? (
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="border-b border-slate-200 text-[9px] text-slate-500 uppercase font-semibold">
+                            <th className="py-1">Medicamento</th>
+                            <th className="py-1">Dosis</th>
+                            <th className="py-1">Frecuencia</th>
+                            <th className="py-1">Duración</th>
+                            <th className="py-1">Indicaciones</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {r.detalles.map((med, mi) => (
+                            <tr key={med.id_detalle || mi}>
+                              <td className="py-1 font-bold text-slate-900">{med.medicamento}</td>
+                              <td className="py-1 text-slate-700">{med.dosis || '—'}</td>
+                              <td className="py-1 text-slate-700">{med.frecuencia || '—'}</td>
+                              <td className="py-1 text-slate-700">{med.duracion || med.duracion_dias || '—'}</td>
+                              <td className="py-1 text-slate-600 italic text-[11px]">{med.indicaciones || '—'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <p className="text-slate-400 italic text-[11px]">Sin detalle de fármacos especificado.</p>
+                    )}
+
+                    {r.indicaciones_generales && (
+                      <p className="text-[10px] text-slate-600 italic pt-1 border-t border-slate-100">
+                        <strong>Indicaciones generales:</strong> {r.indicaciones_generales}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 7. Órdenes de Exámenes Auxiliares (CU25) */}
+          {ordenes.length > 0 && (
+            <div className="space-y-2 break-inside-avoid">
+              <div className="border-b-2 border-slate-300 pb-1 flex items-center justify-between">
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                  Órdenes de Exámenes Auxiliares ({ordenes.length})
+                </h3>
+                <span className="text-[10px] text-slate-500">Paquete 5 · CU25</span>
+              </div>
+              <table className="w-full text-left text-xs border-collapse border border-slate-200">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-[10px] text-slate-600 uppercase font-semibold">
+                    <th className="p-1.5">Código</th>
+                    <th className="p-1.5">Estudio Solicitado</th>
+                    <th className="p-1.5">Tipo</th>
+                    <th className="p-1.5">Médico Solicitante</th>
+                    <th className="p-1.5 text-right">Estado</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {ordenes.map((ord, oi) => (
+                    <tr key={ord.id_orden || oi}>
+                      <td className="p-1.5 font-mono font-bold text-slate-800">{ord.codigo_orden || `ORD-${ord.id_orden}`}</td>
+                      <td className="p-1.5 font-semibold text-slate-900">{ord.nombre_estudio}</td>
+                      <td className="p-1.5 text-slate-600 text-[11px]">{ord.tipo_estudio}</td>
+                      <td className="p-1.5 text-slate-700">Dr(a). {ord.medico?.nombres} {ord.medico?.apellidos}</td>
+                      <td className="p-1.5 text-right font-mono text-[10px] font-bold text-slate-700">{ord.estado}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* 8. Firmas de Conformidad y Validez Legal */}
+          <div className="pt-8 grid grid-cols-2 gap-8 text-center break-inside-avoid">
+            {/* Firma del Paciente */}
+            <div className="pt-8 border-t border-slate-400 space-y-0.5">
+              <p className="text-xs font-bold text-slate-900">
+                {paciente.nombres} {paciente.apellidos}
+              </p>
+              <p className="text-[10px] text-slate-500 font-mono">
+                CI: {paciente.numero_documento}
+              </p>
+              <p className="text-[9px] text-slate-400 uppercase tracking-wider">
+                Firma de Conformidad / Paciente o Tutor
+              </p>
+            </div>
+
+            {/* Sello y Firma del Profesional / Dirección Médica */}
+            <div className="pt-8 border-t border-slate-400 space-y-0.5">
+              <p className="text-xs font-bold text-slate-900">
+                {user ? `Dr(a). ${user.name || user.username}` : 'Dirección Médica'}
+              </p>
+              <p className="text-[10px] text-slate-600">
+                Centro Médico La Cruz — Acreditación Sanitaria
+              </p>
+              <p className="text-[9px] text-[#00687a] font-bold uppercase tracking-wider">
+                Sello y Firma Profesional Autorizada
+              </p>
+            </div>
+          </div>
+
+          {/* 9. Pie de Página Institucional */}
+          <div className="border-t border-slate-200 pt-2 flex items-center justify-between text-[9px] text-slate-400 break-inside-avoid">
+            <span>Centro Médico La Cruz — Clínica Vida Salud • Expediente Clínico Inmutable (Ley de Salud y Normativa RUP)</span>
+            <span>Generado el: {fechaHoy}</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

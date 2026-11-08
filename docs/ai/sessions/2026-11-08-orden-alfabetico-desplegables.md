@@ -56,3 +56,4 @@ El usuario observó en el selector de pacientes de **Expediente Clínico y Antec
 # Ninguna migración nueva requerida
 npm --prefix frontend run build
 ```
+

@@ -400,7 +400,7 @@
     - Banner destacado de Alertas Médicas (alergias activas en rose/amber y crónicos).
     - Widget de signos vitales y triaje con semáforo OMS de IMC (Bajo peso, Normal, Sobrepeso, Obesidad).
     - 5 pestañas de navegación: Línea de Tiempo (timeline vertical conectada con iconos temáticos), Consultas Médicas (acordeón con diagnósticos CIE-10), Prescripciones (con visor de receta membretada), Antecedentes y Contactos de Emergencia.
-    - Soporte completo para impresión oficial (`@media print`) omitiendo elementos interactivos.
+    - Soporte completo para impresión oficial multipágina (`@media print` con `#print-official-expediente`): Membrete institucional oficial del Centro Médico La Cruz, ficha demográfica del paciente, alertas alérgicas, antecedentes médicos (CU17), signos vitales y triaje, desglose completo de consultas con diagnósticos CIE-10 (CU16), recetas con posología (CU18), órdenes de exámenes auxiliares (CU25) y cuadro legal de firmas para paciente y médico tratante, ocultando por completo la interfaz web interactiva.
   - ✅ **Integración en Navegación:**
     - `Sidebar.jsx`: Ítem "Expediente Digital" / "Mi Expediente Clínico" (P4) bajo icono `FileText`.
     - `App.jsx`: Pestaña `expediente` y tarjeta interactiva de acceso rápido en el dashboard de bienvenida.
