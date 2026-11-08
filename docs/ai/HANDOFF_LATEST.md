@@ -1,5 +1,19 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Fix Crítico: Error de Hooks en Activación de Paciente con CI)
+- **Causa Raíz de "Rendered more hooks than during the previous render":**
+  - En [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) existía una salida temprana `if (!isOpen) return null;` previa a la invocación de `useEffect(...)`.
+  - Cuando el modal estaba cerrado, el componente registraba 6 hooks (`useState`). Al hacer clic en "Activar Cuenta CI" en el Homepage, `isOpen` pasaba a `true`, ejecutando el `useEffect` posterior (hook #7), lo que violaba la regla estricta de React sobre orden e invariabilidad en la cuenta de hooks por render.
+- **Solución:**
+  - Se eliminó el early return condicional y el `useEffect` manual, migrando [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) al componente estándar [`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx).
+  - Todos los hooks (`useState`) quedan arriba de forma incondicional, mientras que el portal encapsula el bloqueo de scroll y el listener de `Escape` en un ciclo de vida aislado sin rupturas.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 34.78s).
+- **Commit en Rama `prueba`:** `7d90a0b`: `fix(auth): corregir violacion de reglas de hooks en ActivatePatientModal migrando a ModalPortal`.
+
+---
+
+# HANDOFF LATEST — CLÍNICA VIDA SALUD
+
 ## Estado de Relevo al 07/11/2026 (Estandarización Universal de Modales con ModalPortal, Viewport Lock y Centrado)
 - **Estandarización de Todos los Modales de la Aplicación:**
   - **Componente Maestro [`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx):**
@@ -15,6 +29,20 @@
     - Landing Page: Modal de agendamiento rápido en [`HomePage.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/pages/HomePage.jsx).
 - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 17.75s).
 - **Bitácora Registrada:** [`docs/ai/sessions/2026-11-07-estandarizacion-modales-modal-portal.md`](file:///c:/Users/PERSONAL/clinica-SI1/docs/ai/sessions/2026-11-07-estandarizacion-modales-modal-portal.md).
+
+---
+
+# HANDOFF LATEST — CLÍNICA VIDA SALUD
+
+## Estado de Relevo al 07/11/2026 (Fix Crítico: Error de Hooks en Activación de Paciente con CI)
+- **Causa Raíz de "Rendered more hooks than during the previous render":**
+  - En [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) existía una salida temprana `if (!isOpen) return null;` previa a la invocación de `useEffect(...)`.
+  - Cuando el modal estaba cerrado, el componente registraba 6 hooks (`useState`). Al hacer clic en "Activar Cuenta CI" en el Homepage, `isOpen` pasaba a `true`, ejecutando el `useEffect` posterior (hook #7), lo que violaba la regla estricta de React sobre orden e invariabilidad en la cuenta de hooks por render.
+- **Solución:**
+  - Se eliminó el early return condicional y el `useEffect` manual, migrando [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) al componente estándar [`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx).
+  - Todos los hooks (`useState`) quedan arriba de forma incondicional, mientras que el portal encapsula el bloqueo de scroll y el listener de `Escape` en un ciclo de vida aislado sin rupturas.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 34.78s).
+- **Commit en Rama `prueba`:** `7d90a0b`: `fix(auth): corregir violacion de reglas de hooks en ActivatePatientModal migrando a ModalPortal`.
 
 ---
 
