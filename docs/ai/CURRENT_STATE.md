@@ -536,3 +536,47 @@
     - `App.jsx`: Registro de ruta, breadcrumb y renderizado seguro bajo RBAC.
     - `InicioPanelView.jsx`: Tarjetas de acceso rápido en el portal principal para Administrador, Recepcionista y Médico.
   - ✅ **Compilación Exitosa:** `npm run build` verificado con **0 errores** (2049 módulos transformados en 743ms).
+
+### 29. Implementación Full-Stack de CU20 (Enviar Recordatorios y Notificaciones — Sistema / Cron) (07/11/2026)
+- **Backend (`backend/app/Packages/Integrations/` y `Console/`):**
+  - ✅ **Modelo Enriquecido (`Notificacion.php`):** Mapeo de la tabla relacional `notificaciones` con constantes tipadas (`RECORDATORIO_24H`, `CONFIRMACION`, `REPROGRAMACION`, `CANCELACION`, `PAGO_EXITOSO`), scopes locales (`noLeidas`, `paraUsuario`, `porTipo`), accessor de tiempo relativo y método de instancia `marcarComoLeida()`.
+  - ✅ **Modelo Actualizado (`User.php`):** Agregada relación Eloquent uno a muchos `notificaciones()`.
+  - ✅ **Servicio Orquestador de Notificaciones (`NotificationService.php`):**
+    - Resolutores inteligentes de cuentas de usuario para pacientes y médicos por ID foráneo, correo institucional o cédula de identidad.
+    - Método `crearNotificacion`: Registro estructurado en base de datos con canal (in-app, email) y fecha de emisión.
+    - Disparadores automáticos desacoplados:
+      - `notificarCitaCreada`: Emite aviso de confirmación al paciente y notificación a la agenda del médico.
+      - `notificarCitaReprogramada`: Alerta a paciente y médico del cambio de fecha/hora con registro del motivo.
+      - `notificarCitaCancelada`: Notifica a paciente y médico la anulación del turno y liberación del cupo.
+      - `notificarPagoCompletado`: Envía comprobante oficial de pago exitoso al paciente.
+    - Motor de Recordatorios 24h (`ejecutarRecordatorios24h`):
+      - Escaneo de citas en estado `PROGRAMADA` o `CONFIRMADA` en la ventana preventiva de 24 a 48 horas hacia adelante.
+      - Idempotencia estricta para evitar duplicidad de recordatorios ya despachados.
+      - Opción `--force` y filtro por cita específica para demostración de pruebas.
+      - Registro inmutable en `Bitacora.php` con tipo `RECORDATORIOS_24H_ENVIADOS`.
+    - Operaciones de lectura y gestión: Listado paginado con métricas y control Anti-IDOR para `marcarComoLeida`, `marcarTodasComoLeidas` y `eliminarNotificacion`.
+  - ✅ **Comando Artisan Programable (`SendAppointmentRemindersCommand.php`):**
+    - Ejecutable mediante `php artisan appointments:send-reminders` con flags opcionales `--force` y `--cita=ID`.
+    - Salida en consola formateada con tabla de citas evaluadas y notificaciones entregadas.
+  - ✅ **Planificador Laravel Schedule (`backend/routes/console.php`):**
+    - Tarea programada registrada: `Schedule::command('appointments:send-reminders')->dailyAt('08:00')->withoutOverlapping()->runInBackground()`.
+  - ✅ **Integración en Servicios Existentes del Sistema:**
+    - `AppointmentBookingService.php`: Dispara notificación tras crear la cita.
+    - `AppointmentRescheduleService.php`: Dispara notificación tras reprogramar.
+    - `AppointmentsController.php`: Dispara notificación tras cancelación.
+    - `StripePaymentService.php`: Dispara notificación tras confirmación de pago con Stripe.
+  - ✅ **Controlador REST (`NotificationsController.php`):** Endpoints `index`, `unreadCount`, `markAsRead`, `markAllAsRead`, `destroy` y `triggerReminders`.
+  - ✅ **Rutas API (`backend/routes/api.php`):** 6 endpoints bajo `/api/notifications/` con middleware de roles y autenticación.
+
+- **Frontend (`frontend/src/apps/integrations/` y `components/`):**
+  - ✅ **Servicio API (`notificationService.js`):** Métodos para consumo REST (`fetchNotifications`, `fetchUnreadCount`, `markAsRead`, `markAllAsRead`, `deleteNotification`, `triggerReminders`).
+  - ✅ **Componente Interactivo (`NotificationsDropdown.jsx`):**
+    - Integrado en la cabecera principal de `App.jsx`.
+    - Badge con contador de no leídas en vivo y pulso animado.
+    - Polling en segundo plano cada 30 segundos (`fetchUnreadCount`).
+    - Pestañas de filtrado: *Todas*, *No leídas* y *Recordatorios 24h*.
+    - Tarjetas de notificación enriquecidas con iconos y colores temáticos según el evento (`Clock` ámbar para recordatorios 24h, `Calendar` azul para confirmaciones, `CalendarClock` para reprogramaciones, `CalendarX` rojo para cancelaciones y `CreditCard` esmeralda para pagos Stripe).
+    - Acciones contextuales: Marcar una como leída, marcar todas como leídas y eliminar de bandeja.
+    - Botón de demostración interactivo **"Probar 24h Ahora"** con spinner de carga para disparar el Cron en vivo ante el docente.
+  - ✅ **Compilación Exitosa:** `npm run build` verificado con **0 errores** (2050 módulos transformados en 690ms).
+

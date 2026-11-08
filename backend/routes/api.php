@@ -20,6 +20,7 @@ use App\Packages\MedicalRecords\Controllers\ExpedienteController;
 use App\Packages\MedicalRecords\Controllers\DocumentosClinicosController;
 use App\Packages\MedicalRecords\Controllers\OrdenesExamenesController;
 use App\Packages\Integrations\Controllers\PaymentsController;
+use App\Packages\Integrations\Controllers\NotificationsController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
 use App\Packages\Analytics\Controllers\DashboardController;
 use App\Packages\Analytics\Controllers\ReportsController;
@@ -210,6 +211,17 @@ Route::prefix('payments')->middleware('web')->group(function () {
     Route::post('/process', [PaymentsController::class, 'process'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
     Route::get('/receipt/{id}', [PaymentsController::class, 'receipt'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
 });
+
+// CU20: Enviar Recordatorios y Notificaciones (Paquete 5: Integraciones Externas y Pagos)
+Route::prefix('notifications')->middleware('web')->group(function () {
+    Route::get('/', [NotificationsController::class, 'index'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::get('/unread-count', [NotificationsController::class, 'unreadCount'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::patch('/{id}/read', [NotificationsController::class, 'markAsRead'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::post('/read-all', [NotificationsController::class, 'markAllAsRead'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::delete('/{id}', [NotificationsController::class, 'destroy'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::post('/trigger-reminders', [NotificationsController::class, 'triggerReminders'])->middleware('role:ADMIN,RECEPCIONISTA');
+});
+
 
 
 

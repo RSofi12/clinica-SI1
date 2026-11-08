@@ -86,4 +86,17 @@
 8. [x] **CU26:** Gestionar Documentos Clínicos Adjuntos (Extra) — Full-Stack 100% operativo (Cloudinary, soporte para DICOM, enlace opcional con órdenes de CU25, modal asistido IMAIOS, carga multipart y visor de imágenes/PDF) (Completado — 07/11/2026).
 9. [x] **CU25:** Emitir Órdenes de Exámenes Auxiliares (Extra) — Full-Stack 100% operativo (generación atómica `ORD-XXXX`, modelo con tipos/estados, `OrdenExamenFormModal.jsx` con scroll-lock y `createPortal`, pestaña dedicada en `ExpedienteClinicoView.jsx`, baja lógica RN11 y enlace a Cloudinary CU26) (Completado — 07/11/2026).
 10. [x] **CU21:** Pagar Cita Médica con Stripe Sandbox (Extra) — Full-Stack 100% operativo (API Keys Stripe Sandbox conectadas, generación atómica `PAG-XXXX`, cobro de citas, confirmación atómica transaccional, modelo `Pago.php`, `StripePaymentModal.jsx` con auto-fill `4242...`, comprobante digital oficial de pago y visualización de estatus en citas y ticket) (Completado — 07/11/2026).
-11. [ ] **CU20:** Notificaciones y Recordatorios automáticos en background (Cron / Laravel Schedule 24h previas y panel interactivo).
+11. [x] **CU20:** Notificaciones y Recordatorios automáticos en background (Cron / Laravel Schedule 24h previas, disparadores automáticos en ciclo de vida de citas y pagos, comando Artisan `appointments:send-reminders`, idempotencia estricta, endpoints REST y panel interactivo `NotificationsDropdown.jsx` con polling en vivo) (Completado al 100% — 07/11/2026).
+
+---
+
+## 🏁 Hito Histórico Alcanzado:
+**¡TODOS LOS 24 CASOS DE USO REGULARES DEL SISTEMA ESTÁN COMPLETADOS AL 100%!**
+- Requisitos Funcionales del Examen Oficial: **RF01 al RF13 al 100%**.
+- 10 Pruebas Mínimas Obligatorias del Examen: **10 de 10 Superadas al 100%**.
+- Casos de Uso del Ciclo 1 (13 CU): **100% Completados**.
+- Casos de Uso del Ciclo 2 (11 CU regulares): **100% Completados** (CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26).
+- **Total:** **24 de 26 CUs completados (92.3% del total del proyecto)**.
+- Solo quedan las 2 reservas opcionales/condicionales si se desean abordar:
+  - **CU27-RES:** Exportar expediente clínico y receta en PDF con membrete (ya provisto mediante `@media print` en CU18 y CU19).
+  - **CU28-OPC:** Generar análisis clínico y diagnóstico asistido por IA (extensión opcional para CU16).

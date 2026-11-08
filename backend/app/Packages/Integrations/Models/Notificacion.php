@@ -18,11 +18,23 @@ class Notificacion extends Model
     protected $table = 'notificaciones';
     protected $primaryKey = 'id_notificacion';
 
+    const TIPO_RECORDATORIO_24H = 'RECORDATORIO_24H';
+    const TIPO_CONFIRMACION = 'CONFIRMACION';
+    const TIPO_CANCELACION = 'CANCELACION';
+    const TIPO_REPROGRAMACION = 'REPROGRAMACION';
+    const TIPO_PAGO_EXITOSO = 'PAGO_EXITOSO';
+    const TIPO_AVISO_CLINICO = 'AVISO_CLINICO';
+
+    const CANAL_EMAIL = 'EMAIL';
+    const CANAL_PUSH = 'PUSH';
+    const CANAL_SMS = 'SMS';
+    const CANAL_IN_APP = 'IN_APP';
+
     protected $fillable = [
         'id_usuario',
         'id_cita',
-        'tipo', // RECORDATORIO_24H, CONFIRMACION, CANCELACION, REPROGRAMACION
-        'canal', // EMAIL, PUSH, SMS
+        'tipo',
+        'canal',
         'titulo',
         'mensaje',
         'leida',
@@ -32,7 +44,19 @@ class Notificacion extends Model
     protected $casts = [
         'leida' => 'boolean',
         'fecha_envio' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
+
+    protected $appends = [
+        'tiempo_relativo',
+    ];
+
+    public function getTiempoRelativoAttribute(): string
+    {
+        $fecha = $this->fecha_envio ?? $this->created_at;
+        return $fecha ? $fecha->diffForHumans() : 'Recientemente';
+    }
 
     public function usuario(): BelongsTo
     {
@@ -42,5 +66,26 @@ class Notificacion extends Model
     public function cita(): BelongsTo
     {
         return $this->belongsTo(Cita::class, 'id_cita', 'id_cita');
+    }
+
+    public function scopeNoLeidas($query)
+    {
+        return $query->where('leida', false);
+    }
+
+    public function scopeParaUsuario($query, int $idUsuario)
+    {
+        return $query->where('id_usuario', $idUsuario);
+    }
+
+    public function scopePorTipo($query, string $tipo)
+    {
+        return $query->where('tipo', $tipo);
+    }
+
+    public function marcarComoLeida(): bool
+    {
+        $this->leida = true;
+        return $this->save();
     }
 }

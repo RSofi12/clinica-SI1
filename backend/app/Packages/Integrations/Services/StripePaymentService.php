@@ -268,6 +268,13 @@ class StripePaymentService
                 "Confirmado pago {$pago->codigo_pago} de \${$monto} USD para cita {$cita->codigo_cita} ({$cita->especialidad?->nombre}) vía Stripe Sandbox ({$paymentIntentId}). Tarjeta terminada en {$tarjetaUltimos4}."
             );
 
+            // Disparar notificación automática de pago confirmado (CU20 / CU21)
+            try {
+                app(\App\Packages\Integrations\Services\NotificationService::class)->notificarPagoCompletado($pago);
+            } catch (\Throwable $th) {
+                \Illuminate\Support\Facades\Log::warning("Error al emitir notificación de pago {$pago->codigo_pago}: " . $th->getMessage());
+            }
+
             return $pago->fresh(['cita.especialidad', 'cita.medico', 'paciente']);
         });
     }

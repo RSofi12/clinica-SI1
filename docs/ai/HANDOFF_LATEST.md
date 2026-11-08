@@ -1,5 +1,24 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU20: Enviar Recordatorios y Notificaciones — Sistema / Cron)
+- **Implementación Full-Stack de CU20 (Enviar Recordatorios y Notificaciones — Sistema / Cron):**
+  - **Backend (`backend/app/Packages/Integrations/` y `Console/`):**
+    - `Notificacion.php`: Modelo con constantes de tipo (`RECORDATORIO_24H`, `CONFIRMACION`, `REPROGRAMACION`, `CANCELACION`, `PAGO_EXITOSO`), scopes locales (`noLeidas`, `paraUsuario`, `porTipo`), accessor de tiempo relativo y método de instancia `marcarComoLeida()`.
+    - `User.php`: Relación `notificaciones()` HasMany registrada.
+    - `NotificationService.php`: Motor central de notificaciones con resolución inteligente de cuentas de pacientes y médicos, inserción en BD, emisión desacoplada en el ciclo de vida de citas (`AppointmentBookingService`, `AppointmentRescheduleService`, `AppointmentsController` y `StripePaymentService`), motor de recordatorios preventivos de 24 horas con idempotencia estricta, registro de auditoría inmutable en `Bitacora.php` y operaciones de gestión Anti-IDOR.
+    - `SendAppointmentRemindersCommand.php`: Comando Artisan `php artisan appointments:send-reminders` con soporte para `--force` y `--cita=ID`.
+    - `routes/console.php`: Tarea programada en Laravel Schedule `dailyAt('08:00')->withoutOverlapping()`.
+    - `NotificationsController.php`: Endpoints REST (`index`, `unreadCount`, `markAsRead`, `markAllAsRead`, `destroy`, `triggerReminders`).
+    - 6 rutas registradas en `routes/api.php` bajo `/api/notifications/` con middleware `web` y roles.
+    - Verificación: Prueba integral ejecutada con éxito en terminal enviando recordatorios simultáneos a paciente y médico con detección de idempotencia.
+  - **Frontend (`frontend/src/apps/integrations/` y `components/`):**
+    - `notificationService.js`: Cliente HTTP API para consultas, marcas de lectura y disparo forzado.
+    - `NotificationsDropdown.jsx`: Componente interactivo en el header con badge numérico en tiempo real, polling ligero cada 30 segundos, pestañas (*Todas*, *No leídas*, *Recordatorios 24h*), tarjetas enriquecidas con iconos temáticos y badges semánticos, acciones de lectura/eliminación y botón "Probar 24h Ahora" para demostración docente en vivo.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2050 módulos transformados en 690ms).
+  - **Avance General:** 24 de 26 CUs completados (**92.3% de avance global**). Todos los 24 Casos de Uso regulares del sistema están 100% operativos. Solo restan las 2 reservas opcionales (CU27-RES, CU28-OPC).
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU22: Generar Reportes con Filtros Dinámicos — RF13)
 - **Implementación Full-Stack de CU22 (Generar Reportes con Filtros Dinámicos — RF13):**
   - **Backend (`backend/app/Packages/Analytics/`):**

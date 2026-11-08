@@ -194,6 +194,21 @@
   4. Proveer doble formato de exportación: descarga instantánea de datos tabulares en CSV estructurado y vista de reporte oficial imprimible en PDF con formato membretado y firmas de auditoría.
 * **Impacto:** Creación de `DynamicReportService.php`, `ReportsController.php`, `DynamicReportsView.jsx`, `dynamicReportService.js`, y actualización de `routes/api.php`, `Sidebar.jsx`, `App.jsx` e `InicioPanelView.jsx`. El avance global del sistema alcanza el **88.5% (23 de 26 CUs completados)** y el núcleo funcional RF01-RF13 queda cubierto al 100%.
 
+### Registro 26: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU20: Enviar Recordatorios y Notificaciones** bajo el actor secundario *Sistema (Planificador / Cron)*, con integración transaccional en el ciclo de vida de citas, planificador diario en Laravel Schedule, comando Artisan programable y dropdown reactivo en cabecera con polling ligero.
+* **Motivo:**
+  1. Completar el Paquete 5 (Integraciones Externas y Pagos) y la totalidad de los 24 Casos de Uso regulares del sistema PUDS.
+  2. Proveer al sistema un motor de recordatorios preventivos de 24 horas (`RECORDATORIO_24H`) con regla estricta de idempotencia para no duplicar notificaciones ya despachadas.
+  3. Desacoplar y automatizar la emisión de avisos institucionales ante eventos clave del ciclo asistencial:
+     - Confirmación inmediata al reservar cita (`CONFIRMACION` - CU10).
+     - Alerta de reprogramación con motivo registrado (`REPROGRAMACION` - CU11).
+     - Notificación de cancelación y liberación de cupo (`CANCELACION` - CU12).
+     - Comprobante digital tras pago exitoso con Stripe (`PAGO_EXITOSO` - CU21).
+  4. Resolver de forma no intrusiva los destinatarios asociados (pacientes con cuentas de autoservicio web o vinculadas, y médicos asignados a su agenda).
+  5. Proveer una experiencia de usuario interactiva y en tiempo real a través de `NotificationsDropdown.jsx` en el header: contador dinámico con pulso, pestañas de filtrado, marcas de lectura individual/colectiva, eliminación con Anti-IDOR y botón para disparar el Cron en vivo ante el docente.
+* **Impacto:** Creación de `NotificationService.php`, `NotificationsController.php`, `SendAppointmentRemindersCommand.php`, `notificationService.js`, actualización de `Notificacion.php`, `User.php`, `routes/console.php`, `routes/api.php`, `AppointmentBookingService.php`, `AppointmentRescheduleService.php`, `AppointmentsController.php`, `StripePaymentService.php` y `NotificationsDropdown.jsx`. El avance global alcanza el **92.3% (24 de 26 CUs completados)**.
+
+
 
 
 

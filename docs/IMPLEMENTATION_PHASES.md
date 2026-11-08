@@ -11,8 +11,8 @@
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
 | **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 13 | 0 | 🟢 **100% Completado** (Meta superada anticipadamente) |
-| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 10 | 3 (+1) | 🟡 **En Progreso Avanzado** (Meta: Domingo 08/11/2026) |
-| **TOTAL GENERAL** | **26 (+1)** | **23** | **3 (+1)** | **Progreso Global: 88.5% (23 de 26 CUs)** |
+| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 11 | 2 (+1) | 🟢 **92.3% Completado** (Todos los 24 CUs regulares 100% operativos) |
+| **TOTAL GENERAL** | **26 (+1)** | **24** | **2 (+1)** | **Progreso Global: 92.3% (24 de 26 CUs)** |
 
 ---
 
@@ -379,10 +379,27 @@ pm run build exitoso).
 
 ### 📦 Paquete 5: Integraciones Externas y Pagos (P5)
 
-#### ⏳ CU20: Enviar Recordatorios y Notificaciones (3.4 / Cron)
-- [ ] **Backend:** Comando Laravel Schedule (`php artisan appointments:remind`) para avisos 24h antes.
-- [ ] **Frontend:** Notificaciones en interfaz y panel de configuración de avisos.
-- [ ] **Fase de Pruebas:** Ejecución de tarea programada sin duplicar recordatorios.
+#### ✅ CU20: Enviar Recordatorios y Notificaciones (3.4 / Cron)
+- [x] **Backend:**
+  - [x] Modelo `Notificacion.php` enriquecido con constantes de tipo (`RECORDATORIO_24H`, `CONFIRMACION`, `REPROGRAMACION`, `CANCELACION`, `PAGO_EXITOSO`), scopes (`noLeidas`, `paraUsuario`, `porTipo`) y método `marcarComoLeida()`.
+  - [x] Relación `notificaciones()` registrada en el modelo `User.php`.
+  - [x] `NotificationService.php`: Servicio orquestador central con métodos de emisión de notificaciones, resolución de cuentas de pacientes/médicos, idempotencia estricta en recordatorios 24h y registro de auditoría inmutable en `Bitacora.php`.
+  - [x] Integración en ciclo de vida de citas:
+    - `AppointmentBookingService.php`: Dispara notificación automática de confirmación a paciente y médico al reservar cita.
+    - `AppointmentRescheduleService.php`: Dispara notificación automática de reprogramación a paciente y médico.
+    - `AppointmentsController.php`: Dispara notificación automática de cancelación a paciente y médico.
+    - `StripePaymentService.php`: Dispara comprobante de pago garantizado tras confirmación exitosa con Stripe.
+  - [x] Comando de Consola Artisan `SendAppointmentRemindersCommand.php` (`php artisan appointments:send-reminders` con opciones `--force` y `--cita=ID`).
+  - [x] Registro en `backend/routes/console.php` con programación `Schedule::command('appointments:send-reminders')->dailyAt('08:00');`.
+  - [x] `NotificationsController.php`: Endpoints REST (`index`, `unreadCount`, `markAsRead`, `markAllAsRead`, `destroy`, `triggerReminders`).
+  - [x] Rutas registradas en `routes/api.php` bajo `/api/notifications/` con control RBAC y middleware `web`.
+- [x] **Frontend:**
+  - [x] `notificationService.js`: Cliente API para consultas, marcas de lectura, eliminación y disparo forzado del planificador.
+  - [x] `NotificationsDropdown.jsx`: Componente interactivo en cabecera con badge numérico en tiempo real, polling ligero cada 30s, pestañas ("Todas", "No leídas", "Recordatorios 24h"), iconos específicos por tipo de evento, marcas de lectura individual/colectiva y botón "Probar 24h Ahora" para demostración docente.
+- [x] **Fase de Pruebas:**
+  - [x] Verificación del comando `php artisan appointments:send-reminders` en terminal.
+  - [x] Prueba end-to-end con script de prueba: recordatorios generados a paciente y médico con éxito, detección de idempotencia, y marcado como leído.
+  - [x] Verificación de 0 errores en compilación de Frontend (`npm run build`).
 
 #### ✅ CU21: Pagar Cita Médica con Stripe Sandbox (Extra)
 - [x] **Backend:**

@@ -121,6 +121,13 @@ class AppointmentRescheduleService
                 $idUsuario
             );
 
+            // Disparar notificaciones automáticas (CU20 / Paquete 5)
+            try {
+                app(\App\Packages\Integrations\Services\NotificationService::class)->notificarCitaReprogramada($cita, $data['motivo_reprogramacion']);
+            } catch (\Throwable $th) {
+                \Illuminate\Support\Facades\Log::warning("Error al emitir notificación de reprogramación para {$cita->codigo_cita}: " . $th->getMessage());
+            }
+
             return $cita->fresh([
                 'paciente:id_paciente,nombres,apellidos,numero_documento,numero_historia,telefono',
                 'medico:id_medico,nombres,apellidos,codigo_profesional',

@@ -199,6 +199,13 @@ class AppointmentBookingService
                 "Se reservó la cita {$codigoCita} para el paciente {$paciente->nombre_completo} (HC: {$paciente->numero_historia}) con {$medico->nombre_completo} ({$especialidad->nombre}) el {$fecha} a las {$horaInicio}."
             );
 
+            // Disparar notificaciones automáticas (CU20 / Paquete 5)
+            try {
+                app(\App\Packages\Integrations\Services\NotificationService::class)->notificarCitaCreada($cita);
+            } catch (\Throwable $th) {
+                \Illuminate\Support\Facades\Log::warning("Error al emitir notificaciones de cita {$codigoCita}: " . $th->getMessage());
+            }
+
             return $cita->load(['paciente', 'medico', 'especialidad', 'tipoCita']);
         });
     }
