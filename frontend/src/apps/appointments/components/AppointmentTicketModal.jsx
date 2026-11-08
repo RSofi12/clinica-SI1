@@ -428,3 +428,4 @@ export function AppointmentTicketModal({
     </ModalPortal>
   );
 }
+
