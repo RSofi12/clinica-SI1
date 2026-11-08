@@ -1,5 +1,18 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Aislamiento de Impresión y Formato Formal de Ticket de Cita Médica — CU10 / RF06)
+- **Corrección de Impresión de Ticket de Cita (`AppointmentTicketModal.jsx` y `AppointmentsManager.jsx`):**
+  - **Problema:** Al pulsar "Imprimir Ticket", la vista previa mostraba la tabla de citas del sistema en gris oscuro de fondo y extendida a 2 páginas, imprimiendo el modal con barras de ventana web y botones en lugar de un comprobante formal.
+  - **Solución:**
+    - Se creó el componente maestro `AppointmentTicketModal.jsx` basado en `ModalPortal` (`role="dialog"`), desanclado de `#root`.
+    - Activación de `.printing-modal` para invocar el aislamiento de `index.css`, ocultando al 100% la aplicación de fondo durante el diálogo de impresión.
+    - Estructura dual: vista interactiva en pantalla (`print:hidden`) y voucher clínico oficial impreso (`hidden print:block`) en **1 sola página**.
+    - El voucher impreso cuenta con membrete del Centro Médico La Cruz, código `CM-XXXX` prominente, ficha del paciente con CI, médico con matrícula, especialidad, horario, estado de pago con tarifa, instrucciones para la atención y cuadro para firma y sello de Admisión/Caja.
+    - Se eliminaron las dos copias inline duplicadas en `AppointmentsManager.jsx`.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2052 módulos, 1.54s).
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Ajuste Visual del Código de Cita y Columnas en ConsultasManager — CU16)
 - **Corrección de Salto de Línea en Badges (`ConsultasManager.jsx`):**
   - **Problema:** En la columna "CÓDIGO CITA", el texto `CM-XXXX` se partía por el guion en dos renglones (`CM-` arriba y `0123` abajo) debido a la falta de `whitespace-nowrap` y ausencia de ancho mínimo en la tabla, comprimiendo también los nombres de los médicos.
