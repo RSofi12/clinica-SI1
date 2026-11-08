@@ -217,6 +217,7 @@ export function AppointmentRescheduleModal({
     <ModalPortal
       isOpen={isOpen}
       onClose={handleClose}
+      closeOnBackdrop={false}
       maxWidth="max-w-2xl"
       panelClassName="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col animate-modal-panel my-auto"
     >

@@ -1,6 +1,23 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Exclusividad Estricta de CU24 para Administrador)
+## Estado de Relevo al 08/11/2026 (Aislamiento Estricto de CU23/CU18, Cierre Seguro de Modales y Corrección en Reprogramación)
+- **Aislamiento Estricto de Casos de Uso y RBAC:**
+  - **CU23 (Reportes por Voz con IA):** Exclusivo para `ADMIN`. Quitado de `MEDICO` en Sidebar ([`Sidebar.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/components/Sidebar.jsx)), navegación ([`App.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/App.jsx)), accesos rápidos ([`InicioPanelView.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/apps/analytics/components/InicioPanelView.jsx)) y rutas backend ([`routes/api.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/routes/api.php)).
+  - **CU18 (Prescripciones y Recetas):** Restringido a `ADMIN` y `MEDICO`. Quitado de `PACIENTE` en Sidebar, `App.jsx`, `InicioPanelView.jsx` y rutas API (`/recetas` solo `role:ADMIN,MEDICO`).
+  - **CU09 y CU12:** Confirmada exclusión para `MEDICO` (exclusivos de Recepcionista y Paciente).
+- **Cierre Seguro de Modales por Clic Exterior (`backdrop`) y Escape (Opción 1):**
+  - **Corrección en [`ModalPortal.jsx`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/frontend/src/components/ModalPortal.jsx):** Corregido el conflicto en el `useEffect` que cancelaba el temporizador de cierre interno (`handleRequestClose`) provocando que el clic exterior no respondiera.
+  - **Incorporación de props `closeOnBackdrop` y `closeOnEscape`:**
+    - Modales de solo lectura / consulta (Ficha de Paciente, Detalle de Médico, Ticket imprimible, Historiales, Detalles de Consulta y Receta, Bitácora) ahora cierran con clic en el fondo oscuro y con `Escape`.
+    - Modales de formularios extensos con captura de datos (Registro de Paciente, Admisión, Consulta y Triaje, Emisión de Recetas, Agendamiento, Reprogramación, Pasarela Stripe, etc.) tienen `closeOnBackdrop={false}` para proteger los datos escritos contra clics accidentales.
+- **Corrección de Error en Reprogramación de Citas (CU11 / RF08):**
+  - Corregido `Call to undefined method Bitacora::registrarAccion()` en [`AppointmentRescheduleService.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Appointments/Services/AppointmentRescheduleService.php) llamando formalmente a `Bitacora::registrar(...)`.
+  - Agregado método estático de retrocompatibilidad `registrarAccion(...)` en [`Bitacora.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Security/Models/Bitacora.php).
+- **Retiro de Herramienta Temporal:**
+  - Se eliminó completamente el botón flotante temporal de pruebas (`FloatingRoleCuTester.jsx` y su import en `App.jsx`).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2052 módulos, 476ms) generando bundle `index-vIic9u0U.js`.
+
+---
 - **Aislamiento de CU24 (Dashboard Administrativo y KPIs) — Cumplimiento 100% con Documento Oficial:**
   - **Backend (`routes/api.php`):** Ruta `/analytics/dashboard-kpis` restringida exclusivamente a `role:ADMIN`. Recepción, Médicos y Pacientes reciben `403 Forbidden` (probado y verificado).
   - **Sidebar (`Sidebar.jsx`):** Ítem "Dashboard Clínico" configurado con `requiredRole: 'ADMIN'`. Solo es visible para el Administrador; Recepcionista, Médico y Paciente acceden a su respectivo espacio operativo en "Inicio".

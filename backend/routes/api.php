@@ -162,10 +162,10 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::put('/antecedentes/{id}', [AntecedentesController::class, 'update'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/antecedentes/{id}/toggle-status', [AntecedentesController::class, 'toggleStatus'])->middleware('role:ADMIN,MEDICO');
 
-    // CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas
-    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE');
-    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE');
-    Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    // CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas (Exclusivo Médico y Admin)
+    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO');
     Route::post('/recetas', [RecetasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/recetas/{id}/anular', [RecetasController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
 
@@ -196,10 +196,10 @@ Route::prefix('analytics/reports')->middleware('web')->group(function () {
     Route::get('/export-csv', [ReportsController::class, 'export'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
 });
 
-// CU23 / CU24: Reportes, Analítica y Dashboard de KPIs (Paquete 6: Reportes y Analítica)
+// CU23 / CU24: Reportes, Analítica y Dashboard de KPIs (Paquete 6: Exclusivo Administrador)
 Route::prefix('analytics')->middleware('web')->group(function () {
-    Route::post('/voice-report', [VoiceReportController::class, 'processVoiceCommand'])->middleware('role:ADMIN,MEDICO');
-    Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN,MEDICO');
+    Route::post('/voice-report', [VoiceReportController::class, 'processVoiceCommand'])->middleware('role:ADMIN');
+    Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN');
     Route::get('/voice-stats', [VoiceReportController::class, 'stats'])->middleware('role:ADMIN');
     Route::get('/dashboard-kpis', [DashboardController::class, 'getKpis'])->middleware('role:ADMIN');
 });

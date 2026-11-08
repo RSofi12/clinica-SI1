@@ -67,7 +67,7 @@ export function BlockModal({ isOpen, onClose, doctors = [], onBlockCreated, defa
   };
 
   return (
-    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg">
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg" closeOnBackdrop={false}>
       {/* Cabecera */}
         <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#004d5a] to-[#00687a] text-white">
           <div className="flex items-center gap-2.5">

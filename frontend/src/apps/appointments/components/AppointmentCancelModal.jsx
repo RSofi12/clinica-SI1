@@ -98,6 +98,7 @@ export function AppointmentCancelModal({
     <ModalPortal
       isOpen={isOpen}
       onClose={handleClose}
+      closeOnBackdrop={false}
       maxWidth="max-w-md"
       panelClassName="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-rose-200/80 overflow-hidden flex flex-col animate-modal-panel my-auto"
     >

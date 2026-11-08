@@ -48,7 +48,7 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
   const faltan = Math.max(0, caracteresMinimos - motivo.trim().length);
 
   return (
-    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md">
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md" closeOnBackdrop={false}>
       {/* Cabecera */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-rose-100 bg-rose-50/70">
           <div className="flex items-center gap-2.5 text-rose-800">

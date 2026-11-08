@@ -108,4 +108,24 @@ class Bitacora extends Model
             'fecha_registro' => now(),
         ]);
     }
+
+    /**
+     * Alias de retrocompatibilidad para registro de acciones
+     */
+    public static function registrarAccion(
+        string $accion,
+        ?string $tablaAfectada = null,
+        $idRegistro = null,
+        ?string $descripcion = null,
+        $idUsuario = null
+    ): self {
+        return self::registrar(
+            $idUsuario,
+            'Citas Médicas',
+            $accion,
+            $tablaAfectada,
+            $idRegistro,
+            $descripcion
+        );
+    }
 }

@@ -196,7 +196,7 @@ export default function App() {
           ? 'Generador de Reportes con Filtros Dinámicos (CU22 / RF13)'
           : 'Inicio';
       case 'voice-reports':
-        return ['ADMIN', 'MEDICO'].includes(role)
+        return role === 'ADMIN'
           ? 'Asistente de Reportes por Voz con IA (CU23)'
           : 'Inicio';
       case 'appointments':
@@ -325,11 +325,11 @@ export default function App() {
               <ExpedienteClinicoView />
             ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
               <ConsultasManager />
-            ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+            ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO'].includes(role) ? (
               <RecetasManager currentUser={user} />
             ) : dashboardTab === 'dynamic-reports' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
               <DynamicReportsView />
-            ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
+            ) : dashboardTab === 'voice-reports' && role === 'ADMIN' ? (
               <VoiceReportAssistant />
             ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
               <PatientProfileView />

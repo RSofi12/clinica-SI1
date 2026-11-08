@@ -20,43 +20,51 @@ export function ModalPortal({
   className = '',
   panelClassName = '',
   duration = 220,
+  closeOnBackdrop = true,
+  closeOnEscape = true,
 }) {
   const [mounted, setMounted] = useState(isOpen);
   const [isClosing, setIsClosing] = useState(false);
   const prevIsOpen = useRef(isOpen);
   const closingTimeoutRef = useRef(null);
+  const isClosingRef = useRef(false);
 
   const handleRequestClose = () => {
-    if (isClosing || !mounted) return;
+    if (isClosingRef.current || !mounted) return;
+    isClosingRef.current = true;
     setIsClosing(true);
     if (closingTimeoutRef.current) clearTimeout(closingTimeoutRef.current);
     closingTimeoutRef.current = setTimeout(() => {
       onClose?.();
       setMounted(false);
       setIsClosing(false);
+      isClosingRef.current = false;
       closingTimeoutRef.current = null;
     }, duration);
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !prevIsOpen.current) {
       if (closingTimeoutRef.current) {
         clearTimeout(closingTimeoutRef.current);
         closingTimeoutRef.current = null;
       }
+      isClosingRef.current = false;
       setMounted(true);
       setIsClosing(false);
-    } else if (prevIsOpen.current && !isOpen && mounted && !isClosing) {
+    } else if (!isOpen && prevIsOpen.current && mounted && !isClosingRef.current) {
       // Si el padre puso isOpen en false externamente, animar salida fluida antes de desmontar
+      isClosingRef.current = true;
       setIsClosing(true);
       closingTimeoutRef.current = setTimeout(() => {
         setMounted(false);
         setIsClosing(false);
+        isClosingRef.current = false;
         closingTimeoutRef.current = null;
       }, duration);
     }
     prevIsOpen.current = isOpen;
-  }, [isOpen, mounted, isClosing, duration]);
+  }, [isOpen, mounted, duration]);
 
   useEffect(() => {
     return () => {
@@ -73,7 +81,7 @@ export function ModalPortal({
     document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && closeOnEscape) {
         e.preventDefault();
         handleRequestClose();
       }
@@ -85,7 +93,7 @@ export function ModalPortal({
       document.body.style.overflow = originalOverflow;
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [mounted, isClosing]);
+  }, [mounted, isClosing, closeOnEscape]);
 
   if (!mounted) return null;
 
@@ -124,11 +132,13 @@ export function ModalPortal({
     <ModalCloseContext.Provider value={handleRequestClose}>
       <div
         onClick={(e) => {
-          if (e.target === e.currentTarget) {
+          if (e.target === e.currentTarget && closeOnBackdrop) {
             handleRequestClose();
           }
         }}
-        className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto cursor-pointer ${backdropAnimClass} ${className}`}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto ${
+          closeOnBackdrop ? 'cursor-pointer' : 'cursor-default'
+        } ${backdropAnimClass} ${className}`}
         role="dialog"
         aria-modal="true"
       >

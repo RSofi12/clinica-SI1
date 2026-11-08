@@ -292,15 +292,6 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
           action: () => onNavigate('dynamic-reports'),
         },
         {
-          id: 'voice-reports',
-          title: 'Reportes por Voz con IA',
-          desc: 'Dictado de comandos clínicos y filtros inteligentes (CU23)',
-          icon: Sparkles,
-          iconBg: 'bg-rose-50 text-rose-600 border-rose-100',
-          badge: 'IA Asistente',
-          action: () => onNavigate('voice-reports'),
-        },
-        {
           id: 'examenes',
           title: 'Órdenes de Exámenes (CU25)',
           desc: 'Solicitud y seguimiento de pruebas diagnósticas (laboratorio e imágenes)',
@@ -462,15 +453,6 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
         iconBg: 'bg-sky-50 text-sky-600 border-sky-100',
         badge: 'Solo lectura',
         action: () => onNavigate('expediente'),
-      },
-      {
-        id: 'recetas',
-        title: 'Mis Recetas Médicas',
-        desc: 'Ver indicaciones farmacológicas y prescripciones vigentes (CU18)',
-        icon: Pill,
-        iconBg: 'bg-purple-50 text-purple-600 border-purple-100',
-        badge: 'Farmacia',
-        action: () => onNavigate('recetas'),
       },
       {
         id: 'patient-profile',

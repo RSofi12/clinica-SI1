@@ -158,10 +158,7 @@ export default function OrdenExamenFormModal({
 
   const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto animate-modal-backdrop cursor-pointer"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto animate-modal-backdrop cursor-default"
     >
       <div
         className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 w-full max-w-2xl my-auto overflow-hidden transition-all animate-modal-panel cursor-default"

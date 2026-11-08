@@ -280,6 +280,7 @@ export function AppointmentBookingModal({
     <ModalPortal
       isOpen={isOpen}
       onClose={onClose}
+      closeOnBackdrop={false}
       maxWidth="max-w-2xl"
       panelClassName="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-modal-panel my-auto"
     >

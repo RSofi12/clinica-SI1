@@ -191,10 +191,7 @@ export default function StripePaymentModal({
 
   const modalContent = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/65 backdrop-blur-md overflow-y-auto animate-modal-backdrop cursor-pointer"
-      onClick={(e) => {
-        if (e.target === e.currentTarget && !isSubmitting) onClose();
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/65 backdrop-blur-md overflow-y-auto animate-modal-backdrop cursor-default"
     >
       <div
         className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 w-full max-w-lg my-auto overflow-hidden transition-all animate-modal-panel cursor-default"

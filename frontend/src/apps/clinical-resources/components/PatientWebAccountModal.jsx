@@ -59,7 +59,7 @@ export function PatientWebAccountModal({ isOpen, onClose, patient, onCreated }) 
   };
 
   return (
-    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md">
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md" closeOnBackdrop={false}>
       {/* Cabecera */}
         <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">

@@ -127,6 +127,7 @@ export function ActivatePatientModal({ isOpen, onClose, onActivated }) {
     <ModalPortal
       isOpen={isOpen}
       onClose={handleClose}
+      closeOnBackdrop={false}
       maxWidth="max-w-lg"
     >
       {/* Cabecera del Modal */}

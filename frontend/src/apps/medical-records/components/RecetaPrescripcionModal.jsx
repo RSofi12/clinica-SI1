@@ -124,7 +124,7 @@ export default function RecetaPrescripcionModal({
   if (!isOpen || !consulta) return null;
 
   return (
-    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-4xl">
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-4xl" closeOnBackdrop={false}>
       {/* ENCABEZADO */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-teal-50/70">
           <div className="flex items-center gap-3">

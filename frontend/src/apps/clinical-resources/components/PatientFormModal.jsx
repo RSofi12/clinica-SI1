@@ -153,7 +153,7 @@ export function PatientFormModal({ isOpen, onClose, onSaved, initialPatient }) {
   };
 
   return (
-    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-2xl">
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-2xl" closeOnBackdrop={false}>
       {/* Cabecera del Modal */}
         <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">

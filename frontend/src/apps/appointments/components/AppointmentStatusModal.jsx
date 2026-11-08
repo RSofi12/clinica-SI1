@@ -219,6 +219,7 @@ export function AppointmentStatusModal({
     <ModalPortal
       isOpen={isOpen}
       onClose={onClose}
+      closeOnBackdrop={false}
       maxWidth="max-w-xl"
       panelClassName="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-modal-panel flex flex-col max-h-[92vh]"
     >

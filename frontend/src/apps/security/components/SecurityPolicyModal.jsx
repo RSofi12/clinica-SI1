@@ -64,7 +64,7 @@ export function SecurityPolicyModal({ isOpen, onClose, onPolicyUpdated }) {
   };
 
   return (
-    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md">
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md" closeOnBackdrop={false}>
       {/* Cabecera */}
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
           <div className="flex items-center gap-2.5">

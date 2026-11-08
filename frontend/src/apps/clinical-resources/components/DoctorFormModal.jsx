@@ -176,6 +176,7 @@ export function DoctorFormModal({ isOpen, onClose, doctorToEdit, onSaved }) {
     <ModalPortal
       isOpen={isOpen}
       onClose={onClose}
+      closeOnBackdrop={false}
       panelClassName="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] my-auto animate-modal-panel cursor-default"
     >
       {/* Cabecera */}

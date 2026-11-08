@@ -263,6 +263,7 @@ export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistr
       <ModalPortal
         isOpen={true}
         onClose={onClose}
+        closeOnBackdrop={false}
         maxWidth="max-w-3xl"
         panelClassName="bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden w-full max-w-3xl max-h-[90vh] flex flex-col my-auto animate-modal-panel"
       >
