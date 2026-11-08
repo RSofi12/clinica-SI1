@@ -6,7 +6,10 @@ import axios from 'axios';
  * (Authorization: Bearer <token>), cookies con withCredentials, y manejo centralizado de errores.
  */
 // URL base de la API: variable de entorno en Vercel o relativo para desarrollo local con proxy
-const rawApiUrl = (import.meta.env.VITE_API_URL || '').trim();
+let rawApiUrl = (import.meta.env.VITE_API_URL || '').trim();
+if (rawApiUrl && !rawApiUrl.startsWith('http://') && !rawApiUrl.startsWith('https://') && !rawApiUrl.startsWith('/')) {
+  rawApiUrl = `https://${rawApiUrl}`;
+}
 const API_BASE_URL = rawApiUrl
   ? (rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl.replace(/\/+$/, '')}/api`)
   : '/api';
