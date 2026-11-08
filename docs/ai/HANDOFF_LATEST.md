@@ -1,5 +1,30 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU22: Generar Reportes con Filtros Dinámicos — RF13)
+- **Implementación Full-Stack de CU22 (Generar Reportes con Filtros Dinámicos — RF13):**
+  - **Backend (`backend/app/Packages/Analytics/`):**
+    - `DynamicReportService.php`: Motor transaccional de los 7 reportes gerenciales del examen:
+      1. *Citas por rango de fechas* (evolución, promedios diarios, gráfico de tendencia).
+      2. *Citas por médico* (carga de trabajo, atenciones, cancelaciones, tasa de atención %).
+      3. *Citas por especialidad* (demanda clínica, porcentaje de participación y balance estimado).
+      4. *Citas por estado* (ciclo de vida, motivos de cancelación justificados según RN09/RN11).
+      5. *Padrón de pacientes registrados* (censo, grupos etarios RF04: pediátricos <15, adultos 15-59, geriátricos 60+, cuentas web §3.4).
+      6. *Balance consolidado* (atendidas vs perdidas, tasa de asistencia, ingresos de consultas y pagos confirmados en Stripe CU21).
+      7. *Agenda médica diaria* (cronograma por médico y fecha, resolución de franja de disponibilidad semanal y ocupación).
+    - Scoping estricto por roles: Médico limitado a sus atenciones; Admin y Recepcionista con visión global.
+    - Exportación nativa Streamed CSV con codificación UTF-8 + BOM (`exportCsv`).
+    - `ReportsController.php`: Endpoints `/catalogs`, `/dynamic` y `/export-csv`.
+    - 3 rutas API registradas bajo `/api/analytics/reports` en `routes/api.php` y auditoría inmutable en `Bitacora.php`.
+    - Pruebas directas automatizadas sobre PostgreSQL ejecutadas con 100% de éxito en los 7 reportes.
+  - **Frontend (`frontend/src/apps/analytics/`):**
+    - `dynamicReportService.js`: Cliente API para catálogos, generación en tiempo real y descarga de CSV.
+    - `DynamicReportsView.jsx`: Vista integral con barra de 7 pestañas, filtros reactivos de fecha (atajos y personalizados), selectores de médico, especialidad, estado y grupo etario, tarjetas de KPIs ejecutivos, desgloses visuales adaptativos, tabla paginada con buscador en vivo, descarga de CSV y formato imprimible institucional `@media print` para exportación a PDF.
+    - Integrado en `Sidebar.jsx` (P6), `App.jsx` e `InicioPanelView.jsx`.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2049 módulos transformados en 743ms).
+  - **Avance General:** 23 de 26 CUs completados (**88.5% de avance global**). El núcleo del examen oficial (RF01 al RF13) está completado al 100%.
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU21: Pagar Cita Médica con Pasarela Stripe Sandbox)
 - **Implementación Full-Stack de CU21 (Pagar Cita Médica con Pasarela Stripe Sandbox):**
   - **Backend (`backend/app/Packages/Integrations/`):**

@@ -22,6 +22,7 @@ use App\Packages\MedicalRecords\Controllers\OrdenesExamenesController;
 use App\Packages\Integrations\Controllers\PaymentsController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
 use App\Packages\Analytics\Controllers\DashboardController;
+use App\Packages\Analytics\Controllers\ReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -185,6 +186,13 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::get('/historias/{idHistoria}/ordenes-examenes', [OrdenesExamenesController::class, 'byHistoria'])->middleware('role:ADMIN,MEDICO,PACIENTE');
     Route::post('/ordenes-examenes', [OrdenesExamenesController::class, 'store'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/ordenes-examenes/{id}/anular', [OrdenesExamenesController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
+});
+
+// CU22: Reportes con Filtros Dinámicos (RF13 - Paquete 6: Reportes y Analítica)
+Route::prefix('analytics/reports')->middleware('web')->group(function () {
+    Route::get('/catalogs', [ReportsController::class, 'catalogs'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
+    Route::get('/dynamic', [ReportsController::class, 'generate'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
+    Route::get('/export-csv', [ReportsController::class, 'export'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
 });
 
 // CU23 / CU24: Reportes, Analítica y Dashboard de KPIs (Paquete 6: Reportes y Analítica)

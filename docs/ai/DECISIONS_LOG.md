@@ -178,6 +178,23 @@
   4. Proveer una experiencia de usuario distinguida mediante `StripePaymentModal.jsx` con botón de auto-llenado demo, confirmación visual con sello digital verde y comprobante oficial de pago imprimible.
 * **Impacto:** Creación de `StripePaymentService.php`, `PaymentsController.php`, `ProcessPaymentRequest.php`, `StripePaymentModal.jsx`, `paymentService.js`, migración `2026_11_07_000004_add_details_to_pagos_and_citas_table.php`, y enriquecimiento de `Cita.php` y `Pago.php`. El avance global del sistema alcanza el **84.6% (22 de 26 CUs completados)**.
 
+### Registro 25: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU22: Generar Reportes con Filtros Dinámicos (RF13)** con motor centralizado para los 7 reportes gerenciales del examen oficial, exportación de streaming CSV (UTF-8 con BOM) y vista de impresión institucional con membrete oficial del Centro Médico La Cruz para exportación a PDF.
+* **Motivo:**
+  1. Cumplir al 100% con el último requerimiento funcional obligatorio del examen (`RF13`).
+  2. Implementar los 7 reportes exigidos en la especificación PUDS:
+     - Reporte 1: Citas por rango de fechas (promedios diarios y tendencias).
+     - Reporte 2: Citas por médico (rendimiento, tasa de atención individual y cancelaciones).
+     - Reporte 3: Citas por especialidad (demanda clínica, participación y facturación estimada).
+     - Reporte 4: Citas por estado (ciclo de vida, efectividad y justificaciones de anulación RN09/RN11).
+     - Reporte 5: Padrón de pacientes registrados (censo, grupos etarios RF04 y cuentas web §3.4).
+     - Reporte 6: Balance consolidado (citas atendidas vs perdidas, ingresos y pagos Stripe CU21).
+     - Reporte 7: Agenda médica diaria por profesional (cronograma detallado, franjas horarias y ocupación).
+  3. Garantizar estricto scoping de seguridad: los médicos solo acceden a sus propios registros y agendas, mientras Administradores y Recepcionistas disponen de visión gerencial completa.
+  4. Proveer doble formato de exportación: descarga instantánea de datos tabulares en CSV estructurado y vista de reporte oficial imprimible en PDF con formato membretado y firmas de auditoría.
+* **Impacto:** Creación de `DynamicReportService.php`, `ReportsController.php`, `DynamicReportsView.jsx`, `dynamicReportService.js`, y actualización de `routes/api.php`, `Sidebar.jsx`, `App.jsx` e `InicioPanelView.jsx`. El avance global del sistema alcanza el **88.5% (23 de 26 CUs completados)** y el núcleo funcional RF01-RF13 queda cubierto al 100%.
+
+
 
 
 

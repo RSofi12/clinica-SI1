@@ -11,8 +11,8 @@
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
 | **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 13 | 0 | 🟢 **100% Completado** (Meta superada anticipadamente) |
-| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 9 | 4 (+1) | 🟡 **En Progreso Avanzado** (Meta: Domingo 08/11/2026) |
-| **TOTAL GENERAL** | **26 (+1)** | **22** | **4 (+1)** | **Progreso Global: 84.6% (22 de 26 CUs)** |
+| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 10 | 3 (+1) | 🟡 **En Progreso Avanzado** (Meta: Domingo 08/11/2026) |
+| **TOTAL GENERAL** | **26 (+1)** | **23** | **3 (+1)** | **Progreso Global: 88.5% (23 de 26 CUs)** |
 
 ---
 
@@ -407,18 +407,29 @@ pm run build exitoso).
 
 ### 📦 Paquete 6: Reportes y Analítica (P6)
 
-#### ⏳ CU22: Generar Reportes con Filtros Dinámicos (RF13)
-- [ ] **Backend:**
-  - [ ] Reporte 1: Citas por fecha.
-  - [ ] Reporte 2: Citas por médico.
-  - [ ] Reporte 3: Citas por especialidad.
-  - [ ] Reporte 4: Citas por estado (Programadas, Atendidas, Canceladas, Inasistencias).
-  - [ ] Reporte 5: Pacientes registrados.
-  - [ ] Reporte 6: Balance y totales en período.
-  - [ ] Reporte 7: Agenda diaria por médico.
-  - [ ] Exportación a formato CSV / PDF.
-- [ ] **Frontend:** Módulo de analítica con gráficos, filtros de fecha y botón de exportación.
-- [ ] **Fase de Pruebas:** Comparación de totales del reporte contra conteos reales en PostgreSQL.
+#### ✅ CU22: Generar Reportes con Filtros Dinámicos (RF13)
+- [x] **Backend:**
+  - [x] Reporte 1: Citas por fecha / rango de fechas cronológico con promedios diarios.
+  - [x] Reporte 2: Citas por médico asignado con tasas individuales de atención y cancelaciones.
+  - [x] Reporte 3: Citas por especialidad médica con porcentaje de participación y balance estimado.
+  - [x] Reporte 4: Citas por estado (Programadas, Atendidas, Canceladas, Inasistencias) con desglose de motivos de anulación (RN09/RN11).
+  - [x] Reporte 5: Pacientes registrados con segmentación etaria (Pediátricos <15, Adultos 15-59, Geriátricos 60+) y estado de cuentas web.
+  - [x] Reporte 6: Balance consolidado y rendimiento operativo (ingresos, pagos Stripe completados, tasa de pérdida).
+  - [x] Reporte 7: Agenda médica diaria por profesional con franja horaria configurada.
+  - [x] Servicio transaccional `DynamicReportService.php` y controlador `ReportsController.php`.
+  - [x] Exportación nativa Streamed CSV con codificación UTF-8 + BOM (`/export-csv`).
+  - [x] 3 rutas protegidas registradas en `routes/api.php` bajo `/api/analytics/reports`.
+  - [x] Auditoría inmutable en `Bitacora.php` (`GENERAR_REPORTE_DINAMICO`).
+- [x] **Frontend:**
+  - [x] Servicio `dynamicReportService.js` para consumo de catálogos, datos y descargas.
+  - [x] Vista interactiva `DynamicReportsView.jsx` con selector de 7 pestañas, barra de filtros contextual (fechas, médico, especialidad, estado, grupo etario).
+  - [x] Bloque de KPIs ejecutivos interactivos, desgloses visuales de distribución y tabla con buscador en vivo y paginación.
+  - [x] Descarga de CSV y soporte oficial de impresión estructurada `@media print` con membrete del Centro Médico La Cruz.
+  - [x] Integración en `Sidebar.jsx`, `App.jsx` e `InicioPanelView.jsx`.
+- [x] **Fase de Pruebas:**
+  - [x] Verificación de consistencia de los 7 reportes contra registros reales de PostgreSQL (`clinica_db`).
+  - [x] Verificación de filtros etarios matemáticos y scoping por rol médico.
+  - [x] Compilación limpia de frontend con Vite (0 errores).
 
 #### ✅ CU23: Generar Reporte Personalizado por Voz con IA (Extra)
 - [x] **Backend:**

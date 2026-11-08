@@ -22,6 +22,7 @@ import {
   CreditCard,
   Layers,
   FolderOpen,
+  FileSpreadsheet,
 } from 'lucide-react';
 
 /**
@@ -196,6 +197,15 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
           action: () => onNavigate('appointments'),
         },
         {
+          id: 'dynamic-reports',
+          title: 'Reportes Dinámicos (RF13)',
+          desc: 'Los 7 reportes gerenciales con filtros, exportación CSV y PDF (CU22)',
+          icon: FileSpreadsheet,
+          iconBg: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+          badge: 'RF13',
+          action: () => onNavigate('dynamic-reports'),
+        },
+        {
           id: 'voice-reports',
           title: 'Reportes por Voz con IA',
           desc: 'Asistente de inteligencia artificial para analítica clínica (CU23)',
@@ -273,6 +283,15 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
           action: () => onNavigate('recetas'),
         },
         {
+          id: 'dynamic-reports',
+          title: 'Reportes Dinámicos (RF13)',
+          desc: 'Los 7 reportes gerenciales con filtros, exportación CSV y PDF (CU22)',
+          icon: FileSpreadsheet,
+          iconBg: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+          badge: 'RF13',
+          action: () => onNavigate('dynamic-reports'),
+        },
+        {
           id: 'voice-reports',
           title: 'Reportes por Voz con IA',
           desc: 'Dictado de comandos clínicos y filtros inteligentes (CU23)',
@@ -348,6 +367,15 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
           iconBg: 'bg-purple-50 text-purple-600 border-purple-100',
           badge: 'Comprobantes',
           action: () => onNavigate('recetas'),
+        },
+        {
+          id: 'dynamic-reports',
+          title: 'Reportes y Estadísticas',
+          desc: '7 reportes dinámicos con filtros de fechas, médico y estado (CU22)',
+          icon: FileSpreadsheet,
+          iconBg: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+          badge: 'RF13',
+          action: () => onNavigate('dynamic-reports'),
         },
         {
           id: 'overview',

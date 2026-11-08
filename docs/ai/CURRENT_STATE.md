@@ -12,7 +12,7 @@
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **9 completados de 13 (+2) (CU11, CU13, CU16, CU17, CU18, CU19, CU21, CU23, CU24, CU25, CU26)**. Total Global: **22 de 26 (+2) completados (84.6%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes dinámicos, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **10 completados de 13 (+2) (CU11, CU13, CU16, CU17, CU18, CU19, CU21, CU22, CU23, CU24, CU25, CU26)**. Total Global: **23 de 26 (+2) completados (88.5%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -502,3 +502,37 @@
     - Botón de acción contextual "Pagar" para citas pendientes, accesible por Recepción y Paciente.
     - Visualización del estatus de pago en el modal de Ticket oficial de la cita.
   - ✅ **Compilación Exitosa:** `npm run build` verificado con **0 errores** (2046 módulos transformados).
+
+### 28. Implementación Full-Stack de CU22 (Generar Reportes con Filtros Dinámicos — RF13) (07/11/2026)
+- **Backend (`backend/app/Packages/Analytics/`):**
+  - ✅ **Servicio de Dominio Transaccional (`DynamicReportService.php`):**
+    - Implementación de los **7 reportes gerenciales obligatorios del examen (RF13)**:
+      1. *Citas por rango de fechas:* Evolución cronológica, cálculo de promedios diarios y agrupador de tendencia.
+      2. *Citas por médico:* Desempeño individual, atenciones, cancelaciones y tasa de atención porcentual por profesional.
+      3. *Citas por especialidad:* Demanda clínica, participación sobre el total institucional e ingresos facturados estimados.
+      4. *Citas por estado:* Ciclo de vida completo (Programada, Confirmada, Atendida, Cancelada, Inasistencia) con listado detallado de motivos de cancelación (RN09/RN11).
+      5. *Padrón de pacientes registrados:* Censo clínico, segmentación matemática por grupos etarios según RF04 (Pediátricos <15 años, Adultos 15-59 años, Geriátricos 60+ años) y estado de cuentas de autoservicio web (§3.4).
+      6. *Balance consolidado y rendimiento operativo:* Relación de citas atendidas vs perdidas, tasa de asistencia, ingresos de consultas y pagos confirmados en Stripe Sandbox (CU21).
+      7. *Agenda médica diaria por profesional:* Cronograma detallado hora por hora para un médico y fecha específica, resolución de franja horaria configurada en `disponibilidades` y tasa de ocupación.
+    - Scoping estricto por rol: Los médicos quedan restringidos exclusivamente a sus propios datos y pacientes atendidos; Administradores y Recepcionistas disponen de visión global.
+    - Exportador de streaming nativo a CSV con codificación UTF-8 y BOM (`exportCsv`).
+    - Auditoría inmutable en `Bitacora.php` con tipo de acción `GENERAR_REPORTE_DINAMICO`.
+  - ✅ **Controlador REST (`ReportsController.php`):**
+    - Endpoints `/api/analytics/reports/catalogs`, `/api/analytics/reports/dynamic` y `/api/analytics/reports/export-csv`.
+  - ✅ **Rutas API (`backend/routes/api.php`):** 3 endpoints protegidos bajo `/api/analytics/reports/` con middleware de roles (`ADMIN`, `RECEPCIONISTA`, `MEDICO`).
+  - ✅ **Verificación:** Pruebas automatizadas directas sobre PostgreSQL ejecutadas con 100% de éxito en los 7 reportes y catálogos.
+
+- **Frontend (`frontend/src/apps/analytics/`):**
+  - ✅ **Servicio API (`dynamicReportService.js`):** Cliente HTTP para catálogos, generación en tiempo real, descarga de streams CSV y disparador de impresión nativa.
+  - ✅ **Componente Principal (`DynamicReportsView.jsx`):**
+    - Diseñado según `/design-taste-frontend` con cabecera institucional Deep Aqua (`#003844`), barra de pestañas para los 7 reportes con iconos dedicados (`Calendar`, `UserCheck`, `Stethoscope`, `Activity`, `Users`, `DollarSign`, `Clock`).
+    - Barra de filtros reactiva: atajos de tiempo (`Hoy`, `7 días`, `Mes`, `Fechas personalizadas`), selectores dinámicos de Médico, Especialidad, Estado de Cita y Grupo Etario.
+    - Bloque de KPIs ejecutivos interactivos (conteos, porcentajes, balances de ingresos).
+    - Desgloses visuales adaptativos: barras de demanda clínica por especialidad, distribución de ciclo de vida de citas y segmentación etaria.
+    - Tabla de datos interactiva con buscador en vivo, badges semánticos por estado/pago, y paginación en cliente.
+    - Descarga de archivo CSV estructurado con un clic y vista de impresión institucional con membrete del Centro Médico La Cruz formateada para `@media print` y exportación a PDF.
+  - ✅ **Integración en Navegación:**
+    - `Sidebar.jsx`: Nuevo acceso oficial `Reportes Dinámicos (CU22 / RF13)` bajo el paquete P6.
+    - `App.jsx`: Registro de ruta, breadcrumb y renderizado seguro bajo RBAC.
+    - `InicioPanelView.jsx`: Tarjetas de acceso rápido en el portal principal para Administrador, Recepcionista y Médico.
+  - ✅ **Compilación Exitosa:** `npm run build` verificado con **0 errores** (2049 módulos transformados en 743ms).

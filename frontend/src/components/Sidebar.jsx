@@ -21,6 +21,7 @@ import {
   Pill,
   FileText,
   Paperclip,
+  FileSpreadsheet,
 } from 'lucide-react';
 import logoWhite from '../assets/logo-full-white.svg';
 
@@ -153,6 +154,14 @@ export function Sidebar({
     {
       group: 'Reportes y Analítica (P6)',
       items: [
+        {
+          id: 'dynamic-reports',
+          label: 'Reportes Dinámicos',
+          subtitle: '7 reportes gerenciales con filtros',
+          tag: 'CU22 / RF13',
+          icon: FileSpreadsheet,
+          requiredRoles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO'],
+        },
         {
           id: 'voice-reports',
           label: 'Reportes por Voz (IA)',

@@ -11,6 +11,7 @@ import { DoctorsManager } from './apps/clinical-resources/components/DoctorsMana
 import { SchedulesManager } from './apps/clinical-resources/components/SchedulesManager';
 import { AppointmentsManager } from './apps/appointments/components/AppointmentsManager';
 import { VoiceReportAssistant } from './apps/analytics/components/VoiceReportAssistant';
+import { DynamicReportsView } from './apps/analytics/components/DynamicReportsView';
 import { ConsultasManager } from './apps/medical-records/components/ConsultasManager';
 import { RecetasManager } from './apps/medical-records/components/RecetasManager';
 import { ExpedienteClinicoView } from './apps/medical-records/components/ExpedienteClinicoView';
@@ -190,6 +191,10 @@ export default function App() {
         return role === 'ADMIN' ? 'Plantel Médico y Especialidades (CU06 / CU07)' : 'Inicio';
       case 'schedules':
         return role === 'ADMIN' ? 'Gestión de Horarios y Disponibilidad Médica (CU08)' : 'Inicio';
+      case 'dynamic-reports':
+        return ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+          ? 'Generador de Reportes con Filtros Dinámicos (CU22 / RF13)'
+          : 'Inicio';
       case 'voice-reports':
         return ['ADMIN', 'MEDICO'].includes(role)
           ? 'Asistente de Reportes por Voz con IA (CU23)'
@@ -322,6 +327,8 @@ export default function App() {
               <ConsultasManager />
             ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
               <RecetasManager currentUser={user} />
+            ) : dashboardTab === 'dynamic-reports' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
+              <DynamicReportsView />
             ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
               <VoiceReportAssistant />
             ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
