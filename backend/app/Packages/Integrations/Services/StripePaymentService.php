@@ -113,7 +113,8 @@ class StripePaymentService
                 'metadata[id_paciente]'     => (string) $cita->id_paciente,
                 'metadata[paciente]'        => $cita->paciente ? "{$cita->paciente->nombres} {$cita->paciente->apellidos}" : 'Paciente',
                 'metadata[especialidad]'    => $cita->especialidad?->nombre ?? 'Medicina General',
-                'payment_method_types[]'    => 'card',
+                'automatic_payment_methods[enabled]' => 'true',
+                'automatic_payment_methods[allow_redirects]' => 'never',
             ]);
 
         if ($response->failed()) {
@@ -263,9 +264,12 @@ class StripePaymentService
             // Auditoría inmutable en Bitacora (CU03)
             Bitacora::registrar(
                 $usuario->id_usuario ?? $usuario->id,
-                'PAGO_CITA_STRIPE',
                 'PAGOS',
-                "Confirmado pago {$pago->codigo_pago} de \${$monto} USD para cita {$cita->codigo_cita} ({$cita->especialidad?->nombre}) vía Stripe Sandbox ({$paymentIntentId}). Tarjeta terminada en {$tarjetaUltimos4}."
+                'PAGO_CITA_STRIPE',
+                'pagos',
+                $pago->id_pago,
+                "Confirmado pago {$pago->codigo_pago} de \${$monto} USD para cita {$cita->codigo_cita} ({$cita->especialidad?->nombre}) vía Stripe Sandbox ({$paymentIntentId}). Tarjeta terminada en {$tarjetaUltimos4}.",
+                request() ? request()->ip() : '127.0.0.1'
             );
 
             // Disparar notificación automática de pago confirmado (CU20 / CU21)

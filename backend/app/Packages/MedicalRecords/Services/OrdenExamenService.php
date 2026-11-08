@@ -244,8 +244,10 @@ class OrdenExamenService
             // Auditoría inmutable en Bitacora.php (CU03)
             Bitacora::registrar(
                 $usuario->id_usuario ?? $usuario->id,
-                'EMITIR_ORDEN_EXAMEN',
                 'HISTORIAL_CLINICO',
+                'EMITIR_ORDEN_EXAMEN',
+                'ordenes_examenes',
+                $orden->id_orden,
                 "Emitida orden de examen auxiliar {$orden->codigo_orden} ({$orden->nombre_estudio} - {$orden->tipo_estudio}) para historia clínica #{$consulta->id_historia_clinica} en consulta #{$consulta->id_consulta}."
             );
 
@@ -288,8 +290,10 @@ class OrdenExamenService
             // Auditoría inmutable en Bitacora (CU03)
             Bitacora::registrar(
                 $usuario->id_usuario ?? $usuario->id,
-                'ANULAR_ORDEN_EXAMEN',
                 'HISTORIAL_CLINICO',
+                'ANULAR_ORDEN_EXAMEN',
+                'ordenes_examenes',
+                $orden->id_orden,
                 "Cancelada orden de examen {$orden->codigo_orden} ({$orden->nombre_estudio}). Motivo: {$motivo}"
             );
 
