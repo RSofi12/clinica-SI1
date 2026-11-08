@@ -72,10 +72,26 @@ Durante las pruebas de usuario en el modal de cobro de Stripe Sandbox se detecta
 
 ---
 
-## 5. Commits de Git Realizados
+## 5. Cambio de Moneda Oficial a Bolivianos (Bs / BOB)
+A solicitud del usuario, se unificó la moneda oficial en todo el sistema a Bolivianos (**Bs. / BOB**):
+1. **Configuración Backend (`.env`, `config/services.php`, `StripePaymentService.php`):**
+   - Configurada divisa `STRIPE_CURRENCY=bob`.
+   - Pasarela Stripe Sandbox configurada para emitir cargos y PaymentIntents nativos en `bob` (admitido al 100% por Stripe).
+   - Bitácora inmutable registra montos con formato `Bs. {$monto}`.
+2. **Base de Datos (PostgreSQL):**
+   - 294 registros históricos de la tabla `pagos` actualizados de `'usd'` a `'bob'`.
+3. **Frontend (`StripePaymentModal.jsx`, `DynamicReportsView.jsx`):**
+   - Modal de cobro muestra `Bs. {monto}` y comprobante digital en `Bs.`.
+   - Reportes dinámicos (CU22 / RF13) y aranceles de especialidades visualizados y exportados en `Bs.`.
+4. **Verificación:** Prueba de cobro en vivo procesada exitosamente en Stripe Sandbox: PaymentIntent `pi_3UZMk0...`, cargo en `bob` de Bs. 90.00, cita CM-0005 confirmada y registrada en Bitácora ID 168.
+
+---
+
+## 6. Commits de Git Realizados
 1. `e06e780` — `fix(ui): activar accesos rapidos en InicioPanelView para CU21, CU25 y CU26`
 2. `35601fa` — `build(assets): regenerar bundle de produccion con accesos rapidos actualizados`
 3. `88beae9` — `docs: actualizar estado del proyecto, bitacora y fases tras activar accesos rapidos en InicioPanelView`
 4. `d8f4b5a` — `fix(stripe): actualizar parametros automatic_payment_methods y corregir mapeo de bitacora en pagos`
+5. `5788806` — `feat(currency): cambiar moneda oficial a Bolivianos (Bs / BOB) en pasarela Stripe, reportes y vistas`
 
 

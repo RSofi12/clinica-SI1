@@ -1,5 +1,14 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Cambio de Moneda Oficial a Bolivianos — Bs / BOB)
+- **Moneda Oficial Unificada a Bolivianos (Bs / BOB):**
+  - **Backend:** `STRIPE_CURRENCY=bob` en `.env` y `config/services.php`; pasarela Stripe configurada para cobrar nativamente en `bob`; auditoría en `Bitacora.php` con formato `Bs. {$monto}`.
+  - **Base de Datos:** 294 pagos históricos actualizados a `moneda = 'bob'`.
+  - **Frontend:** Modal de pago con tarjeta (`StripePaymentModal.jsx`), reportes dinámicos (`DynamicReportsView.jsx`) y aranceles alineados formalmente a `Bs.`.
+  - **Commit de Git:** `5788806` (aislado y fácilmente reversible con `git revert 5788806` en caso de requerirse).
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Corrección de Errores Stripe Sandbox y Bitácora en CU21)
 - **Corrección de Pasarela de Pagos Stripe (`StripePaymentService.php` y `Bitacora.php`):**
   - **Parámetro Stripe obsoleto:** Sustituido `payment_method_types[] = 'card'` por `automatic_payment_methods[enabled] = 'true'` y `allow_redirects = 'never'` para cumplir con la versión actual de la API de Stripe.
