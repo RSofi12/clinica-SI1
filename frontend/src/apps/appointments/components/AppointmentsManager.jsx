@@ -39,6 +39,7 @@ import { AppointmentCancelModal } from './AppointmentCancelModal';
 import { AppointmentRescheduleModal } from './AppointmentRescheduleModal';
 import { PatientAppointmentHistoryModal } from './PatientAppointmentHistoryModal';
 import { AppointmentStatusModal } from './AppointmentStatusModal';
+import { AppointmentTicketModal } from './AppointmentTicketModal';
 import { patientProfileService } from '../../clinical-resources/services/patientProfileService';
 
 /**
@@ -275,89 +276,6 @@ export function AppointmentsManager() {
           onOpenTicket={setTicketModalAppointment}
           onOpenPatientHistory={setSelectedPatientForHistory}
         />
-
-        {/* Modal de Ticket de Cita */}
-        {ticketModalAppointment && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-            <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden animate-in zoom-in-95 duration-200">
-              <div className="bg-gradient-to-r from-[#004d5a] to-[#00687a] p-5 text-white flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <Printer className="w-5 h-5 text-cyan-200" />
-                  <h3 className="font-bold text-sm font-serif-clinical font-normal tracking-tight">Ticket de Cita Médica</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setTicketModalAppointment(null)}
-                  className="p-1 hover:bg-white/10 rounded-lg transition cursor-pointer"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
-              </div>
-
-              <div className="p-6 space-y-4 text-xs">
-                <div className="text-center pb-3 border-b border-dashed border-slate-200">
-                  <span className="font-mono font-extrabold text-xl text-[#00687a] block">
-                    {ticketModalAppointment.codigo_cita}
-                  </span>
-                  <span className="text-[11px] text-slate-400">Comprobante Oficial de Cita</span>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500">Paciente:</span>
-                    <span className="font-bold text-slate-800">
-                      {ticketModalAppointment.paciente?.nombres} {ticketModalAppointment.paciente?.apellidos}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500">Documento / CI:</span>
-                    <span className="font-mono text-slate-700">
-                      {ticketModalAppointment.paciente?.numero_documento || '—'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500">Médico:</span>
-                    <span className="font-semibold text-slate-800">
-                      Dr(a). {ticketModalAppointment.medico?.nombres} {ticketModalAppointment.medico?.apellidos}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500">Especialidad:</span>
-                    <span className="text-slate-700">{ticketModalAppointment.especialidad?.nombre}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-slate-100">
-                    <span className="text-slate-500">Fecha y Hora:</span>
-                    <span className="font-bold text-slate-900">
-                      {formatDateDisplay(ticketModalAppointment.fecha_hora_inicio)} — {formatTimeDisplay(ticketModalAppointment.fecha_hora_inicio)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between py-1">
-                    <span className="text-slate-500">Estado:</span>
-                    <div>{getStatusBadge(ticketModalAppointment.estado)}</div>
-                  </div>
-                </div>
-
-                <div className="pt-2 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => window.print()}
-                    className="flex-1 py-2 px-3 bg-gradient-to-r from-[#00687a] to-[#008b9e] text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-1.5 hover:brightness-105 cursor-pointer"
-                  >
-                    <Printer className="w-4 h-4" />
-                    <span>Imprimir Ticket</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTicketModalAppointment(null)}
-                    className="py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer"
-                  >
-                    Cerrar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Modal de Historial Cronológico de Citas del Paciente (CU15) */}
         <PatientAppointmentHistoryModal
@@ -868,112 +786,12 @@ export function AppointmentsManager() {
         initialData={bookingInitialData}
       />
 
-      {/* Modal de Visualización de Ticket Oficial de Cita */}
-      {ticketModalAppointment && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-modal-backdrop">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden animate-modal-panel">
-            {/* Header */}
-            <div className="px-6 py-4 bg-gradient-to-r from-[#004d5a] to-[#00687a] text-white flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-cyan-200" />
-                <h3 className="font-bold text-sm font-serif-clinical font-normal tracking-tight">Ticket de Cita Médica</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setTicketModalAppointment(null)}
-                className="p-1 text-cyan-200 hover:text-white rounded-lg transition cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Ticket Body */}
-            <div className="p-6 space-y-4 text-xs font-sans">
-              <div className="text-center pb-3 border-b border-dashed border-slate-300">
-                <h4 className="font-extrabold text-base text-slate-900 tracking-tight">
-                  CENTRO MÉDICO LA CRUZ
-                </h4>
-                <p className="text-[11px] text-slate-500">Clínica Vida Salud • Santa Cruz, Bolivia</p>
-                <div className="mt-2 inline-block px-3 py-1 bg-[#00687a]/10 border border-[#00687a]/20 rounded-lg">
-                  <span className="font-mono font-extrabold text-sm text-[#00687a]">
-                    {ticketModalAppointment.codigo_cita}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-2.5">
-                <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                  <span className="text-slate-500">Paciente:</span>
-                  <span className="font-bold text-slate-800 text-right">
-                    {ticketModalAppointment.paciente?.nombres} {ticketModalAppointment.paciente?.apellidos}
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                  <span className="text-slate-500">Documento CI:</span>
-                  <span className="font-mono font-medium text-slate-700">
-                    {ticketModalAppointment.paciente?.numero_documento || '—'}
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                  <span className="text-slate-500">Médico Tratante:</span>
-                  <span className="font-bold text-slate-800 text-right">
-                    Dr. {ticketModalAppointment.medico?.nombres} {ticketModalAppointment.medico?.apellidos}
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                  <span className="text-slate-500">Especialidad:</span>
-                  <span className="font-semibold text-[#00687a]">
-                    {ticketModalAppointment.especialidad?.nombre || 'Medicina General'}
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                  <span className="text-slate-500">Fecha y Hora:</span>
-                  <span className="font-bold text-slate-900">
-                    {formatDateDisplay(ticketModalAppointment.fecha_hora_inicio)} • {formatTimeDisplay(ticketModalAppointment.fecha_hora_inicio)} - {formatTimeDisplay(ticketModalAppointment.fecha_hora_fin)}
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                  <span className="text-slate-500">Modalidad:</span>
-                  <span className="font-semibold text-slate-700">
-                    {ticketModalAppointment.modalidad}
-                  </span>
-                </div>
-                <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                  <span className="text-slate-500">Estado:</span>
-                  <div>{getStatusBadge(ticketModalAppointment.estado)}</div>
-                </div>
-                {ticketModalAppointment.motivo_consulta && (
-                  <div className="pt-1">
-                    <span className="text-slate-500 block mb-1">Motivo de Consulta:</span>
-                    <p className="bg-slate-50 p-2 rounded-lg border border-slate-200 text-slate-700 italic">
-                      "{ticketModalAppointment.motivo_consulta}"
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Botón de Impresión */}
-              <div className="pt-2 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="flex-1 py-2 px-3 bg-gradient-to-r from-[#00687a] to-[#008b9e] text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-1.5 hover:brightness-105 cursor-pointer"
-                >
-                  <Printer className="w-4 h-4" />
-                  <span>Imprimir Ticket</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTicketModalAppointment(null)}
-                  className="py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition cursor-pointer"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal de Visualización e Impresión de Ticket Oficial de Cita (CU09/CU10) */}
+      <AppointmentTicketModal
+        isOpen={Boolean(ticketModalAppointment)}
+        appointment={ticketModalAppointment}
+        onClose={() => setTicketModalAppointment(null)}
+      />
 
       {/* Modal de Reprogramación de Cita con Validación Anti-Colisión (CU11 / RF08) */}
       <AppointmentRescheduleModal

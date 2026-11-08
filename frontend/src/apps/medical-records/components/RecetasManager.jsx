@@ -270,7 +270,14 @@ export function RecetasManager({ currentUser }) {
                     <tr key={r.id_receta} className="hover:bg-slate-50/70 transition">
                       {/* Nº Receta */}
                       <td className="py-3.5 px-4 font-bold text-slate-900">
-                        #{String(r.id_receta).padStart(5, '0')}
+                        <button
+                          type="button"
+                          onClick={() => handleVerDetalle(r)}
+                          className="font-mono font-bold text-teal-800 hover:text-teal-950 hover:underline cursor-pointer"
+                          title="Ver detalle completo de la receta"
+                        >
+                          #{String(r.id_receta).padStart(5, '0')}
+                        </button>
                       </td>
 
                       {/* Fecha */}
@@ -338,24 +345,34 @@ export function RecetasManager({ currentUser }) {
 
                       {/* Acciones */}
                       <td className="py-3.5 px-4 text-right">
-                        <div className="inline-flex items-center gap-1.5">
+                        <div className="inline-flex items-center justify-end gap-1.5">
                           <button
                             type="button"
                             onClick={() => handleVerDetalle(r)}
-                            className="p-1.5 rounded-lg text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition"
-                            title="Ver e imprimir receta médica"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition shadow-2xs cursor-pointer active:scale-95"
+                            title="Ver prescripción médica y posología"
                           >
-                            <Printer className="w-4 h-4" />
+                            <Eye className="w-3.5 h-3.5 text-teal-700" />
+                            <span>Ver Receta</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleVerDetalle(r)}
+                            className="p-1.5 rounded-lg text-slate-600 bg-white hover:bg-slate-100 border border-slate-200 transition shadow-2xs cursor-pointer active:scale-95"
+                            title="Imprimir receta oficial membretada"
+                          >
+                            <Printer className="w-3.5 h-3.5 text-slate-700" />
                           </button>
 
                           {esActiva && (rol === 'ADMIN' || (rol === 'MEDICO' && currentUser?.medico?.id_medico === r.id_medico)) && (
                             <button
                               type="button"
                               onClick={() => handleSolicitarAnular(r)}
-                              className="p-1.5 rounded-lg text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition"
-                              title="Anular receta"
+                              className="p-1.5 rounded-lg text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition shadow-2xs cursor-pointer active:scale-95"
+                              title="Anular receta médica (Baja Lógica RN11)"
                             >
-                              <Ban className="w-4 h-4" />
+                              <Ban className="w-3.5 h-3.5" />
                             </button>
                           )}
                         </div>
@@ -402,7 +419,6 @@ export function RecetasManager({ currentUser }) {
         isOpen={isDetailOpen}
         onClose={() => {
           setIsDetailOpen(false);
-          setSelectedReceta(null);
         }}
         onAnular={(rec) => {
           setIsDetailOpen(false);
@@ -417,7 +433,6 @@ export function RecetasManager({ currentUser }) {
         isOpen={isAnularOpen}
         onClose={() => {
           setIsAnularOpen(false);
-          setRecetaToAnular(null);
         }}
         onConfirm={handleConfirmarAnular}
       />

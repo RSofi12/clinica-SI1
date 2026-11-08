@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, AlertTriangle, ShieldAlert, Ban, Loader2 } from 'lucide-react';
 import { ModalPortal } from '../../../components/ModalPortal';
 
@@ -6,11 +6,21 @@ import { ModalPortal } from '../../../components/ModalPortal';
  * Modal de Anulación Lógica de Receta Médica (RN11 / CU18)
  */
 export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }) {
+  const [cachedReceta, setCachedReceta] = useState(receta);
   const [motivo, setMotivo] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  if (!isOpen || !receta) return null;
+  useEffect(() => {
+    if (receta) {
+      setCachedReceta(receta);
+    }
+  }, [receta]);
+
+  const activeReceta = receta || cachedReceta;
+
+  if (!isOpen && !activeReceta) return null;
+  if (!activeReceta) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +34,7 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
     try {
       setIsSubmitting(true);
       setError(null);
-      await onConfirm(receta.id_receta, motivoLimpio);
+      await onConfirm(activeReceta.id_receta, motivoLimpio);
       setMotivo('');
       onClose();
     } catch (err) {
@@ -46,14 +56,16 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
               <Ban className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-semibold">Anular Receta Médica #{receta.id_receta}</h3>
+              <h3 className="text-base font-semibold">Anular Receta Médica #{activeReceta.id_receta}</h3>
               <p className="text-xs text-rose-600">Baja lógica permanente (RN11)</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition"
+            data-modal-close="true"
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition cursor-pointer"
             disabled={isSubmitting}
+            aria-label="Cerrar modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -99,9 +111,10 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
             <button
               type="button"
+              data-modal-close="true"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition"
+              className="px-4 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition cursor-pointer"
             >
               Cancelar
             </button>

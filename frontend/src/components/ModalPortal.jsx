@@ -1,9 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
+
+export const ModalCloseContext = createContext(null);
+
+export function useModalClose() {
+  return useContext(ModalCloseContext);
+}
 
 /**
  * Contenedor Maestro de Modales en Portal con Bloqueo de Scroll,
- * Cierre en Backdrop y Transición Fluida de Entrada y Salida
+ * Cierre en Backdrop y Transición Fluida de Entrada y Salida.
  * Garantiza que todo modal se fije al viewport y sea inmune al scroll de contenedores internos.
  */
 export function ModalPortal({
@@ -13,27 +19,52 @@ export function ModalPortal({
   maxWidth = 'max-w-lg',
   className = '',
   panelClassName = '',
-  duration = 200,
+  duration = 220,
 }) {
   const [mounted, setMounted] = useState(isOpen);
   const [isClosing, setIsClosing] = useState(false);
   const prevIsOpen = useRef(isOpen);
+  const closingTimeoutRef = useRef(null);
+
+  const handleRequestClose = () => {
+    if (isClosing || !mounted) return;
+    setIsClosing(true);
+    if (closingTimeoutRef.current) clearTimeout(closingTimeoutRef.current);
+    closingTimeoutRef.current = setTimeout(() => {
+      onClose?.();
+      setMounted(false);
+      setIsClosing(false);
+      closingTimeoutRef.current = null;
+    }, duration);
+  };
 
   useEffect(() => {
     if (isOpen) {
+      if (closingTimeoutRef.current) {
+        clearTimeout(closingTimeoutRef.current);
+        closingTimeoutRef.current = null;
+      }
       setMounted(true);
       setIsClosing(false);
-    } else if (prevIsOpen.current && !isOpen) {
-      // Activar animación fluida de salida
+    } else if (prevIsOpen.current && !isOpen && mounted && !isClosing) {
+      // Si el padre puso isOpen en false externamente, animar salida fluida antes de desmontar
       setIsClosing(true);
-      const timer = setTimeout(() => {
+      closingTimeoutRef.current = setTimeout(() => {
         setMounted(false);
         setIsClosing(false);
+        closingTimeoutRef.current = null;
       }, duration);
-      return () => clearTimeout(timer);
     }
     prevIsOpen.current = isOpen;
-  }, [isOpen, duration]);
+  }, [isOpen, mounted, isClosing, duration]);
+
+  useEffect(() => {
+    return () => {
+      if (closingTimeoutRef.current) {
+        clearTimeout(closingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!mounted) return;
@@ -42,8 +73,9 @@ export function ModalPortal({
     document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && !isClosing) {
-        onClose?.();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleRequestClose();
       }
     };
 
@@ -53,7 +85,7 @@ export function ModalPortal({
       document.body.style.overflow = originalOverflow;
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [mounted, isClosing, onClose]);
+  }, [mounted, isClosing]);
 
   if (!mounted) return null;
 
@@ -73,8 +105,14 @@ export function ModalPortal({
       if (!resolvedPanelClass.includes('animate-modal-panel-out')) {
         resolvedPanelClass += ' animate-modal-panel-out';
       }
-    } else if (!resolvedPanelClass.includes('animate-modal-panel')) {
-      resolvedPanelClass += ' animate-modal-panel';
+    } else {
+      resolvedPanelClass = resolvedPanelClass.replace(
+        /\banimate-modal-panel-out\b/g,
+        'animate-modal-panel'
+      );
+      if (!resolvedPanelClass.includes('animate-modal-panel')) {
+        resolvedPanelClass += ' animate-modal-panel';
+      }
     }
   }
 
@@ -83,23 +121,35 @@ export function ModalPortal({
     : 'animate-modal-backdrop';
 
   const modalMarkup = (
-    <div
-      onClick={(e) => {
-        if (e.target === e.currentTarget && !isClosing) {
-          onClose?.();
-        }
-      }}
-      className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto cursor-pointer ${backdropAnimClass} ${className}`}
-      role="dialog"
-      aria-modal="true"
-    >
+    <ModalCloseContext.Provider value={handleRequestClose}>
       <div
-        onClick={(e) => e.stopPropagation()}
-        className={resolvedPanelClass}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            handleRequestClose();
+          }
+        }}
+        className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-md overflow-y-auto cursor-pointer ${backdropAnimClass} ${className}`}
+        role="dialog"
+        aria-modal="true"
       >
-        {children}
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            // Interceptar elementos con data-modal-close="true" para salida fluida
+            const closeTrigger = e.target.closest('[data-modal-close="true"]');
+            if (closeTrigger) {
+              e.preventDefault();
+              handleRequestClose();
+            }
+          }}
+          className={resolvedPanelClass}
+        >
+          {typeof children === 'function'
+            ? children({ requestClose: handleRequestClose, isClosing })
+            : children}
+        </div>
       </div>
-    </div>
+    </ModalCloseContext.Provider>
   );
 
   return typeof document !== 'undefined'

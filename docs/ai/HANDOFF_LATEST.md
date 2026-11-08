@@ -1,6 +1,29 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+## Estado de Relevo al 08/11/2026 (Modal de Ticket Oficial, Transición Fluida de Modales y Detalle de Recetas Médicas CU18)
+- **Modal de Ticket Oficial de Cita Médica ([`AppointmentTicketModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentTicketModal.jsx) y [`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - **Componente Dedicado y Centralizado:** Se extrajo y estandarizó el ticket de cita en `AppointmentTicketModal.jsx` integrado completamente con `ModalPortal`.
+  - **Ficha Clínica del Ticket:** Cabecera institucional con gradiente clínico, código correlativo de cita en destaque con botón de copiado rápido (`CM-0054`), datos completos del paciente (nombre, CI), médico tratante y matrícula profesional, especialidad médica, fecha y franja horaria formateada, modalidad asistencial, estado con badge cromático, motivo de consulta e indicación asistencial previa a la cita.
+  - **Acciones y Estilos de Impresión:** Botones para "Imprimir Ticket" (`window.print()`, con optimización de medios `@media print` que oculta controles interactivos) y "Cerrar".
+  - **Eliminación de Código Duplicado:** Se eliminaron los dos bloques inline con `fixed inset-0` que estaban duplicados en la vista de recepcionista y de agenda médica.
+
+- **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx)):**
+  - **Causa raíz de la desaparición abrupta:** Al presionar Escape, hacer clic en el backdrop o en los botones "X" / "Cancelar", los componentes ejecutaban inmediatamente `onClose()`. Esto forzaba al componente padre a desmontar el modal o vaciar el objeto seleccionado (`selectedReceta = null`, `patient = null`), impidiendo que `animate-modal-panel-out` y `animate-modal-backdrop-out` se reprodujeran durante sus 200ms en el DOM.
+  - **Solución Arquitectónica:**
+    - `ModalPortal` ahora incorpora `handleRequestClose` diferido que activa `isClosing = true` durante 220ms antes de invocar `onClose?.()`.
+    - Intercepción automática de clics en elementos con `data-modal-close="true"`, clic en el backdrop y tecla `Escape`.
+    - En los modales principales ([`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx), [`RecetaAnularModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaAnularModal.jsx), [`AntecedentesPatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedentesPatientModal.jsx), [`AntecedenteFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedenteFormModal.jsx), [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx)) se implementó preservación de datos (`activeObject = item || cachedItem`), evitando que un reseteo prematuro del padre destruya el modal antes de que culmine su animación de salida.
+
+- **Gestión y Visualización de Recetas Médicas ([`RecetasManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetasManager.jsx) y [`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx)):**
+  - **Acciones Claras en Tabla:** La columna "ACCIONES" ahora despliega de forma explícita el botón primario **`Ver Receta`** (`Eye` con fondo teal suave) para abrir la prescripción completa, junto al botón secundario de **`Imprimir`** (`Printer`) y el botón asistencial de **`Anular`** (`Ban`) para profesionales facultados.
+  - **Hipervínculo Directo:** El número correlativo de receta (ej. `#00092`) ahora es interactivo con estilo clickeable para abrir la ficha directamente.
+  - **Alineación con Reglas Clínico-Legales:**
+    - *Emisión en Consulta:* Las recetas se originan en el acto médico de la consulta (`CU16 / ConsultaRegistroModal.jsx`), donde el facultativo prescribe tras registrar el diagnóstico CIE-10.
+    - *Inmutabilidad y Baja Lógica (RN11):* Una receta emitida es un documento médico-legal que no admite edición directa silenciosa (prevención de mala praxis o adulteración de fármacos). Todo error posológico se subsana anulando la receta anterior con motivo justificado (`PATCH /api/recetas/{id}/anular`) y emitiendo una nueva prescripción.
+
+- **Verificación Técnica:** `npm --prefix frontend run build` exitoso con **0 errores** (23.60s).
+
+---
 - **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
   - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
   - **Solución implementada:**
@@ -77,7 +100,30 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+## Estado de Relevo al 08/11/2026 (Modal de Ticket Oficial, Transición Fluida de Modales y Detalle de Recetas Médicas CU18)
+- **Modal de Ticket Oficial de Cita Médica ([`AppointmentTicketModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentTicketModal.jsx) y [`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - **Componente Dedicado y Centralizado:** Se extrajo y estandarizó el ticket de cita en `AppointmentTicketModal.jsx` integrado completamente con `ModalPortal`.
+  - **Ficha Clínica del Ticket:** Cabecera institucional con gradiente clínico, código correlativo de cita en destaque con botón de copiado rápido (`CM-0054`), datos completos del paciente (nombre, CI), médico tratante y matrícula profesional, especialidad médica, fecha y franja horaria formateada, modalidad asistencial, estado con badge cromático, motivo de consulta e indicación asistencial previa a la cita.
+  - **Acciones y Estilos de Impresión:** Botones para "Imprimir Ticket" (`window.print()`, con optimización de medios `@media print` que oculta controles interactivos) y "Cerrar".
+  - **Eliminación de Código Duplicado:** Se eliminaron los dos bloques inline con `fixed inset-0` que estaban duplicados en la vista de recepcionista y de agenda médica.
+
+- **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx)):**
+  - **Causa raíz de la desaparición abrupta:** Al presionar Escape, hacer clic en el backdrop o en los botones "X" / "Cancelar", los componentes ejecutaban inmediatamente `onClose()`. Esto forzaba al componente padre a desmontar el modal o vaciar el objeto seleccionado (`selectedReceta = null`, `patient = null`), impidiendo que `animate-modal-panel-out` y `animate-modal-backdrop-out` se reprodujeran durante sus 200ms en el DOM.
+  - **Solución Arquitectónica:**
+    - `ModalPortal` ahora incorpora `handleRequestClose` diferido que activa `isClosing = true` durante 220ms antes de invocar `onClose?.()`.
+    - Intercepción automática de clics en elementos con `data-modal-close="true"`, clic en el backdrop y tecla `Escape`.
+    - En los modales principales ([`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx), [`RecetaAnularModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaAnularModal.jsx), [`AntecedentesPatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedentesPatientModal.jsx), [`AntecedenteFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedenteFormModal.jsx), [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx)) se implementó preservación de datos (`activeObject = item || cachedItem`), evitando que un reseteo prematuro del padre destruya el modal antes de que culmine su animación de salida.
+
+- **Gestión y Visualización de Recetas Médicas ([`RecetasManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetasManager.jsx) y [`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx)):**
+  - **Acciones Claras en Tabla:** La columna "ACCIONES" ahora despliega de forma explícita el botón primario **`Ver Receta`** (`Eye` con fondo teal suave) para abrir la prescripción completa, junto al botón secundario de **`Imprimir`** (`Printer`) y el botón asistencial de **`Anular`** (`Ban`) para profesionales facultados.
+  - **Hipervínculo Directo:** El número correlativo de receta (ej. `#00092`) ahora es interactivo con estilo clickeable para abrir la ficha directamente.
+  - **Alineación con Reglas Clínico-Legales:**
+    - *Emisión en Consulta:* Las recetas se originan en el acto médico de la consulta (`CU16 / ConsultaRegistroModal.jsx`), donde el facultativo prescribe tras registrar el diagnóstico CIE-10.
+    - *Inmutabilidad y Baja Lógica (RN11):* Una receta emitida es un documento médico-legal que no admite edición directa silenciosa (prevención de mala praxis o adulteración de fármacos). Todo error posológico se subsana anulando la receta anterior con motivo justificado (`PATCH /api/recetas/{id}/anular`) y emitiendo una nueva prescripción.
+
+- **Verificación Técnica:** `npm --prefix frontend run build` exitoso con **0 errores** (23.60s).
+
+---
 - **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
   - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
   - **Solución implementada:**
@@ -160,7 +206,30 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+## Estado de Relevo al 08/11/2026 (Modal de Ticket Oficial, Transición Fluida de Modales y Detalle de Recetas Médicas CU18)
+- **Modal de Ticket Oficial de Cita Médica ([`AppointmentTicketModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentTicketModal.jsx) y [`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - **Componente Dedicado y Centralizado:** Se extrajo y estandarizó el ticket de cita en `AppointmentTicketModal.jsx` integrado completamente con `ModalPortal`.
+  - **Ficha Clínica del Ticket:** Cabecera institucional con gradiente clínico, código correlativo de cita en destaque con botón de copiado rápido (`CM-0054`), datos completos del paciente (nombre, CI), médico tratante y matrícula profesional, especialidad médica, fecha y franja horaria formateada, modalidad asistencial, estado con badge cromático, motivo de consulta e indicación asistencial previa a la cita.
+  - **Acciones y Estilos de Impresión:** Botones para "Imprimir Ticket" (`window.print()`, con optimización de medios `@media print` que oculta controles interactivos) y "Cerrar".
+  - **Eliminación de Código Duplicado:** Se eliminaron los dos bloques inline con `fixed inset-0` que estaban duplicados en la vista de recepcionista y de agenda médica.
+
+- **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx)):**
+  - **Causa raíz de la desaparición abrupta:** Al presionar Escape, hacer clic en el backdrop o en los botones "X" / "Cancelar", los componentes ejecutaban inmediatamente `onClose()`. Esto forzaba al componente padre a desmontar el modal o vaciar el objeto seleccionado (`selectedReceta = null`, `patient = null`), impidiendo que `animate-modal-panel-out` y `animate-modal-backdrop-out` se reprodujeran durante sus 200ms en el DOM.
+  - **Solución Arquitectónica:**
+    - `ModalPortal` ahora incorpora `handleRequestClose` diferido que activa `isClosing = true` durante 220ms antes de invocar `onClose?.()`.
+    - Intercepción automática de clics en elementos con `data-modal-close="true"`, clic en el backdrop y tecla `Escape`.
+    - En los modales principales ([`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx), [`RecetaAnularModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaAnularModal.jsx), [`AntecedentesPatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedentesPatientModal.jsx), [`AntecedenteFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedenteFormModal.jsx), [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx)) se implementó preservación de datos (`activeObject = item || cachedItem`), evitando que un reseteo prematuro del padre destruya el modal antes de que culmine su animación de salida.
+
+- **Gestión y Visualización de Recetas Médicas ([`RecetasManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetasManager.jsx) y [`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx)):**
+  - **Acciones Claras en Tabla:** La columna "ACCIONES" ahora despliega de forma explícita el botón primario **`Ver Receta`** (`Eye` con fondo teal suave) para abrir la prescripción completa, junto al botón secundario de **`Imprimir`** (`Printer`) y el botón asistencial de **`Anular`** (`Ban`) para profesionales facultados.
+  - **Hipervínculo Directo:** El número correlativo de receta (ej. `#00092`) ahora es interactivo con estilo clickeable para abrir la ficha directamente.
+  - **Alineación con Reglas Clínico-Legales:**
+    - *Emisión en Consulta:* Las recetas se originan en el acto médico de la consulta (`CU16 / ConsultaRegistroModal.jsx`), donde el facultativo prescribe tras registrar el diagnóstico CIE-10.
+    - *Inmutabilidad y Baja Lógica (RN11):* Una receta emitida es un documento médico-legal que no admite edición directa silenciosa (prevención de mala praxis o adulteración de fármacos). Todo error posológico se subsana anulando la receta anterior con motivo justificado (`PATCH /api/recetas/{id}/anular`) y emitiendo una nueva prescripción.
+
+- **Verificación Técnica:** `npm --prefix frontend run build` exitoso con **0 errores** (23.60s).
+
+---
 - **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
   - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
   - **Solución implementada:**
@@ -237,7 +306,30 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+## Estado de Relevo al 08/11/2026 (Modal de Ticket Oficial, Transición Fluida de Modales y Detalle de Recetas Médicas CU18)
+- **Modal de Ticket Oficial de Cita Médica ([`AppointmentTicketModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentTicketModal.jsx) y [`AppointmentsManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/AppointmentsManager.jsx)):**
+  - **Componente Dedicado y Centralizado:** Se extrajo y estandarizó el ticket de cita en `AppointmentTicketModal.jsx` integrado completamente con `ModalPortal`.
+  - **Ficha Clínica del Ticket:** Cabecera institucional con gradiente clínico, código correlativo de cita en destaque con botón de copiado rápido (`CM-0054`), datos completos del paciente (nombre, CI), médico tratante y matrícula profesional, especialidad médica, fecha y franja horaria formateada, modalidad asistencial, estado con badge cromático, motivo de consulta e indicación asistencial previa a la cita.
+  - **Acciones y Estilos de Impresión:** Botones para "Imprimir Ticket" (`window.print()`, con optimización de medios `@media print` que oculta controles interactivos) y "Cerrar".
+  - **Eliminación de Código Duplicado:** Se eliminaron los dos bloques inline con `fixed inset-0` que estaban duplicados en la vista de recepcionista y de agenda médica.
+
+- **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx)):**
+  - **Causa raíz de la desaparición abrupta:** Al presionar Escape, hacer clic en el backdrop o en los botones "X" / "Cancelar", los componentes ejecutaban inmediatamente `onClose()`. Esto forzaba al componente padre a desmontar el modal o vaciar el objeto seleccionado (`selectedReceta = null`, `patient = null`), impidiendo que `animate-modal-panel-out` y `animate-modal-backdrop-out` se reprodujeran durante sus 200ms en el DOM.
+  - **Solución Arquitectónica:**
+    - `ModalPortal` ahora incorpora `handleRequestClose` diferido que activa `isClosing = true` durante 220ms antes de invocar `onClose?.()`.
+    - Intercepción automática de clics en elementos con `data-modal-close="true"`, clic en el backdrop y tecla `Escape`.
+    - En los modales principales ([`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx), [`RecetaAnularModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaAnularModal.jsx), [`AntecedentesPatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedentesPatientModal.jsx), [`AntecedenteFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedenteFormModal.jsx), [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx)) se implementó preservación de datos (`activeObject = item || cachedItem`), evitando que un reseteo prematuro del padre destruya el modal antes de que culmine su animación de salida.
+
+- **Gestión y Visualización de Recetas Médicas ([`RecetasManager.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetasManager.jsx) y [`RecetaDetailModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/RecetaDetailModal.jsx)):**
+  - **Acciones Claras en Tabla:** La columna "ACCIONES" ahora despliega de forma explícita el botón primario **`Ver Receta`** (`Eye` con fondo teal suave) para abrir la prescripción completa, junto al botón secundario de **`Imprimir`** (`Printer`) y el botón asistencial de **`Anular`** (`Ban`) para profesionales facultados.
+  - **Hipervínculo Directo:** El número correlativo de receta (ej. `#00092`) ahora es interactivo con estilo clickeable para abrir la ficha directamente.
+  - **Alineación con Reglas Clínico-Legales:**
+    - *Emisión en Consulta:* Las recetas se originan en el acto médico de la consulta (`CU16 / ConsultaRegistroModal.jsx`), donde el facultativo prescribe tras registrar el diagnóstico CIE-10.
+    - *Inmutabilidad y Baja Lógica (RN11):* Una receta emitida es un documento médico-legal que no admite edición directa silenciosa (prevención de mala praxis o adulteración de fármacos). Todo error posológico se subsana anulando la receta anterior con motivo justificado (`PATCH /api/recetas/{id}/anular`) y emitiendo una nueva prescripción.
+
+- **Verificación Técnica:** `npm --prefix frontend run build` exitoso con **0 errores** (23.60s).
+
+---
 - **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
   - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
   - **Solución implementada:**
