@@ -1,0 +1,124 @@
+<mxGraphModel dx="2742" dy="1318" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1000" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- TITULO -->
+    <mxCell id="CU17-AC-TITLE" parent="1" style="text;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="&lt;b style=&quot;font-weight:normal;&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.8;margin-top:0pt;margin-bottom:6pt;&quot;&gt;&lt;span style=&quot;font-size:14pt;font-family:Arial,sans-serif;color:#000000;font-weight:700;&quot;&gt;CU17 – Diagrama de Análisis de Clases (Arquitectura BCE)&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;font-size:10pt;color:#666666;margin:0;&quot;&gt;Caso de Uso: Gestionar Antecedentes Médicos • 1 Boundary y 1 Controller • Metodología PUDS / RUP&lt;/p&gt;&lt;/b&gt;" vertex="1">
+      <mxGeometry height="60" width="700" x="40" y="30" as="geometry" />
+    </mxCell>
+
+    <!-- ACTOR 1: Médico -->
+    <mxCell id="CU17-AC-ACT-MED" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontStyle=1;fontSize=12;labelBackgroundColor=none;fillColor=#d5e8d4;strokeColor=#82b366;" value="Médico" vertex="1">
+      <mxGeometry height="65" width="45" x="45" y="320" as="geometry" />
+    </mxCell>
+
+    <!-- ACTOR 2: Administrador -->
+    <mxCell id="CU17-AC-ACT-ADM" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontStyle=1;fontSize=12;labelBackgroundColor=none;fillColor=#d5e8d4;strokeColor=#82b366;" value="Administrador" vertex="1">
+      <mxGeometry height="65" width="45" x="45" y="440" as="geometry" />
+    </mxCell>
+
+    <!-- INTERFACE / BOUNDARY: AntecedentesPatientModal (rounded=0) -->
+    <mxCell id="CU17-AC-BND-MOD" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;labelBackgroundColor=none;rounded=0;shadow=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;AntecedentesPatientModal&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ activeCategory: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ showInactive: Boolean&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ antecedentes: List&amp;lt;Antecedente&amp;gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ selectedAntecedente: Antecedente&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ isFormOpen: Boolean&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ loading: Boolean&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ errorMsg: String&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ loadAntecedentes(): void&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ handleTabChange(cat: String): void&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ handleToggleStatus(item: Antecedente): void&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ handleOpenCreate(): void&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ handleOpenEdit(item: Antecedente): void&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ handleSaveSuccess(): void&lt;/p&gt;" vertex="1">
+      <mxGeometry height="280" width="240" x="180" y="272" as="geometry" />
+    </mxCell>
+
+    <!-- CONTROLLER: AntecedentesController (rounded=0) -->
+    <mxCell id="CU17-AC-CTRL" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;labelBackgroundColor=none;rounded=0;shadow=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Controller&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;AntecedentesController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- antecedenteService: AntecedenteService&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ indexByPatient(patientId: Integer): JsonResponse&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ store(req: AntecedenteCreateRequest, patientId: Integer): JsonResponse&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ update(req: AntecedenteUpdateRequest, id: Integer): JsonResponse&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ toggleStatus(id: Integer): JsonResponse&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;- validarAccesoRBAC(): void&lt;/p&gt;" vertex="1">
+      <mxGeometry height="180" width="310" x="490" y="322" as="geometry" />
+    </mxCell>
+
+    <!-- ENTIDADES DE DOMINIO (MODELOS ELOQUENT) - TODAS CON rounded=0 -->
+
+    <!-- ENTITY: Paciente (rounded=0) -->
+    <mxCell id="CU17-AC-ENT-PAC" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;labelBackgroundColor=none;rounded=0;shadow=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Paciente&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_paciente: Long [PK]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_usuario: Long [FK]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ numero_documento: String [UNIQUE]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ nombres: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ apellidos: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ fecha_nacimiento: Date&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ tipo_sangre: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ estado_paciente: String&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ historiaClinica(): HasOne&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ usuario(): BelongsTo&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ contactosEmergencia(): HasMany&lt;/p&gt;" vertex="1">
+      <mxGeometry height="240" width="200" x="900" y="80" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY: HistoriaClinica (rounded=0) -->
+    <mxCell id="CU17-AC-ENT-HIS" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;labelBackgroundColor=none;rounded=0;shadow=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;HistoriaClinica&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_historia_clinica: Long [PK]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_paciente: Long [FK, UNIQUE]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ fecha_apertura: Date&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ estado: String&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ paciente(): BelongsTo&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ antecedentes(): HasMany&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ consultas(): HasMany&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ diagnosticos(): HasMany&lt;/p&gt;" vertex="1">
+      <mxGeometry height="200" width="190" x="1200" y="100" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY: Antecedente (rounded=0) -->
+    <mxCell id="CU17-AC-ENT-ANT" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;labelBackgroundColor=none;rounded=0;shadow=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Antecedente&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_antecedente: Long [PK]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_historia_clinica: Long [FK]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ tipo_antecedente: String(50)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ descripcion: Text&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ fecha_deteccion: Date&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ observaciones: Text&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ estado: String(20)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ created_at: DateTime&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ updated_at: DateTime&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ historiaClinica(): BelongsTo&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ scopeActivos(): Builder&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ scopePorTipo(tipo): Builder&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ scopeAlergicos(): Builder&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ esAlergico(): Boolean&lt;/p&gt;" vertex="1">
+      <mxGeometry height="280" width="220" x="900" y="380" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY: Bitacora (rounded=0) -->
+    <mxCell id="CU17-AC-ENT-BIT" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;labelBackgroundColor=none;rounded=0;shadow=0;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Entity&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Bitacora&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_bitacora: Long [PK]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_usuario: Long [FK]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ modulo: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ accion: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ tabla_afectada: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ id_registro: Long&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ descripcion: String&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ fecha_registro: DateTime&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ registrar(): Bitacora&lt;/p&gt;" vertex="1">
+      <mxGeometry height="200" width="180" x="900" y="700" as="geometry" />
+    </mxCell>
+
+    <!-- CONEXIONES BCE (SIN CARDINALIDADES) -->
+    <!-- Actor Médico -> AntecedentesPatientModal -->
+    <mxCell id="CU17-E-MED-MOD" edge="1" parent="1" source="CU17-AC-ACT-MED" target="CU17-AC-BND-MOD" style="endArrow=none;endFill=0;rounded=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Actor Administrador -> AntecedentesPatientModal -->
+    <mxCell id="CU17-E-ADM-MOD" edge="1" parent="1" source="CU17-AC-ACT-ADM" target="CU17-AC-BND-MOD" style="endArrow=none;endFill=0;rounded=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- AntecedentesPatientModal -> AntecedentesController -->
+    <mxCell id="CU17-E-MOD-CTRL" edge="1" parent="1" source="CU17-AC-BND-MOD" target="CU17-AC-CTRL" style="endArrow=none;endFill=0;rounded=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- AntecedentesController -> Entidades (Lineas de dependencia simple sin cardinalidades) -->
+    <mxCell id="CU17-E-CTRL-PAC" edge="1" parent="1" source="CU17-AC-CTRL" target="CU17-AC-ENT-PAC" style="endArrow=none;endFill=0;rounded=0;exitX=1;exitY=0.2;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-E-CTRL-HIS" edge="1" parent="1" source="CU17-AC-CTRL" target="CU17-AC-ENT-HIS" style="endArrow=none;endFill=0;rounded=0;exitX=1;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="830" y="385" />
+          <mxPoint x="830" y="240" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="CU17-E-CTRL-ANT" edge="1" parent="1" source="CU17-AC-CTRL" target="CU17-AC-ENT-ANT" style="endArrow=none;endFill=0;rounded=0;exitX=1;exitY=0.6;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-E-CTRL-BIT" edge="1" parent="1" source="CU17-AC-CTRL" target="CU17-AC-ENT-BIT" style="endArrow=none;endFill=0;rounded=0;exitX=1;exitY=0.85;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="830" y="475" />
+          <mxPoint x="830" y="800" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- REGLA DE ORO INVIOLABLE: CARDINALIDADES Y RELACIONES FORMALES SOLO ENTRE ENTIDADES -->
+    <!-- ========================================================================= -->
+
+    <!-- Paciente (1) ◆──── (1) HistoriaClinica [Composicion 1 a 1 de expediente clinico] -->
+    <mxCell id="CU17-R-PAC-HIS" edge="1" parent="1" source="CU17-AC-ENT-PAC" target="CU17-AC-ENT-HIS" style="startArrow=diamond;startFill=1;endArrow=none;endFill=0;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-R-PAC-HIS-c1" connectable="0" parent="CU17-R-PAC-HIS" style="edgeLabel;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;" value="+1" vertex="1">
+      <mxGeometry relative="1" x="-0.8" y="-10" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="CU17-R-PAC-HIS-c2" connectable="0" parent="CU17-R-PAC-HIS" style="edgeLabel;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;" value="+1" vertex="1">
+      <mxGeometry relative="1" x="0.8" y="-10" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+    <!-- HistoriaClinica (1) ◆──── (0..*) Antecedente [Composicion de antecedentes en la historia clinica] -->
+    <mxCell id="CU17-R-HIS-ANT" edge="1" parent="1" source="CU17-AC-ENT-HIS" target="CU17-AC-ENT-ANT" style="startArrow=diamond;startFill=1;endArrow=none;endFill=0;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1295" y="520" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="CU17-R-HIS-ANT-c1" connectable="0" parent="CU17-R-HIS-ANT" style="edgeLabel;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;" value="+1" vertex="1">
+      <mxGeometry relative="1" x="-0.85" y="-10" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+    <mxCell id="CU17-R-HIS-ANT-c2" connectable="0" parent="CU17-R-HIS-ANT" style="edgeLabel;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;" value="+0..*" vertex="1">
+      <mxGeometry relative="1" x="0.85" y="-10" as="geometry"><mxPoint as="offset" /></mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>

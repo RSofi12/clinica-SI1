@@ -1,0 +1,356 @@
+<mxGraphModel dx="1823" dy="1037" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="900" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ========== GRUPO PRINCIPAL (PAQUETE P2) ========== -->
+    <mxCell id="pkg-group" value="" style="group" vertex="1" connectable="0" parent="1">
+      <mxGeometry x="30" y="30" width="1380" height="820" as="geometry" />
+    </mxCell>
+
+    <!-- Carpeta del paquete -->
+    <mxCell id="pkg-folder" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=450;tabHeight=33;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="pkg-group">
+      <mxGeometry x="10" y="0" width="1370" height="820" as="geometry" />
+    </mxCell>
+
+    <!-- Título del paquete -->
+    <mxCell id="pkg-title" value="&lt;b&gt;pkg Gestión de Recursos Clínicos y Pacientes&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="15" y="0" width="430" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--                    CAPA FORM (ARRIBA) - Rosa                     -->
+    <!-- ================================================================ -->
+
+    <!-- FORM 1: PatientsManager.jsx -->
+    <mxCell id="form-patients" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;PatientsManager.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="25" y="60" width="180" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-patients-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-patients">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 2: PatientFormModal.jsx -->
+    <mxCell id="form-patientmodal" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;PatientFormModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="220" y="60" width="180" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-patientmodal-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-patientmodal">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 3: PatientProfileView.jsx -->
+    <mxCell id="form-patientprofile" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;PatientProfileView.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="415" y="60" width="180" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-patientprofile-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-patientprofile">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 4: ActivatePatientModal.jsx -->
+    <mxCell id="form-activate" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;ActivatePatientModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="610" y="60" width="180" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-activate-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-activate">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 5: DoctorsManager.jsx -->
+    <mxCell id="form-doctors" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;DoctorsManager.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="805" y="60" width="180" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-doctors-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-doctors">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 6: DoctorFormModal.jsx -->
+    <mxCell id="form-doctormodal" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;DoctorFormModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="1000" y="60" width="180" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-doctormodal-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-doctormodal">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 7: SpecialtiesManager.jsx -->
+    <mxCell id="form-specialties" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;SpecialtiesManager.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="1195" y="60" width="170" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-specialties-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-specialties">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--         INTERFACES FORM → CLASS (provides/requires)              -->
+    <!-- ================================================================ -->
+
+    <!-- PatientsManager → halfCircle (requires) -->
+    <mxCell id="edge-patients-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-patients" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="115" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-patientserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-patientservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="115" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- PatientFormModal → halfCircle (requires) -->
+    <mxCell id="edge-patientmodal-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-patientmodal" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="310" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-patientmodal-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-patientservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="310" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- PatientProfileView → halfCircle (requires) -->
+    <mxCell id="edge-patientprofile-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-patientprofile" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="505" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-profileserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-profileservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="505" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ActivatePatientModal → halfCircle (requires) -->
+    <mxCell id="edge-activate-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-activate" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="700" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-activate-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-profileservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="700" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- DoctorsManager → halfCircle (requires) -->
+    <mxCell id="edge-doctors-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-doctors" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="895" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-doctorserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-doctorservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="895" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- DoctorFormModal → halfCircle (requires) -->
+    <mxCell id="edge-doctormodal-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-doctormodal" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1090" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-doctormodal-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-doctorservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1090" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- SpecialtiesManager → halfCircle (requires) -->
+    <mxCell id="edge-specialties-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-specialties" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1280" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-specialtiesserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-specialtyservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1280" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--                   CAPA CLASS (MEDIO) - Naranja                   -->
+    <!-- ================================================================ -->
+
+    <!-- CLASS 1: patientService.js -->
+    <mxCell id="class-patientservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;patientService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="110" y="300" width="220" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-patientservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-patientservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 2: patientProfileService.js -->
+    <mxCell id="class-profileservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;patientProfileService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="390" y="300" width="230" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-profileservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-profileservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 3: doctorService.js -->
+    <mxCell id="class-doctorservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;doctorService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="690" y="300" width="220" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-doctorservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-doctorservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 4: specialtyService.js -->
+    <mxCell id="class-specialtyservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;specialtyService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="960" y="300" width="220" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-specialtyservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-specialtyservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 5: DoctorAvailabilityService.php -->
+    <mxCell id="class-availability" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;DoctorAvailabilityService.php&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="770" y="440" width="260" height="85" as="geometry" />
+    </mxCell>
+    <mxCell id="class-availability-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-availability">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--              CAPA TABLE (ABAJO) - Azul (PostgreSQL)              -->
+    <!-- ================================================================ -->
+
+    <!-- TABLE 1: pacientes -->
+    <mxCell id="table-pacientes" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;pacientes&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="30" y="650" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-pacientes-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-pacientes">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 2: contactos_emergencia -->
+    <mxCell id="table-contactos" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;contactos_emergencia&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="210" y="650" width="170" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-contactos-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-contactos">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 3: especialidades -->
+    <mxCell id="table-especialidades" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;especialidades&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="420" y="650" width="150" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-especialidades-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-especialidades">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 4: medicos -->
+    <mxCell id="table-medicos" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;medicos&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="610" y="650" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-medicos-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-medicos">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 5: medico_especialidad -->
+    <mxCell id="table-medicoesp" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;medico_especialidad&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="790" y="650" width="165" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-medicoesp-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-medicoesp">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 6: disponibilidades -->
+    <mxCell id="table-disponibilidades" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;disponibilidades&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="995" y="650" width="160" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-disponibilidades-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-disponibilidades">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 7: bloqueos_horario -->
+    <mxCell id="table-bloqueos" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;bloqueos_horario&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="1195" y="650" width="160" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-bloqueos-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-bloqueos">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--          RELACIONES CLASS → TABLE (dashed / «use»)               -->
+    <!-- ================================================================ -->
+
+    <!-- patientService.js -> pacientes (dashed) -->
+    <mxCell id="edge-patientservice-pacientes" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-patientservice" target="table-pacientes" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- patientService.js -> contactos_emergencia -->
+    <mxCell id="edge-patientservice-contactos" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-patientservice" target="table-contactos" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- patientProfileService.js -> pacientes -->
+    <mxCell id="edge-profileservice-pacientes" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-profileservice" target="table-pacientes" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- doctorService.js -> medicos -->
+    <mxCell id="edge-doctorservice-medicos" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-doctorservice" target="table-medicos" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- doctorService.js -> medico_especialidad -->
+    <mxCell id="edge-doctorservice-medicoesp" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-doctorservice" target="table-medicoesp" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- specialtyService.js -> especialidades -->
+    <mxCell id="edge-specialtyservice-especialidades" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-specialtyservice" target="table-especialidades" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- DoctorAvailabilityService.php -> disponibilidades -->
+    <mxCell id="edge-availability-disp" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-availability" target="table-disponibilidades" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- DoctorAvailabilityService.php -> bloqueos_horario -->
+    <mxCell id="edge-availability-bloqueos" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.9;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-availability" target="table-bloqueos" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

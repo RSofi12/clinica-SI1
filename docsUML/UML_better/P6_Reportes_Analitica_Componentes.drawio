@@ -1,0 +1,302 @@
+<mxGraphModel dx="1823" dy="1037" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1380" pageHeight="860" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ========== GRUPO PRINCIPAL (PAQUETE P6) ========== -->
+    <mxCell id="pkg-group" value="" style="group" vertex="1" connectable="0" parent="1">
+      <mxGeometry x="30" y="30" width="1310" height="800" as="geometry" />
+    </mxCell>
+
+    <!-- Carpeta del paquete -->
+    <mxCell id="pkg-folder" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=380;tabHeight=33;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="pkg-group">
+      <mxGeometry x="10" y="0" width="1300" height="800" as="geometry" />
+    </mxCell>
+
+    <!-- Título del paquete -->
+    <mxCell id="pkg-title" value="&lt;b&gt;pkg Reportes y Analítica&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="15" y="0" width="360" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--                    CAPA FORM (ARRIBA) - Rosa                     -->
+    <!-- ================================================================ -->
+
+    <!-- FORM 1: DynamicReportsView.jsx -->
+    <mxCell id="form-reportsview" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;DynamicReportsView.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="30" y="60" width="210" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-reportsview-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-reportsview">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 2: ReportFilterModal.jsx -->
+    <mxCell id="form-filtermodal" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;ReportFilterModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="275" y="60" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-filtermodal-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-filtermodal">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 3: VoiceReportModal.jsx -->
+    <mxCell id="form-voicemodal" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;VoiceReportModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="510" y="60" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-voicemodal-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-voicemodal">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 4: ReportExportModal.jsx -->
+    <mxCell id="form-exportmodal" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;ReportExportModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="745" y="60" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-exportmodal-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-exportmodal">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 5: AiReportPreviewModal.jsx -->
+    <mxCell id="form-aipreview" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;AiReportPreviewModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="980" y="60" width="220" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-aipreview-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-aipreview">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--         INTERFACES FORM → CLASS (provides/requires)              -->
+    <!-- ================================================================ -->
+
+    <!-- ReportsView → halfCircle (requires) -->
+    <mxCell id="edge-reportsview-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-reportsview" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="135" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-reportserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-reportservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="135" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FilterModal → halfCircle (requires) -->
+    <mxCell id="edge-filter-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-filtermodal" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="375" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-queryphp-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.3;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-queryservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="375" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- VoiceModal → halfCircle (requires) -->
+    <mxCell id="edge-voice-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-voicemodal" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="610" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-voiceserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.35;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-voiceservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="610" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ExportModal → halfCircle (requires) -->
+    <mxCell id="edge-export-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-exportmodal" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="845" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-exportphp-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.2;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-exportservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="845" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- AiPreviewModal → halfCircle (requires) -->
+    <mxCell id="edge-aipreview-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-aipreview" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1090" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-aiphp-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-aiinterpreterservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1090" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--                   CAPA CLASS (MEDIO) - Naranja                   -->
+    <!-- ================================================================ -->
+
+    <!-- CLASS 1: reportService.js -->
+    <mxCell id="class-reportservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;reportService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="35" y="300" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-reportservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-reportservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 2: DynamicReportQueryService.php -->
+    <mxCell id="class-queryservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;DynamicReportQueryService.php&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="260" y="300" width="250" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-queryservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-queryservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 3: voiceReportService.js -->
+    <mxCell id="class-voiceservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;voiceReportService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="535" y="300" width="215" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-voiceservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-voiceservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 4: AiReportInterpreterService.php -->
+    <mxCell id="class-aiinterpreterservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;AiReportInterpreterService.php&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="775" y="300" width="260" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-aiinterpreterservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-aiinterpreterservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 5: ReportExportService.php -->
+    <mxCell id="class-exportservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:12px;&quot;&gt;ReportExportService.php&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="1060" y="300" width="210" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-exportservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-exportservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--              CAPA TABLE (ABAJO) - Azul (PostgreSQL)              -->
+    <!-- ================================================================ -->
+
+    <!-- TABLE 1: reportes_ia -->
+    <mxCell id="table-reportesia" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;reportes_ia&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="40" y="640" width="150" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-reportesia-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-reportesia">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 2: citas -->
+    <mxCell id="table-citas" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;citas&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="235" y="640" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-citas-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-citas">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 3: medicos -->
+    <mxCell id="table-medicos" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;medicos&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="420" y="640" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-medicos-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-medicos">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 4: pacientes -->
+    <mxCell id="table-pacientes" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;pacientes&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="600" y="640" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-pacientes-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-pacientes">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 5: consultas_medicas -->
+    <mxCell id="table-consultas" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;consultas_medicas&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="780" y="640" width="165" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-consultas-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-consultas">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 6: pagos -->
+    <mxCell id="table-pagos" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;pagos&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="985" y="640" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-pagos-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-pagos">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--          RELACIONES CLASS → TABLE (dashed / «use»)               -->
+    <!-- ================================================================ -->
+
+    <!-- reportService.js -> citas -->
+    <mxCell id="edge-reportserv-citas" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-reportservice" target="table-citas" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- DynamicReportQueryService.php -> citas -->
+    <mxCell id="edge-query-citas" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-queryservice" target="table-citas" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- DynamicReportQueryService.php -> medicos -->
+    <mxCell id="edge-query-medicos" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.6;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-queryservice" target="table-medicos" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- DynamicReportQueryService.php -> pacientes -->
+    <mxCell id="edge-query-pacientes" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.85;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-queryservice" target="table-pacientes" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- AiReportInterpreterService.php -> reportes_ia -->
+    <mxCell id="edge-ai-reportesia" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-aiinterpreterservice" target="table-reportesia" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- AiReportInterpreterService.php -> consultas_medicas -->
+    <mxCell id="edge-ai-consultas" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-aiinterpreterservice" target="table-consultas" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ReportExportService.php -> pagos -->
+    <mxCell id="edge-export-pagos" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-exportservice" target="table-pagos" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ReportExportService.php -> citas -->
+    <mxCell id="edge-export-citas" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;exitDy=0;entryDx=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-exportservice" target="table-citas" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

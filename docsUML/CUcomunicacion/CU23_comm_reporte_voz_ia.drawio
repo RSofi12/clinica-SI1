@@ -1,0 +1,386 @@
+<mxGraphModel dx="1628" dy="898" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="950" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- TÍTULO DEL DIAGRAMA -->
+    <mxCell id="CU23-COMM-TITLE" parent="1" style="text;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="&lt;b style=&quot;font-weight:normal;&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.8;margin-top:0pt;margin-bottom:6pt;&quot;&gt;&lt;span style=&quot;font-size:12pt;font-family:Arial,sans-serif;color:#000000;font-weight:700;&quot;&gt;CU23 – Generar reporte personalizado por voz con IA&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;font-size:9pt;color:#666666;margin:0;&quot;&gt;Diagrama de Comunicación UML • Arquitectura Canónica BCE (Boundary - Control - Entity)&lt;/p&gt;&lt;/b&gt;" vertex="1">
+      <mxGeometry height="50" width="550" x="40" y="30" as="geometry" />
+    </mxCell>
+
+    <!-- ACTOR: :Administrador / Médico -->
+    <mxCell id="CU23-COMM-ACT" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Administrador / Médico" vertex="1">
+      <mxGeometry height="70" width="40" x="60" y="380" as="geometry" />
+    </mxCell>
+
+    <!-- BOUNDARY / INTERFACE: :VoiceReportAssistant -->
+    <mxCell id="CU23-COMM-BND" parent="1" style="shape=umlBoundary;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":VoiceReportAssistant" vertex="1">
+      <mxGeometry height="70" width="80" x="300" y="380" as="geometry" />
+    </mxCell>
+
+    <!-- CONTROLLER: :VoiceReportController -->
+    <mxCell id="CU23-COMM-CTRL" parent="1" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":VoiceReportController" vertex="1">
+      <mxGeometry height="80" width="70" x="590" y="375" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY 1: :ReporteIa -->
+    <mxCell id="CU23-COMM-ENT-RP" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":ReporteIa" vertex="1">
+      <mxGeometry height="42" width="42" x="920" y="210" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY 2: :Cita -->
+    <mxCell id="CU23-COMM-ENT-CI" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Cita" vertex="1">
+      <mxGeometry height="42" width="42" x="920" y="330" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY 3: :Paciente -->
+    <mxCell id="CU23-COMM-ENT-PA" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Paciente" vertex="1">
+      <mxGeometry height="42" width="42" x="920" y="450" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY 4: :Bitacora -->
+    <mxCell id="CU23-COMM-ENT-BI" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Bitacora" vertex="1">
+      <mxGeometry height="42" width="42" x="920" y="570" as="geometry" />
+    </mxCell>
+
+    <!-- ============================================================= -->
+    <!-- ENLACES DE COMUNICACIÓN (LÍNEAS SÓLIDAS SIN MULTIPLICIDADES)  -->
+    <!-- ============================================================= -->
+
+    <!-- Enlace Actor - Boundary -->
+    <mxCell id="CU23-COMM-LNK-ACT-BND" edge="1" parent="1" source="CU23-COMM-ACT" target="CU23-COMM-BND" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Enlace Boundary - Controller -->
+    <mxCell id="CU23-COMM-LNK-BND-CTRL" edge="1" parent="1" source="CU23-COMM-BND" target="CU23-COMM-CTRL" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Enlace Controller - ReporteIa -->
+    <mxCell id="CU23-COMM-LNK-CTRL-RP" edge="1" parent="1" source="CU23-COMM-CTRL" target="CU23-COMM-ENT-RP" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.9;exitY=0.15;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="700" y="231" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Enlace Controller - Cita -->
+    <mxCell id="CU23-COMM-LNK-CTRL-CI" edge="1" parent="1" source="CU23-COMM-CTRL" target="CU23-COMM-ENT-CI" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.95;exitY=0.35;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="740" y="351" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Enlace Controller - Paciente -->
+    <mxCell id="CU23-COMM-LNK-CTRL-PA" edge="1" parent="1" source="CU23-COMM-CTRL" target="CU23-COMM-ENT-PA" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.95;exitY=0.65;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="740" y="471" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Enlace Controller - Bitacora -->
+    <mxCell id="CU23-COMM-LNK-CTRL-BI" edge="1" parent="1" source="CU23-COMM-CTRL" target="CU23-COMM-ENT-BI" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.9;exitY=0.85;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="700" y="591" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Auto-enlace reflexivo en Boundary -->
+    <mxCell id="CU23-COMM-SELF-BND" edge="1" parent="1" source="CU23-COMM-BND" target="CU23-COMM-BND" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="320" y="320" />
+          <mxPoint x="360" y="320" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Auto-enlace reflexivo en Controller -->
+    <mxCell id="CU23-COMM-SELF-CTRL" edge="1" parent="1" source="CU23-COMM-CTRL" target="CU23-COMM-CTRL" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="608" y="310" />
+          <mxPoint x="643" y="310" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ============================================================= -->
+    <!-- MENSAJES Y FLECHAS DE DIRECCIÓN (GOLD STANDARD: TEXTO + FLECHA) -->
+    <!-- ============================================================= -->
+
+    <!-- FLUJO 1: CAPTURA DE VOZ Y ENTRADA (#003366 - Azul Marino Oscuro) -->
+    <!-- 1: clickMicrofono() -->
+    <mxCell id="CU23-COMM-M1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="1: clickMicrofono()" vertex="1">
+      <mxGeometry height="22" width="140" x="125" y="340" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A1" edge="1" parent="1" source="CU23-COMM-M1" target="CU23-COMM-M1" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="175" y="335" as="sourcePoint" />
+        <mxPoint x="205" y="335" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.1: getUserMedia() -->
+    <mxCell id="CU23-COMM-M11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="1.1: getUserMedia()" vertex="1">
+      <mxGeometry height="20" width="130" x="275" y="295" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A11" edge="1" parent="1" source="CU23-COMM-M11" target="CU23-COMM-M11" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="325" y="290" as="sourcePoint" />
+        <mxPoint x="355" y="290" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.2: SpeechRecognition.start() -->
+    <mxCell id="CU23-COMM-M12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="1.2: SpeechRecognition.start()" vertex="1">
+      <mxGeometry height="20" width="160" x="260" y="275" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A12" edge="1" parent="1" source="CU23-COMM-M12" target="CU23-COMM-M12" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="325" y="270" as="sourcePoint" />
+        <mxPoint x="355" y="270" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2: dictarComando(audio) -->
+    <mxCell id="CU23-COMM-M2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="2: dictarComando(audio)" vertex="1">
+      <mxGeometry height="22" width="150" x="120" y="362" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A2" edge="1" parent="1" source="CU23-COMM-M2" target="CU23-COMM-M2" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="357" as="sourcePoint" />
+        <mxPoint x="210" y="357" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.1: onresult(transcript) -->
+    <mxCell id="CU23-COMM-M21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="2.1: onresult(transcript)" vertex="1">
+      <mxGeometry height="20" width="140" x="270" y="255" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A21" edge="1" parent="1" source="CU23-COMM-M21" target="CU23-COMM-M21" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="325" y="250" as="sourcePoint" />
+        <mxPoint x="355" y="250" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3: clickConsultar() -->
+    <mxCell id="CU23-COMM-M3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="3: clickConsultar()" vertex="1">
+      <mxGeometry height="22" width="130" x="130" y="384" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A3" edge="1" parent="1" source="CU23-COMM-M3" target="CU23-COMM-M3" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="379" as="sourcePoint" />
+        <mxPoint x="210" y="379" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FLUJO 2: PROCESAMIENTO REST Y CONSULTAS (#005522 - Verde Bosque Oscuro) -->
+    <!-- 3.1: processVoiceCommand(request) -->
+    <mxCell id="CU23-COMM-M31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#005522;fontStyle=1;labelBackgroundColor=none;" value="3.1: processVoiceCommand(request)" vertex="1">
+      <mxGeometry height="24" width="190" x="390" y="340" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A31" edge="1" parent="1" source="CU23-COMM-M31" target="CU23-COMM-M31" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="470" y="335" as="sourcePoint" />
+        <mxPoint x="500" y="335" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.2: validate() en Controller -->
+    <mxCell id="CU23-COMM-M32" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#005522;fontStyle=1;labelBackgroundColor=none;" value="3.2: validate()" vertex="1">
+      <mxGeometry height="20" width="90" x="580" y="280" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A32" edge="1" parent="1" source="CU23-COMM-M32" target="CU23-COMM-M32" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="615" y="275" as="sourcePoint" />
+        <mxPoint x="640" y="275" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.3: parse(comando) -->
+    <mxCell id="CU23-COMM-M33" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#005522;fontStyle=1;labelBackgroundColor=none;" value="3.3: parse(comando)" vertex="1">
+      <mxGeometry height="20" width="120" x="565" y="260" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A33" edge="1" parent="1" source="CU23-COMM-M33" target="CU23-COMM-M33" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="615" y="255" as="sourcePoint" />
+        <mxPoint x="640" y="255" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.4: [opt] consultarGeminiApi() -->
+    <mxCell id="CU23-COMM-M34" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#005522;fontStyle=1;labelBackgroundColor=none;" value="3.4: [opt] consultarGeminiApi()" vertex="1">
+      <mxGeometry height="20" width="160" x="545" y="240" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A34" edge="1" parent="1" source="CU23-COMM-M34" target="CU23-COMM-M34" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="615" y="235" as="sourcePoint" />
+        <mxPoint x="640" y="235" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.5: aplicarScopingRBAC() -->
+    <mxCell id="CU23-COMM-M35" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#005522;fontStyle=1;labelBackgroundColor=none;" value="3.5: aplicarScopingRBAC()" vertex="1">
+      <mxGeometry height="20" width="140" x="555" y="220" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A35" edge="1" parent="1" source="CU23-COMM-M35" target="CU23-COMM-M35" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="615" y="215" as="sourcePoint" />
+        <mxPoint x="640" y="215" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.6: consultarPacientes(filtros) (Controller -> Paciente) -->
+    <mxCell id="CU23-COMM-M36" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#005522;fontStyle=1;labelBackgroundColor=none;" value="3.6: consultarPacientes(filtros)" vertex="1">
+      <mxGeometry height="22" width="170" x="740" y="445" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A36" edge="1" parent="1" source="CU23-COMM-M36" target="CU23-COMM-M36" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="810" y="440" as="sourcePoint" />
+        <mxPoint x="840" y="440" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.8: consultarCitas(filtros) (Controller -> Cita) -->
+    <mxCell id="CU23-COMM-M38" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#005522;fontStyle=1;labelBackgroundColor=none;" value="3.8: consultarCitas(filtros)" vertex="1">
+      <mxGeometry height="22" width="150" x="750" y="325" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A38" edge="1" parent="1" source="CU23-COMM-M38" target="CU23-COMM-M38" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="810" y="320" as="sourcePoint" />
+        <mxPoint x="840" y="320" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FLUJO 3: PERSISTENCIA Y AUDITORÍA (#4B0082 - Púrpura Oscuro) -->
+    <!-- 3.10: DB::transaction() -->
+    <mxCell id="CU23-COMM-M310" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#4B0082;fontStyle=1;labelBackgroundColor=none;" value="3.10: DB::transaction()" vertex="1">
+      <mxGeometry height="20" width="130" x="560" y="460" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A310" edge="1" parent="1" source="CU23-COMM-M310" target="CU23-COMM-M310" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#4B0082;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="615" y="485" as="sourcePoint" />
+        <mxPoint x="640" y="485" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.11: create(reporte) (Controller -> ReporteIa) -->
+    <mxCell id="CU23-COMM-M311" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#4B0082;fontStyle=1;labelBackgroundColor=none;" value="3.11: create(reporte)" vertex="1">
+      <mxGeometry height="22" width="130" x="740" y="205" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A311" edge="1" parent="1" source="CU23-COMM-M311" target="CU23-COMM-M311" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#4B0082;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="795" y="200" as="sourcePoint" />
+        <mxPoint x="825" y="200" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.13: registrar(evento) (Controller -> Bitacora) -->
+    <mxCell id="CU23-COMM-M313" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#4B0082;fontStyle=1;labelBackgroundColor=none;" value="3.13: registrar(evento)" vertex="1">
+      <mxGeometry height="22" width="140" x="740" y="565" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A313" edge="1" parent="1" source="CU23-COMM-M313" target="CU23-COMM-M313" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#4B0082;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="800" y="560" as="sourcePoint" />
+        <mxPoint x="830" y="560" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.14: 200 OK (datos, metricas) (Retorno Controller -> Boundary) -->
+    <mxCell id="CU23-COMM-M314" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#4B0082;fontStyle=1;labelBackgroundColor=none;" value="3.14: 200 OK (datos, metricas)" vertex="1">
+      <mxGeometry height="20" width="180" x="390" y="405" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A314" edge="1" parent="1" source="CU23-COMM-M314" target="CU23-COMM-M314" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#4B0082;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="495" y="400" as="sourcePoint" />
+        <mxPoint x="455" y="400" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.15: renderizarReporte() (Retorno Boundary -> Actor) -->
+    <mxCell id="CU23-COMM-M315" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#4B0082;fontStyle=1;labelBackgroundColor=none;" value="3.15: renderizarReporte()" vertex="1">
+      <mxGeometry height="20" width="150" x="120" y="420" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A315" edge="1" parent="1" source="CU23-COMM-M315" target="CU23-COMM-M315" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#4B0082;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="210" y="415" as="sourcePoint" />
+        <mxPoint x="170" y="415" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FLUJO 4: EXPORTACIÓN MULTIDESTINO (#003366 - Azul Marino Oscuro) -->
+    <!-- 4: clickExportarExcel() & 4.1: exportToExcel() -->
+    <mxCell id="CU23-COMM-M4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="4: clickExportarExcel()" vertex="1">
+      <mxGeometry height="18" width="140" x="125" y="455" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A4" edge="1" parent="1" source="CU23-COMM-M4" target="CU23-COMM-M4" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="452" as="sourcePoint" />
+        <mxPoint x="205" y="452" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="CU23-COMM-M41" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="4.1: exportToExcel()" vertex="1">
+      <mxGeometry height="18" width="130" x="130" y="475" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A41" edge="1" parent="1" source="CU23-COMM-M41" target="CU23-COMM-M41" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="205" y="472" as="sourcePoint" />
+        <mxPoint x="180" y="472" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 5: clickExportarPdf() & 5.1: exportToPdf() -->
+    <mxCell id="CU23-COMM-M5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="5: clickExportarPdf()" vertex="1">
+      <mxGeometry height="18" width="130" x="130" y="505" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A5" edge="1" parent="1" source="CU23-COMM-M5" target="CU23-COMM-M5" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="502" as="sourcePoint" />
+        <mxPoint x="205" y="502" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="CU23-COMM-M51" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="5.1: exportToPdf()" vertex="1">
+      <mxGeometry height="18" width="120" x="135" y="525" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A51" edge="1" parent="1" source="CU23-COMM-M51" target="CU23-COMM-M51" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="205" y="522" as="sourcePoint" />
+        <mxPoint x="180" y="522" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 6: clickExportarCsv() & 6.1: exportToCsv() -->
+    <mxCell id="CU23-COMM-M6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="6: clickExportarCsv()" vertex="1">
+      <mxGeometry height="18" width="130" x="130" y="555" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A6" edge="1" parent="1" source="CU23-COMM-M6" target="CU23-COMM-M6" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="552" as="sourcePoint" />
+        <mxPoint x="205" y="552" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="CU23-COMM-M61" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#003366;fontStyle=1;labelBackgroundColor=none;" value="6.1: exportToCsv()" vertex="1">
+      <mxGeometry height="18" width="120" x="135" y="575" as="geometry" />
+    </mxCell>
+    <mxCell id="CU23-COMM-A61" edge="1" parent="1" source="CU23-COMM-M61" target="CU23-COMM-M61" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=9;strokeColor=#003366;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="205" y="572" as="sourcePoint" />
+        <mxPoint x="180" y="572" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>

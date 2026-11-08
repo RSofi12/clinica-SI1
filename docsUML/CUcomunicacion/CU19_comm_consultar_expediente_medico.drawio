@@ -1,0 +1,297 @@
+<mxGraphModel dx="1628" dy="898" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1000" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- TITULO -->
+    <mxCell id="CU19-COMM-TITLE" parent="1" style="text;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="&lt;b style=&quot;font-weight:normal;&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.8;margin-top:0pt;margin-bottom:6pt;&quot;&gt;&lt;span style=&quot;font-size:13pt;font-family:Arial,sans-serif;color:#000000;font-weight:700;&quot;&gt;CU19 – Consultar Expediente Médico y Antecedentes&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;font-size:9pt;color:#666666;margin:0;&quot;&gt;Diagrama de Comunicación UML • Arquitectura BCE Canónica: 1 Boundary y 1 Controller • Metodología PUDS / RUP&lt;/p&gt;&lt;/b&gt;" vertex="1">
+      <mxGeometry height="50" width="700" x="40" y="30" as="geometry" />
+    </mxCell>
+
+    <!-- ACTOR: :Médico / Paciente -->
+    <mxCell id="CU19-COMM-ACT" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Médico / Paciente" vertex="1">
+      <mxGeometry height="70" width="40" x="70" y="380" as="geometry" />
+    </mxCell>
+
+    <!-- BOUNDARY: :ExpedienteClinicoView -->
+    <mxCell id="CU19-COMM-BND" parent="1" style="shape=umlBoundary;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":ExpedienteClinicoView" vertex="1">
+      <mxGeometry height="70" width="80" x="320" y="380" as="geometry" />
+    </mxCell>
+
+    <!-- CONTROLLER: :ExpedienteController -->
+    <mxCell id="CU19-COMM-CTRL" parent="1" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":ExpedienteController" vertex="1">
+      <mxGeometry height="80" width="70" x="620" y="375" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITIES (DISTRIBUIDAS VERTICALMENTE A LA DERECHA) -->
+    <!-- :Paciente -->
+    <mxCell id="CU19-COMM-ENT-PAC" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Paciente" vertex="1">
+      <mxGeometry height="45" width="45" x="1060" y="100" as="geometry" />
+    </mxCell>
+
+    <!-- :HistoriaClinica -->
+    <mxCell id="CU19-COMM-ENT-HIS" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":HistoriaClinica" vertex="1">
+      <mxGeometry height="45" width="45" x="1060" y="210" as="geometry" />
+    </mxCell>
+
+    <!-- :Antecedente -->
+    <mxCell id="CU19-COMM-ENT-ANT" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Antecedente" vertex="1">
+      <mxGeometry height="45" width="45" x="1060" y="320" as="geometry" />
+    </mxCell>
+
+    <!-- :ConsultaMedica -->
+    <mxCell id="CU19-COMM-ENT-CON" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":ConsultaMedica" vertex="1">
+      <mxGeometry height="45" width="45" x="1060" y="430" as="geometry" />
+    </mxCell>
+
+    <!-- :Receta -->
+    <mxCell id="CU19-COMM-ENT-REC" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Receta" vertex="1">
+      <mxGeometry height="45" width="45" x="1060" y="540" as="geometry" />
+    </mxCell>
+
+    <!-- :Bitacora -->
+    <mxCell id="CU19-COMM-ENT-BIT" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Bitacora" vertex="1">
+      <mxGeometry height="45" width="45" x="1060" y="650" as="geometry" />
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- LINEAS DE RELACION BASE (SIN FLECHA) -->
+    <!-- ========================================================================= -->
+
+    <!-- Actor <-> Boundary -->
+    <mxCell id="CU19-LNK-ACT-BND" edge="1" parent="1" source="CU19-COMM-ACT" target="CU19-COMM-BND" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Boundary <-> Controller -->
+    <mxCell id="CU19-LNK-BND-CTRL" edge="1" parent="1" source="CU19-COMM-BND" target="CU19-COMM-CTRL" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> Paciente -->
+    <mxCell id="CU19-LNK-CTRL-PAC" edge="1" parent="1" source="CU19-COMM-CTRL" target="CU19-COMM-ENT-PAC" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=0.9;exitY=0.1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="122" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> HistoriaClinica -->
+    <mxCell id="CU19-LNK-CTRL-HIS" edge="1" parent="1" source="CU19-COMM-CTRL" target="CU19-COMM-ENT-HIS" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="232" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> Antecedente -->
+    <mxCell id="CU19-LNK-CTRL-ANT" edge="1" parent="1" source="CU19-COMM-CTRL" target="CU19-COMM-ENT-ANT" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=1;exitY=0.45;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="342" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> ConsultaMedica -->
+    <mxCell id="CU19-LNK-CTRL-CON" edge="1" parent="1" source="CU19-COMM-CTRL" target="CU19-COMM-ENT-CON" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=1;exitY=0.65;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="452" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> Receta -->
+    <mxCell id="CU19-LNK-CTRL-REC" edge="1" parent="1" source="CU19-COMM-CTRL" target="CU19-COMM-ENT-REC" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=0.95;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="562" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> Bitacora -->
+    <mxCell id="CU19-LNK-CTRL-BIT" edge="1" parent="1" source="CU19-COMM-CTRL" target="CU19-COMM-ENT-BIT" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=0.85;exitY=0.95;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="672" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- MENSAJES ENTRE ACTOR Y BOUNDARY (ExpedienteClinicoView) -->
+    <!-- ========================================================================= -->
+
+    <!-- Mensaje 1: abrirExpediente(paciente) [Azul Marino #003366] -->
+    <mxCell id="CU19-COMM-M1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1: abrirExpediente(paciente)" vertex="1">
+      <mxGeometry height="22" width="190" x="115" y="280" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A1" edge="1" parent="1" source="CU19-COMM-M1" target="CU19-COMM-M1" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Mensaje 1.15: renderizarExpedienteYMetricas() [Retorno] -->
+    <mxCell id="CU19-COMM-M115" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.15: renderizarExpedienteYMetricas()" vertex="1">
+      <mxGeometry height="22" width="190" x="115" y="305" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A115" edge="1" parent="1" source="CU19-COMM-M115" target="CU19-COMM-M115" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;dashed=1;exitX=0.65;exitY=0;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Mensaje 2: seleccionarPestanaTimeline() [Verde Bosque #005522] -->
+    <mxCell id="CU19-COMM-M2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2: seleccionarPestanaTimeline()" vertex="1">
+      <mxGeometry height="22" width="190" x="115" y="350" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A2" edge="1" parent="1" source="CU19-COMM-M2" target="CU19-COMM-M2" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#005522;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Mensaje 2.4: renderizarTimelineCronologico() [Retorno] -->
+    <mxCell id="CU19-COMM-M24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.4: renderizarTimelineCronologico()" vertex="1">
+      <mxGeometry height="22" width="190" x="115" y="375" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A24" edge="1" parent="1" source="CU19-COMM-M24" target="CU19-COMM-M24" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#005522;dashed=1;exitX=0.65;exitY=0;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Mensaje 3: consultarMiExpediente() [Púrpura #4B0082] -->
+    <mxCell id="CU19-COMM-M3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3: consultarMiExpediente()" vertex="1">
+      <mxGeometry height="22" width="190" x="115" y="470" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A3" edge="1" parent="1" source="CU19-COMM-M3" target="CU19-COMM-M3" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#4B0082;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Mensaje 3.4: renderizarVistaSoloLectura() [Retorno] -->
+    <mxCell id="CU19-COMM-M34" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.4: renderizarVistaSoloLectura()" vertex="1">
+      <mxGeometry height="22" width="190" x="115" y="495" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A34" edge="1" parent="1" source="CU19-COMM-M34" target="CU19-COMM-M34" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#4B0082;dashed=1;exitX=0.65;exitY=0;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- MENSAJES ENTRE BOUNDARY Y CONTROLLER -->
+    <!-- ========================================================================= -->
+
+    <!-- 1.1: showByPatient(idPaciente) [Flujo 1: #003366] -->
+    <mxCell id="CU19-COMM-M11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.1: showByPatient(idPaciente)" vertex="1">
+      <mxGeometry height="22" width="190" x="415" y="280" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A11" edge="1" parent="1" source="CU19-COMM-M11" target="CU19-COMM-M11" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- 1.14: return 200 OK (expediente) [Retorno] -->
+    <mxCell id="CU19-COMM-M114" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.14: 200 OK (expediente)" vertex="1">
+      <mxGeometry height="22" width="190" x="415" y="305" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A114" edge="1" parent="1" source="CU19-COMM-M114" target="CU19-COMM-M114" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;dashed=1;exitX=0.65;exitY=0;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- 2.1: timeline(idPaciente) [Flujo 2: #005522] -->
+    <mxCell id="CU19-COMM-M21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.1: timeline(idPaciente)" vertex="1">
+      <mxGeometry height="22" width="190" x="415" y="350" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A21" edge="1" parent="1" source="CU19-COMM-M21" target="CU19-COMM-M21" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#005522;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- 2.3: return 200 OK (timeline) [Retorno] -->
+    <mxCell id="CU19-COMM-M23" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.3: 200 OK (timeline)" vertex="1">
+      <mxGeometry height="22" width="190" x="415" y="375" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A23" edge="1" parent="1" source="CU19-COMM-M23" target="CU19-COMM-M23" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#005522;dashed=1;exitX=0.65;exitY=0;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- 3.1: miExpediente() [Flujo 3: #4B0082] -->
+    <mxCell id="CU19-COMM-M31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.1: miExpediente()" vertex="1">
+      <mxGeometry height="22" width="190" x="415" y="470" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A31" edge="1" parent="1" source="CU19-COMM-M31" target="CU19-COMM-M31" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#4B0082;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- 3.3: return 200 OK (miExpediente) [Retorno] -->
+    <mxCell id="CU19-COMM-M33" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.3: 200 OK (miExpediente)" vertex="1">
+      <mxGeometry height="22" width="190" x="415" y="495" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A33" edge="1" parent="1" source="CU19-COMM-M33" target="CU19-COMM-M33" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#4B0082;dashed=1;exitX=0.65;exitY=0;exitDx=0;exitDy=0;entryX=0.35;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- AUTO-LLAMADAS REFLEXIVAS EN CONTROLLER -->
+    <!-- ========================================================================= -->
+    <mxCell id="CU19-COMM-SELF-CTRL" edge="1" parent="1" source="CU19-COMM-CTRL" target="CU19-COMM-CTRL" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;endFill=1;fontSize=10;strokeColor=#666666;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=1;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="635" y="495" />
+          <mxPoint x="675" y="495" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="CU19-COMM-M-SELF" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#000000;fontStyle=2;labelBackgroundColor=none;" value="1.2: validarAcceso()&lt;br&gt;2.2: obtenerTimeline()&lt;br&gt;3.2: validarIdentidadPaciente()" vertex="1">
+      <mxGeometry height="60" width="170" x="570" y="500" as="geometry" />
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- MENSAJES HACIA ENTIDADES (CONTROLLER -> ENTITY) -->
+    <!-- ========================================================================= -->
+
+    <!-- Controller -> Paciente: 1.3: findOrFail(idPaciente) -->
+    <mxCell id="CU19-COMM-M13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.3: findOrFail(idPaciente)" vertex="1">
+      <mxGeometry height="22" width="180" x="830" y="100" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A13" edge="1" parent="1" source="CU19-COMM-M13" target="CU19-COMM-M13" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> HistoriaClinica: 1.5: firstOrCreate(idPaciente) -->
+    <mxCell id="CU19-COMM-M15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.5: firstOrCreate(idPaciente)" vertex="1">
+      <mxGeometry height="22" width="180" x="830" y="210" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A15" edge="1" parent="1" source="CU19-COMM-M15" target="CU19-COMM-M15" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> Antecedente: 1.7: where('id_historia', id) -->
+    <mxCell id="CU19-COMM-M17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.7: where('id_historia', id)" vertex="1">
+      <mxGeometry height="22" width="180" x="830" y="320" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A17" edge="1" parent="1" source="CU19-COMM-M17" target="CU19-COMM-M17" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> ConsultaMedica: 1.9: where('id_historia', id) -->
+    <mxCell id="CU19-COMM-M19" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.9: where('id_historia', id)" vertex="1">
+      <mxGeometry height="22" width="180" x="830" y="430" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A19" edge="1" parent="1" source="CU19-COMM-M19" target="CU19-COMM-M19" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> Receta: 1.11: where('id_historia', id) -->
+    <mxCell id="CU19-COMM-M111" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.11: where('id_historia', id)" vertex="1">
+      <mxGeometry height="22" width="180" x="830" y="540" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A111" edge="1" parent="1" source="CU19-COMM-M111" target="CU19-COMM-M111" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> Bitacora: 1.13: registrar(CONSULTAR_EXPEDIENTE) -->
+    <mxCell id="CU19-COMM-M113" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.13: registrar(CONSULTAR_EXP)" vertex="1">
+      <mxGeometry height="22" width="180" x="830" y="650" as="geometry" />
+    </mxCell>
+    <mxCell id="CU19-COMM-A113" edge="1" parent="1" source="CU19-COMM-M113" target="CU19-COMM-M113" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;strokeColor=#003366;exitX=0.35;exitY=0;exitDx=0;exitDy=0;entryX=0.65;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

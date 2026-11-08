@@ -1,0 +1,448 @@
+<mxGraphModel dx="1628" dy="898" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1350" pageHeight="900" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- TITULO -->
+    <mxCell id="CU17-COMM-TITLE" parent="1" style="text;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="&lt;b style=&quot;font-weight:normal;&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.8;margin-top:0pt;margin-bottom:6pt;&quot;&gt;&lt;span style=&quot;font-size:13pt;font-family:Arial,sans-serif;color:#000000;font-weight:700;&quot;&gt;CU17 – Gestionar Antecedentes Médicos&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;font-size:9pt;color:#666666;margin:0;&quot;&gt;Diagrama de Comunicación UML • Arquitectura BCE Canónica: 1 Boundary y 1 Controller&lt;/p&gt;&lt;/b&gt;" vertex="1">
+      <mxGeometry height="50" width="550" x="40" y="30" as="geometry" />
+    </mxCell>
+
+    <!-- ACTOR: :Médico / Administrador -->
+    <mxCell id="CU17-COMM-ACT" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Médico / Administrador" vertex="1">
+      <mxGeometry height="70" width="40" x="70" y="270" as="geometry" />
+    </mxCell>
+
+    <!-- BOUNDARY: :AntecedentesPatientModal -->
+    <mxCell id="CU17-COMM-BND" parent="1" style="shape=umlBoundary;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":AntecedentesPatientModal" vertex="1">
+      <mxGeometry height="70" width="80" x="310" y="270" as="geometry" />
+    </mxCell>
+
+    <!-- CONTROLLER: :AntecedentesController -->
+    <mxCell id="CU17-COMM-CTRL" parent="1" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":AntecedentesController" vertex="1">
+      <mxGeometry height="80" width="70" x="580" y="265" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITIES (DISTRIBUIDAS VERTICALMENTE A LA DERECHA) -->
+    <!-- :Paciente -->
+    <mxCell id="CU17-COMM-ENT-PAC" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Paciente" vertex="1">
+      <mxGeometry height="42" width="42" x="930" y="140" as="geometry" />
+    </mxCell>
+
+    <!-- :HistoriaClinica -->
+    <mxCell id="CU17-COMM-ENT-HIS" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":HistoriaClinica" vertex="1">
+      <mxGeometry height="42" width="42" x="930" y="240" as="geometry" />
+    </mxCell>
+
+    <!-- :Antecedente -->
+    <mxCell id="CU17-COMM-ENT-ANT" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Antecedente" vertex="1">
+      <mxGeometry height="42" width="42" x="930" y="340" as="geometry" />
+    </mxCell>
+
+    <!-- :Bitacora -->
+    <mxCell id="CU17-COMM-ENT-BIT" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Bitacora" vertex="1">
+      <mxGeometry height="42" width="42" x="930" y="440" as="geometry" />
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- LINEAS DE RELACION (CONECTORES BASE CONTINUOS SIN FLECHA) -->
+    <!-- ========================================================================= -->
+
+    <!-- Actor <-> Boundary -->
+    <mxCell id="CU17-LNK-ACT-BND" edge="1" parent="1" source="CU17-COMM-ACT" target="CU17-COMM-BND" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Boundary <-> Controller -->
+    <mxCell id="CU17-LNK-BND-CTRL" edge="1" parent="1" source="CU17-COMM-BND" target="CU17-COMM-CTRL" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Controller -> Paciente -->
+    <mxCell id="CU17-LNK-CTRL-PAC" edge="1" parent="1" source="CU17-COMM-CTRL" target="CU17-COMM-ENT-PAC" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=0.9;exitY=0.2;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="680" y="161" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> HistoriaClinica -->
+    <mxCell id="CU17-LNK-CTRL-HIS" edge="1" parent="1" source="CU17-COMM-CTRL" target="CU17-COMM-ENT-HIS" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="680" y="261" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> Antecedente -->
+    <mxCell id="CU17-LNK-CTRL-ANT" edge="1" parent="1" source="CU17-COMM-CTRL" target="CU17-COMM-ENT-ANT" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="680" y="361" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Controller -> Bitacora -->
+    <mxCell id="CU17-LNK-CTRL-BIT" edge="1" parent="1" source="CU17-COMM-CTRL" target="CU17-COMM-ENT-BIT" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="680" y="461" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ========================================================================= -->
+    <!-- MENSAJES Y FLECHAS INDEPENDIENTES ARRIBA DE CADA MENSAJE (CANONICO DRAWIO) -->
+    <!-- ========================================================================= -->
+
+    <!-- SECCION ACTOR -> BOUNDARY (LLAMADAS ARRIBA, RETORNOS ABAJO) -->
+
+    <!-- 1: abrirGestionAntecedentes(paciente) [FLUJO 1: FLECHA NEGRA #000000] -->
+    <mxCell id="CU17-M1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1: abrirGestionAntecedentes(paciente)" vertex="1">
+      <mxGeometry height="24" width="200" x="110" y="165" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A1" edge="1" parent="1" source="CU17-M1" target="CU17-M1" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="160" as="sourcePoint" />
+        <mxPoint x="220" y="160" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2: ingresarAntecedente(tipo, descripcion) [FLUJO 2: FLECHA VERDE #005522] -->
+    <mxCell id="CU17-M2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2: ingresarAntecedente(tipo, descripcion)" vertex="1">
+      <mxGeometry height="24" width="210" x="105" y="195" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A2" edge="1" parent="1" source="CU17-M2" target="CU17-M2" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="190" as="sourcePoint" />
+        <mxPoint x="220" y="190" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3: editarAntecedente(id, datos) [FLUJO 3: FLECHA MORADA #4B0082] -->
+    <mxCell id="CU17-M3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3: editarAntecedente(id, datos)" vertex="1">
+      <mxGeometry height="24" width="180" x="120" y="225" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A3" edge="1" parent="1" source="CU17-M3" target="CU17-M3" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#4B0082;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="220" as="sourcePoint" />
+        <mxPoint x="220" y="220" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4: toggleEstado(idAntecedente) [FLUJO 4: FLECHA ROJA #8B0000] -->
+    <mxCell id="CU17-M4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="4: toggleEstado(idAntecedente)" vertex="1">
+      <mxGeometry height="24" width="180" x="120" y="255" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A4" edge="1" parent="1" source="CU17-M4" target="CU17-M4" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#8B0000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="250" as="sourcePoint" />
+        <mxPoint x="220" y="250" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- RETORNOS ACTOR <- BOUNDARY (ABAJO CON FLECHA DISCONTINUA) -->
+
+    <!-- 1.10: renderizarPestanasYAlertas() [FLUJO 1: NEGRO] -->
+    <mxCell id="CU17-M110" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.10: renderizarPestanasYAlertas()" vertex="1">
+      <mxGeometry height="20" width="190" x="115" y="345" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A110" edge="1" parent="1" source="CU17-M110" target="CU17-M110" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#000000;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="220" y="340" as="sourcePoint" />
+        <mxPoint x="180" y="340" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.12: actualizarListaYAlerta() [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M212" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.12: actualizarListaYAlerta()" vertex="1">
+      <mxGeometry height="20" width="170" x="125" y="375" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A212" edge="1" parent="1" source="CU17-M212" target="CU17-M212" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="220" y="370" as="sourcePoint" />
+        <mxPoint x="180" y="370" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.14: notificarErrorDuplicado() [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M214" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.14: notificarErrorDuplicado()" vertex="1">
+      <mxGeometry height="20" width="160" x="130" y="405" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A214" edge="1" parent="1" source="CU17-M214" target="CU17-M214" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="220" y="400" as="sourcePoint" />
+        <mxPoint x="180" y="400" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.7: reflejarCambioEnVista() [FLUJO 3: MORADO] -->
+    <mxCell id="CU17-M37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.7: reflejarCambioEnVista()" vertex="1">
+      <mxGeometry height="20" width="160" x="130" y="435" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A37" edge="1" parent="1" source="CU17-M37" target="CU17-M37" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#4B0082;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="220" y="430" as="sourcePoint" />
+        <mxPoint x="180" y="430" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4.6: notificarCambioEstado() [FLUJO 4: ROJO OXIDO] -->
+    <mxCell id="CU17-M46" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="4.6: notificarCambioEstado()" vertex="1">
+      <mxGeometry height="20" width="160" x="130" y="465" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A46" edge="1" parent="1" source="CU17-M46" target="CU17-M46" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#8B0000;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="220" y="460" as="sourcePoint" />
+        <mxPoint x="180" y="460" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- SECCION BOUNDARY -> CONTROLLER (FUNCIONES REALES DEL CONTROLADOR LARAVEL) -->
+
+    <!-- 1.1: indexByPatient(idPaciente) [FLUJO 1: NEGRO] -->
+    <mxCell id="CU17-M11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.1: indexByPatient(idPaciente)" vertex="1">
+      <mxGeometry height="24" width="190" x="390" y="165" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A11" edge="1" parent="1" source="CU17-M11" target="CU17-M11" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="465" y="160" as="sourcePoint" />
+        <mxPoint x="505" y="160" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.1: store(payload) [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.1: store(payload)" vertex="1">
+      <mxGeometry height="24" width="220" x="375" y="195" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A21" edge="1" parent="1" source="CU17-M21" target="CU17-M21" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="465" y="190" as="sourcePoint" />
+        <mxPoint x="505" y="190" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.1: update(id) [FLUJO 3: MORADO] -->
+    <mxCell id="CU17-M31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.1: update(id)" vertex="1">
+      <mxGeometry height="24" width="190" x="390" y="225" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A31" edge="1" parent="1" source="CU17-M31" target="CU17-M31" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#4B0082;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="465" y="220" as="sourcePoint" />
+        <mxPoint x="505" y="220" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4.1: toggleStatus(id) [FLUJO 4: ROJO OXIDO] -->
+    <mxCell id="CU17-M41" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="4.1: toggleStatus(id)" vertex="1">
+      <mxGeometry height="24" width="220" x="375" y="255" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A41" edge="1" parent="1" source="CU17-M41" target="CU17-M41" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#8B0000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="465" y="250" as="sourcePoint" />
+        <mxPoint x="505" y="250" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- RETORNOS CONTROLLER -> BOUNDARY (ABAJO CON FLECHA DISCONTINUA) -->
+
+    <!-- 1.9: return antecedentes [FLUJO 1: NEGRO] -->
+    <mxCell id="CU17-M19" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.9: return antecedentes" vertex="1">
+      <mxGeometry height="20" width="160" x="405" y="345" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A19" edge="1" parent="1" source="CU17-M19" target="CU17-M19" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#000000;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="500" y="340" as="sourcePoint" />
+        <mxPoint x="460" y="340" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.11: return antecedente [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M211" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.11: return antecedente" vertex="1">
+      <mxGeometry height="20" width="170" x="400" y="375" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A211" edge="1" parent="1" source="CU17-M211" target="CU17-M211" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="500" y="370" as="sourcePoint" />
+        <mxPoint x="460" y="370" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.13: 422 Unprocessable (duplicado activo) [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M213" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.13: 422 Unprocessable (duplicado activo)" vertex="1">
+      <mxGeometry height="20" width="220" x="375" y="405" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A213" edge="1" parent="1" source="CU17-M213" target="CU17-M213" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="500" y="400" as="sourcePoint" />
+        <mxPoint x="460" y="400" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.6: return antecedenteActualizado [FLUJO 3: MORADO] -->
+    <mxCell id="CU17-M36" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.6: return antecedenteActualizado" vertex="1">
+      <mxGeometry height="20" width="180" x="395" y="435" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A36" edge="1" parent="1" source="CU17-M36" target="CU17-M36" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#4B0082;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="500" y="430" as="sourcePoint" />
+        <mxPoint x="460" y="430" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4.5: return nuevoEstado [FLUJO 4: ROJO OXIDO] -->
+    <mxCell id="CU17-M45" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="4.5: return nuevoEstado" vertex="1">
+      <mxGeometry height="20" width="160" x="405" y="465" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A45" edge="1" parent="1" source="CU17-M45" target="CU17-M45" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#8B0000;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="500" y="460" as="sourcePoint" />
+        <mxPoint x="460" y="460" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- VALIDACIONES REFLEXIVAS EN CONTROLLER (BUCLE CURVO HACIA SI MISMO) -->
+    <mxCell id="CU17-SELF-CALL" edge="1" parent="1" source="CU17-COMM-CTRL" target="CU17-COMM-CTRL" style="curved=1;html=1;strokeWidth=1.5;endArrow=classic;endFill=1;fontSize=10;fontColor=#4B0082;strokeColor=#4B0082;">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="600" y="250" as="sourcePoint" />
+        <mxPoint x="635" y="250" as="targetPoint" />
+        <Array as="points">
+          <mxPoint x="585" y="190" />
+          <mxPoint x="645" y="190" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="CU17-MS1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=1;fontSize=9;fontColor=#000000;fontStyle=0;labelBackgroundColor=none;" value="1.2: validarAccesoRBAC()&#xa;2.2: validate(AntecedenteCreateRequest)&#xa;2.3: DB::transaction()&#xa;3.2: validate(AntecedenteUpdateRequest)" vertex="1">
+      <mxGeometry height="60" width="220" x="535" y="125" as="geometry" />
+    </mxCell>
+
+    <!-- LLAMADAS CONTROLLER -> PACIENTE [FLUJO 1: NEGRO] -->
+    <!-- 1.3: findOrFail(idPaciente) -->
+    <mxCell id="CU17-M13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.3: findOrFail(idPaciente)" vertex="1">
+      <mxGeometry height="20" width="160" x="720" y="138" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A13" edge="1" parent="1" source="CU17-M13" target="CU17-M13" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="133" as="sourcePoint" />
+        <mxPoint x="825" y="133" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- LLAMADAS CONTROLLER -> HISTORIACLINICA -->
+    <!-- 1.5: where('id_paciente', id) [FLUJO 1: NEGRO] -->
+    <mxCell id="CU17-M15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.5: where('id_paciente', id)" vertex="1">
+      <mxGeometry height="20" width="160" x="720" y="222" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A15" edge="1" parent="1" source="CU17-M15" target="CU17-M15" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="217" as="sourcePoint" />
+        <mxPoint x="825" y="217" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.4: firstOrCreate(idPaciente) [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.4: firstOrCreate(idPaciente)" vertex="1">
+      <mxGeometry height="20" width="160" x="720" y="247" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A24" edge="1" parent="1" source="CU17-M24" target="CU17-M24" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="242" as="sourcePoint" />
+        <mxPoint x="825" y="242" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- LLAMADAS CONTROLLER -> ANTECEDENTE -->
+    <!-- 1.7: scopePorPaciente(idHistoria) [FLUJO 1: NEGRO] -->
+    <mxCell id="CU17-M17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.7: scopePorPaciente(idHistoria)" vertex="1">
+      <mxGeometry height="20" width="180" x="710" y="310" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A17" edge="1" parent="1" source="CU17-M17" target="CU17-M17" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#000000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="305" as="sourcePoint" />
+        <mxPoint x="825" y="305" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.6: verificarDuplicadoActivo() [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M26" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.6: verificarDuplicadoActivo()" vertex="1">
+      <mxGeometry height="20" width="170" x="715" y="333" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A26" edge="1" parent="1" source="CU17-M26" target="CU17-M26" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="328" as="sourcePoint" />
+        <mxPoint x="825" y="328" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.8: create(datosAntecedente) [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M28" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.8: create(datosAntecedente)" vertex="1">
+      <mxGeometry height="20" width="170" x="715" y="356" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A28" edge="1" parent="1" source="CU17-M28" target="CU17-M28" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="351" as="sourcePoint" />
+        <mxPoint x="825" y="351" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.3: update(datos) [FLUJO 3: MORADO] -->
+    <mxCell id="CU17-M33" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.3: update(datos)" vertex="1">
+      <mxGeometry height="20" width="140" x="730" y="379" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A33" edge="1" parent="1" source="CU17-M33" target="CU17-M33" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#4B0082;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="374" as="sourcePoint" />
+        <mxPoint x="825" y="374" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4.2: findOrFail(id) / save(nuevoEstado) [FLUJO 4: ROJO OXIDO] -->
+    <mxCell id="CU17-M42" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="4.2: findOrFail(id) / save(nuevoEstado)" vertex="1">
+      <mxGeometry height="20" width="220" x="690" y="402" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A42" edge="1" parent="1" source="CU17-M42" target="CU17-M42" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#8B0000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="397" as="sourcePoint" />
+        <mxPoint x="825" y="397" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- LLAMADAS CONTROLLER -> BITACORA -->
+    <!-- 2.10: registrar(CREAR_ANTECEDENTE) [FLUJO 2: VERDE] -->
+    <mxCell id="CU17-M210" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="2.10: registrar(CREAR_ANTECEDENTE)" vertex="1">
+      <mxGeometry height="20" width="210" x="695" y="437" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A210" edge="1" parent="1" source="CU17-M210" target="CU17-M210" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#005522;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="432" as="sourcePoint" />
+        <mxPoint x="825" y="432" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.5: registrar(EDITAR_ANTECEDENTE) [FLUJO 3: MORADO] -->
+    <mxCell id="CU17-M35" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="3.5: registrar(EDITAR_ANTECEDENTE)" vertex="1">
+      <mxGeometry height="20" width="210" x="695" y="460" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A35" edge="1" parent="1" source="CU17-M35" target="CU17-M35" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#4B0082;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="455" as="sourcePoint" />
+        <mxPoint x="825" y="455" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4.4: registrar(BAJA_LOGICA_ANTECEDENTE) [FLUJO 4: ROJO OXIDO] -->
+    <mxCell id="CU17-M44" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="4.4: registrar(BAJA_LOGICA_ANTECEDENTE)" vertex="1">
+      <mxGeometry height="20" width="220" x="690" y="483" as="geometry" />
+    </mxCell>
+    <mxCell id="CU17-A44" edge="1" parent="1" source="CU17-M44" target="CU17-M44" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#8B0000;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="785" y="478" as="sourcePoint" />
+        <mxPoint x="825" y="478" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>

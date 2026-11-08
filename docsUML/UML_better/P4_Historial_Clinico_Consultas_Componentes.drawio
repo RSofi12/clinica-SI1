@@ -1,0 +1,351 @@
+<mxGraphModel dx="1823" dy="1037" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="900" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ========== GRUPO PRINCIPAL (PAQUETE P4) ========== -->
+    <mxCell id="pkg-group" value="" style="group" vertex="1" connectable="0" parent="1">
+      <mxGeometry x="30" y="30" width="1390" height="820" as="geometry" />
+    </mxCell>
+
+    <!-- Carpeta del paquete -->
+    <mxCell id="pkg-folder" value="" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=450;tabHeight=33;tabPosition=left;html=1;whiteSpace=wrap;" vertex="1" parent="pkg-group">
+      <mxGeometry x="10" y="0" width="1380" height="820" as="geometry" />
+    </mxCell>
+
+    <!-- Título del paquete -->
+    <mxCell id="pkg-title" value="&lt;b&gt;pkg Historial Clínico y Consultas&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="15" y="0" width="430" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--                    CAPA FORM (ARRIBA) - Rosa                     -->
+    <!-- ================================================================ -->
+
+    <!-- FORM 1: MedicalConsultationForm.jsx -->
+    <mxCell id="form-consultation" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;MedicalConsultationForm.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="25" y="60" width="195" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-consultation-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-consultation">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 2: PatientMedicalRecordView.jsx -->
+    <mxCell id="form-recordview" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;PatientMedicalRecordView.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="255" y="60" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-recordview-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-recordview">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 3: BackgroundManagerModal.jsx -->
+    <mxCell id="form-background" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;BackgroundManagerModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="490" y="60" width="200" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-background-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-background">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 4: PrescriptionFormModal.jsx -->
+    <mxCell id="form-prescription" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;PrescriptionFormModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="725" y="60" width="190" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-prescription-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-prescription">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 5: EvolutionNotesModal.jsx -->
+    <mxCell id="form-evolution" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;EvolutionNotesModal.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="950" y="60" width="190" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-evolution-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-evolution">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- FORM 6: ClinicalAnalysisView.jsx -->
+    <mxCell id="form-analysis" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;FORM&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;ClinicalAnalysisView.jsx&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="pkg-group">
+      <mxGeometry x="1175" y="60" width="190" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="form-analysis-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="form-analysis">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--         INTERFACES FORM → CLASS (provides/requires)              -->
+    <!-- ================================================================ -->
+
+    <!-- ConsultationForm → halfCircle (requires) -->
+    <mxCell id="edge-consult-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-consultation" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="122" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-consultserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-consultservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="122" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- RecordView → halfCircle (requires) -->
+    <mxCell id="edge-record-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-recordview" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="355" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-recordserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-recordservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="355" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- BackgroundModal → halfCircle (requires) -->
+    <mxCell id="edge-bg-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-background" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="590" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-recordserv-prov-bg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-recordservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="590" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- PrescriptionModal → halfCircle (requires) -->
+    <mxCell id="edge-presc-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-prescription" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="820" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-consultphp-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-consultphp" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="820" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- EvolutionModal → halfCircle (requires) -->
+    <mxCell id="edge-evol-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-evolution" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1045" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-consultphp-prov-evol" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-consultphp" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1045" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- AnalysisView → halfCircle (requires) -->
+    <mxCell id="edge-analysis-req" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=halfCircle;endFill=0;" edge="1" source="form-analysis" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1270" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-aiserv-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;endArrow=circle;endFill=0;" edge="1" source="class-aiservice" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="1270" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--                   CAPA CLASS (MEDIO) - Naranja                   -->
+    <!-- ================================================================ -->
+
+    <!-- CLASS 1: consultationService.js -->
+    <mxCell id="class-consultservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;consultationService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="80" y="300" width="220" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-consultservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-consultservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 2: medicalRecordService.js -->
+    <mxCell id="class-recordservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:13px;&quot;&gt;medicalRecordService.js&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="360" y="300" width="230" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-recordservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-recordservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 3: MedicalConsultationService.php -->
+    <mxCell id="class-consultphp" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;MedicalConsultationService.php&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="660" y="300" width="250" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-consultphp-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-consultphp">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 4: MedicalRecordService.php -->
+    <mxCell id="class-recordphp" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;font-size:12px;&quot;&gt;MedicalRecordService.php&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="945" y="300" width="220" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-recordphp-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-recordphp">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- CLASS 5: ClinicalAiSummaryService.php -->
+    <mxCell id="class-aiservice" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;CLASS&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:6px;font-size:12px;&quot;&gt;ClinicalAiSummaryService.php&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="pkg-group">
+      <mxGeometry x="1190" y="300" width="225" height="90" as="geometry" />
+    </mxCell>
+    <mxCell id="class-aiservice-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="class-aiservice">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--              CAPA TABLE (ABAJO) - Azul (PostgreSQL)              -->
+    <!-- ================================================================ -->
+
+    <!-- TABLE 1: historias_clinicas -->
+    <mxCell id="table-historias" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;historias_clinicas&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="25" y="640" width="145" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-historias-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-historias">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 2: consultas_medicas -->
+    <mxCell id="table-consultas" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;consultas_medicas&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="190" y="640" width="150" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-consultas-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-consultas">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 3: antecedentes -->
+    <mxCell id="table-antecedentes" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;antecedentes&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="360" y="640" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-antecedentes-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-antecedentes">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 4: diagnosticos -->
+    <mxCell id="table-diagnosticos" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;diagnosticos&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="520" y="640" width="140" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-diagnosticos-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-diagnosticos">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 5: evoluciones -->
+    <mxCell id="table-evoluciones" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;evoluciones&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="680" y="640" width="135" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-evoluciones-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-evoluciones">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 6: recetas -->
+    <mxCell id="table-recetas" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:13px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:13px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 8px;font-size:13px;&quot;&gt;recetas&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;" vertex="1" parent="pkg-group">
+      <mxGeometry x="835" y="640" width="130" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-recetas-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-recetas">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 7: receta_detalles -->
+    <mxCell id="table-recetadetalles" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;receta_detalles&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="985" y="640" width="145" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-recetadetalles-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-recetadetalles">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- TABLE 8: analisis_clinicos -->
+    <mxCell id="table-analisis" value="&lt;p style=&quot;margin:6px 0 0;text-align:center;font-size:12px;&quot;&gt;&amp;lt;&amp;lt;Table&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr style=&quot;border-style:solid;font-size:12px;&quot;&gt;&lt;p style=&quot;margin:0 0 0 6px;font-size:12px;&quot;&gt;analisis_clinicos&lt;/p&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="pkg-group">
+      <mxGeometry x="1150" y="640" width="150" height="60" as="geometry" />
+    </mxCell>
+    <mxCell id="table-analisis-icon" value="" style="shape=component;jettyWidth=8;jettyHeight=4;" vertex="1" parent="table-analisis">
+      <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+        <mxPoint x="-24" y="4" as="offset" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ================================================================ -->
+    <!--          RELACIONES CLASS → TABLE (dashed / «use»)               -->
+    <!-- ================================================================ -->
+
+    <!-- consultationService.js -> consultas_medicas -->
+    <mxCell id="edge-consult-tbl" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-consultservice" target="table-consultas" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- medicalRecordService.js -> historias_clinicas -->
+    <mxCell id="edge-rec-historias" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-recordservice" target="table-historias" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- medicalRecordService.js -> antecedentes -->
+    <mxCell id="edge-rec-antecedentes" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.7;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-recordservice" target="table-antecedentes" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="450" y="550" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- MedicalConsultationService.php -> consultas_medicas -->
+    <mxCell id="edge-php-consultas" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-consultphp" target="table-consultas" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- MedicalConsultationService.php -> diagnosticos -->
+    <mxCell id="edge-php-diag" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.4;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-consultphp" target="table-diagnosticos" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- MedicalConsultationService.php -> evoluciones -->
+    <mxCell id="edge-php-evol" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.6;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-consultphp" target="table-evoluciones" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- MedicalRecordService.php -> recetas -->
+    <mxCell id="edge-recphp-recetas" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-recordphp" target="table-recetas" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- MedicalRecordService.php -> receta_detalles -->
+    <mxCell id="edge-recphp-detalles" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-recordphp" target="table-recetadetalles" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ClinicalAiSummaryService.php -> analisis_clinicos -->
+    <mxCell id="edge-aiphp-analisis" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;endArrow=open;endFill=0;" edge="1" source="class-aiservice" target="table-analisis" parent="pkg-group">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

@@ -1,0 +1,328 @@
+<mxGraphModel dx="1628" dy="898" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- TÍTULO DEL DIAGRAMA -->
+    <mxCell id="CU01-COMM-TITLE" parent="1" style="text;whiteSpace=wrap;html=1;labelBackgroundColor=none;" value="&lt;b style=&quot;font-weight:normal;&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height:1.8;margin-top:0pt;margin-bottom:6pt;&quot;&gt;&lt;span style=&quot;font-size:12pt;font-family:Arial,sans-serif;color:#000000;font-weight:700;&quot;&gt;CU01 – Autenticar usuario (RF01)&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;font-size:9pt;color:#666666;margin:0;&quot;&gt;Diagrama de Comunicación UML • Flujo Actor - Boundary - Controller - Entities&lt;/p&gt;&lt;/b&gt;" vertex="1">
+      <mxGeometry height="50" width="450" x="40" y="30" as="geometry" />
+    </mxCell>
+
+    <!-- ACTOR: :Usuario -->
+    <mxCell id="CU01-COMM-ACT" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Usuario" vertex="1">
+      <mxGeometry height="70" width="40" x="70" y="260" as="geometry" />
+    </mxCell>
+
+    <!-- BOUNDARY / INTERFACE: :LoginPage -->
+    <mxCell id="CU01-COMM-BND" parent="1" style="shape=umlBoundary;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":LoginPage" vertex="1">
+      <mxGeometry height="70" width="80" x="310" y="260" as="geometry" />
+    </mxCell>
+
+    <!-- CONTROLLER: :AuthController -->
+    <mxCell id="CU01-COMM-CTRL" parent="1" style="ellipse;shape=umlControl;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":AuthController" vertex="1">
+      <mxGeometry height="80" width="70" x="550" y="255" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY: :SecurityConfig -->
+    <mxCell id="CU01-COMM-ENT-SC" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":SecurityConfig" vertex="1">
+      <mxGeometry height="42" width="42" x="840" y="100" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY: :User -->
+    <mxCell id="CU01-COMM-ENT-US" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":User" vertex="1">
+      <mxGeometry height="42" width="42" x="840" y="255" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY: :PasswordResetToken -->
+    <mxCell id="CU01-COMM-ENT-PR" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":PasswordResetToken" vertex="1">
+      <mxGeometry height="42" width="42" x="1040" y="380" as="geometry" />
+    </mxCell>
+
+    <!-- ENTITY: :Bitacora -->
+    <mxCell id="CU01-COMM-ENT-BI" parent="1" style="ellipse;shape=umlEntity;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontSize=10;labelBackgroundColor=none;rounded=1;fontStyle=1;" value=":Bitacora" vertex="1">
+      <mxGeometry height="42" width="42" x="840" y="420" as="geometry" />
+    </mxCell>
+
+    <!-- ENLACES DE COMUNICACIÓN (LÍNEAS SÓLIDAS) -->
+    <!-- Enlace Actor - Boundary -->
+    <mxCell id="CU01-COMM-LNK-ACT-BND" edge="1" parent="1" source="CU01-COMM-ACT" target="CU01-COMM-BND" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Enlace Boundary - Controller -->
+    <mxCell id="CU01-COMM-LNK-BND-CTRL" edge="1" parent="1" source="CU01-COMM-BND" target="CU01-COMM-CTRL" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Enlace Controller - SecurityConfig -->
+    <mxCell id="CU01-COMM-LNK-CTRL-SC" edge="1" parent="1" source="CU01-COMM-CTRL" target="CU01-COMM-ENT-SC" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.85;exitY=0.15;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="640" y="121" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Enlace Controller - User -->
+    <mxCell id="CU01-COMM-LNK-CTRL-US" edge="1" parent="1" source="CU01-COMM-CTRL" target="CU01-COMM-ENT-US" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Enlace Controller - PasswordResetToken -->
+    <mxCell id="CU01-COMM-LNK-CTRL-PR" edge="1" parent="1" source="CU01-COMM-CTRL" target="CU01-COMM-ENT-PR" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.9;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="640" y="350" />
+          <mxPoint x="980" y="350" />
+          <mxPoint x="980" y="401" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Enlace Controller - Bitacora -->
+    <mxCell id="CU01-COMM-LNK-CTRL-BI" edge="1" parent="1" source="CU01-COMM-CTRL" target="CU01-COMM-ENT-BI" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.8;exitY=0.9;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="640" y="441" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- MENSAJES Y FLECHAS DE DIRECCIÓN: SECUENCIA 1 (AUTENTICACIÓN EXITOSA) -->
+    <!-- 1: solicitarAutenticacion() -->
+    <mxCell id="CU01-COMM-M1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="1: solicitarAutenticacion()" vertex="1">
+      <mxGeometry height="26" width="150" x="135" y="195" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A1" edge="1" parent="1" source="CU01-COMM-M1" target="CU01-COMM-M1" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="190" as="sourcePoint" />
+        <mxPoint x="215" y="190" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.1: login() -->
+    <mxCell id="CU01-COMM-M11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="1.1: login()" vertex="1">
+      <mxGeometry height="24" width="90" x="415" y="195" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A11" edge="1" parent="1" source="CU01-COMM-M11" target="CU01-COMM-M11" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="445" y="190" as="sourcePoint" />
+        <mxPoint x="475" y="190" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.2: obtenerPoliticaActiva() -->
+    <mxCell id="CU01-COMM-M12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="1.2: obtenerPoliticaActiva()" vertex="1">
+      <mxGeometry height="24" width="145" x="660" y="95" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A12" edge="1" parent="1" source="CU01-COMM-M12" target="CU01-COMM-M12" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="705" y="90" as="sourcePoint" />
+        <mxPoint x="735" y="90" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.3: estaBloqueadoTemporalmente() -->
+    <mxCell id="CU01-COMM-M13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="1.3: estaBloqueadoTemporalmente()" vertex="1">
+      <mxGeometry height="24" width="180" x="645" y="215" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A13" edge="1" parent="1" source="CU01-COMM-M13" target="CU01-COMM-M13" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="705" y="210" as="sourcePoint" />
+        <mxPoint x="735" y="210" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.4: autenticar() -->
+    <mxCell id="CU01-COMM-M14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="1.4: autenticar()" vertex="1">
+      <mxGeometry height="24" width="100" x="670" y="240" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A14" edge="1" parent="1" source="CU01-COMM-M14" target="CU01-COMM-M14" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="705" y="235" as="sourcePoint" />
+        <mxPoint x="735" y="235" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.5: actualizarUltimoAcceso() -->
+    <mxCell id="CU01-COMM-M15" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="1.5: actualizarUltimoAcceso()" vertex="1">
+      <mxGeometry height="24" width="160" x="655" y="265" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A15" edge="1" parent="1" source="CU01-COMM-M15" target="CU01-COMM-M15" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="705" y="260" as="sourcePoint" />
+        <mxPoint x="735" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.6: registrar() -->
+    <mxCell id="CU01-COMM-M16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="1.6: registrar()" vertex="1">
+      <mxGeometry height="24" width="90" x="670" y="415" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A16" edge="1" parent="1" source="CU01-COMM-M16" target="CU01-COMM-M16" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="700" y="410" as="sourcePoint" />
+        <mxPoint x="730" y="410" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.7: retornarSesion() (retorno) -->
+    <mxCell id="CU01-COMM-M17" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;fontStyle=0;" value="1.7: retornarSesion()" vertex="1">
+      <mxGeometry height="20" width="130" x="400" y="335" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A17" edge="1" parent="1" source="CU01-COMM-M17" target="CU01-COMM-M17" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;fontSize=10;labelBackgroundColor=none;fontColor=default;dashed=1;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="475" y="330" as="sourcePoint" />
+        <mxPoint x="435" y="330" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 1.8: redirigirDashboard() (retorno) -->
+    <mxCell id="CU01-COMM-M18" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;fontStyle=0;" value="1.8: redirigirDashboard()" vertex="1">
+      <mxGeometry height="20" width="140" x="140" y="335" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A18" edge="1" parent="1" source="CU01-COMM-M18" target="CU01-COMM-M18" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;fontSize=10;labelBackgroundColor=none;fontColor=default;dashed=1;" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="220" y="330" as="sourcePoint" />
+        <mxPoint x="180" y="330" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- MENSAJES Y FLECHAS DE DIRECCIÓN: SECUENCIA 2 (INTENTOS FALLIDOS Y BLOQUEO) -->
+    <!-- 2: solicitarAutenticacionErronea() -->
+    <mxCell id="CU01-COMM-M2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="2: solicitarAutenticacionErronea()" vertex="1">
+      <mxGeometry height="24" width="170" x="125" y="160" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A2" edge="1" parent="1" source="CU01-COMM-M2" target="CU01-COMM-M2" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="155" as="sourcePoint" />
+        <mxPoint x="215" y="155" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.1: login() -->
+    <mxCell id="CU01-COMM-M21" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="2.1: login()" vertex="1">
+      <mxGeometry height="24" width="90" x="415" y="160" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A21" edge="1" parent="1" source="CU01-COMM-M21" target="CU01-COMM-M21" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="445" y="155" as="sourcePoint" />
+        <mxPoint x="475" y="155" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.2: registrarIntentoFallido() -->
+    <mxCell id="CU01-COMM-M22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="2.2: registrarIntentoFallido()" vertex="1">
+      <mxGeometry height="24" width="160" x="655" y="290" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A22" edge="1" parent="1" source="CU01-COMM-M22" target="CU01-COMM-M22" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="705" y="285" as="sourcePoint" />
+        <mxPoint x="735" y="285" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 2.3: registrar() -->
+    <mxCell id="CU01-COMM-M23" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="2.3: registrar()" vertex="1">
+      <mxGeometry height="24" width="90" x="670" y="440" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A23" edge="1" parent="1" source="CU01-COMM-M23" target="CU01-COMM-M23" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="700" y="435" as="sourcePoint" />
+        <mxPoint x="730" y="435" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- MENSAJES Y FLECHAS DE DIRECCIÓN: SECUENCIA 3 (RECUPERACIÓN DE CONTRASEÑA) -->
+    <!-- 3: solicitarCodigoRecuperacion() -->
+    <mxCell id="CU01-COMM-M3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="3: solicitarCodigoRecuperacion()" vertex="1">
+      <mxGeometry height="24" width="170" x="125" y="230" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A3" edge="1" parent="1" source="CU01-COMM-M3" target="CU01-COMM-M3" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="225" as="sourcePoint" />
+        <mxPoint x="215" y="225" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.1: forgotPassword() -->
+    <mxCell id="CU01-COMM-M31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="3.1: forgotPassword()" vertex="1">
+      <mxGeometry height="24" width="125" x="397.5" y="230" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A31" edge="1" parent="1" source="CU01-COMM-M31" target="CU01-COMM-M31" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="445" y="225" as="sourcePoint" />
+        <mxPoint x="475" y="225" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 3.2: create() -->
+    <mxCell id="CU01-COMM-M32" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="3.2: create()" vertex="1">
+      <mxGeometry height="24" width="90" x="800" y="325" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A32" edge="1" parent="1" source="CU01-COMM-M32" target="CU01-COMM-M32" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="835" y="320" as="sourcePoint" />
+        <mxPoint x="865" y="320" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- MENSAJES Y FLECHAS DE DIRECCIÓN: SECUENCIA 4 (RESTABLECER CON CONTRASEÑA) -->
+    <!-- 4: resetPassword() -->
+    <mxCell id="CU01-COMM-M4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="4: resetPassword()" vertex="1">
+      <mxGeometry height="24" width="115" x="402.5" y="265" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A4" edge="1" parent="1" source="CU01-COMM-M4" target="CU01-COMM-M4" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="445" y="260" as="sourcePoint" />
+        <mxPoint x="475" y="260" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4.1: validarToken() -->
+    <mxCell id="CU01-COMM-M41" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="4.1: validarToken()" vertex="1">
+      <mxGeometry height="24" width="115" x="910" y="360" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A41" edge="1" parent="1" source="CU01-COMM-M41" target="CU01-COMM-M41" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="955" y="355" as="sourcePoint" />
+        <mxPoint x="985" y="355" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 4.2: recuperarPassword() -->
+    <mxCell id="CU01-COMM-M42" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="4.2: recuperarPassword()" vertex="1">
+      <mxGeometry height="24" width="145" x="895" y="295" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A42" edge="1" parent="1" source="CU01-COMM-M42" target="CU01-COMM-M42" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="955" y="290" as="sourcePoint" />
+        <mxPoint x="985" y="290" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- MENSAJES Y FLECHAS DE DIRECCIÓN: SECUENCIA 5 (LOGOUT) -->
+    <!-- 5: solicitarLogout() -->
+    <mxCell id="CU01-COMM-M5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="5: solicitarLogout()" vertex="1">
+      <mxGeometry height="24" width="120" x="150" y="295" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A5" edge="1" parent="1" source="CU01-COMM-M5" target="CU01-COMM-M5" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="180" y="290" as="sourcePoint" />
+        <mxPoint x="215" y="290" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- 5.1: logout() -->
+    <mxCell id="CU01-COMM-M51" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;labelBackgroundColor=none;" value="5.1: logout()" vertex="1">
+      <mxGeometry height="24" width="90" x="415" y="295" as="geometry" />
+    </mxCell>
+    <mxCell id="CU01-COMM-A51" edge="1" parent="1" source="CU01-COMM-M51" target="CU01-COMM-M51" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;labelBackgroundColor=none;fontColor=default;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+      <mxGeometry height="50" relative="1" width="50" as="geometry">
+        <mxPoint x="445" y="290" as="sourcePoint" />
+        <mxPoint x="475" y="290" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>
