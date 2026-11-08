@@ -1,5 +1,16 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+- **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
+  - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
+  - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
+  - **Auditoría global:** Verificado con escaneo recursivo que el 100% de los archivos `.jsx` y `.js` del frontend y `.php` del backend tienen 0 caracteres corruptos.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 16.43s).
+
+---
+
+# HANDOFF LATEST — CLÍNICA VIDA SALUD
+
 ## Estado de Relevo al 07/11/2026 (Transición Fluida de Salida en Modales y Descarga Directa de Reportes IA en PDF)
 - **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx) y [`index.css`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/index.css)):**
   - **Animación no abrupta al cerrar:** Implementado estado interno `isClosing` de 200ms que aplica `@keyframes modalBackdropOut` y `@keyframes modalPanelOut` al presionar `Escape`, hacer clic en el backdrop exterior o pulsar el botón `X`/Cerrar.
@@ -9,6 +20,17 @@
   - **Descarga instantánea como archivo binario `.pdf`:** Se construye un PDF estándar (PDF-1.4 con membrete institucional Teal `#00687A`, tarjetas KPI formateadas, tablas zebra sanitizadas y paginación) que se descarga automáticamente a la carpeta de descargas del usuario mediante `Blob` y trigger `link.click()`.
   - Botón de exportación actualizado con icono `Download` e indicación visual de descarga directa.
 - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 1m 28s).
+
+---
+
+# HANDOFF LATEST — CLÍNICA VIDA SALUD
+
+## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+- **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
+  - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
+  - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
+  - **Auditoría global:** Verificado con escaneo recursivo que el 100% de los archivos `.jsx` y `.js` del frontend y `.php` del backend tienen 0 caracteres corruptos.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 16.43s).
 
 ---
 
@@ -34,6 +56,17 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+- **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
+  - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
+  - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
+  - **Auditoría global:** Verificado con escaneo recursivo que el 100% de los archivos `.jsx` y `.js` del frontend y `.php` del backend tienen 0 caracteres corruptos.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 16.43s).
+
+---
+
+# HANDOFF LATEST — CLÍNICA VIDA SALUD
+
 ## Estado de Relevo al 07/11/2026 (Transición Fluida de Salida en Modales y Descarga Directa de Reportes IA en PDF)
 - **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx) y [`index.css`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/index.css)):**
   - **Animación no abrupta al cerrar:** Implementado estado interno `isClosing` de 200ms que aplica `@keyframes modalBackdropOut` y `@keyframes modalPanelOut` al presionar `Escape`, hacer clic en el backdrop exterior o pulsar el botón `X`/Cerrar.
@@ -43,6 +76,17 @@
   - **Descarga instantánea como archivo binario `.pdf`:** Se construye un PDF estándar (PDF-1.4 con membrete institucional Teal `#00687A`, tarjetas KPI formateadas, tablas zebra sanitizadas y paginación) que se descarga automáticamente a la carpeta de descargas del usuario mediante `Blob` y trigger `link.click()`.
   - Botón de exportación actualizado con icono `Download` e indicación visual de descarga directa.
 - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 1m 28s).
+
+---
+
+# HANDOFF LATEST — CLÍNICA VIDA SALUD
+
+## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+- **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
+  - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
+  - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
+  - **Auditoría global:** Verificado con escaneo recursivo que el 100% de los archivos `.jsx` y `.js` del frontend y `.php` del backend tienen 0 caracteres corruptos.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 16.43s).
 
 ---
 
