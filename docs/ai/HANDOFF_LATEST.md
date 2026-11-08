@@ -1,5 +1,14 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Corrección de Violación de Hooks en RecetaDetailModal — CU18)
+- **Corrección de Excepción "Rendered more hooks than during previous render" (`RecetaDetailModal.jsx`):**
+  - **Problema:** Al pulsar el icono de impresora en `Prescripciones y Recetas`, la pantalla se rompía con un error de React por inconsistencia en el conteo de hooks entre renders.
+  - **Causa:** `React.useEffect` estaba ubicado después de la guarda `if (!isOpen || !receta) return null;`, ejecutando 1 hook en estado cerrado y 2 hooks en estado abierto.
+  - **Solución:** Se reubicó `useEffect` al tope del componente junto a `useRef`, antes de cualquier retorno condicional. El visor e impresor de recetas médicas ahora abre al instante con 0 errores de renderizado.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2052 módulos, 702ms).
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Aislamiento de Impresión y Formato Formal de Ticket de Cita Médica — CU10 / RF06)
 - **Corrección de Impresión de Ticket de Cita (`AppointmentTicketModal.jsx` y `AppointmentsManager.jsx`):**
   - **Problema:** Al pulsar "Imprimir Ticket", la vista previa mostraba la tabla de citas del sistema en gris oscuro de fondo y extendida a 2 páginas, imprimiendo el modal con barras de ventana web y botones en lugar de un comprobante formal.

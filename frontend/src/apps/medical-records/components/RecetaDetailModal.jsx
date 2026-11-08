@@ -28,6 +28,18 @@ export default function RecetaDetailModal({
 }) {
   const printRef = useRef(null);
 
+  // Limpieza defensiva de clases de impresión en document.body (Hook llamado siempre al inicio)
+  React.useEffect(() => {
+    const cleanup = () => {
+      document.body.classList.remove('printing-modal');
+    };
+    window.addEventListener('afterprint', cleanup);
+    return () => {
+      window.removeEventListener('afterprint', cleanup);
+      cleanup();
+    };
+  }, []);
+
   if (!isOpen || !receta) return null;
 
   const esAnulada = receta.estado === 'ANULADO';
@@ -49,17 +61,6 @@ export default function RecetaDetailModal({
       window.print();
     }, 80);
   };
-
-  React.useEffect(() => {
-    const cleanup = () => {
-      document.body.classList.remove('printing-modal');
-    };
-    window.addEventListener('afterprint', cleanup);
-    return () => {
-      window.removeEventListener('afterprint', cleanup);
-      cleanup();
-    };
-  }, []);
 
   const calcularEdad = (fechaNacimiento) => {
     if (!fechaNacimiento) return null;
