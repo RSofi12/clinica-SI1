@@ -1,5 +1,19 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Exclusión Estricta de CU18 para Recepcionista y Filtrado Directo de Casos de Uso)
+- **Filtrado Dinámico en Matriz de Trazabilidad (`ClinicalDashboardView.jsx`):**
+  - Se eliminó el renderizado de tarjetas con etiquetas "No autorizado" o deshabilitadas.
+  - La grilla ahora aplica un filtro directo: `{listaCasosDeUso.filter(item => item.roles.includes(role)).map(...)}`.
+  - Cada actor únicamente ve los Casos de Uso que le corresponden formalmente según el documento oficial.
+- **Aislamiento Estricto de CU18 (Prescripciones y Recetas) para `RECEPCIONISTA`:**
+  - **Backend (`routes/api.php`):** Rutas `/recetas` y `/recetas/{id}` restringidas a `role:ADMIN,MEDICO,PACIENTE`. Intento de acceso por recepcionista retorna `403 Forbidden` (probado y verificado con curl/php).
+  - **Sidebar (`Sidebar.jsx`):** Eliminado `RECEPCIONISTA` de `requiredRoles`, por lo que ya no figura en el menú lateral.
+  - **Navegación (`App.jsx`):** Pestaña `recetas` bloqueada para recepcionista.
+  - **Dashboard (`ClinicalDashboardView.jsx` e `InicioPanelView.jsx`):** Eliminado CU18 para recepcionista tanto en la matriz como en accesos rápidos.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2052 módulos, 717ms) generando bundles `index-B9kF2rxP.css` e `index-D2q_n8ZU.js`.
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Homologación Integral de Accesos Rápidos por Rol: Recepción, Médico, Paciente, Admin)
 - **Refinamiento Contextual de la Matriz de Trazabilidad (`ClinicalDashboardView.jsx`):**
   - **CU01 (Autenticación):** Acción condicional: `Bloqueo →` para Administrador (políticas de seguridad) y `Sesión Activa` para Recepcionista, Médico y Paciente.

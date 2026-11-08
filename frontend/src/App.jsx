@@ -325,7 +325,7 @@ export default function App() {
               <ExpedienteClinicoView />
             ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
               <ConsultasManager />
-            ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
+            ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
               <RecetasManager currentUser={user} />
             ) : dashboardTab === 'dynamic-reports' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
               <DynamicReportsView />

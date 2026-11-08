@@ -147,7 +147,7 @@ export function Sidebar({
           subtitle: 'Recetario digital y posología',
           tag: 'CU18 / Extra',
           icon: Pill,
-          requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'],
+          requiredRoles: ['ADMIN', 'MEDICO', 'PACIENTE'],
         },
       ],
     },

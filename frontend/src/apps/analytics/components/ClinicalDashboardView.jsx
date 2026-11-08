@@ -379,9 +379,9 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
       desc: 'Emisión estructurada de recetas con fármacos, posología y archivo legal.',
       estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: role === 'PACIENTE' ? 'Mis Recetas →' : role === 'RECEPCIONISTA' ? 'Comprobantes →' : 'Recetario →',
+      actionLabel: role === 'PACIENTE' ? 'Mis Recetas →' : 'Recetario →',
       action: () => onNavigate('recetas'),
-      roles: ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'],
+      roles: ['ADMIN', 'MEDICO', 'PACIENTE'],
       badgeClass: 'text-teal-700 bg-teal-50 hover:bg-teal-100',
     },
     {
@@ -403,9 +403,9 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
       desc: 'Solicitud formal de pruebas diagnósticas (laboratorio e imagenología) con justificación.',
       estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: role === 'RECEPCIONISTA' ? 'Órdenes Cita →' : 'Ver Órdenes →',
-      action: () => onNavigate(role === 'RECEPCIONISTA' ? 'appointments' : 'expediente'),
-      roles: ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'],
+      actionLabel: 'Ver Órdenes →',
+      action: () => onNavigate('expediente'),
+      roles: ['ADMIN', 'MEDICO', 'PACIENTE'],
       badgeClass: 'text-teal-700 bg-teal-50 hover:bg-teal-100',
     },
     {
@@ -818,66 +818,49 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
           <div className="p-5 sm:p-6 border-t border-slate-100 bg-slate-50/40 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500">
               <p>
-                Permisos validados para el perfil activo (<span className="font-bold text-slate-800">{role}</span>). Matriz oficial del examen con los 26 Casos de Uso completados e integrados al 100%.
+                Casos de Uso habilitados para su perfil (<span className="font-bold text-slate-800">{role}</span>):
               </p>
               <div className="flex items-center gap-3 text-[11px] shrink-0">
                 <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  26/26 Casos Implementados (100%)
+                  {listaCasosDeUso.filter((item) => item.roles.includes(role)).length} Casos de Uso Disponibles
                 </span>
               </div>
             </div>
 
-            {/* Grilla Completa de los 26 Casos de Uso */}
+            {/* Grilla de Casos de Uso Exclusivos del Rol */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {listaCasosDeUso.map((item) => {
-                const isAuthorized = item.roles.includes(role);
-                const isDev = item.estado === 'desarrollo';
+              {listaCasosDeUso
+                .filter((item) => item.roles.includes(role))
+                .map((item) => {
+                  return (
+                    <div
+                      key={item.cu}
+                      onClick={() => handleCuClick(item)}
+                      className="p-4 rounded-xl bg-white border border-slate-200/90 hover:border-[#00687a]/40 hover:shadow-xs cursor-pointer transition flex flex-col justify-between"
+                    >
+                      <div>
+                        {/* Cabecera de la Tarjeta */}
+                        <div className="flex items-center justify-between gap-1 mb-1.5">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="text-[11px] font-bold text-[#00687a] tracking-tight shrink-0">
+                              {item.cu}:
+                            </span>
+                            <span className="text-xs font-bold text-slate-800 truncate" title={item.titulo}>
+                              {item.titulo}
+                            </span>
+                          </div>
 
-                return (
-                  <div
-                    key={item.cu}
-                    onClick={() => isAuthorized && handleCuClick(item)}
-                    className={`p-4 rounded-xl bg-white border transition flex flex-col justify-between ${
-                      !isAuthorized
-                        ? 'opacity-40 border-slate-200 cursor-not-allowed'
-                        : isDev
-                        ? 'border-amber-200/90 hover:border-amber-300 hover:shadow-xs cursor-pointer'
-                        : 'border-slate-200/90 hover:border-[#00687a]/40 hover:shadow-xs cursor-pointer'
-                    }`}
-                  >
-                    <div>
-                      {/* Cabecera de la Tarjeta */}
-                      <div className="flex items-center justify-between gap-1 mb-1.5">
-                        <div className="flex items-center gap-1.5 min-w-0">
-                          <span className="text-[11px] font-bold text-[#00687a] tracking-tight shrink-0">
-                            {item.cu}:
-                          </span>
-                          <span className="text-xs font-bold text-slate-800 truncate" title={item.titulo}>
-                            {item.titulo}
-                          </span>
-                        </div>
-
-                        {/* Estado / Botón de Acción */}
-                        {isDev ? (
-                          <span className="text-[9px] font-semibold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded shrink-0">
-                            En desarrollo
-                          </span>
-                        ) : isAuthorized ? (
+                          {/* Botón de Acción Directo */}
                           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded transition shrink-0 ${item.badgeClass}`}>
                             {item.actionLabel}
                           </span>
-                        ) : (
-                          <span className="text-[9px] font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded shrink-0">
-                            No autorizado
-                          </span>
-                        )}
-                      </div>
+                        </div>
 
-                      <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                        {item.desc}
-                      </p>
-                    </div>
+                        <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                          {item.desc}
+                        </p>
+                      </div>
 
                     <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400 font-medium">
                       <span>{item.paquete.split(':')[0]}</span>

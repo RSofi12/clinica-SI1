@@ -414,15 +414,6 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
           action: () => onNavigate('patients'),
         },
         {
-          id: 'recetas',
-          title: 'Recetario y Comprobantes',
-          desc: 'Consulta y reimpresión de recetas emitidas a pacientes (CU18)',
-          icon: Pill,
-          iconBg: 'bg-rose-50 text-rose-600 border-rose-100',
-          badge: 'Comprobantes',
-          action: () => onNavigate('recetas'),
-        },
-        {
           id: 'stripe-recepcion',
           title: 'Cobros con Stripe (CU21)',
           desc: 'Recepción y cobro de citas con tarjeta tokenizada en Sandbox',

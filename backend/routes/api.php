@@ -163,8 +163,8 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::patch('/antecedentes/{id}/toggle-status', [AntecedentesController::class, 'toggleStatus'])->middleware('role:ADMIN,MEDICO');
 
     // CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas
-    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
-    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE');
     Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
     Route::post('/recetas', [RecetasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/recetas/{id}/anular', [RecetasController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
