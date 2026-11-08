@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Check, AlertCircle, Shield, Lock, Mail, User as UserIcon, Loader2 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 /**
  * Modal para creación y edición de usuarios (CU02 - RF01)
@@ -93,16 +94,15 @@ export function UserFormModal({ isOpen, onClose, onSaved, initialUser = null, ro
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden">
-        {/* Header del Modal */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg" closeOnBackdrop={false}>
+      {/* Header del Modal */}
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-[#00687a]/10 text-[#00687a]">
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-base">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-base">
                 {isEditing ? 'Editar Operador de Sistema' : 'Nuevo Operador de Sistema'}
               </h3>
               <p className="text-xs text-slate-500">CU02: Gestión de accesos y perfiles (RF01)</p>
@@ -272,7 +272,6 @@ export function UserFormModal({ isOpen, onClose, onSaved, initialUser = null, ro
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

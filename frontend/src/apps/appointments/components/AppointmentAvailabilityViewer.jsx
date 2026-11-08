@@ -60,11 +60,21 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
         ]);
 
         if (isMounted) {
-          if (espRes?.data) setSpecialties(espRes.data);
+          if (espRes?.data) {
+            const sortedEsp = [...espRes.data].sort((a, b) =>
+              (a.nombre || '').localeCompare(b.nombre || '', 'es')
+            );
+            setSpecialties(sortedEsp);
+          }
           if (docRes?.data) {
-            setDoctors(docRes.data);
-            if (docRes.data.length > 0) {
-              setSelectedDoctorId(String(docRes.data[0].id_medico));
+            const sortedDocs = [...docRes.data].sort((a, b) => {
+              const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+              const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+              return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+            });
+            setDoctors(sortedDocs);
+            if (sortedDocs.length > 0) {
+              setSelectedDoctorId(String(sortedDocs[0].id_medico));
             }
           }
         }
@@ -80,13 +90,19 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
     };
   }, []);
 
-  // 2. Filtrar médicos cuando cambia la especialidad seleccionada
-  const filteredDoctors = doctors.filter((doc) => {
-    if (!selectedSpecialtyId) return true;
-    return (doc.specialties || []).some(
-      (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
-    );
-  });
+  // 2. Filtrar médicos cuando cambia la especialidad seleccionada (ordenados A-Z)
+  const filteredDoctors = doctors
+    .filter((doc) => {
+      if (!selectedSpecialtyId) return true;
+      return (doc.specialties || []).some(
+        (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
+      );
+    })
+    .sort((a, b) => {
+      const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+      const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+      return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+    });
 
   // Ajustar el médico seleccionado si queda fuera del filtro
   useEffect(() => {
@@ -137,7 +153,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-view-fade">
       {/* Cabecera del Módulo */}
       <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -147,7 +163,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="font-montserrat font-bold text-xl text-slate-900">
+                <h1 className="font-serif-clinical font-normal tracking-tight text-xl text-slate-900">
                   Consulta de Disponibilidad de Horarios
                 </h1>
                 <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-100 text-[#00687a]">
@@ -299,7 +315,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
                 <span className="text-[11px] font-bold text-[#00687a] uppercase tracking-wider">
                   Profesional Evaluado
                 </span>
-                <h2 className="font-montserrat font-bold text-lg text-slate-900 mt-0.5">
+                <h2 className="font-serif-clinical font-normal tracking-tight text-lg text-slate-900 mt-0.5">
                   {availability.medico?.nombre_completo || 'Médico'}
                 </h2>
                 <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
@@ -355,7 +371,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
               <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center mx-auto mb-3">
                 <Building2 className="w-6 h-6" />
               </div>
-              <h3 className="font-montserrat font-bold text-base text-rose-900 mb-1">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base text-rose-900 mb-1">
                 Fecha no disponible para atención clínica
               </h3>
               <p className="text-xs text-rose-700 max-w-md mx-auto leading-relaxed">
@@ -373,7 +389,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
               <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-3">
                 <CalendarX className="w-6 h-6" />
               </div>
-              <h3 className="font-montserrat font-bold text-base text-amber-900 mb-1">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base text-amber-900 mb-1">
                 El médico no atiende en el día seleccionado
               </h3>
               <p className="text-xs text-amber-700 max-w-md mx-auto leading-relaxed">
@@ -390,7 +406,7 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
             <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-montserrat font-bold text-base text-slate-900">
+                  <h3 className="font-serif-clinical font-normal tracking-tight text-base text-slate-900">
                     Turnos de Consulta para el {availability.dia_nombre} {availability.fecha}
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">

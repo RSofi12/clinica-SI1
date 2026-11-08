@@ -1,6 +1,6 @@
 ---
 name: uml-academic-diagrams
-description: Guía y estándares obligatorios para la generación de Diagramas UML académicos (Secuencia en JScript/Enterprise Architect, Comunicación en Draw.io/JScript y Análisis de Clases en Draw.io) bajo arquitectura BCE y metodología PUDS/RUP.
+description: Generación y estándares de Diagramas UML académicos (Secuencia, Comunicación y Análisis de Clases BCE). USAR EXCLUSIVAMENTE cuando el usuario invoque explícitamente /uml-academic-diagrams o pida textualmente 'generame los diagramas uml del CU...', 'crea los diagramas del CU...' o peticiones directas equivalentes. NUNCA activar automáticamente por adjuntar imágenes, ni durante tareas de implementación de código Backend/Frontend.
 ---
 
 # 📐 Estándar Oficial de Diagramas UML (PUDS / RUP / BCE)
@@ -89,19 +89,46 @@ El Diagrama de Comunicación resalta la arquitectura y organización espacial de
 
 ### 3.1. Estándar de Diseño para Draw.io (`.drawio`)
 En Draw.io, el diagrama debe mantener holgura visual y máxima claridad estética:
-1. **Flecha Arriba de Cada Mensaje (No a un Lado):**  
-   Cada mensaje se compone de **dos celdas (`mxCell`) independientes**:
-   - Una celda de texto para la etiqueta del método (ej. `1.1: index()`).
-   - Una celda tipo arista/flecha (`edge`) colocada **directamente encima de la celda de texto**, orientada horizontalmente hacia el componente receptor.
+1. **Flecha Gráfica Arriba de Cada Mensaje (Gold Standard: ver CU03):**  
+   - **Prohibido terminantemente** colocar flechas como caracteres unicode dentro del texto (`1: mensaje() ->`) o pegadas lateralmente al texto (como en CU16 o CU23).
+   - Cada mensaje se compone de **dos celdas (`mxCell`) independientes**:
+     1. Una celda de texto para la etiqueta del método (ej. `1.1: index()`).
+     2. Una celda tipo arista/flecha (`edge="1"`) posicionada **directamente encima de la celda de texto**, orientada horizontalmente hacia el componente receptor.
+   - **Plantilla XML canónica en Draw.io (referencia oficial CU03):**
+     ```xml
+     <!-- Invocación hacia adelante (Arriba de la línea de relación) -->
+     <mxCell id="CUxx-COMM-M1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1: solicitarConsulta()" vertex="1">
+       <mxGeometry height="26" width="160" x="130" y="200" as="geometry" />
+     </mxCell>
+     <mxCell id="CUxx-COMM-A1" edge="1" parent="1" source="CUxx-COMM-M1" target="CUxx-COMM-M1" style="endArrow=classic;html=1;rounded=1;strokeWidth=2;fontSize=10;strokeColor=#003366;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" value="">
+       <mxGeometry height="50" relative="1" width="50" as="geometry">
+         <mxPoint x="180" y="195" as="sourcePoint" />
+         <mxPoint x="215" y="195" as="targetPoint" />
+       </mxGeometry>
+     </mxCell>
+
+     <!-- Retorno hacia atrás (Abajo de la línea de relación con línea discontinua) -->
+     <mxCell id="CUxx-COMM-M14" parent="1" style="text;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=1;fontSize=10;fontColor=#000000;fontStyle=1;labelBackgroundColor=none;" value="1.4: mostrarDatos()" vertex="1">
+       <mxGeometry height="20" width="160" x="385" y="335" as="geometry" />
+     </mxCell>
+     <mxCell id="CUxx-COMM-A14" edge="1" parent="1" source="CUxx-COMM-M14" target="CUxx-COMM-M14" style="endArrow=classic;html=1;rounded=1;strokeWidth=1.5;fontSize=10;strokeColor=#003366;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" value="">
+       <mxGeometry relative="1" as="geometry">
+         <mxPoint x="475" y="330" as="sourcePoint" />
+         <mxPoint x="435" y="330" as="targetPoint" />
+       </mxGeometry>
+     </mxCell>
+     ```
 2. **Posición Respecto a la Línea de Relación:**
    - **Llamadas Secuenciales (Invocaciones):** Se ubican **ARRIBA** de la línea continua de relación con flecha continua (`endArrow=classic`).
    - **Retornos de Datos (Respuestas):** Se ubican **ABAJO** de la línea de relación con flecha a rayas / discontinua (`dashed=1;` / `<------`) orientada de regreso hacia el emisor.
-3. **Diferenciación Cromática de Flujos (Paleta Oficial de Colores Oscuros):**  
-   Cada flujo principal de interacción (determinado por su número raíz: Flujo 1, Flujo 2, Flujo 3...) debe distinguirse visualmente en el texto del mensaje y en su flecha asociada utilizando la siguiente paleta formal:
-   - **Flujo 1 (Principal / Listado / Consulta):** Estrictamente Negro (`#000000`).
-   - **Flujo 2 (Creación / Filtros / Catálogo):** Verde Bosque Oscuro (`#005522`).
-   - **Flujo 3 (Actualización / Métricas / Edición):** Púrpura / Morado Oscuro (`#4B0082`).
-   - **Flujo 4 (Eliminación / Detalle / Estado / Baja Lógica):** Rojo Óxido Oscuro (`#8B0000`) o Azul Marino Oscuro (`#003366`).
+3. **Diferenciación Cromática de Flujos (Solo en Flechas):**  
+   - **Regla Estricta de Texto en Negro:** El texto de todas las funciones y mensajes permanece **SIEMPRE en color negro (fontColor=#000000)** para garantizar máxima legibilidad y pulcritud académica formal.
+   - **Coloreado Exclusivo en Flechas:** Cada flujo principal de interacción (determinado por su número raíz: Flujo 1, Flujo 2, Flujo 3...) se distingue visualmente **ÚNICAMENTE en la flecha direccional superior (strokeColor)** utilizando la siguiente paleta formal de colores oscuros:
+     - **Flujo 1 (Principal / Listado / Consulta):** Azul Marino Oscuro (strokeColor=#003366) o Negro (strokeColor=#000000).
+     - **Flujo 2 (Creación / Filtros / Catálogo / Órdenes):** Verde Bosque Oscuro (strokeColor=#005522).
+     - **Flujo 3 (Actualización / Adjuntos / Carga Cloud / Edición):** Púrpura / Morado Oscuro (strokeColor=#4B0082).
+     - **Flujo 4 (Inspección / Detalle / Visores):** Azul Marino Oscuro (strokeColor=#003366).
+     - **Flujo 5 (Eliminación / Baja Lógica / Estado):** Rojo Óxido Oscuro (strokeColor=#8B0000).
 4. **Mensajes entre Boundary y Controller (Funciones vs. Endpoints):**
    - Según el estándar formal **UML 2.5+ y PUDS/RUP**, todo mensaje que llega a un objeto receptor representa una invocación de operación (`callOperation`) sobre dicho objeto.
    - Por tanto, la convención académica estándar es utilizar **el nombre del método/función real del Controller en el backend** (`index()`, `store()`, `update()`, `indexByPatient()`, etc.), con parámetros según la regla general `metodo()` o `metodo(parametro)`.

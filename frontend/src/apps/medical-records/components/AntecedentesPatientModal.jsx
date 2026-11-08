@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   AlertTriangle,
@@ -50,15 +51,24 @@ export function AntecedentesPatientModal({
   // Modales secundarios
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [antecedenteToEdit, setAntecedenteToEdit] = useState(null);
+  const [cachedPatient, setCachedPatient] = useState(patient);
+
+  useEffect(() => {
+    if (patient) {
+      setCachedPatient(patient);
+    }
+  }, [patient]);
+
+  const activePatient = patient || cachedPatient;
 
   const canEdit = ['ADMIN', 'MEDICO'].includes(role);
 
   const loadAntecedentes = useCallback(async () => {
-    if (!patient?.id_paciente) return;
+    if (!activePatient?.id_paciente) return;
     setIsLoading(true);
     setErrorMsg('');
     try {
-      const res = await antecedenteService.fetchPatientAntecedentes(patient.id_paciente, {
+      const res = await antecedenteService.fetchPatientAntecedentes(activePatient.id_paciente, {
         tipo: activeTab !== 'TODOS' ? activeTab : undefined,
         incluir_inactivos: incluirInactivos ? true : undefined,
       });
@@ -74,15 +84,16 @@ export function AntecedentesPatientModal({
     } finally {
       setIsLoading(false);
     }
-  }, [patient?.id_paciente, activeTab, incluirInactivos]);
+  }, [activePatient?.id_paciente, activeTab, incluirInactivos]);
 
   useEffect(() => {
-    if (isOpen && patient?.id_paciente) {
+    if (isOpen && activePatient?.id_paciente) {
       loadAntecedentes();
     }
-  }, [isOpen, patient?.id_paciente, loadAntecedentes]);
+  }, [isOpen, activePatient?.id_paciente, loadAntecedentes]);
 
-  if (!isOpen || !patient) return null;
+  if (!isOpen && !activePatient) return null;
+  if (!activePatient) return null;
 
   // Toggle status de baja lógica (RN11)
   const handleToggleStatus = async (item) => {
@@ -155,14 +166,13 @@ export function AntecedentesPatientModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
-        
+    <>
+      <ModalPortal
+        isOpen={isOpen}
+        onClose={onClose}
+        maxWidth="max-w-3xl"
+        panelClassName="bg-white rounded-3xl max-w-3xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-modal-panel flex flex-col max-h-[92vh]"
+      >
         {/* Header institucional */}
         <div className="bg-gradient-to-r from-[#003d47] via-[#005a69] to-[#00687a] p-5 sm:p-6 text-white relative shrink-0">
           <div className="flex items-start justify-between gap-4">
@@ -175,17 +185,17 @@ export function AntecedentesPatientModal({
                   <span className="text-[11px] font-mono tracking-widest text-cyan-200 uppercase font-semibold">
                     Expediente Clínico Digital • CU17
                   </span>
-                  {patient.numero_historia && (
+                  {activePatient.numero_historia && (
                     <span className="font-mono text-xs bg-white/20 text-white px-2 py-0.5 rounded-md font-bold">
-                      HC: {patient.numero_historia}
+                      HC: {activePatient.numero_historia}
                     </span>
                   )}
                 </div>
-                <h3 className="text-lg font-bold font-montserrat text-white mt-0.5">
+                <h3 className="text-lg font-bold font-serif-clinical font-normal tracking-tight text-white mt-0.5">
                   Antecedentes Médicos del Paciente
                 </h3>
                 <span className="text-xs text-cyan-100 block">
-                  {patient.nombres} {patient.apellidos} · Doc: {patient.numero_documento || '—'}
+                  {activePatient.nombres} {activePatient.apellidos} · Doc: {activePatient.numero_documento || '—'}
                 </span>
               </div>
             </div>
@@ -206,8 +216,10 @@ export function AntecedentesPatientModal({
               )}
               <button
                 type="button"
+                data-modal-close="true"
                 onClick={onClose}
                 className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/90 hover:text-white transition cursor-pointer"
+                aria-label="Cerrar modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -455,13 +467,14 @@ export function AntecedentesPatientModal({
           </span>
           <button
             type="button"
+            data-modal-close="true"
             onClick={onClose}
             className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition cursor-pointer"
           >
             Cerrar
           </button>
         </div>
-      </div>
+      </ModalPortal>
 
       {/* Modal Secundario de Alta / Edición */}
       <AntecedenteFormModal
@@ -470,14 +483,14 @@ export function AntecedentesPatientModal({
           setIsFormOpen(false);
           setAntecedenteToEdit(null);
         }}
-        patientId={patient.id_paciente}
-        patientName={`${patient.nombres} ${patient.apellidos}`}
+        patientId={activePatient.id_paciente}
+        patientName={`${activePatient.nombres} ${activePatient.apellidos}`}
         antecedenteToEdit={antecedenteToEdit}
         onAntecedenteSaved={() => {
           loadAntecedentes();
           if (onUpdated) onUpdated();
         }}
       />
-    </div>
+    </>
   );
 }

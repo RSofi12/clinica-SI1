@@ -194,5 +194,17 @@ class DatabaseSeeder extends Seeder
 
         // 10. Poblar horarios de atención médica (CU08) y citas demostrativas (CU09-CU15)
         $this->call(ScheduleAndAppointmentSeeder::class);
+
+        // 11. Poblar catálogo extendido integral (16 permisos, 3 recepcionistas, 12 especialidades, 16 médicos, 40 pacientes, historias y consultas)
+        $this->call(ComprehensivePopulationSeeder::class);
+
+        // 12. Poblar módulos de apoyo clínico y financiero (bloqueos, órdenes, DICOM, pagos y reportes IA)
+        $this->call(OperationalClinicalSeeder::class);
+
+        // 13. Poblar histórico profundo de 4 a 6 meses hacia atrás (CU22, CU24, CU15, CU19)
+        $this->call(HistoricalMultiMonthPopulationSeeder::class);
+
+        // 14. Poblar historial clínico extenso y antecedentes para 10 pacientes en rango de 4 meses (IDs 41 al 50)
+        $this->call(ExtendedClinicalHistorySeeder::class);
     }
 }

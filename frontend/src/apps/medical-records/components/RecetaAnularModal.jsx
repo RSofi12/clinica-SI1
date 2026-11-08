@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, AlertTriangle, ShieldAlert, Ban, Loader2 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 /**
  * Modal de Anulación Lógica de Receta Médica (RN11 / CU18)
  */
 export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }) {
+  const [cachedReceta, setCachedReceta] = useState(receta);
   const [motivo, setMotivo] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  if (!isOpen || !receta) return null;
+  useEffect(() => {
+    if (receta) {
+      setCachedReceta(receta);
+    }
+  }, [receta]);
+
+  const activeReceta = receta || cachedReceta;
+
+  if (!isOpen && !activeReceta) return null;
+  if (!activeReceta) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +34,7 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
     try {
       setIsSubmitting(true);
       setError(null);
-      await onConfirm(receta.id_receta, motivoLimpio);
+      await onConfirm(activeReceta.id_receta, motivoLimpio);
       setMotivo('');
       onClose();
     } catch (err) {
@@ -37,23 +48,24 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
   const faltan = Math.max(0, caracteresMinimos - motivo.trim().length);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
-        {/* Cabecera */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md" closeOnBackdrop={false}>
+      {/* Cabecera */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-rose-100 bg-rose-50/70">
           <div className="flex items-center gap-2.5 text-rose-800">
             <div className="p-2 rounded-xl bg-rose-100 text-rose-700">
               <Ban className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-semibold">Anular Receta Médica #{receta.id_receta}</h3>
+              <h3 className="text-base font-semibold">Anular Receta Médica #{activeReceta.id_receta}</h3>
               <p className="text-xs text-rose-600">Baja lógica permanente (RN11)</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition"
+            data-modal-close="true"
+            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition cursor-pointer"
             disabled={isSubmitting}
+            aria-label="Cerrar modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -99,9 +111,10 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
             <button
               type="button"
+              data-modal-close="true"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition"
+              className="px-4 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition cursor-pointer"
             >
               Cancelar
             </button>
@@ -124,7 +137,6 @@ export default function RecetaAnularModal({ receta, isOpen, onClose, onConfirm }
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

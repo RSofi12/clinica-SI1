@@ -391,5 +391,17 @@ class PatientSeeder extends Seeder
                 ]);
             }
         }
+
+        // Sincronizar secuencia de PostgreSQL tras inserción con IDs explícitos
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            $maxId = DB::table('pacientes')->max('id_paciente');
+            if ($maxId) {
+                DB::statement("SELECT setval(pg_get_serial_sequence('pacientes', 'id_paciente'), {$maxId})");
+            }
+            $maxContacto = DB::table('contactos_emergencia')->max('id_contacto');
+            if ($maxContacto) {
+                DB::statement("SELECT setval(pg_get_serial_sequence('contactos_emergencia', 'id_contacto'), {$maxContacto})");
+            }
+        }
     }
 }

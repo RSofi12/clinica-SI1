@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { antecedenteService } from '../services/antecedenteService';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 // Sugerencias clínicas rápidas por categoría
 const SUGERENCIAS_CLINICAS = {
@@ -132,8 +133,6 @@ export function AntecedenteFormModal({
     }
   }, [isOpen, antecedenteToEdit]);
 
-  if (!isOpen) return null;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!descripcion.trim() || descripcion.trim().length < 3) {
@@ -176,14 +175,13 @@ export function AntecedenteFormModal({
   const sugerencias = SUGERENCIAS_CLINICAS[tipo] || [];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-      role="dialog"
-      aria-modal="true"
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnBackdrop={false}
+      panelClassName="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-modal-panel flex flex-col max-h-[92vh] cursor-default"
     >
-      <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
-        {/* Header */}
+      {/* Header */}
         <div className="bg-gradient-to-r from-[#003d47] via-[#005a69] to-[#00687a] p-5 sm:p-6 text-white relative shrink-0">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -194,7 +192,7 @@ export function AntecedenteFormModal({
                 <span className="text-[11px] font-mono tracking-widest text-cyan-200 uppercase font-semibold">
                   Expediente Clínico Permanente • CU17
                 </span>
-                <h3 className="text-lg font-bold font-montserrat text-white mt-0.5">
+                <h3 className="text-lg font-bold font-serif-clinical font-normal tracking-tight text-white mt-0.5">
                   {isEditing ? 'Editar Antecedente Médico' : 'Nuevo Antecedente Médico'}
                 </h3>
                 <span className="text-xs text-cyan-100 block">
@@ -205,8 +203,10 @@ export function AntecedenteFormModal({
 
             <button
               type="button"
+              data-modal-close="true"
               onClick={onClose}
               className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/90 hover:text-white transition cursor-pointer"
+              aria-label="Cerrar modal"
             >
               <X className="w-5 h-5" />
             </button>
@@ -315,6 +315,7 @@ export function AntecedenteFormModal({
           <div className="pt-2 flex items-center justify-end gap-2.5 border-t border-slate-100">
             <button
               type="button"
+              data-modal-close="true"
               onClick={onClose}
               disabled={isSubmitting}
               className="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition cursor-pointer"
@@ -340,7 +341,6 @@ export function AntecedenteFormModal({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

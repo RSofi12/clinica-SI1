@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   User,
@@ -152,16 +153,15 @@ export function PatientFormModal({ isOpen, onClose, onSaved, initialPatient }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/80 w-full max-w-2xl my-8 overflow-hidden transition-all animate-in fade-in zoom-in-95">
-        {/* Cabecera del Modal */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-2xl" closeOnBackdrop={false}>
+      {/* Cabecera del Modal */}
         <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-[#00687a]/10 text-[#00687a]">
               <HeartPulse className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-lg">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-lg">
                 {isEditing ? 'Editar Ficha del Paciente' : 'Registrar Nuevo Paciente'}
               </h3>
               <p className="text-xs text-slate-500">
@@ -482,7 +482,6 @@ export function PatientFormModal({ isOpen, onClose, onSaved, initialPatient }) {
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

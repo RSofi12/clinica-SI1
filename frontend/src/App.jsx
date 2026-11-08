@@ -11,12 +11,17 @@ import { DoctorsManager } from './apps/clinical-resources/components/DoctorsMana
 import { SchedulesManager } from './apps/clinical-resources/components/SchedulesManager';
 import { AppointmentsManager } from './apps/appointments/components/AppointmentsManager';
 import { VoiceReportAssistant } from './apps/analytics/components/VoiceReportAssistant';
+import { DynamicReportsView } from './apps/analytics/components/DynamicReportsView';
 import { ConsultasManager } from './apps/medical-records/components/ConsultasManager';
 import { RecetasManager } from './apps/medical-records/components/RecetasManager';
+import { ExpedienteClinicoView } from './apps/medical-records/components/ExpedienteClinicoView';
+import InicioPanelView from './apps/analytics/components/InicioPanelView';
+import ClinicalDashboardView from './apps/analytics/components/ClinicalDashboardView';
 
 import { PatientProfileView } from './apps/clinical-resources/components/PatientProfileView';
 import { ActivatePatientModal } from './apps/clinical-resources/components/ActivatePatientModal';
 import { Sidebar } from './components/Sidebar';
+import { NotificationsDropdown } from './components/NotificationsDropdown';
 import {
   Stethoscope,
   Calendar,
@@ -48,7 +53,7 @@ function getInitialView() {
 export default function App() {
   const { user, role, isAuthenticated, loading, logout } = useAuth();
   const [currentView, setCurrentView] = useState(getInitialView);
-  const [dashboardTab, setDashboardTab] = useState('overview'); // 'overview' | 'users'
+  const [dashboardTab, setDashboardTab] = useState('inicio'); // 'inicio' | 'overview' | 'users'
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false);
@@ -119,10 +124,12 @@ export default function App() {
   if (currentView === 'home' && !isAuthenticated) {
     return (
       <>
-        <HomePage
-          onNavigateLogin={() => navigateTo('login')}
-          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
-        />
+        <div key="home-view" className="animate-view-fade">
+          <HomePage
+            onNavigateLogin={() => navigateTo('login')}
+            onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+          />
+        </div>
         <ActivatePatientModal
           isOpen={isActivatePatientOpen}
           onClose={() => setIsActivatePatientOpen(false)}
@@ -138,12 +145,14 @@ export default function App() {
   if (currentView === 'login' && !isAuthenticated) {
     return (
       <>
-        <LoginPage
-          onNavigateHome={() => navigateTo('home')}
-          onLoginSuccess={() => navigateTo('dashboard')}
-          onNavigateForgotPassword={() => navigateTo('forgot-password')}
-          onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
-        />
+        <div key="login-view" className="animate-view-fade">
+          <LoginPage
+            onNavigateHome={() => navigateTo('home')}
+            onLoginSuccess={() => navigateTo('dashboard')}
+            onNavigateForgotPassword={() => navigateTo('forgot-password')}
+            onOpenActivatePatient={() => setIsActivatePatientOpen(true)}
+          />
+        </div>
         <ActivatePatientModal
           isOpen={isActivatePatientOpen}
           onClose={() => setIsActivatePatientOpen(false)}
@@ -155,31 +164,41 @@ export default function App() {
 
   if (currentView === 'forgot-password' && !isAuthenticated) {
     return (
-      <ForgotPasswordPage
-        onNavigateLogin={() => navigateTo('login')}
-      />
+      <div key="forgot-view" className="animate-view-fade">
+        <ForgotPasswordPage
+          onNavigateLogin={() => navigateTo('login')}
+        />
+      </div>
     );
   }
 
   // Nombre de sección activa para el breadcrumb superior (con validación de rol)
   const getSectionTitle = () => {
     switch (dashboardTab) {
+      case 'inicio':
+        return 'Inicio';
+      case 'overview':
+        return 'Dashboard Clínico';
       case 'users':
-        return role === 'ADMIN' ? 'Gestión de Usuarios y Roles (CU02)' : 'Panel General';
+        return role === 'ADMIN' ? 'Gestión de Usuarios y Roles (CU02)' : 'Inicio';
       case 'audit':
-        return role === 'ADMIN' ? 'Bitácora de Auditoría del Sistema (CU03)' : 'Panel General';
+        return role === 'ADMIN' ? 'Bitácora de Auditoría del Sistema (CU03)' : 'Inicio';
       case 'patients':
         return ['ADMIN', 'RECEPCIONISTA'].includes(role)
           ? 'Gestión de Pacientes y Cuentas Web (CU04 / CU05)'
-          : 'Panel General';
+          : 'Inicio';
       case 'doctors':
-        return role === 'ADMIN' ? 'Plantel Médico y Especialidades (CU06 / CU07)' : 'Panel General';
+        return role === 'ADMIN' ? 'Plantel Médico y Especialidades (CU06 / CU07)' : 'Inicio';
       case 'schedules':
-        return role === 'ADMIN' ? 'Gestión de Horarios y Disponibilidad Médica (CU08)' : 'Panel General';
-            case 'voice-reports':
-        return ['ADMIN', 'MEDICO'].includes(role)
+        return role === 'ADMIN' ? 'Gestión de Horarios y Disponibilidad Médica (CU08)' : 'Inicio';
+      case 'dynamic-reports':
+        return ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role)
+          ? 'Generador de Reportes con Filtros Dinámicos (CU22 / RF13)'
+          : 'Inicio';
+      case 'voice-reports':
+        return role === 'ADMIN'
           ? 'Asistente de Reportes por Voz con IA (CU23)'
-          : 'Panel General';
+          : 'Inicio';
       case 'appointments':
         return role === 'MEDICO'
           ? 'Mi Agenda Médica Diaria (CU14 / CU15)'
@@ -187,16 +206,15 @@ export default function App() {
           ? 'Mis Citas Médicas'
           : 'Consulta de Disponibilidad de Horarios y Citas (CU09 / CU10)';
       case 'patient-profile':
-        return role === 'PACIENTE' ? 'Mi Perfil de Paciente (CU05)' : 'Panel General';
-      case 'overview':
+        return role === 'PACIENTE' ? 'Mi Perfil de Paciente (CU05)' : 'Inicio';
       default:
-        return 'Panel General';
+        return 'Inicio';
     }
   };
 
   // Vista de Dashboard Clínico con Barra Lateral Fija y Contenido con Scroll Independiente a la Derecha
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800 font-sans">
+    <div key="dashboard-view" className="flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-800 font-sans animate-view-fade print:h-auto print:w-auto print:overflow-visible print:bg-white">
       {/* 1. Barra Lateral a la Izquierda (Sidebar fija con su propio scroll) */}
       <Sidebar
         activeTab={dashboardTab}
@@ -214,9 +232,9 @@ export default function App() {
       />
 
       {/* 2. Área de Contenido Principal a la Derecha (con scroll vertical independiente) */}
-      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen min-w-0 overflow-hidden print:h-auto print:overflow-visible">
         {/* Barra Superior Limpia (Header fijo) */}
-        <header className="border-b border-slate-200 bg-white shrink-0 z-30 shadow-xs h-16">
+        <header className="border-b border-slate-200 bg-white shrink-0 z-30 shadow-xs h-16 print:hidden">
           <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             {/* Izquierda: Botón Hamburguesa Móvil + Botón Colapso Desktop + Breadcrumb */}
             <div className="flex items-center gap-3">
@@ -241,20 +259,23 @@ export default function App() {
               {/* Ruta / Migas de Pan (Breadcrumb) */}
               <div className="flex items-center gap-2 text-xs">
                 <span
-                  onClick={() => setDashboardTab('overview')}
+                  onClick={() => setDashboardTab('inicio')}
                   className="font-medium text-slate-500 hover:text-slate-800 cursor-pointer hidden sm:inline"
                 >
                   Clínica La Cruz
                 </span>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-300 hidden sm:inline" />
-                <span className="font-montserrat font-bold text-slate-900">
+                <span className="font-serif-clinical font-semibold text-slate-900 text-sm tracking-tight">
                   {getSectionTitle()}
                 </span>
               </div>
             </div>
 
-            {/* Derecha: Badge de Usuario y Salir */}
-            <div className="flex items-center gap-3">
+            {/* Derecha: Notificaciones, Badge de Usuario y Salir */}
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              {/* Precursor UI Notificaciones Push (CU20/CU21) */}
+              <NotificationsDropdown />
+
               <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-xl border border-slate-200">
                 <Shield className="w-3.5 h-3.5 text-[#00687a]" />
                 <span className="text-xs font-semibold text-slate-700 hidden sm:inline">{user?.username}</span>
@@ -279,366 +300,54 @@ export default function App() {
         </header>
 
         {/* 3. Contenedor de la Vista Activa con Scroll Independiente a la Derecha */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-transparent">
-          {dashboardTab === 'users' && role === 'ADMIN' ? (
-            <UsersManager />
-          ) : dashboardTab === 'audit' && role === 'ADMIN' ? (
-            <AuditLogViewer />
-          ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
-            <PatientsManager />
-          ) : dashboardTab === 'doctors' && role === 'ADMIN' ? (
-            <DoctorsManager />
-          ) : dashboardTab === 'schedules' && role === 'ADMIN' ? (
-            <SchedulesManager />
-          ) : dashboardTab === 'appointments' ? (
-            <AppointmentsManager />
-          ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
-            <ConsultasManager />
-          ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) ? (
-            <RecetasManager currentUser={user} />
-          ) : dashboardTab === 'voice-reports' && ['ADMIN', 'MEDICO'].includes(role) ? (
-            <VoiceReportAssistant />
-
-          ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
-            <PatientProfileView />
-          ) : (
-            <div className="space-y-8">
-              {/* Banner de Bienvenida */}
-              <div className="bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] rounded-2xl p-6 sm:p-8 text-white shadow-xl shadow-[#00687a]/15">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="font-montserrat font-bold text-2xl sm:text-3xl mb-2">
-                      Bienvenido, {user?.username || 'Usuario'}
-                    </h2>
-                    <p className="text-cyan-100/90 text-xs sm:text-sm max-w-2xl leading-relaxed">
-                      Sesión activa bajo el rol de <span className="font-bold underline">{role}</span> en el Centro Médico La Cruz.
-                    </p>
-                  </div>
-                  <div className="hidden md:block p-3 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md">
-                    <Stethoscope className="w-10 h-10 text-cyan-200" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Tarjetas informativas de roles */}
-              <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
-                <h3 className="font-montserrat font-bold text-slate-800 text-base mb-2">
-                  Módulos autorizados para su rol:
-                </h3>
-                <p className="text-xs text-slate-500 mb-4">
-                  El sistema de permisos RBAC valida las acciones permitidas según su perfil institucional.
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {/* CU01: Autenticación (Todos los usuarios) */}
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#00687a] uppercase">CU01: Autenticación</span>
-                        {role === 'ADMIN' && (
-                          <button
-                            onClick={() => setIsPolicyModalOpen(true)}
-                            className="text-[10px] font-semibold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 px-2 py-0.5 rounded-md transition cursor-pointer flex items-center gap-1"
-                            title="Editar intentos fallidos y minutos de bloqueo de seguridad"
-                          >
-                            <ShieldAlert className="w-3 h-3" />
-                            <span>Configurar Bloqueo →</span>
-                          </button>
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-600 mt-1">
-                        Sesión activa con hash criptográfico, bloqueo tras 3 intentos y registro inmutable en bitácora.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* CU02: Usuarios y Roles (Exclusivo Administrador) */}
-                  {role === 'ADMIN' && (
-                    <div
-                      onClick={() => setDashboardTab('users')}
-                      className="p-4 rounded-xl border bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-emerald-700 uppercase">CU02: Usuarios y Roles</span>
-                          <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-100/60 px-1.5 py-0.5 rounded-md">
-                            Abrir módulo →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Control de operadores, asignación de roles y bajas lógicas (RF01).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU03: Bitácora Activa (Exclusivo Administrador) */}
-                  {role === 'ADMIN' && (
-                    <div
-                      onClick={() => setDashboardTab('audit')}
-                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-cyan-800 uppercase">CU03: Bitácora Activa</span>
-                          <span className="text-[10px] font-semibold text-cyan-700 bg-cyan-100/60 px-1.5 py-0.5 rounded-md">
-                            Consultar →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Trazabilidad inmutable de accesos con IP, usuario, acción y fecha.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU04: Pacientes (Recepcionista y Administrador) */}
-                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
-                    <div
-                      onClick={() => setDashboardTab('patients')}
-                      className="p-4 rounded-xl border bg-amber-50/50 border-amber-200/80 hover:bg-amber-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-amber-800 uppercase">CU04: Pacientes</span>
-                          <span className="text-[10px] font-semibold text-amber-700 bg-amber-100/60 px-1.5 py-0.5 rounded-md">
-                            Gestionar →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Admisión clínica, correlativo HC, grupos etarios y bajas lógicas (RF02).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU05: Cuentas Web de Pacientes (Recepcionista y Administrador) */}
-                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
-                    <div
-                      onClick={() => setDashboardTab('patients')}
-                      className="p-4 rounded-xl border bg-teal-50/60 border-teal-200/80 hover:bg-teal-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-teal-800 uppercase">CU05: Cuentas Web</span>
-                          <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-1.5 py-0.5 rounded-md">
-                            Padrón →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Habilite el acceso web de autoservicio para pacientes con su CI desde el padrón de admisiones (§3.4).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU05: Mi Perfil (Exclusivo Paciente) */}
-                  {role === 'PACIENTE' && (
-                    <div
-                      onClick={() => setDashboardTab('patient-profile')}
-                      className="p-4 rounded-xl border bg-emerald-50/70 border-emerald-300 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-emerald-800 uppercase">CU05: Mi Perfil</span>
-                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-md">
-                            Gestionar →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Consulte su historial, actualice sus canales de contacto y contacto de emergencia (§3.4).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU06: Médicos y Especialidades (Exclusivo Administrador) */}
-                  {role === 'ADMIN' && (
-                    <div
-                      onClick={() => setDashboardTab('doctors')}
-                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#00687a] uppercase">CU06 / CU07: Médicos</span>
-                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
-                            Plantel →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Plantel institucional, especialidades asignadas, rangos etarios y matrículas (RF03, RF04).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU08: Horarios y Bloqueos (Exclusivo Administrador) */}
-                  {role === 'ADMIN' && (
-                    <div
-                      onClick={() => setDashboardTab('schedules')}
-                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#00687a] uppercase">CU08: Horarios y Bloqueos</span>
-                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
-                            Gestionar →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Franjas semanales por médico, duración de cita y bloqueo de feriados (RF05).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU09 / CU10 / CU12: Gestión de Citas (Recepcionista y Administrador) */}
-                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
-                    <div
-                      onClick={() => setDashboardTab('appointments')}
-                      className="p-4 rounded-xl border bg-emerald-50/50 border-emerald-200/80 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-emerald-800 uppercase">CU09 / CU10 / CU12: Citas</span>
-                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded-md">
-                            Gestionar →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Disponibilidad de turnos libres, programación asistida y cancelación con motivo (RF06, RF07, RF09).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU14: Agenda Médica Diaria (Recepcionista y Administrador) */}
-                  {['ADMIN', 'RECEPCIONISTA'].includes(role) && (
-                    <div
-                      onClick={() => setDashboardTab('appointments')}
-                      className="p-4 rounded-xl border bg-cyan-50/50 border-cyan-200/80 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#00687a] uppercase">CU14: Agendas Médicas</span>
-                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100/70 px-1.5 py-0.5 rounded-md">
-                            Consultar →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Supervise el cronograma de pacientes y los KPIs del día de cualquier médico de la institución (RF11).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU14: Mi Agenda Médica (Exclusivo Médico) */}
-                  {role === 'MEDICO' && (
-                    <div
-                      onClick={() => setDashboardTab('appointments')}
-                      className="p-4 rounded-xl border bg-emerald-50/70 border-emerald-300 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-emerald-800 uppercase">CU14: Mi Agenda Médica</span>
-                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-md">
-                            Mi Agenda →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Consulte su cronograma diario de citas, turnos confirmados y franjas horarias de atención (RF11).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU15: Historial Clínico de Citas (Médico y Recepcionista) */}
-                  {['MEDICO', 'RECEPCIONISTA'].includes(role) && (
-                    <div
-                      onClick={() => setDashboardTab('appointments')}
-                      className="p-4 rounded-xl border bg-slate-50 border-slate-200/80 flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#00687a] uppercase">CU15: Historial de Citas</span>
-                          <span className="text-[9px] font-semibold text-slate-500 bg-slate-200/60 px-1.5 py-0.5 rounded-md">
-                            Integrado
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          {role === 'MEDICO'
-                            ? 'Consulte la cronología y tasa de asistencia de sus pacientes asignados desde su agenda (RF12).'
-                            : 'Consulte el historial completo de atenciones y estados de cualquier paciente desde citas y padrón (RF12).'}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU09 / CU10 / CU12: Mis Citas (Exclusivo Paciente) */}
-                  {role === 'PACIENTE' && (
-                    <div
-                      onClick={() => setDashboardTab('appointments')}
-                      className="p-4 rounded-xl border bg-emerald-50/70 border-emerald-300 hover:bg-emerald-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-emerald-800 uppercase">CU09 / CU10: Mis Citas</span>
-                          <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-md">
-                            Mis Citas →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Consulte disponibilidad de turnos libres y reserve sus citas médicas personales con anti-colisión (RF06, RF07).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU18: Prescripciones y Recetas Médicas */}
-                  {['ADMIN', 'MEDICO', 'PACIENTE', 'RECEPCIONISTA'].includes(role) && (
-                    <div
-                      onClick={() => setDashboardTab('recetas')}
-                      className="p-4 rounded-xl border bg-teal-50/60 border-teal-200/80 hover:bg-teal-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-teal-800 uppercase">CU18: Recetas Médicas</span>
-                          <span className="text-[10px] font-semibold text-teal-700 bg-teal-100 px-1.5 py-0.5 rounded-md">
-                            {role === 'PACIENTE' ? 'Mis Recetas →' : 'Recetario →'}
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          {role === 'PACIENTE'
-                            ? 'Consulte sus prescripciones emitidas con posología y descargue la receta membretada oficial.'
-                            : 'Emisión estructurada de recetas médicas, posología tipada y archivo legal inmutable (CU18).'}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* CU15: Mi Historial de Salud (Exclusivo Paciente) */}
-                  {role === 'PACIENTE' && (
-                    <div
-                      onClick={() => setDashboardTab('appointments')}
-                      className="p-4 rounded-xl border bg-cyan-50/70 border-cyan-300 hover:bg-cyan-50 hover:shadow-xs transition cursor-pointer flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#00687a] uppercase">CU15: Mi Historial</span>
-                          <span className="text-[10px] font-semibold text-[#00687a] bg-cyan-100 px-1.5 py-0.5 rounded-md">
-                            Consultar →
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 mt-1">
-                          Consulte la cronología completa de sus citas previas, atendidas y canceladas en modo solo lectura (RF12).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto scrollbar-thin scrollbar-thumb-slate-300 hover:scrollbar-thumb-slate-400 scrollbar-track-transparent print:p-0 print:m-0 print:max-w-none print:overflow-visible print:h-auto">
+          <div key={dashboardTab} className="animate-view-fade">
+            {dashboardTab === 'inicio' ? (
+              <InicioPanelView
+                user={user}
+                role={role}
+                onNavigate={setDashboardTab}
+                onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
+              />
+            ) : dashboardTab === 'users' && role === 'ADMIN' ? (
+              <UsersManager />
+            ) : dashboardTab === 'audit' && role === 'ADMIN' ? (
+              <AuditLogViewer />
+            ) : dashboardTab === 'patients' && ['ADMIN', 'RECEPCIONISTA'].includes(role) ? (
+              <PatientsManager />
+            ) : dashboardTab === 'doctors' && role === 'ADMIN' ? (
+              <DoctorsManager />
+            ) : dashboardTab === 'schedules' && role === 'ADMIN' ? (
+              <SchedulesManager />
+            ) : dashboardTab === 'appointments' ? (
+              <AppointmentsManager />
+            ) : dashboardTab === 'expediente' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+              <ExpedienteClinicoView />
+            ) : dashboardTab === 'consultas' && ['ADMIN', 'MEDICO', 'PACIENTE'].includes(role) ? (
+              <ConsultasManager />
+            ) : dashboardTab === 'recetas' && ['ADMIN', 'MEDICO'].includes(role) ? (
+              <RecetasManager currentUser={user} />
+            ) : dashboardTab === 'dynamic-reports' && ['ADMIN', 'RECEPCIONISTA', 'MEDICO'].includes(role) ? (
+              <DynamicReportsView />
+            ) : dashboardTab === 'voice-reports' && role === 'ADMIN' ? (
+              <VoiceReportAssistant />
+            ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
+              <PatientProfileView />
+            ) : dashboardTab === 'overview' && role === 'ADMIN' ? (
+              <ClinicalDashboardView
+                role={role}
+                onNavigate={setDashboardTab}
+                onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
+              />
+            ) : (
+              <InicioPanelView
+                user={user}
+                role={role}
+                onNavigate={setDashboardTab}
+                onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
+              />
+            )}
+          </div>
         </main>
       </div>
 

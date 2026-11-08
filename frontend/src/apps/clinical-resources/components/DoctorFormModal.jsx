@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { doctorService } from '../services/doctorService';
 import { specialtyService } from '../services/specialtyService';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 export function DoctorFormModal({ isOpen, onClose, doctorToEdit, onSaved }) {
   const isEditing = !!doctorToEdit;
@@ -172,22 +173,20 @@ export function DoctorFormModal({ isOpen, onClose, doctorToEdit, onSaved }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in"
-      onClick={onClose}
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnBackdrop={false}
+      panelClassName="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] my-auto animate-modal-panel cursor-default"
     >
-      <div
-        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-scale"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Cabecera */}
+      {/* Cabecera */}
         <div className="px-6 py-5 bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#007b90] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-white/10 border border-white/20">
               <Stethoscope className="w-5 h-5 text-[#70cbff]" />
             </div>
             <div>
-              <h2 className="text-lg font-montserrat font-bold">
+              <h2 className="text-lg font-serif-clinical font-normal tracking-tight">
                 {isEditing ? 'Modificar Datos del Médico' : 'Registrar Nuevo Profesional Médico'}
               </h2>
               <p className="text-xs text-cyan-100/80">
@@ -472,7 +471,6 @@ export function DoctorFormModal({ isOpen, onClose, doctorToEdit, onSaved }) {
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

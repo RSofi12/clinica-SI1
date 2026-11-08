@@ -15,6 +15,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { AntecedentesPatientModal } from './AntecedentesPatientModal';
+import { ConsultaDetailModal } from './ConsultaDetailModal';
 import { consultaService } from '../services/consultaService';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -73,6 +74,7 @@ export function ConsultasManager() {
   const [fecha, setFecha] = useState('');
   const [page, setPage] = useState(1);
   const [selectedPatientForAntecedentes, setSelectedPatientForAntecedentes] = useState(null);
+  const [selectedConsulta, setSelectedConsulta] = useState(null);
 
   const debounceRef = useRef(null);
 
@@ -134,7 +136,7 @@ export function ConsultasManager() {
     return fechaC === hoy;
   }).length;
   const definitivos = consultas.filter((c) =>
-    c.diagnosticos?.some((d) => d.tipo_diagnostico === 'DEFINITIVO')
+    c.diagnosticos?.some((d) => (d.tipo || d.tipo_diagnostico) === 'DEFINITIVO')
   ).length;
 
   // Obtener diagnóstico principal de una consulta
@@ -151,7 +153,7 @@ export function ConsultasManager() {
           <ClipboardList className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="font-bold text-slate-900 text-lg font-montserrat leading-tight">
+          <h1 className="font-bold text-slate-900 text-lg font-serif-clinical font-normal tracking-tight leading-tight">
             Consultas Médicas
           </h1>
           <span className="text-xs text-slate-400">Paquete 4 — Historial Clínico · CU16</span>
@@ -234,7 +236,7 @@ export function ConsultasManager() {
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Stethoscope className="w-4 h-4 text-[#00687a]" />
-            <h2 className="font-bold text-slate-900 text-sm font-montserrat">
+            <h2 className="font-bold text-slate-900 text-sm font-serif-clinical font-normal tracking-tight">
               Registro de Consultas
             </h2>
           </div>
@@ -269,21 +271,22 @@ export function ConsultasManager() {
           <>
             {/* Desktop table */}
             <div className="overflow-x-auto hidden sm:block">
-              <table className="w-full text-xs">
+              <table className="w-full text-xs min-w-[980px]">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left">
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Fecha / Hora</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Código Cita</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Paciente</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Médico</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Diagnóstico Principal</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider text-right">Acciones</th>
+                  <tr className="border-b border-slate-100 text-left bg-slate-50/50">
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider whitespace-nowrap w-[110px] min-w-[110px]">Fecha / Hora</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider whitespace-nowrap w-[110px] min-w-[110px]">Código Cita</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider min-w-[210px]">Paciente</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider min-w-[190px]">Médico</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider min-w-[220px]">Diagnóstico Principal</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider text-right whitespace-nowrap w-[210px] min-w-[210px]">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {consultas.map((c) => {
                     const diag = diagPrincipal(c);
                     const fechaConsulta = c.fecha_consulta || c.created_at;
+                    const paciente = c.paciente || c.historia_clinica?.paciente || c.historiaClinica?.paciente || c.cita?.paciente;
                     return (
                       <tr key={c.id_consulta || c.id} className="hover:bg-slate-50/60 transition">
                         {/* Fecha */}
@@ -301,38 +304,47 @@ export function ConsultasManager() {
                         </td>
 
                         {/* Código cita */}
-                        <td className="px-5 py-3.5">
-                          <span className="font-mono font-bold text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2 py-0.5">
+                        <td className="px-5 py-3.5 whitespace-nowrap">
+                          <span className="inline-flex items-center font-mono font-bold text-xs text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2.5 py-1 whitespace-nowrap tracking-wide">
                             {c.cita?.codigo_cita || c.codigo_cita || '—'}
                           </span>
                         </td>
 
                         {/* Paciente */}
                         <td className="px-5 py-3.5">
-                          <div className="flex items-center gap-2">
-                            <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200/80 text-[#00687a] flex items-center justify-center shrink-0">
+                              <User className="w-3.5 h-3.5" />
+                            </div>
                             <div>
-                              <span className="font-semibold text-slate-900">
-                                {c.paciente?.nombres} {c.paciente?.apellidos}
+                              <span className="font-semibold text-slate-900 block">
+                                {paciente ? `${paciente.nombres} ${paciente.apellidos}` : 'Paciente no asignado'}
                               </span>
-                              {c.paciente?.numero_documento && (
-                                <span className="text-[10px] text-slate-400 font-mono block">
-                                  CI: {c.paciente.numero_documento}
-                                </span>
-                              )}
+                              <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+                                {paciente?.numero_documento && (
+                                  <span>CI: {paciente.numero_documento}</span>
+                                )}
+                                {paciente?.numero_historia && (
+                                  <span className="text-[#00687a] font-semibold bg-teal-50 px-1 rounded">
+                                    {paciente.numero_historia}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </td>
 
                         {/* Médico */}
                         <td className="px-5 py-3.5">
-                          <span className="text-slate-700 font-medium">
+                          <span className="text-slate-800 font-medium block">
                             {c.medico
-                              ? `Dr. ${c.medico.apellidos} ${c.medico.nombres}`
+                              ? `Dr(a). ${c.medico.nombres} ${c.medico.apellidos}`
                               : '—'}
                           </span>
-                          {c.especialidad?.nombre && (
-                            <span className="text-[10px] text-slate-400 block">{c.especialidad.nombre}</span>
+                          {c.medico?.codigo_profesional && (
+                            <span className="text-[10px] text-slate-400 font-mono block">
+                              Mat: {c.medico.codigo_profesional}
+                            </span>
                           )}
                         </td>
 
@@ -340,7 +352,7 @@ export function ConsultasManager() {
                         <td className="px-5 py-3.5">
                           {diag ? (
                             <div className="space-y-1">
-                              <DiagnosticoBadge tipo={diag.tipo_diagnostico} />
+                              <DiagnosticoBadge tipo={diag.tipo || diag.tipo_diagnostico} />
                               <p className="text-slate-700 max-w-[200px] truncate" title={diag.descripcion}>
                                 {diag.descripcion}
                               </p>
@@ -356,10 +368,10 @@ export function ConsultasManager() {
                         {/* Acciones */}
                         <td className="px-5 py-3.5 text-right">
                           <div className="flex items-center justify-end gap-2">
-                            {c.paciente && (
+                            {paciente && (
                               <button
                                 type="button"
-                                onClick={() => setSelectedPatientForAntecedentes(c.paciente)}
+                                onClick={() => setSelectedPatientForAntecedentes(paciente)}
                                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-lg transition cursor-pointer"
                                 title="Ver y Gestionar Antecedentes Médicos (CU17)"
                               >
@@ -369,7 +381,7 @@ export function ConsultasManager() {
                             )}
                             <button
                               type="button"
-                              onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
+                              onClick={() => setSelectedConsulta(c)}
                               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
                               title="Ver detalle de la consulta"
                             >
@@ -389,32 +401,40 @@ export function ConsultasManager() {
             <div className="sm:hidden divide-y divide-slate-100">
               {consultas.map((c) => {
                 const diag = diagPrincipal(c);
+                const paciente = c.paciente || c.historia_clinica?.paciente || c.historiaClinica?.paciente || c.cita?.paciente;
                 return (
                   <div key={c.id_consulta || c.id} className="p-4 space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <span className="font-bold text-slate-900 text-sm">
-                          {c.paciente?.nombres} {c.paciente?.apellidos}
+                        <span className="font-bold text-slate-900 text-sm block">
+                          {paciente ? `${paciente.nombres} ${paciente.apellidos}` : 'Paciente no asignado'}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-mono block">
-                          CI: {c.paciente?.numero_documento || '—'}
-                        </span>
+                        <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+                          {paciente?.numero_documento && (
+                            <span>CI: {paciente.numero_documento}</span>
+                          )}
+                          {paciente?.numero_historia && (
+                            <span className="text-[#00687a] font-semibold">
+                              {paciente.numero_historia}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <span className="font-mono text-[10px] font-bold text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2 py-0.5">
+                      <span className="inline-flex items-center font-mono text-[10px] font-bold text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2 py-0.5 whitespace-nowrap">
                         {c.cita?.codigo_cita || c.codigo_cita || '—'}
                       </span>
                     </div>
                     {diag && (
                       <div className="flex items-center gap-2">
-                        <DiagnosticoBadge tipo={diag.tipo_diagnostico} />
+                        <DiagnosticoBadge tipo={diag.tipo || diag.tipo_diagnostico} />
                         <span className="text-xs text-slate-700 truncate">{diag.descripcion}</span>
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-2 pt-1">
-                      {c.paciente && (
+                      {paciente && (
                         <button
                           type="button"
-                          onClick={() => setSelectedPatientForAntecedentes(c.paciente)}
+                          onClick={() => setSelectedPatientForAntecedentes(paciente)}
                           className="flex items-center justify-center gap-1 px-2.5 py-1.5 text-[11px] font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-lg transition cursor-pointer"
                         >
                           <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
@@ -423,7 +443,7 @@ export function ConsultasManager() {
                       )}
                       <button
                         type="button"
-                        onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
+                        onClick={() => setSelectedConsulta(c)}
                         className="flex items-center justify-center gap-1 px-2.5 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -471,6 +491,16 @@ export function ConsultasManager() {
           isOpen={Boolean(selectedPatientForAntecedentes)}
           patient={selectedPatientForAntecedentes}
           onClose={() => setSelectedPatientForAntecedentes(null)}
+        />
+      )}
+
+      {/* Modal de Detalle de Consulta Médica (CU16 / CU19) */}
+      {selectedConsulta && (
+        <ConsultaDetailModal
+          isOpen={Boolean(selectedConsulta)}
+          consulta={selectedConsulta}
+          consultaId={selectedConsulta?.id_consulta || selectedConsulta?.id}
+          onClose={() => setSelectedConsulta(null)}
         />
       )}
     </div>

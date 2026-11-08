@@ -62,3 +62,31 @@ backend/database/seeders/*Massive*.php
 backend/database/seeders/*Mock*.php
 backend/database/data/
 *.demo.sql
+
+# ==========================================
+# Archivos de Apoyo Documental, Diagramas y Scripts Utilitarios
+# ==========================================
+docs/tablas_casos_de_uso.html
+docs/PUNTO_A_DETALLE_CASOS_DE_USO.md
+docs/prototipos/
+docs/screenshots/
+frontend/scripts/
+scripts/
+backend/scripts/
+*.cjs
+check_*.js
+inspect_*.js
+update_*.js
+reorder_*.js
+validate_*.js
+extract_*.js
+deep_check_*.js
+test_*.js
+docs/*.drawio
+*.drawio
+*.drawio.bkp
+*.drawio.dtmp
+*.bkp
+
+
+

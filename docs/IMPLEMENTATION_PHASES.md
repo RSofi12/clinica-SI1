@@ -11,8 +11,8 @@
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
 | **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 13 | 0 | 🟢 **100% Completado** (Meta superada anticipadamente) |
-| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 6 | 7 (+1) | 🟡 **En Progreso Avanzado** (Meta: Domingo 08/11/2026) |
-| **TOTAL GENERAL** | **26 (+1)** | **19** | **7 (+1)** | **Progreso Global: 73.1% (19 de 26 CUs)** |
+| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+2) | 13 | 0 (+2) | 🟢 **100% Completado** (Los 26 CUs oficiales 100% operativos) |
+| **TOTAL GENERAL** | **26 (+2)** | **26** | **0 (+2)** | **Progreso Global: 100% (26 de 26 CUs Oficiales)** |
 
 ---
 
@@ -348,50 +348,105 @@ pm run build exitoso).
   - [x] **P18.5:** Compilación limpia en Vite (`npm run build` en 22.45s, 0 errores).
 
 #### ⏳ CU19: Consultar Expediente Médico y Antecedentes (3.4)
-- [ ] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes.
-- [ ] **Frontend:** Vista de expediente en solo lectura para el portal del paciente.
-- [ ] **Fase de Pruebas:** Intentar consultar expediente de otro paciente por ID (HTTP 403 Forbidden).
+- [x] **Backend:** Endpoint con autorización estricta: paciente solo lee su expediente; médico lee el de sus pacientes (ExpedienteService + ExpedienteController).
+- [x] **Frontend:** Vista de expediente en solo lectura para portal de pacientes y visor clínico integral para personal médico/admin (`ExpedienteClinicoView.jsx` con transiciones fluidas, timeline cronológico y `@media print`).
+- [x] **Fase de Pruebas:** Scoping RBAC / Anti-IDOR validado (HTTP 403 Forbidden para pacientes consultando expedientes ajenos o recepcionistas) y compilación limpia en producción (`npm run build` en 27.44s, 0 errores).
 
-#### ⏳ CU25: Emitir Órdenes de Exámenes Auxiliares (Extra)
-- [ ] **Backend:** Modelo `ordenes_examenes`, generación de código correlativo `ORD-XXXX`, validación de tipo de estudio (laboratorio/imagen) e indicaciones.
-- [ ] **Frontend:** Formulario médico de prescripción de estudios dentro de la consulta médica y vista de órdenes pendientes.
-- [ ] **Fase de Pruebas:** Emisión exitosa de orden y enlace relacional con la consulta y el paciente.
+#### ✅ CU25: Emitir Órdenes de Exámenes Auxiliares (Extra)
+- [x] **Backend:**
+  - [x] Migración `2026_11_07_000003_add_motivo_cancelacion_to_ordenes_examenes_table.php` (baja lógica RN11).
+  - [x] Modelo `OrdenExamen.php` con constantes, métodos de negocio (`puedeCancelarse()`, `cancelar()`, `marcarConResultados()`) y relaciones.
+  - [x] FormRequests: `OrdenExamenCreateRequest.php` y `OrdenExamenAnularRequest.php` (motivo min:5).
+  - [x] Servicio transaccional `OrdenExamenService.php` con generador atómico `ORD-XXXX`, control Anti-IDOR y auditoría inmutable en `Bitacora.php`.
+  - [x] Controlador REST `OrdenesExamenesController.php` con 6 endpoints en `routes/api.php` bajo `/api/medical-records/ordenes-examenes`.
+  - [x] Integración en `ExpedienteService.php` para listado unificado y eventos en línea de tiempo (timeline).
+- [x] **Frontend:**
+  - [x] Servicio API `ordenExamenService.js` (`fetchOrdenes`, `fetchOrdenById`, `fetchOrdenesByConsulta`, `fetchOrdenesByHistoria`, `emitirOrden`, `anularOrden`).
+  - [x] Modal interactivo `OrdenExamenFormModal.jsx` con diseño institucional Deep Aqua, chips de estudios predefinidos, atajos de preparación, scroll-lock y `createPortal`.
+  - [x] Pestaña oficial "Órdenes de Exámenes" integrada en `ExpedienteClinicoView.jsx` con tarjetas informativas, badges de estado (`PENDIENTE`, `CON_RESULTADOS`, `CANCELADA`), modal de cancelación con motivo justificado (RN11) y conexión bidireccional hacia CU26 para subir resultados.
+- [x] **Fase de Pruebas:**
+  - [x] Emisión exitosa de orden con correlativo secuencial `ORD-0001` y validación de tipos válidos.
+  - [x] Enlace relacional con la consulta médica, el médico y la historia clínica del paciente.
+  - [x] Cancelación lógica con motivo obligatorio (RN11) bloqueando cancelaciones sobre órdenes ya procesadas.
+  - [x] Compilación limpia de producción en React + Vite (`npm run build` sin errores en 2044 módulos).
 
-#### ⏳ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
-- [ ] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG) vinculados a la historia clínica.
-- [ ] **Frontend:** Componente de carga de archivos adjuntos con visor previo integrado.
-- [ ] **Fase de Pruebas:** Subida de archivo y descarga protegida por RBAC.
+#### ✅ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
+- [x] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG, DICOM) con Cloudinary, Anti-IDOR y enlace opcional a órdenes auxiliares CU25 (DocumentoClinicoService + DocumentosClinicosController).
+- [x] **Frontend:** `ClinicalDocumentsSection.jsx` y `documentoClinicoService.js` con soporte dual (autónomo / CU25), barra de progreso multipart, previsualización de imágenes/PDF y asistente para visor DICOM externo (`IMAIOS`).
+- [x] **Fase de Pruebas:** Subida a Cloudinary, descarga segura, enlace con CU25 (`CON_RESULTADOS`), protección Anti-IDOR y registro inmutable en Bitácora (pruebas `CN-CU26-01` a `CN-CU26-08`).
 
 ---
 
 ### 📦 Paquete 5: Integraciones Externas y Pagos (P5)
 
-#### ⏳ CU20: Enviar Recordatorios y Notificaciones (3.4 / Cron)
-- [ ] **Backend:** Comando Laravel Schedule (`php artisan appointments:remind`) para avisos 24h antes.
-- [ ] **Frontend:** Notificaciones en interfaz y panel de configuración de avisos.
-- [ ] **Fase de Pruebas:** Ejecución de tarea programada sin duplicar recordatorios.
+#### ✅ CU20: Enviar Recordatorios y Notificaciones (3.4 / Cron)
+- [x] **Backend:**
+  - [x] Modelo `Notificacion.php` enriquecido con constantes de tipo (`RECORDATORIO_24H`, `CONFIRMACION`, `REPROGRAMACION`, `CANCELACION`, `PAGO_EXITOSO`), scopes (`noLeidas`, `paraUsuario`, `porTipo`) y método `marcarComoLeida()`.
+  - [x] Relación `notificaciones()` registrada en el modelo `User.php`.
+  - [x] `NotificationService.php`: Servicio orquestador central con métodos de emisión de notificaciones, resolución de cuentas de pacientes/médicos, idempotencia estricta en recordatorios 24h y registro de auditoría inmutable en `Bitacora.php`.
+  - [x] Integración en ciclo de vida de citas:
+    - `AppointmentBookingService.php`: Dispara notificación automática de confirmación a paciente y médico al reservar cita.
+    - `AppointmentRescheduleService.php`: Dispara notificación automática de reprogramación a paciente y médico.
+    - `AppointmentsController.php`: Dispara notificación automática de cancelación a paciente y médico.
+    - `StripePaymentService.php`: Dispara comprobante de pago garantizado tras confirmación exitosa con Stripe.
+  - [x] Comando de Consola Artisan `SendAppointmentRemindersCommand.php` (`php artisan appointments:send-reminders` con opciones `--force` y `--cita=ID`).
+  - [x] Registro en `backend/routes/console.php` con programación `Schedule::command('appointments:send-reminders')->dailyAt('08:00');`.
+  - [x] `NotificationsController.php`: Endpoints REST (`index`, `unreadCount`, `markAsRead`, `markAllAsRead`, `destroy`, `triggerReminders`).
+  - [x] Rutas registradas en `routes/api.php` bajo `/api/notifications/` con control RBAC y middleware `web`.
+- [x] **Frontend:**
+  - [x] `notificationService.js`: Cliente API para consultas, marcas de lectura, eliminación y disparo forzado del planificador.
+  - [x] `NotificationsDropdown.jsx`: Componente interactivo en cabecera con badge numérico en tiempo real, polling ligero cada 30s, pestañas ("Todas", "No leídas", "Recordatorios 24h"), iconos específicos por tipo de evento, marcas de lectura individual/colectiva y botón "Probar 24h Ahora" para demostración docente.
+- [x] **Fase de Pruebas:**
+  - [x] Verificación del comando `php artisan appointments:send-reminders` en terminal.
+  - [x] Prueba end-to-end con script de prueba: recordatorios generados a paciente y médico con éxito, detección de idempotencia, y marcado como leído.
+  - [x] Verificación de 0 errores en compilación de Frontend (`npm run build`).
 
-#### ⏳ CU21: Pagar Cita Médica con Stripe Sandbox (Extra)
-- [ ] **Backend:** Integración con Stripe SDK (modo de pruebas con tarjetas demo `4242...`).
-- [ ] **Frontend:** Formulario con Stripe Elements o Checkout simulado.
-- [ ] **Fase de Pruebas:** Cobro exitoso y confirmación garantizada de cita.
+#### ✅ CU21: Pagar Cita Médica con Stripe Sandbox (Extra)
+- [x] **Backend:**
+  - [x] Migración `2026_11_07_000004_add_details_to_pagos_and_citas_table.php` ejecutada (`codigo_pago`, `moneda`, `tarjeta_marca`, `tarjeta_ultimos4`, `descripcion`, `recibo_url` en `pagos`; `pagada`, `monto_pago` en `citas`).
+  - [x] Configuración en `config/services.php` para credenciales Stripe (`key`, `secret`, `currency`).
+  - [x] `Pago.php`: Modelo con constantes (`COMPLETADO`, `FALLIDO`, `REEMBOLSADO`, `PENDIENTE`), relaciones Eloquent foráneas y casts numéricos.
+  - [x] `Cita.php`: Actualizado con campos `pagada`, `monto_pago` y relaciones `pagos()` y `pago()`.
+  - [x] `StripePaymentService.php`: Correlativo atómico `PAG-XXXX`, integración REST nativa con Stripe API (`PaymentIntents`, `charges`), manejo seguro con tarjeta de pruebas `pm_card_visa`, confirmación transaccional `DB::transaction()` y auditoría inmutable en `Bitacora.php`.
+  - [x] `ProcessPaymentRequest.php`: Validación estricta de monto, método de pago y correo electrónico.
+  - [x] `PaymentsController.php`: Endpoints REST (`index`, `createIntent`, `process`, `receipt`).
+  - [x] 4 rutas registradas en `routes/api.php` bajo `/api/payments`.
+- [x] **Frontend:**
+  - [x] `paymentService.js`: Cliente API para crear intenciones de pago, procesar transacciones y emitir comprobantes.
+  - [x] `StripePaymentModal.jsx`: Modal interactivo en dos pasos (formulario de tarjeta con botón de auto-llenado demo `4242...` y pantalla de comprobante digital emitido con soporte de impresión).
+  - [x] Integración en `AppointmentsManager.jsx`: Botón contextual "Pagar", badge de estado "Pagada" / "Pendiente de Pago" y visualización de estatus de cobro en modal de Ticket oficial.
+- [x] **Fase de Pruebas:**
+  - [x] Cobro exitoso con tarjeta de prueba en Stripe Sandbox (balance y cargo verificados contra API de Stripe).
+  - [x] Actualización atómica de `citas.pagada = true` y creación de registro `PAG-XXXX` en PostgreSQL.
+  - [x] Generación de comprobante digital de pago imprimible.
 
 ---
 
 ### 📦 Paquete 6: Reportes y Analítica (P6)
 
-#### ⏳ CU22: Generar Reportes con Filtros Dinámicos (RF13)
-- [ ] **Backend:**
-  - [ ] Reporte 1: Citas por fecha.
-  - [ ] Reporte 2: Citas por médico.
-  - [ ] Reporte 3: Citas por especialidad.
-  - [ ] Reporte 4: Citas por estado (Programadas, Atendidas, Canceladas, Inasistencias).
-  - [ ] Reporte 5: Pacientes registrados.
-  - [ ] Reporte 6: Balance y totales en período.
-  - [ ] Reporte 7: Agenda diaria por médico.
-  - [ ] Exportación a formato CSV / PDF.
-- [ ] **Frontend:** Módulo de analítica con gráficos, filtros de fecha y botón de exportación.
-- [ ] **Fase de Pruebas:** Comparación de totales del reporte contra conteos reales en PostgreSQL.
+#### ✅ CU22: Generar Reportes con Filtros Dinámicos (RF13)
+- [x] **Backend:**
+  - [x] Reporte 1: Citas por fecha / rango de fechas cronológico con promedios diarios.
+  - [x] Reporte 2: Citas por médico asignado con tasas individuales de atención y cancelaciones.
+  - [x] Reporte 3: Citas por especialidad médica con porcentaje de participación y balance estimado.
+  - [x] Reporte 4: Citas por estado (Programadas, Atendidas, Canceladas, Inasistencias) con desglose de motivos de anulación (RN09/RN11).
+  - [x] Reporte 5: Pacientes registrados con segmentación etaria (Pediátricos <15, Adultos 15-59, Geriátricos 60+) y estado de cuentas web.
+  - [x] Reporte 6: Balance consolidado y rendimiento operativo (ingresos, pagos Stripe completados, tasa de pérdida).
+  - [x] Reporte 7: Agenda médica diaria por profesional con franja horaria configurada.
+  - [x] Servicio transaccional `DynamicReportService.php` y controlador `ReportsController.php`.
+  - [x] Exportación nativa Streamed CSV con codificación UTF-8 + BOM (`/export-csv`).
+  - [x] 3 rutas protegidas registradas en `routes/api.php` bajo `/api/analytics/reports`.
+  - [x] Auditoría inmutable en `Bitacora.php` (`GENERAR_REPORTE_DINAMICO`).
+- [x] **Frontend:**
+  - [x] Servicio `dynamicReportService.js` para consumo de catálogos, datos y descargas.
+  - [x] Vista interactiva `DynamicReportsView.jsx` con selector de 7 pestañas, barra de filtros contextual (fechas, médico, especialidad, estado, grupo etario).
+  - [x] Bloque de KPIs ejecutivos interactivos, desgloses visuales de distribución y tabla con buscador en vivo y paginación.
+  - [x] Descarga de CSV y soporte oficial de impresión estructurada `@media print` con membrete del Centro Médico La Cruz.
+  - [x] Integración en `Sidebar.jsx`, `App.jsx` e `InicioPanelView.jsx`.
+- [x] **Fase de Pruebas:**
+  - [x] Verificación de consistencia de los 7 reportes contra registros reales de PostgreSQL (`clinica_db`).
+  - [x] Verificación de filtros etarios matemáticos y scoping por rol médico.
+  - [x] Compilación limpia de frontend con Vite (0 errores).
 
 #### ✅ CU23: Generar Reporte Personalizado por Voz con IA (Extra)
 - [x] **Backend:**
@@ -408,10 +463,10 @@ pm run build exitoso).
   - [x] Dictado: *"Citas canceladas de este mes"*, *"Atenciones de hoy"*, *"Balance de la semana pasada"* resolviendo fechas y filtros en PostgreSQL.
   - [x] Fallback de escritura manual cuando no hay permisos de micrófono.
 
-#### ⏳ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
-- [ ] **Backend:** Endpoint de agregación analítica en tiempo real (citas por estado, ocupación médica, ingresos estimados).
-- [ ] **Frontend:** Panel visual ejecutivo (`DashboardView.jsx`) con tarjetas de métricas interactivas y gráficos de tendencia.
-- [ ] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en base de datos.
+#### ✅ CU24: Consultar Dashboard Administrativo y KPIs (Extra)
+- [x] **Backend:** Endpoint de agregación analítica en tiempo real (`DashboardController.php` - `GET /api/analytics/dashboard-kpis`) con scoping por rol y filtros temporales (`hoy`, `7d`, `30d`, `mes`, custom).
+- [x] **Frontend:** Panel visual ejecutivo (`ClinicalDashboardView.jsx` y `InicioPanelView.jsx`) con tarjetas KPI, selector de períodos, desglose de estados y operativo diario.
+- [x] **Fase de Pruebas:** Verificación de consistencia entre los KPIs mostrados y los registros en PostgreSQL (`clinica_db`), compilación limpia con Vite.
 
 #### 🟡 CU27-RES: Exportar Expediente Clínico y Receta en PDF (Reserva Condicional / Subfunción CU18-19)
 - [ ] Generación de documentos descargables con membrete oficial e impresión.

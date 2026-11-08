@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   Calendar,
@@ -84,7 +85,19 @@ export function AppointmentBookingModal({
       try {
         const res = await appointmentService.fetchBookingFormData();
         if (isMounted && res?.data) {
-          setFormDataCatalogs(res.data);
+          const sortedEspecialidades = [...(res.data.especialidades || [])].sort((a, b) =>
+            (a.nombre || '').localeCompare(b.nombre || '', 'es')
+          );
+          const sortedMedicos = [...(res.data.medicos || [])].sort((a, b) => {
+            const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+            const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+            return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+          });
+          setFormDataCatalogs({
+            ...res.data,
+            especialidades: sortedEspecialidades,
+            medicos: sortedMedicos,
+          });
 
           // Si hay tipo de cita, pre-seleccionar el primero ('PRIMERA CONSULTA')
           if (res.data.tipos_cita?.length > 0 && !selectedTipoCitaId) {
@@ -151,9 +164,14 @@ export function AppointmentBookingModal({
 
     setIsSearchingPatient(true);
     try {
-      const res = await patientService.fetchPatients({ q: term.trim(), per_page: 5 });
+      const res = await patientService.fetchPatients({ q: term.trim(), per_page: 10, sort: 'alfabetico' });
       if (res?.data) {
-        setPatientResults(res.data);
+        const sorted = [...res.data].sort((a, b) => {
+          const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim();
+          const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim();
+          return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+        });
+        setPatientResults(sorted);
       }
     } catch (err) {
       console.error('Error buscando pacientes:', err);
@@ -162,13 +180,19 @@ export function AppointmentBookingModal({
     }
   };
 
-  // 3. Médicos filtrados por la especialidad seleccionada
-  const doctorsForSpecialty = formDataCatalogs.medicos.filter((m) => {
-    if (!selectedSpecialtyId) return true;
-    return (m.specialties || []).some(
-      (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
-    );
-  });
+  // 3. Médicos filtrados por la especialidad seleccionada (ordenados A-Z por apellidos y nombres)
+  const doctorsForSpecialty = formDataCatalogs.medicos
+    .filter((m) => {
+      if (!selectedSpecialtyId) return true;
+      return (m.specialties || []).some(
+        (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
+      );
+    })
+    .sort((a, b) => {
+      const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+      const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+      return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+    });
 
   // Especialidad seleccionada y validación etaria (RF04 / Prueba P10.4)
   const currentSpecialty = formDataCatalogs.especialidades.find(
@@ -253,16 +277,21 @@ export function AppointmentBookingModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in duration-150 my-8">
-        {/* Cabecera */}
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnBackdrop={false}
+      maxWidth="max-w-2xl"
+      panelClassName="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-modal-panel my-auto"
+    >
+      {/* Cabecera */}
         <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#004d5a] to-[#00687a] text-white">
           <div className="flex items-center gap-2.5">
             <div className="p-2 bg-white/10 rounded-xl">
               <Calendar className="w-5 h-5 text-cyan-200" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-base leading-tight">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base leading-tight">
                 Programar Cita Médica
               </h3>
               <p className="text-xs text-cyan-100/80">
@@ -327,7 +356,7 @@ export function AppointmentBookingModal({
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-montserrat font-bold text-slate-900 text-sm">
+                        <span className="font-sans-clinical font-bold text-slate-900 text-sm">
                           {selectedPatient ? `${selectedPatient.nombres} ${selectedPatient.apellidos}` : 'Cargando tus datos...'}
                         </span>
                         <span className="text-[10px] font-bold bg-[#00687a] text-white px-2 py-0.5 rounded-md uppercase tracking-wider">
@@ -402,7 +431,7 @@ export function AppointmentBookingModal({
                           {selectedPatient.nombres?.charAt(0)}{selectedPatient.apellidos?.charAt(0)}
                         </div>
                         <div>
-                          <span className="font-montserrat font-bold text-slate-900 text-sm block">
+                          <span className="font-sans-clinical font-bold text-slate-900 text-sm block">
                             {selectedPatient.nombres} {selectedPatient.apellidos}
                           </span>
                           <p className="text-[11px] text-slate-600 mt-0.5">
@@ -732,7 +761,7 @@ export function AppointmentBookingModal({
                 <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
                   ¡Cita Programada Exitosamente!
                 </span>
-                <h4 className="font-montserrat font-extrabold text-2xl text-slate-900 mt-1">
+                <h4 className="font-serif-clinical font-normal tracking-tight text-2xl text-slate-900 mt-1">
                   Código: <span className="text-[#00687a]">{createdAppointment.codigo_cita}</span>
                 </h4>
                 <p className="text-xs text-slate-500 mt-1">
@@ -875,7 +904,6 @@ export function AppointmentBookingModal({
             )}
           </div>
         )}
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

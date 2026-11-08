@@ -16,7 +16,14 @@ use App\Packages\Appointments\Controllers\AppointmentsController;
 use App\Packages\MedicalRecords\Controllers\ConsultasController;
 use App\Packages\MedicalRecords\Controllers\AntecedentesController;
 use App\Packages\MedicalRecords\Controllers\RecetasController;
+use App\Packages\MedicalRecords\Controllers\ExpedienteController;
+use App\Packages\MedicalRecords\Controllers\DocumentosClinicosController;
+use App\Packages\MedicalRecords\Controllers\OrdenesExamenesController;
+use App\Packages\Integrations\Controllers\PaymentsController;
+use App\Packages\Integrations\Controllers\NotificationsController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
+use App\Packages\Analytics\Controllers\DashboardController;
+use App\Packages\Analytics\Controllers\ReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,20 +162,66 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::put('/antecedentes/{id}', [AntecedentesController::class, 'update'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/antecedentes/{id}/toggle-status', [AntecedentesController::class, 'toggleStatus'])->middleware('role:ADMIN,MEDICO');
 
-    // CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas
-    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
-    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
-    Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    // CU18: Gestionar Expediente Clínico Digital — Emisión de Recetas Médicas (Exclusivo Médico y Admin)
+    Route::get('/recetas', [RecetasController::class, 'index'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/recetas/{id}', [RecetasController::class, 'show'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/consultas/{idConsulta}/recetas', [RecetasController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO');
     Route::post('/recetas', [RecetasController::class, 'store'])->middleware('role:ADMIN,MEDICO');
     Route::patch('/recetas/{id}/anular', [RecetasController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
+
+    // CU19: Consultar Expediente Médico y Antecedentes Clínicos
+    Route::get('/expediente/mi-expediente', [ExpedienteController::class, 'miExpediente'])->middleware('role:PACIENTE');
+    Route::get('/expediente/paciente/{idPaciente}', [ExpedienteController::class, 'showByPatient'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/expediente/paciente/{idPaciente}/timeline', [ExpedienteController::class, 'timeline'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+
+    // CU26: Gestionar Documentos Clínicos Adjuntos (Cloudinary / DICOM / Órdenes CU25)
+    Route::get('/historias/{idHistoria}/documentos', [DocumentosClinicosController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::post('/historias/{idHistoria}/documentos', [DocumentosClinicosController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+    Route::get('/historias/{idHistoria}/ordenes-pendientes', [DocumentosClinicosController::class, 'ordenesPendientes'])->middleware('role:ADMIN,MEDICO');
+    Route::delete('/documentos/{id}', [DocumentosClinicosController::class, 'destroy'])->middleware('role:ADMIN,MEDICO');
+
+    // CU25: Emitir Órdenes de Exámenes Auxiliares (Laboratorio e Imagenología)
+    Route::get('/ordenes-examenes', [OrdenesExamenesController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/ordenes-examenes/{id}', [OrdenesExamenesController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/consultas/{idConsulta}/ordenes-examenes', [OrdenesExamenesController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::get('/historias/{idHistoria}/ordenes-examenes', [OrdenesExamenesController::class, 'byHistoria'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::post('/ordenes-examenes', [OrdenesExamenesController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+    Route::patch('/ordenes-examenes/{id}/anular', [OrdenesExamenesController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
 });
 
-// CU23: Generar reporte personalizado por voz con IA (Paquete 6: Reportes y Analítica)
-Route::prefix('analytics')->middleware('web')->group(function () {
-    Route::post('/voice-report', [VoiceReportController::class, 'processVoiceCommand'])->middleware('role:ADMIN,MEDICO');
-    Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN,MEDICO');
-    Route::get('/voice-stats', [VoiceReportController::class, 'stats'])->middleware('role:ADMIN');
+// CU22: Reportes con Filtros Dinámicos (RF13 - Paquete 6: Reportes y Analítica)
+Route::prefix('analytics/reports')->middleware('web')->group(function () {
+    Route::get('/catalogs', [ReportsController::class, 'catalogs'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
+    Route::get('/dynamic', [ReportsController::class, 'generate'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
+    Route::get('/export-csv', [ReportsController::class, 'export'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO');
 });
+
+// CU23 / CU24: Reportes, Analítica y Dashboard de KPIs (Paquete 6: Exclusivo Administrador)
+Route::prefix('analytics')->middleware('web')->group(function () {
+    Route::post('/voice-report', [VoiceReportController::class, 'processVoiceCommand'])->middleware('role:ADMIN');
+    Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN');
+    Route::get('/voice-stats', [VoiceReportController::class, 'stats'])->middleware('role:ADMIN');
+    Route::get('/dashboard-kpis', [DashboardController::class, 'getKpis'])->middleware('role:ADMIN');
+});
+
+// CU21: Pasarela de Pagos Stripe Sandbox (Paquete 5: Integraciones Externas y Pagos)
+Route::prefix('payments')->middleware('web')->group(function () {
+    Route::get('/', [PaymentsController::class, 'index'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::post('/create-intent', [PaymentsController::class, 'createIntent'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
+    Route::post('/process', [PaymentsController::class, 'process'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
+    Route::get('/receipt/{id}', [PaymentsController::class, 'receipt'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
+});
+
+// CU20: Enviar Recordatorios y Notificaciones (Paquete 5: Integraciones Externas y Pagos)
+Route::prefix('notifications')->middleware('web')->group(function () {
+    Route::get('/', [NotificationsController::class, 'index'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::get('/unread-count', [NotificationsController::class, 'unreadCount'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::patch('/{id}/read', [NotificationsController::class, 'markAsRead'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::post('/read-all', [NotificationsController::class, 'markAllAsRead'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::delete('/{id}', [NotificationsController::class, 'destroy'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::post('/trigger-reminders', [NotificationsController::class, 'triggerReminders'])->middleware('role:ADMIN,RECEPCIONISTA');
+});
+
 
 
 

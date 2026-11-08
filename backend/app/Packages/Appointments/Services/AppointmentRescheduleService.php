@@ -113,13 +113,21 @@ class AppointmentRescheduleService
             );
 
             // 9. Registrar auditoría inmutable en bitácora (CU03)
-            Bitacora::registrarAccion(
+            Bitacora::registrar(
+                $idUsuario,
+                'Citas Médicas',
                 'REPROGRAMAR_CITA',
                 'citas',
                 $cita->id_cita,
-                "Cita {$cita->codigo_cita} reprogramada para el {$nuevaFechaHoraInicio->format('d/m/Y H:i')}. Motivo: {$data['motivo_reprogramacion']}",
-                $idUsuario
+                "Cita {$cita->codigo_cita} reprogramada para el {$nuevaFechaHoraInicio->format('d/m/Y H:i')}. Motivo: {$data['motivo_reprogramacion']}"
             );
+
+            // Disparar notificaciones automáticas (CU20 / Paquete 5)
+            try {
+                app(\App\Packages\Integrations\Services\NotificationService::class)->notificarCitaReprogramada($cita, $data['motivo_reprogramacion']);
+            } catch (\Throwable $th) {
+                \Illuminate\Support\Facades\Log::warning("Error al emitir notificación de reprogramación para {$cita->codigo_cita}: " . $th->getMessage());
+            }
 
             return $cita->fresh([
                 'paciente:id_paciente,nombres,apellidos,numero_documento,numero_historia,telefono',

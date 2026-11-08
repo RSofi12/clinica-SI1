@@ -266,7 +266,7 @@ class AppointmentsController extends Controller
     {
         $tiposCita = TipoCita::orderBy('nombre')->get();
         $especialidades = Especialidad::activas()->orderBy('nombre')->get();
-        $medicos = Medico::activos()->with(['specialties'])->orderBy('apellidos')->get();
+        $medicos = Medico::activos()->with(['specialties'])->orderBy('apellidos')->orderBy('nombres')->get();
 
         return response()->json([
             'success' => true,
@@ -355,6 +355,13 @@ class AppointmentsController extends Controller
                 'descripcion'    => "Cancelación de cita {$cita->codigo_cita} por motivo: {$motivo}",
                 'ip_origen'      => $request->ip(),
             ]);
+
+            // Disparar notificaciones automáticas de cancelación (CU20 / Paquete 5)
+            try {
+                app(\App\Packages\Integrations\Services\NotificationService::class)->notificarCitaCancelada($cita, $motivo, $user);
+            } catch (\Throwable $th) {
+                \Illuminate\Support\Facades\Log::warning("Error al emitir notificación de cancelación de cita: " . $th->getMessage());
+            }
         });
 
         return response()->json([

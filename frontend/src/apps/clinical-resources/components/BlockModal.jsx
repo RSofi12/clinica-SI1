@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Calendar, Clock, AlertTriangle, ShieldAlert, Sparkles, Building2 } from 'lucide-react';
 import { scheduleService } from '../services/scheduleService';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 /**
  * Modal para Registrar Bloqueo de Horario o Feriado Institucional (CU08 / RF05 / P8.3)
@@ -66,16 +67,15 @@ export function BlockModal({ isOpen, onClose, doctors = [], onBlockCreated, defa
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in duration-150">
-        {/* Cabecera */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-lg" closeOnBackdrop={false}>
+      {/* Cabecera */}
         <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#004d5a] to-[#00687a] text-white">
           <div className="flex items-center gap-2.5">
             <div className="p-2 bg-white/10 rounded-xl">
               <Calendar className="w-5 h-5 text-cyan-200" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-base leading-tight">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-base leading-tight">
                 Registrar Bloqueo o Feriado
               </h3>
               <p className="text-xs text-cyan-100/80">
@@ -262,7 +262,6 @@ export function BlockModal({ isOpen, onClose, doctors = [], onBlockCreated, defa
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

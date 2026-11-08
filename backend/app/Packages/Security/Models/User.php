@@ -198,4 +198,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(\App\Packages\ClinicalResources\Models\Paciente::class, 'id_usuario', 'id_usuario');
     }
+
+    public function notificaciones()
+    {
+        return $this->hasMany(\App\Packages\Integrations\Models\Notificacion::class, 'id_usuario', 'id_usuario');
+    }
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   CalendarClock,
@@ -213,10 +214,14 @@ export function AppointmentRescheduleModal({
     !isSubmitting;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
-        
-        {/* Cabecera con degradado distintivo de la clínica */}
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={handleClose}
+      closeOnBackdrop={false}
+      maxWidth="max-w-2xl"
+      panelClassName="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] shadow-2xl border border-slate-200/90 overflow-hidden flex flex-col animate-modal-panel my-auto"
+    >
+      {/* Cabecera con degradado distintivo de la clínica */}
         <div className="px-5 py-4 bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] text-white flex items-center justify-between shrink-0 shadow-xs">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-xs flex items-center justify-center text-[#70cbff] shadow-inner">
@@ -224,7 +229,7 @@ export function AppointmentRescheduleModal({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base font-montserrat tracking-tight">
+                <h3 className="font-bold text-base font-serif-clinical font-normal tracking-tight tracking-tight">
                   Reprogramar Cita Médica
                 </h3>
                 <span className="text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">
@@ -505,8 +510,6 @@ export function AppointmentRescheduleModal({
             </button>
           </div>
         </div>
-
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

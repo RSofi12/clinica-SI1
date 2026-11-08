@@ -19,6 +19,8 @@ import {
   RotateCcw,
   Loader2,
   Clock,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 export function UsersManager() {
@@ -32,6 +34,16 @@ export function UsersManager() {
   const [roleFilter, setRoleFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
+  // Paginación
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(15);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    per_page: 15,
+    current_page: 1,
+    last_page: 1,
+  });
+
   // Modales
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -40,7 +52,7 @@ export function UsersManager() {
   // Acción en proceso (id_usuario de la fila afectada)
   const [actionLoadingId, setActionLoadingId] = useState(null);
 
-  const loadUsers = useCallback(async () => {
+  const loadUsers = useCallback(async (targetPage = page, customPerPage = perPage) => {
     setLoading(true);
     setError(null);
     try {
@@ -48,21 +60,35 @@ export function UsersManager() {
         q: searchTerm,
         tipo_usuario: roleFilter,
         estado: statusFilter,
+        page: targetPage,
+        per_page: customPerPage,
       });
       setUsers(response.data || []);
+      if (response.pagination) {
+        setPagination(response.pagination);
+      }
     } catch (err) {
       setError(err.message || 'Error al cargar los usuarios.');
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, roleFilter, statusFilter]);
+  }, [searchTerm, roleFilter, statusFilter, perPage, page]);
 
+  // Al cambiar filtros de búsqueda o rol, reiniciar a página 1
   useEffect(() => {
+    setPage(1);
     const timer = setTimeout(() => {
-      loadUsers();
+      loadUsers(1, perPage);
     }, 300);
     return () => clearTimeout(timer);
-  }, [loadUsers]);
+  }, [searchTerm, roleFilter, statusFilter]);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.last_page && newPage !== page) {
+      setPage(newPage);
+      loadUsers(newPage, perPage);
+    }
+  };
 
   // Mensaje temporal de éxito
   const showSuccess = (msg) => {
@@ -88,7 +114,7 @@ export function UsersManager() {
       const res = await usersService.createUser(formData);
       showSuccess(res.message || 'Nuevo operador registrado exitosamente.');
     }
-    loadUsers();
+    loadUsers(page, perPage);
   };
 
   const handleToggleStatus = async (user) => {
@@ -101,7 +127,7 @@ export function UsersManager() {
     try {
       const res = await usersService.toggleUserStatus(user.id_usuario);
       showSuccess(res.message);
-      loadUsers();
+      loadUsers(page, perPage);
     } catch (err) {
       alert(err.message || 'Error al cambiar estado.');
     } finally {
@@ -118,7 +144,7 @@ export function UsersManager() {
     try {
       const res = await usersService.unlockUser(user.id_usuario);
       showSuccess(res.message);
-      loadUsers();
+      loadUsers(page, perPage);
     } catch (err) {
       alert(err.message || 'Error al desbloquear usuario.');
     } finally {
@@ -195,11 +221,11 @@ export function UsersManager() {
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-montserrat font-bold text-slate-900 text-lg">
+              <h2 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-lg">
                 Gestión de Usuarios y Roles (CU02)
               </h2>
               <p className="text-xs text-slate-500">
-                Control de acceso basado en roles (RF01) — {users.length} operadores registrados
+                Control de acceso basado en roles (RF01) — {pagination.total > 0 ? pagination.total : users.length} operadores registrados
               </p>
             </div>
           </div>
@@ -397,6 +423,106 @@ export function UsersManager() {
             </tbody>
           </table>
         </div>
+
+        {/* Barra de Paginación */}
+        {pagination && pagination.total > 0 && (
+          <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+            <div>
+              <span>Mostrando página </span>
+              <span className="font-bold text-slate-900">{pagination.current_page}</span>
+              <span> de </span>
+              <span className="font-bold text-slate-900">{pagination.last_page}</span>
+              <span> ({pagination.total} operadores registrados)</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-slate-500">Por pág.:</span>
+              <select
+                value={perPage}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setPerPage(val);
+                  setPage(1);
+                  loadUsers(1, val);
+                }}
+                className="px-2 py-1 text-xs rounded-lg border border-slate-200 bg-white text-slate-700 font-medium focus:outline-none focus:ring-1 focus:ring-[#00687a]"
+              >
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+              </select>
+
+              <div className="flex items-center gap-1 ml-2">
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(page - 1)}
+                  disabled={page <= 1 || loading}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer font-medium"
+                  title="Página anterior"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline">Anterior</span>
+                </button>
+
+                {/* Números de página */}
+                <div className="hidden sm:flex items-center gap-1">
+                  {Array.from({ length: pagination.last_page }, (_, i) => i + 1)
+                    .filter((p) => {
+                      return (
+                        p === 1 ||
+                        p === pagination.last_page ||
+                        (p >= page - 1 && p <= page + 1)
+                      );
+                    })
+                    .reduce((acc, p, idx, arr) => {
+                      if (idx > 0 && p - arr[idx - 1] > 1) {
+                        acc.push('ellipsis-' + p);
+                      }
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((item) => {
+                      if (typeof item === 'string') {
+                        return (
+                          <span key={item} className="px-1 text-slate-400">
+                            …
+                          </span>
+                        );
+                      }
+                      const isCurrent = item === page;
+                      return (
+                        <button
+                          key={item}
+                          type="button"
+                          onClick={() => handlePageChange(item)}
+                          disabled={loading}
+                          className={`w-7 h-7 text-xs font-semibold rounded-lg transition cursor-pointer flex items-center justify-center ${
+                            isCurrent
+                              ? 'bg-[#00687a] text-white shadow-xs'
+                              : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                          }`}
+                        >
+                          {item}
+                        </button>
+                      );
+                    })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(page + 1)}
+                  disabled={page >= pagination.last_page || loading}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer font-medium"
+                  title="Página siguiente"
+                >
+                  <span className="hidden sm:inline">Siguiente</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modal Crear / Editar */}

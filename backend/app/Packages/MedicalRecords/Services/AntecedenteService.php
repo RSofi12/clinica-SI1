@@ -61,7 +61,10 @@ class AntecedenteService
 
         // 4. Consulta de antecedentes con relaciones y filtros
         $query = Antecedente::where('id_historia_clinica', $historia->id_historia_clinica)
-            ->with('registrador:id_usuario,username,nombres,apellidos,rol');
+            ->with([
+                'registrador:id_usuario,username,tipo_usuario',
+                'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+            ]);
 
         if (!empty($filtros['tipo'])) {
             $query->porTipo($filtros['tipo']);
@@ -149,7 +152,10 @@ class AntecedenteService
                 'ip_origen'      => $ip,
             ]);
 
-            return $antecedente->load('registrador:id_usuario,username,nombres,apellidos,rol');
+            return $antecedente->load([
+                'registrador:id_usuario,username,tipo_usuario',
+                'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+            ]);
         });
     }
 
@@ -194,7 +200,10 @@ class AntecedenteService
             'ip_origen'      => $ip,
         ]);
 
-        return $antecedente->fresh(['registrador:id_usuario,username,nombres,apellidos,rol']);
+        return $antecedente->fresh([
+            'registrador:id_usuario,username,tipo_usuario',
+            'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+        ]);
     }
 
     /**
@@ -229,6 +238,9 @@ class AntecedenteService
             'ip_origen'      => $ip,
         ]);
 
-        return $antecedente->fresh(['registrador:id_usuario,username,nombres,apellidos,rol']);
+        return $antecedente->fresh([
+            'registrador:id_usuario,username,tipo_usuario',
+            'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+        ]);
     }
 }

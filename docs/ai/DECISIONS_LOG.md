@@ -135,7 +135,7 @@
   1. Enriquecer el alcance clínico real del sistema integrando el ciclo completo asistencial: Consulta (CU16) -> Orden de Exámenes (CU25) -> Custodia de Resultados Externos Adjuntos (CU26).
   2. Absorber la exportación a PDF como flujo alternativo natural de CU18/CU19 para no saturar el catálogo con micro-funciones y mantener exactamente 26 Casos de Uso oficiales.
   3. Respetar estrictamente los 13 Casos de Uso del Ciclo 1 ya probados y validados al 100%, asignando las nuevas funcionalidades al Ciclo 2 con simetría total en los 6 paquetes de arquitectura.
-* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ai/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo oficial queda fijado en 26 Casos de Uso (+ 2 reservas).
+* **Impacto:** Actualización de `docs/CU_ESPECIFICACION_SISTEMA.md`, `docs/ARCHITECTURE.md`, `docs/IMPLEMENTATION_PHASES.md` y `docs/ai/CURRENT_STATE.md`. El catálogo oficial queda fijado en 26 Casos de Uso (+ 2 reservas).
 
 ### Registro 20: 2026-11-05
 * **Decisión:** Dockerización del monorepo mediante arquitectura multi-contenedor con `docker-compose`: Nginx (proxy inverso), PHP 8.3 FPM (Laravel), PostgreSQL 16 Alpine y Node 22 (React + Vite).
@@ -151,5 +151,73 @@
   1. La metodología PUDS / RUP es iterativa e incremental: el modelo de datos evoluciona armónicamente en cada ciclo sin anclarse a un esquema estático que impida la trazabilidad de negocio.
   2. Cumplir con los requerimientos de auditoría y ciclo de vida (RF08) asegurando que cualquier cambio quede formalmente versionado en migraciones Laravel y documentado en bitácoras.
 * **Impacto:** Todo ajuste técnico en la base de datos se implementa en migraciones versionadas de Laravel, se sincroniza en `DDL_Database_Clinica_LaCruz.sql` y se refleja en `diagrama_de_clases.puml`.
+
+### Registro 22: 2026-11-07
+* **Decisión:** Desacoplamiento de la pantalla inicial en dos vistas principales: **`Inicio del panel`** (orientada al operador/actor con saludo, estado de cuenta y accesos rápidos a CUs) y **`Dashboard Clínico`** (orientada a KPIs ejecutivos, operativa del día y distribución de estados en tiempo real según CU24).
+* **Motivo:**
+  1. Separar la experiencia de bienvenida y despacho de tareas del análisis cuantitativo y métricas gerenciales.
+  2. Eliminar la sobrecarga cognitiva del panel previo (bloques densos de texto) y sustituirlo por un dashboard limpio, filtrable por fechas (`Hoy`, `7d`, `30d`, `Mes`) con KPIs visuales de ocupación y atención.
+  3. Preservar la trazabilidad de los 24 Casos de Uso del examen en un cajón colapsable para auditoría docente sin saturar la vista operativa.
+* **Impacto:** Creación de `InicioPanelView.jsx`, `ClinicalDashboardView.jsx` y `DashboardController.php` con ruta `/api/analytics/dashboard-kpis`. Incorporación de `Inicio` y `Dashboard Clínico` en la navegación principal del `Sidebar.jsx`.
+
+### Registro 23: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU25: Emitir Órdenes de Exámenes Auxiliares** con correlativo atómico `ORD-XXXX`, integración nativa con el expediente clínico (CU19), baja lógica (RN11) y enlace bidireccional a la custodia de resultados en Cloudinary (CU26).
+* **Motivo:**
+  1. Completar al 100% el Paquete 4 (Historial Clínico y Consultas) de la arquitectura PUDS.
+  2. Proveer al médico la capacidad de prescribir estudios diagnósticos (Laboratorio, Imagenología, Cardiología, Otros) con indicaciones específicas de preparación (ayuno, vestimenta, líquidos).
+  3. Establecer el vínculo relacional con CU26: al adjuntar los informes o placas tomográficas DICOM en Cloudinary, la orden cambia automáticamente su estado de `PENDIENTE` a `CON_RESULTADOS`.
+  4. Aplicar la regla de baja lógica RN11: las órdenes solo pueden cancelarse lógicamente con justificación obligatoria (mínimo 5 caracteres) registrada en la bitácora inmutable.
+* **Impacto:** Creación de `OrdenExamenService.php`, `OrdenesExamenesController.php`, `OrdenExamenFormModal.jsx` y actualización de `ExpedienteClinicoView.jsx` y `ExpedienteService.php`. Avance global alcanza el 76.9% (20 de 26 CUs).
+
+### Registro 24: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU21: Pagar Cita Médica con Pasarela Stripe Sandbox** con correlativo atómico `PAG-XXXX`, cobro seguro vía REST API nativa contra Stripe Sandbox, actualización transaccional de citas a `pagada = true` y emisión de comprobante digital imprimible.
+* **Motivo:**
+  1. Habilitar la pasarela de pagos electrónicos en modo prueba (Stripe Sandbox) con tarjetas de prueba autorizadas (`pm_card_visa` / `4242...`), cumpliendo con el Paquete 5 (Integraciones Externas y Pagos).
+  2. Implementar llamadas directas HTTP hacia la API de Stripe (`https://api.stripe.com/v1/payment_intents`) con autenticación Bearer y manejo resiliente ante inconsistencias de red o claves locales.
+  3. Evitar colisiones y mantener consistencia financiera: el cobro se confirma dentro de una transacción `DB::transaction()` que actualiza el flag `pagada = true` y el `monto_pago` de la cita, crea el registro en la tabla `pagos` y registra la auditoría inmutable en `Bitacora.php`.
+  4. Proveer una experiencia de usuario distinguida mediante `StripePaymentModal.jsx` con botón de auto-llenado demo, confirmación visual con sello digital verde y comprobante oficial de pago imprimible.
+* **Impacto:** Creación de `StripePaymentService.php`, `PaymentsController.php`, `ProcessPaymentRequest.php`, `StripePaymentModal.jsx`, `paymentService.js`, migración `2026_11_07_000004_add_details_to_pagos_and_citas_table.php`, y enriquecimiento de `Cita.php` y `Pago.php`. El avance global del sistema alcanza el **84.6% (22 de 26 CUs completados)**.
+
+### Registro 25: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU22: Generar Reportes con Filtros Dinámicos (RF13)** con motor centralizado para los 7 reportes gerenciales del examen oficial, exportación de streaming CSV (UTF-8 con BOM) y vista de impresión institucional con membrete oficial del Centro Médico La Cruz para exportación a PDF.
+* **Motivo:**
+  1. Cumplir al 100% con el último requerimiento funcional obligatorio del examen (`RF13`).
+  2. Implementar los 7 reportes exigidos en la especificación PUDS:
+     - Reporte 1: Citas por rango de fechas (promedios diarios y tendencias).
+     - Reporte 2: Citas por médico (rendimiento, tasa de atención individual y cancelaciones).
+     - Reporte 3: Citas por especialidad (demanda clínica, participación y facturación estimada).
+     - Reporte 4: Citas por estado (ciclo de vida, efectividad y justificaciones de anulación RN09/RN11).
+     - Reporte 5: Padrón de pacientes registrados (censo, grupos etarios RF04 y cuentas web §3.4).
+     - Reporte 6: Balance consolidado (citas atendidas vs perdidas, ingresos y pagos Stripe CU21).
+     - Reporte 7: Agenda médica diaria por profesional (cronograma detallado, franjas horarias y ocupación).
+  3. Garantizar estricto scoping de seguridad: los médicos solo acceden a sus propios registros y agendas, mientras Administradores y Recepcionistas disponen de visión gerencial completa.
+  4. Proveer doble formato de exportación: descarga instantánea de datos tabulares en CSV estructurado y vista de reporte oficial imprimible en PDF con formato membretado y firmas de auditoría.
+* **Impacto:** Creación de `DynamicReportService.php`, `ReportsController.php`, `DynamicReportsView.jsx`, `dynamicReportService.js`, y actualización de `routes/api.php`, `Sidebar.jsx`, `App.jsx` e `InicioPanelView.jsx`. El avance global del sistema alcanza el **88.5% (23 de 26 CUs completados)** y el núcleo funcional RF01-RF13 queda cubierto al 100%.
+
+### Registro 26: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU20: Enviar Recordatorios y Notificaciones** bajo el actor secundario *Sistema (Planificador / Cron)*, con integración transaccional en el ciclo de vida de citas, planificador diario en Laravel Schedule, comando Artisan programable y dropdown reactivo en cabecera con polling ligero.
+* **Motivo:**
+  1. Completar el Paquete 5 (Integraciones Externas y Pagos) y la totalidad de los 24 Casos de Uso regulares del sistema PUDS.
+  2. Proveer al sistema un motor de recordatorios preventivos de 24 horas (`RECORDATORIO_24H`) con regla estricta de idempotencia para no duplicar notificaciones ya despachadas.
+  3. Desacoplar y automatizar la emisión de avisos institucionales ante eventos clave del ciclo asistencial:
+     - Confirmación inmediata al reservar cita (`CONFIRMACION` - CU10).
+     - Alerta de reprogramación con motivo registrado (`REPROGRAMACION` - CU11).
+     - Notificación de cancelación y liberación de cupo (`CANCELACION` - CU12).
+     - Comprobante digital tras pago exitoso con Stripe (`PAGO_EXITOSO` - CU21).
+  4. Resolver de forma no intrusiva los destinatarios asociados (pacientes con cuentas de autoservicio web o vinculadas, y médicos asignados a su agenda).
+  5. Proveer una experiencia de usuario interactiva y en tiempo real a través de `NotificationsDropdown.jsx` en el header: contador dinámico con pulso, pestañas de filtrado, marcas de lectura individual/colectiva, eliminación con Anti-IDOR y botón para disparar el Cron en vivo ante el docente.
+* **Impacto:** Creación de `NotificationService.php`, `NotificationsController.php`, `SendAppointmentRemindersCommand.php`, `notificationService.js`, actualización de `Notificacion.php`, `User.php`, `routes/console.php`, `routes/api.php`, `AppointmentBookingService.php`, `AppointmentRescheduleService.php`, `AppointmentsController.php`, `StripePaymentService.php` y `NotificationsDropdown.jsx`. El avance global alcanza el **92.3% (24 de 26 CUs completados)**.
+
+### Registro 27: 2026-11-07
+* **Decisión:** Activación completa de accesos directos en el panel de Inicio (`InicioPanelView.jsx`) para CU21 (Pagos con Stripe), CU25 (Órdenes de Exámenes) y CU26 (Documentos Clínicos y DICOM), eliminando todos los badges de `"En desarrollo"` y enlazando directamente las tarjetas a sus módulos operativos en el frontend.
+* **Motivo:**
+  1. Los Casos de Uso CU21 (Stripe), CU25 (Órdenes de Exámenes) y CU26 (Documentos y DICOM) ya están 100% implementados en el Backend y Frontend del proyecto.
+  2. Las tarjetas en el panel de bienvenida conservaban etiquetas provisionales de desarrollo y diálogos de alerta que impedían la navegación directa desde el Dashboard principal.
+  3. Proporcionar una experiencia de usuario fluida y coherente para todos los roles (`ADMIN`, `MEDICO`, `RECEPCIONISTA`, `PACIENTE`), permitiendo navegar a citas/pagos y expedientes directamente con un solo clic.
+* **Impacto:** Modificación de `frontend/src/apps/analytics/components/InicioPanelView.jsx`, remoción de alertas bloqueantes, asignación de badges semánticos (`Sandbox`, `Diagnóstico`, `DICOM`, `Check-in`), regeneración del bundle de producción en `backend/public/assets/`, y consistencia total con el 100% de los 26 Casos de Uso operativos.
+
+
+
+
 
 

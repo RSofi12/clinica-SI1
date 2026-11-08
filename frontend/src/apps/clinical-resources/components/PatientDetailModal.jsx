@@ -12,6 +12,7 @@ import {
   Clock,
   Sparkles,
 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 export function PatientDetailModal({ isOpen, onClose, patient }) {
   if (!isOpen || !patient) return null;
@@ -41,9 +42,8 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/80 w-full max-w-xl my-8 overflow-hidden transition-all animate-in fade-in zoom-in-95">
-        {/* Cabecera de la Ficha Clínica */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-xl">
+      {/* Cabecera de la Ficha Clínica */}
         <div className="relative bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] p-6 text-white">
           <button
             onClick={onClose}
@@ -53,7 +53,7 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
           </button>
 
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 border border-white/30 backdrop-blur-md flex items-center justify-center text-xl font-bold font-montserrat shadow-inner shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-white/20 border border-white/30 backdrop-blur-md flex items-center justify-center text-xl font-bold font-sans-clinical shadow-inner shrink-0">
               {patient.nombres?.[0]}
               {patient.apellidos?.[0]}
             </div>
@@ -70,7 +70,7 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
                   {patient.estado_paciente}
                 </span>
               </div>
-              <h3 className="font-montserrat font-bold text-lg sm:text-xl text-white mt-1">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-lg sm:text-xl text-white mt-1">
                 {patient.nombre_completo || `${patient.nombres} ${patient.apellidos}`}
               </h3>
               <p className="text-xs text-cyan-100 flex items-center gap-1.5 font-mono">
@@ -189,7 +189,6 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
             Cerrar Ficha
           </button>
         </div>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

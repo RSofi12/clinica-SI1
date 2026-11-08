@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { patientProfileService } from '../services/patientProfileService';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   Globe,
@@ -58,16 +59,15 @@ export function PatientWebAccountModal({ isOpen, onClose, patient, onCreated }) 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/80 w-full max-w-md my-8 overflow-hidden transition-all animate-in fade-in zoom-in-95">
-        {/* Cabecera */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md" closeOnBackdrop={false}>
+      {/* Cabecera */}
         <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-[#00687a]/10 text-[#00687a]">
               <Globe className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-montserrat font-bold text-slate-900 text-base">
+              <h3 className="font-serif-clinical font-normal tracking-tight text-slate-900 text-base">
                 Habilitar Acceso Web
               </h3>
               <p className="text-xs text-slate-500">
@@ -177,7 +177,6 @@ export function PatientWebAccountModal({ isOpen, onClose, patient, onCreated }) 
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }
