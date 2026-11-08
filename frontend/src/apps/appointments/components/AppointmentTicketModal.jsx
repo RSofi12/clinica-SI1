@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Printer,
   X,
@@ -13,6 +13,8 @@ import {
   CreditCard,
   Phone,
   AlertCircle,
+  Copy,
+  Check,
 } from 'lucide-react';
 import { ModalPortal } from '../../../components/ModalPortal';
 
@@ -21,13 +23,22 @@ import { ModalPortal } from '../../../components/ModalPortal';
  * Implementa diseño dual:
  *  1. Vista interactiva en pantalla con gradiente institucional y controles rápidos.
  *  2. Formato formal de impresión y exportación a PDF (@media print) con aislamiento
- *     estricto (oculta la aplicación de fondo y formatea un voucher institucional limpio).
+ *     estricto (oculta la aplicación de fondo y formatea un voucher institucional limpio en 1 página).
  */
 export function AppointmentTicketModal({
   appointment = null,
   isOpen = false,
   onClose = () => {},
 }) {
+  const [cachedAppointment, setCachedAppointment] = useState(appointment);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (appointment) {
+      setCachedAppointment(appointment);
+    }
+  }, [appointment]);
+
   // Limpieza defensiva de clases de impresión en document.body
   useEffect(() => {
     const cleanup = () => {
@@ -40,7 +51,18 @@ export function AppointmentTicketModal({
     };
   }, []);
 
-  if (!isOpen || !appointment) return null;
+  const activeAppt = appointment || cachedAppointment;
+
+  if (!isOpen || !activeAppt) return null;
+
+  const handleCopyCode = () => {
+    const code = activeAppt?.codigo_cita || activeAppt?.codigo;
+    if (code) {
+      navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    }
+  };
 
   const handlePrint = () => {
     document.body.classList.add('printing-modal');
@@ -95,186 +117,197 @@ export function AppointmentTicketModal({
     minute: '2-digit',
   });
 
-  const paciente = appointment.paciente || appointment.patient || {};
-  const medico = appointment.medico || appointment.doctor || {};
-  const especialidad = appointment.especialidad?.nombre || 'Medicina General';
-  const codigoCita = appointment.codigo_cita || appointment.codigo || `CM-${appointment.id_cita || ''}`;
-  const modalidad = appointment.modalidad || 'PRESENCIAL';
-  const estado = appointment.estado || 'PROGRAMADA';
-  const estaPagada = Boolean(appointment.pagada);
+  const paciente = activeAppt.paciente || activeAppt.patient || {};
+  const medico = activeAppt.medico || activeAppt.doctor || {};
+  const especialidad = activeAppt.especialidad?.nombre || 'Medicina General';
+  const codigoCita = activeAppt.codigo_cita || activeAppt.codigo || `CM-${activeAppt.id_cita || ''}`;
+  const modalidad = activeAppt.modalidad || 'PRESENCIAL';
+  const estado = activeAppt.estado || 'PROGRAMADA';
+  const estaPagada = Boolean(activeAppt.pagada);
 
   // Tarifa referencial de consulta si no viene especificada
-  const tarifaConsulta = appointment.tarifa || appointment.monto || '130.00';
+  const tarifaConsulta = activeAppt.tarifa || activeAppt.monto || '130.00';
 
   return (
     <ModalPortal
       isOpen={isOpen}
       onClose={onClose}
-      maxWidth="max-w-md"
-      className="print:p-0 print:bg-white print:static"
-      panelClassName="relative w-full max-w-md my-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-modal-panel print:border-none print:shadow-none print:max-w-none print:my-0 print:rounded-none"
+      ariaLabel={`Ticket de Cita Médica ${codigoCita}`}
+      maxWidth="max-w-xl"
+      panelClassName="p-0 overflow-hidden bg-transparent shadow-none border-none"
     >
-      <div>
+      <div className="w-full">
         {/* =========================================================================
-            SECCIÓN 1: VISTA INTERACTIVA EN PANTALLA (OCULTA AL IMPRIMIR)
+            SECCIÓN 1: VISTA EN PANTALLA (Interactivo con Tailwind, oculto al imprimir)
             ========================================================================= */}
-        <div className="print:hidden">
-          {/* Cabecera Deep Teal */}
-          <div className="px-6 py-4 bg-gradient-to-r from-[#003844] via-[#004d5a] to-[#00687a] text-white flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <span className="p-1.5 rounded-lg bg-white/10 text-cyan-200 border border-white/10">
-                <FileText className="w-4 h-4" />
-              </span>
+        <div className="print:hidden bg-white rounded-3xl shadow-2xl border border-slate-200/90 overflow-hidden">
+          {/* Cabecera Deep Aqua con Gradiente */}
+          <div className="bg-gradient-to-r from-[#003844] via-[#004d5a] to-[#00687a] px-6 py-5 text-white flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-cyan-200 shadow-inner">
+                <FileText className="w-5 h-5" />
+              </div>
               <div>
-                <h3 className="font-bold text-sm font-serif-clinical tracking-tight">
-                  Ticket Oficial de Cita Médica
+                <h3 className="font-serif-clinical text-lg font-bold tracking-tight text-white leading-tight">
+                  Ticket de Cita Médica
                 </h3>
-                <p className="text-[10px] text-cyan-100 font-mono">
-                  {codigoCita} • {modalidad}
+                <p className="text-xs text-cyan-100/80 font-medium">
+                  Comprobante Oficial de Reserva • Centro Médico La Cruz
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="p-1.5 text-cyan-200 hover:text-white hover:bg-white/10 rounded-lg transition cursor-pointer"
-                title="Imprimir ticket en papel o exportar a PDF"
-              >
-                <Printer className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="p-1.5 text-cyan-200 hover:text-white hover:bg-white/10 rounded-lg transition cursor-pointer"
-                title="Cerrar ventana"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+
+            <button
+              type="button"
+              data-modal-close="true"
+              onClick={onClose}
+              className="p-2 text-cyan-200 hover:text-white hover:bg-white/10 rounded-xl transition cursor-pointer"
+              aria-label="Cerrar modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Cuerpo del Ticket en Pantalla */}
-          <div className="p-6 space-y-4 text-xs font-sans">
-            {/* Membrete Institucional y Código Prominente */}
-            <div className="text-center pb-3 border-b border-dashed border-slate-300">
-              <h4 className="font-bold text-sm text-slate-900 tracking-tight font-serif-clinical">
-                CENTRO MÉDICO LA CRUZ — VIDA SALUD
-              </h4>
-              <p className="text-[11px] text-slate-500">Clínica de Atención Primaria • Santa Cruz, Bolivia</p>
-              <div className="mt-2.5 inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#00687a]/10 border border-[#00687a]/20 rounded-xl">
-                <span className="text-[11px] uppercase tracking-wider font-bold text-slate-500">CÓDIGO:</span>
-                <span className="font-mono font-extrabold text-base text-[#00687a] tracking-wider">
-                  {codigoCita}
+          {/* Cuerpo del Voucher en Pantalla */}
+          <div className="p-6 sm:p-7 space-y-6">
+            {/* Banner Destacado del Código de Cita y Estado */}
+            <div className="p-4 bg-gradient-to-br from-teal-50/80 via-slate-50 to-cyan-50/50 rounded-2xl border border-teal-100/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-0.5">
+                  Código Correlativo Oficial
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono font-extrabold text-2xl text-[#004d5a] tracking-wide">
+                    {codigoCita}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleCopyCode}
+                    className="p-1.5 text-[#00687a] hover:text-[#004d5a] hover:bg-teal-100/60 rounded-lg transition cursor-pointer"
+                    title="Copiar código de cita"
+                  >
+                    {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-800 border border-teal-200/60">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" />
+                  {estado}
+                </span>
+
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
+                    estaPagada
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                      : 'bg-amber-100 text-amber-800 border-amber-200'
+                  }`}
+                >
+                  <CreditCard className="w-3.5 h-3.5" />
+                  {estaPagada ? 'Pagada' : 'Pendiente de Pago'}
                 </span>
               </div>
             </div>
 
-            {/* Cuadrícula de Datos Clave */}
-            <div className="space-y-2.5 text-xs">
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-slate-400" />
-                  Paciente:
-                </span>
-                <span className="font-bold text-slate-900 text-right">
-                  {paciente.nombres} {paciente.apellidos}
-                </span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">Documento CI:</span>
-                <span className="font-mono font-medium text-slate-700">
-                  {paciente.numero_documento || '—'}
-                  {paciente.numero_historia && (
-                    <span className="ml-1 text-[#00687a] font-bold">({paciente.numero_historia})</span>
-                  )}
-                </span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <Stethoscope className="w-3.5 h-3.5 text-slate-400" />
-                  Médico Tratante:
-                </span>
-                <span className="font-bold text-slate-900 text-right">
-                  Dr(a). {medico.nombres} {medico.apellidos}
-                </span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">Especialidad:</span>
-                <span className="font-semibold text-[#00687a]">{especialidad}</span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  Fecha:
-                </span>
-                <span className="font-bold text-slate-900 capitalize">
-                  {formatDateFull(appointment.fecha_hora_inicio)}
-                </span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-slate-400" />
-                  Horario de Atención:
-                </span>
-                <span className="font-mono font-bold text-slate-900">
-                  {formatTimeRange(appointment.fecha_hora_inicio, appointment.fecha_hora_fin)}
-                </span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">Modalidad:</span>
-                <span className="font-semibold text-slate-700 uppercase">{modalidad}</span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">Estado de Cita:</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
-                  {estado}
-                </span>
-              </div>
-
-              <div className="flex justify-between border-b border-slate-100 pb-1.5 items-center">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <CreditCard className="w-3.5 h-3.5 text-slate-400" />
-                  Estado de Pago:
-                </span>
-                <div>
-                  {estaPagada ? (
-                    <span className="px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 inline-flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                      PAGADA (Bs. {tarifaConsulta})
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-md text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 inline-flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3 text-amber-600" />
-                      PENDIENTE DE PAGO (Bs. {tarifaConsulta})
-                    </span>
-                  )}
+            {/* Rejilla de Información Asistencial */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Paciente */}
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-cyan-100 text-[#004d5a] flex items-center justify-center shrink-0 mt-0.5">
+                  <User className="w-4 h-4" />
                 </div>
-              </div>
-
-              {appointment.motivo_consulta && (
-                <div className="pt-1">
-                  <span className="text-slate-500 block mb-1">Motivo de Consulta:</span>
-                  <p className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-slate-700 italic text-[11px]">
-                    "{appointment.motivo_consulta}"
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                    Paciente
+                  </span>
+                  <p className="font-bold text-slate-800 text-sm truncate">
+                    {paciente.nombres} {paciente.apellidos}
+                  </p>
+                  <p className="text-xs text-slate-500 font-mono">
+                    CI: {paciente.numero_documento || '—'}
                   </p>
                 </div>
-              )}
+              </div>
+
+              {/* Médico Tratante */}
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-teal-100 text-teal-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <Stethoscope className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                    Médico Responsable
+                  </span>
+                  <p className="font-bold text-slate-800 text-sm truncate">
+                    Dr(a). {medico.nombres} {medico.apellidos}
+                  </p>
+                  <p className="text-xs text-[#00687a] font-semibold">
+                    {especialidad}
+                  </p>
+                </div>
+              </div>
+
+              {/* Fecha Asignada */}
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                    Fecha de Atención
+                  </span>
+                  <p className="font-bold text-slate-800 text-sm capitalize">
+                    {formatDateFull(activeAppt.fecha_hora_inicio)}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Modalidad: <strong>{modalidad}</strong>
+                  </p>
+                </div>
+              </div>
+
+              {/* Horario y Duración */}
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-start gap-3">
+                <div className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-800 flex items-center justify-center shrink-0 mt-0.5">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">
+                    Turno y Horario
+                  </span>
+                  <p className="font-bold font-mono text-slate-900 text-sm">
+                    {formatTimeRange(activeAppt.fecha_hora_inicio, activeAppt.fecha_hora_fin)}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Duración estimada: 30 minutos
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Motivo de Consulta si existe */}
+            {activeAppt.motivo_consulta && (
+              <div className="p-3 bg-slate-50/70 rounded-xl border border-slate-100 text-xs">
+                <span className="font-bold text-slate-500 block mb-0.5">Motivo Registrado:</span>
+                <p className="text-slate-700 italic">"{activeAppt.motivo_consulta}"</p>
+              </div>
+            )}
+
+            {/* Aviso de Presentación y Puntualidad */}
+            <div className="p-3.5 bg-cyan-50/70 rounded-2xl border border-cyan-100 text-xs text-cyan-900 flex items-start gap-2.5">
+              <ShieldCheck className="w-4 h-4 text-[#00687a] shrink-0 mt-0.5" />
+              <div>
+                <strong className="block text-[#003844] font-semibold">Indicación Asistencial:</strong>
+                Por favor preséntese en recepción 15 minutos antes de su turno programado con su documento de identidad (CI).
+              </div>
             </div>
 
             {/* Botones de Acción en Pantalla */}
-            <div className="pt-3 flex gap-2.5">
+            <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
               <button
                 type="button"
                 onClick={handlePrint}
-                className="flex-1 py-2.5 px-4 bg-gradient-to-r from-[#00687a] to-[#008b9e] text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 hover:brightness-105 cursor-pointer text-xs"
+                className="py-2.5 px-5 bg-gradient-to-r from-[#003844] via-[#004d5a] to-[#00687a] hover:brightness-110 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer active:scale-95 text-xs"
               >
                 <Printer className="w-4 h-4" />
                 <span>Imprimir Ticket</span>
@@ -373,22 +406,22 @@ export function AppointmentTicketModal({
             <div className="grid grid-cols-3 gap-2">
               <span className="text-slate-500 font-medium">Fecha Asignada:</span>
               <span className="col-span-2 font-bold text-slate-900 capitalize">
-                {formatDateFull(appointment.fecha_hora_inicio)}
+                {formatDateFull(activeAppt.fecha_hora_inicio)}
               </span>
             </div>
 
             <div className="grid grid-cols-3 gap-2">
               <span className="text-slate-500 font-medium">Horario de Atención:</span>
               <span className="col-span-2 font-mono font-bold text-slate-900 text-sm">
-                {formatTimeRange(appointment.fecha_hora_inicio, appointment.fecha_hora_fin)}
+                {formatTimeRange(activeAppt.fecha_hora_inicio, activeAppt.fecha_hora_fin)}
               </span>
             </div>
 
-            {appointment.motivo_consulta && (
+            {activeAppt.motivo_consulta && (
               <div className="grid grid-cols-3 gap-2 pt-1 border-t border-slate-100">
                 <span className="text-slate-500 font-medium">Motivo Registrado:</span>
                 <span className="col-span-2 italic text-slate-700 text-[11px]">
-                  "{appointment.motivo_consulta}"
+                  "{activeAppt.motivo_consulta}"
                 </span>
               </div>
             )}
@@ -429,3 +462,4 @@ export function AppointmentTicketModal({
   );
 }
 
+export default AppointmentTicketModal;

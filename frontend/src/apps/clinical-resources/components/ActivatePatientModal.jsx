@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ModalPortal } from '../../../components/ModalPortal';
 import { patientProfileService } from '../services/patientProfileService';
 import {
@@ -45,8 +45,13 @@ export function ActivatePatientModal({ isOpen, onClose, onActivated }) {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      handleReset();
+    }
+  }, [isOpen]);
+
   const handleClose = () => {
-    handleReset();
     onClose();
   };
 
@@ -141,7 +146,9 @@ export function ActivatePatientModal({ isOpen, onClose, onActivated }) {
           </div>
           <button
             onClick={handleClose}
+            data-modal-close="true"
             className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+            aria-label="Cerrar modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -188,8 +195,9 @@ export function ActivatePatientModal({ isOpen, onClose, onActivated }) {
             <div className="pt-2 flex items-center justify-end gap-3">
               <button
                 type="button"
+                data-modal-close="true"
                 onClick={handleClose}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 rounded-xl"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 rounded-xl transition cursor-pointer"
               >
                 Cancelar
               </button>

@@ -296,13 +296,12 @@ export function AppointmentsManager() {
           onOpenPatientHistory={setSelectedPatientForHistory}
         />
 
-        {/* Modal Oficial de Ticket de Cita Médica */}
+        {/* Modal Oficial de Ticket de Cita Médica (CU10 / CU14 / CU15) */}
         <AppointmentTicketModal
           isOpen={Boolean(ticketModalAppointment)}
           onClose={() => setTicketModalAppointment(null)}
           appointment={ticketModalAppointment}
         />
-
         {/* Modal de Historial Cronológico de Citas del Paciente (CU15) */}
         <PatientAppointmentHistoryModal
           isOpen={Boolean(selectedPatientForHistory)}
@@ -874,8 +873,8 @@ export function AppointmentsManager() {
       {/* Modal Oficial de Ticket de Cita Médica (CU10 / RF06) */}
       <AppointmentTicketModal
         isOpen={Boolean(ticketModalAppointment)}
-        onClose={() => setTicketModalAppointment(null)}
         appointment={ticketModalAppointment}
+        onClose={() => setTicketModalAppointment(null)}
       />
 
       {/* Modal de Reprogramación de Cita con Validación Anti-Colisión (CU11 / RF08) */}

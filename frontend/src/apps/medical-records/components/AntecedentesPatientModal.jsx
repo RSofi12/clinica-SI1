@@ -51,15 +51,24 @@ export function AntecedentesPatientModal({
   // Modales secundarios
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [antecedenteToEdit, setAntecedenteToEdit] = useState(null);
+  const [cachedPatient, setCachedPatient] = useState(patient);
+
+  useEffect(() => {
+    if (patient) {
+      setCachedPatient(patient);
+    }
+  }, [patient]);
+
+  const activePatient = patient || cachedPatient;
 
   const canEdit = ['ADMIN', 'MEDICO'].includes(role);
 
   const loadAntecedentes = useCallback(async () => {
-    if (!patient?.id_paciente) return;
+    if (!activePatient?.id_paciente) return;
     setIsLoading(true);
     setErrorMsg('');
     try {
-      const res = await antecedenteService.fetchPatientAntecedentes(patient.id_paciente, {
+      const res = await antecedenteService.fetchPatientAntecedentes(activePatient.id_paciente, {
         tipo: activeTab !== 'TODOS' ? activeTab : undefined,
         incluir_inactivos: incluirInactivos ? true : undefined,
       });
@@ -75,15 +84,16 @@ export function AntecedentesPatientModal({
     } finally {
       setIsLoading(false);
     }
-  }, [patient?.id_paciente, activeTab, incluirInactivos]);
+  }, [activePatient?.id_paciente, activeTab, incluirInactivos]);
 
   useEffect(() => {
-    if (isOpen && patient?.id_paciente) {
+    if (isOpen && activePatient?.id_paciente) {
       loadAntecedentes();
     }
-  }, [isOpen, patient?.id_paciente, loadAntecedentes]);
+  }, [isOpen, activePatient?.id_paciente, loadAntecedentes]);
 
-  if (!isOpen || !patient) return null;
+  if (!isOpen && !activePatient) return null;
+  if (!activePatient) return null;
 
   // Toggle status de baja lógica (RN11)
   const handleToggleStatus = async (item) => {
@@ -175,9 +185,9 @@ export function AntecedentesPatientModal({
                   <span className="text-[11px] font-mono tracking-widest text-cyan-200 uppercase font-semibold">
                     Expediente Clínico Digital • CU17
                   </span>
-                  {patient.numero_historia && (
+                  {activePatient.numero_historia && (
                     <span className="font-mono text-xs bg-white/20 text-white px-2 py-0.5 rounded-md font-bold">
-                      HC: {patient.numero_historia}
+                      HC: {activePatient.numero_historia}
                     </span>
                   )}
                 </div>
@@ -185,7 +195,7 @@ export function AntecedentesPatientModal({
                   Antecedentes Médicos del Paciente
                 </h3>
                 <span className="text-xs text-cyan-100 block">
-                  {patient.nombres} {patient.apellidos} · Doc: {patient.numero_documento || '—'}
+                  {activePatient.nombres} {activePatient.apellidos} · Doc: {activePatient.numero_documento || '—'}
                 </span>
               </div>
             </div>
@@ -206,8 +216,10 @@ export function AntecedentesPatientModal({
               )}
               <button
                 type="button"
+                data-modal-close="true"
                 onClick={onClose}
                 className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/90 hover:text-white transition cursor-pointer"
+                aria-label="Cerrar modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -455,6 +467,7 @@ export function AntecedentesPatientModal({
           </span>
           <button
             type="button"
+            data-modal-close="true"
             onClick={onClose}
             className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition cursor-pointer"
           >
@@ -470,8 +483,8 @@ export function AntecedentesPatientModal({
           setIsFormOpen(false);
           setAntecedenteToEdit(null);
         }}
-        patientId={patient.id_paciente}
-        patientName={`${patient.nombres} ${patient.apellidos}`}
+        patientId={activePatient.id_paciente}
+        patientName={`${activePatient.nombres} ${activePatient.apellidos}`}
         antecedenteToEdit={antecedenteToEdit}
         onAntecedenteSaved={() => {
           loadAntecedentes();

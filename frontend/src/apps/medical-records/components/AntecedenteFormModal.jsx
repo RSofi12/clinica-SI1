@@ -133,8 +133,6 @@ export function AntecedenteFormModal({
     }
   }, [isOpen, antecedenteToEdit]);
 
-  if (!isOpen) return null;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!descripcion.trim() || descripcion.trim().length < 3) {
@@ -204,8 +202,10 @@ export function AntecedenteFormModal({
 
             <button
               type="button"
+              data-modal-close="true"
               onClick={onClose}
               className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white/90 hover:text-white transition cursor-pointer"
+              aria-label="Cerrar modal"
             >
               <X className="w-5 h-5" />
             </button>
@@ -314,6 +314,7 @@ export function AntecedenteFormModal({
           <div className="pt-2 flex items-center justify-end gap-2.5 border-t border-slate-100">
             <button
               type="button"
+              data-modal-close="true"
               onClick={onClose}
               disabled={isSubmitting}
               className="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition cursor-pointer"
