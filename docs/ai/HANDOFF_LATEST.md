@@ -1,5 +1,19 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Plantilla Oficial Imprimible PDF en CU22 y Corrección de Vista de Impresión)
+- **Plantilla Oficial de Reporte Clínico para Impresión y PDF (`DynamicReportsView.jsx`, `App.jsx`, `index.css`):**
+  - **Ocultamiento de Controles Web:** Se aislaron todos los controles interactivos de pantalla (header superior, breadcrumbs, sidebar, botones de exportación, selector de pestañas, formulario de filtros y controles de paginación) bajo `print:hidden`.
+  - **Plantilla Membretada Imprimible (`hidden print:block`):**
+    - Membrete institucional oficial del Centro Médico La Cruz con logo, dirección y teléfono.
+    - Metadatos del reporte: título formal, resumen de filtros activos (período, médico, especialidad, estado), fecha/hora de emisión y operador.
+    - Cuadrícula ejecutiva de KPIs e indicadores clave.
+    - Desglose temático de especialidades, estados o censo etario según el reporte seleccionado.
+    - Tabla completa sin paginación con todos los registros del universo consultado.
+    - Pie de página institucional con líneas para firmas y sellos del Director Médico y Auditoría.
+  - **Commit de Git:** `d976af6`.
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Cambio de Moneda Oficial a Bolivianos — Bs / BOB)
 - **Moneda Oficial Unificada a Bolivianos (Bs / BOB):**
   - **Backend:** `STRIPE_CURRENCY=bob` en `.env` y `config/services.php`; pasarela Stripe configurada para cobrar nativamente en `bob`; auditoría en `Bitacora.php` con formato `Bs. {$monto}`.

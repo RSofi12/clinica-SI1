@@ -87,11 +87,32 @@ A solicitud del usuario, se unificó la moneda oficial en todo el sistema a Boli
 
 ---
 
-## 6. Commits de Git Realizados
+## 6. Resolución de Observaciones de Usuario: Pantalla Opaca y Plantilla Oficial de PDF (CU22)
+1. **Observación 1 (Filtro / Pantalla Opaca):**
+   - El usuario reportó que la pantalla en `Bitácora del Sistema` se veía "medio opaca".
+   - **Diagnóstico:** Se analizó el DOM y estilos de la aplicación: los contenedores son `bg-white` y `bg-slate-50`, y los modales permanecen cerrados (`isOpen=false`, sin backdrops en el DOM). En la captura se observó la barra flotante externa `⊞ 🗖 🔴 Laravel - Instalación...`, lo cual corresponde a un overlay de software externo (Windows Game Bar `Win+G`, modo PIP de YouTube o extensión de oscurecimiento de pantalla como "Turn Off the Lights" / HDR de Windows). Se verificó que ninguna clase CSS interna estuviera causando opacidad indebida.
+2. **Observación 2 (Impresión y Exportación a PDF en CU22):**
+   - El usuario reportó que al presionar "Imprimir / PDF" en `DynamicReportsView.jsx`, la vista previa de impresión mostraba los controles interactivos de la página (navbar, botones "Exportar CSV", selector de pestañas, dropdowns de filtros dinámicos y barra de scroll).
+   - **Solución Implementada:**
+     - En `App.jsx` y `Sidebar.jsx`, se agregó la clase `print:hidden` al header y aside, y se liberó el contenedor con `print:h-auto print:overflow-visible print:p-0`.
+     - En `index.css`, se incorporaron directivas `@media print` para forzar tamaño de hoja carta, fondo blanco, y ocultar todos los elementos de navegación.
+     - En `DynamicReportsView.jsx`, toda la interfaz interactiva de pantalla se encapsuló en un bloque con `print:hidden`.
+     - Se construyó una **Plantilla Oficial de Reporte Clínico Membretado** (`hidden print:block`):
+       - Membrete con logo institucional del Centro Médico La Cruz.
+       - Título formal y resumen de parámetros activos (Período, Médico, Especialidad, Estado).
+       - Tarjetas ejecutivas de KPIs del período en cuadrícula sin bordes toscos.
+       - Desgloses específicos según el reporte (tabla de especialidades, estados o censo etario).
+       - Tabla completa con todos los registros cronológicos y nominales del reporte actual (sin paginación ni recortes).
+       - Bloque inferior institucional con líneas de firma y sellos para el Director Médico y Responsable de Auditoría / Sistemas.
+
+---
+
+## 7. Commits de Git Realizados
 1. `e06e780` — `fix(ui): activar accesos rapidos en InicioPanelView para CU21, CU25 y CU26`
 2. `35601fa` — `build(assets): regenerar bundle de produccion con accesos rapidos actualizados`
 3. `88beae9` — `docs: actualizar estado del proyecto, bitacora y fases tras activar accesos rapidos en InicioPanelView`
 4. `d8f4b5a` — `fix(stripe): actualizar parametros automatic_payment_methods y corregir mapeo de bitacora en pagos`
 5. `5788806` — `feat(currency): cambiar moneda oficial a Bolivianos (Bs / BOB) en pasarela Stripe, reportes y vistas`
+6. `d976af6` — `fix(reports): disenar plantilla oficial de impresion y exportacion PDF en CU22 ocultando controles UI`
 
 
