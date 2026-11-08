@@ -58,6 +58,24 @@ Dado que ambos Casos de Uso (junto con CU26 de Documentos y DICOM) se encuentran
 
 ---
 
-## 4. Commits de Git Realizados
+## 4. Resolución de Errores en Pasarela de Pagos Stripe (CU21)
+Durante las pruebas de usuario en el modal de cobro de Stripe Sandbox se detectaron dos excepciones consecutivas:
+1. **Error de Stripe (`The 'payment_method_types' parameter is no longer supported`):**
+   - **Causa:** En la versión reciente de la API de Stripe conectada a la cuenta, el parámetro manual `payment_method_types[] = 'card'` fue descontinuado en favor de `automatic_payment_methods[enabled] = true`.
+   - **Solución:** En [`StripePaymentService.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Integrations/Services/StripePaymentService.php) se reemplazó el parámetro obsoleto por `'automatic_payment_methods[enabled]' => 'true'` y `'automatic_payment_methods[allow_redirects]' => 'never'`, alineándolo con las directrices oficiales de Stripe.
+2. **Error de PostgreSQL (`SQLSTATE[22001]: String data, right truncated: 7 ERROR: el valor es demasiado largo para el tipo character varying(100)`):**
+   - **Causa:** En la llamada a `Bitacora::registrar(...)` dentro de `StripePaymentService.php` y `OrdenExamenService.php`, el cuarto parámetro posicional `$tablaAfectada` (limitado a `VARCHAR(100)` en BD) recibió accidentalmente el texto descriptivo largo del evento (~150 caracteres), dejando `$descripcion` en null.
+   - **Solución:**
+     - En `StripePaymentService.php` se corrigieron los argumentos posicionales pasando explícitamente `'PAGOS'`, `'PAGO_CITA_STRIPE'`, `'pagos'`, `$pago->id_pago`, `$descripcion`.
+     - En [`Bitacora.php`](file:///c:/Users/Roberto/Desktop/Examen%20parcial%202/parcial2/backend/app/Packages/Security/Models/Bitacora.php) se implementó una heurística de protección y sanitización automática: si `$tablaAfectada` contiene un texto con espacios o excede 50 caracteres y `$descripcion` es nula, se reubica automáticamente en `$descripcion`, evitando cualquier desbordamiento o truncamiento de cadenas en PostgreSQL.
+   - **Verificación:** Prueba integral ejecutada de punta a punta procesando cobro de cita en Stripe Sandbox (HTTP 200 OK, PaymentIntent `pi_3UZMGr...`, pago registrado en `pagos` y auditoría inmutable guardada en `bitacora` con ID 156).
+
+---
+
+## 5. Commits de Git Realizados
 1. `e06e780` — `fix(ui): activar accesos rapidos en InicioPanelView para CU21, CU25 y CU26`
 2. `35601fa` — `build(assets): regenerar bundle de produccion con accesos rapidos actualizados`
+3. `88beae9` — `docs: actualizar estado del proyecto, bitacora y fases tras activar accesos rapidos en InicioPanelView`
+4. `d8f4b5a` — `fix(stripe): actualizar parametros automatic_payment_methods y corregir mapeo de bitacora en pagos`
+
+

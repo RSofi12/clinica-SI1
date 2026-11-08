@@ -1,5 +1,13 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Corrección de Errores Stripe Sandbox y Bitácora en CU21)
+- **Corrección de Pasarela de Pagos Stripe (`StripePaymentService.php` y `Bitacora.php`):**
+  - **Parámetro Stripe obsoleto:** Sustituido `payment_method_types[] = 'card'` por `automatic_payment_methods[enabled] = 'true'` y `allow_redirects = 'never'` para cumplir con la versión actual de la API de Stripe.
+  - **Truncamiento en Bitácora PostgreSQL:** Corregido el orden de argumentos en `Bitacora::registrar(...)` y agregada heurística defensiva en `Bitacora.php` para reubicar textos largos si caían en `tabla_afectada` (evitando `SQLSTATE[22001]`).
+  - **Prueba End-to-End Superada:** Cobro de cita ejecutado con tarjeta de prueba en Sandbox, PaymentIntent generado exitosamente, cita confirmada/pagada y auditoría inmutable guardada en `bitacora` (ID 156).
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Activación de Accesos Rápidos en InicioPanelView y Población Histórica)
 - **Actualización de Accesos Rápidos (`frontend/src/apps/analytics/components/InicioPanelView.jsx`):**
   - Removidos completamente los badges amarillos `"En desarrollo"` y los diálogos de alerta que bloqueaban las tarjetas.
