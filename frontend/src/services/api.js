@@ -5,8 +5,14 @@ import axios from 'axios';
  * Maneja interceptores para el envío automático de cabeceras de autorización
  * (Authorization: Bearer <token>), cookies con withCredentials, y manejo centralizado de errores.
  */
+// URL base de la API: variable de entorno en Vercel o relativo para desarrollo local con proxy
+const rawApiUrl = (import.meta.env.VITE_API_URL || '').trim();
+const API_BASE_URL = rawApiUrl
+  ? (rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl.replace(/\/+$/, '')}/api`)
+  : '/api';
+
 export const apiClient = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE_URL,
   withCredentials: true, // Para cookies de sesión en Laravel
   headers: {
     'Content-Type': 'application/json',
