@@ -12,7 +12,7 @@
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes dinámicos, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **10 completados de 13 (+2) (CU11, CU13, CU16, CU17, CU18, CU19, CU21, CU22, CU23, CU24, CU25, CU26)**. Total Global: **23 de 26 (+2) completados (88.5%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes dinámicos, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **13 completados de 13 (100% de ejecución)**. Total Global: **26 de 26 Casos de Uso oficiales completados (100%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -579,4 +579,17 @@
     - Acciones contextuales: Marcar una como leída, marcar todas como leídas y eliminar de bandeja.
     - Botón de demostración interactivo **"Probar 24h Ahora"** con spinner de carga para disparar el Cron en vivo ante el docente.
   - ✅ **Compilación Exitosa:** `npm run build` verificado con **0 errores** (2050 módulos transformados en 690ms).
+
+### 30. Activación de Accesos Rápidos en InicioPanelView (CU21, CU25, CU26) y Población Histórica (07/11/2026)
+- **Activación de Accesos Rápidos (`frontend/src/apps/analytics/components/InicioPanelView.jsx`):**
+  - Removidos todos los badges amarillos `"En desarrollo"` y los diálogos bloqueantes de alerta.
+  - Activada tarjeta **Pagos con Stripe (CU21)**: Redirige fluidamente a `appointments` para visualización y cobro en Sandbox de Stripe.
+  - Activada tarjeta **Órdenes de Exámenes (CU25)**: Redirige a `expediente` para prescripción y seguimiento de estudios auxiliares.
+  - Activada tarjeta **Documentos y DICOM (CU26)**: Redirige a `expediente` con badge oficial `DICOM`.
+  - Tarjetas adaptadas y activadas para todos los perfiles (`ADMIN`, `MEDICO`, `RECEPCIONISTA`, `PACIENTE`).
+  - Badges semánticos integrados con diseño consistente Deep Aqua (`text-[#00687a] bg-[#00687a]/10`).
+- **Población de Datos Históricos Multimensual (`HistoricalMultiMonthPopulationSeeder.php`):**
+  - Población clínica masiva de 4+ meses atrás (Junio 2026 - Noviembre 2026).
+  - 347 citas médicas, 111 pacientes con historias clínicas completas, 255 consultas con triaje y CIE-10, 255 recetas farmacológicas y $26,275 USD recaudados en 293 transacciones de pago.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2050 módulos transformados).
 

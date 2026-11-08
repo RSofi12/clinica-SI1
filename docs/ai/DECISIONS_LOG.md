@@ -208,6 +208,14 @@
   5. Proveer una experiencia de usuario interactiva y en tiempo real a través de `NotificationsDropdown.jsx` en el header: contador dinámico con pulso, pestañas de filtrado, marcas de lectura individual/colectiva, eliminación con Anti-IDOR y botón para disparar el Cron en vivo ante el docente.
 * **Impacto:** Creación de `NotificationService.php`, `NotificationsController.php`, `SendAppointmentRemindersCommand.php`, `notificationService.js`, actualización de `Notificacion.php`, `User.php`, `routes/console.php`, `routes/api.php`, `AppointmentBookingService.php`, `AppointmentRescheduleService.php`, `AppointmentsController.php`, `StripePaymentService.php` y `NotificationsDropdown.jsx`. El avance global alcanza el **92.3% (24 de 26 CUs completados)**.
 
+### Registro 27: 2026-11-07
+* **Decisión:** Activación completa de accesos directos en el panel de Inicio (`InicioPanelView.jsx`) para CU21 (Pagos con Stripe), CU25 (Órdenes de Exámenes) y CU26 (Documentos Clínicos y DICOM), eliminando todos los badges de `"En desarrollo"` y enlazando directamente las tarjetas a sus módulos operativos en el frontend.
+* **Motivo:**
+  1. Los Casos de Uso CU21 (Stripe), CU25 (Órdenes de Exámenes) y CU26 (Documentos y DICOM) ya están 100% implementados en el Backend y Frontend del proyecto.
+  2. Las tarjetas en el panel de bienvenida conservaban etiquetas provisionales de desarrollo y diálogos de alerta que impedían la navegación directa desde el Dashboard principal.
+  3. Proporcionar una experiencia de usuario fluida y coherente para todos los roles (`ADMIN`, `MEDICO`, `RECEPCIONISTA`, `PACIENTE`), permitiendo navegar a citas/pagos y expedientes directamente con un solo clic.
+* **Impacto:** Modificación de `frontend/src/apps/analytics/components/InicioPanelView.jsx`, remoción de alertas bloqueantes, asignación de badges semánticos (`Sandbox`, `Diagnóstico`, `DICOM`, `Check-in`), regeneración del bundle de producción en `backend/public/assets/`, y consistencia total con el 100% de los 26 Casos de Uso operativos.
+
 
 
 
