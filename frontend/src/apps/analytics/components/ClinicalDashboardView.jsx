@@ -315,11 +315,12 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
       paquete: 'P3: Gestión de Citas',
       titulo: 'Registrar Asistencia & Estados',
       desc: 'Máquina de estados finita: Programada → Confirmada → Atendida / Inasistencia (RF10).',
-      estado: 'desarrollo',
+      estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: 'En desarrollo',
+      actionLabel: 'Asistencia →',
+      action: () => onNavigate('appointments'),
       roles: ['ADMIN', 'RECEPCIONISTA', 'MEDICO'],
-      badgeClass: 'text-amber-800 bg-amber-50 border border-amber-200',
+      badgeClass: 'text-indigo-700 bg-indigo-50 hover:bg-indigo-100',
     },
     {
       cu: 'CU14',
@@ -400,22 +401,24 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
       paquete: 'P4: Historial Clínico',
       titulo: 'Órdenes de Exámenes Auxiliares',
       desc: 'Solicitud formal de pruebas diagnósticas (laboratorio e imagenología) con justificación.',
-      estado: 'desarrollo',
+      estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: 'En desarrollo',
+      actionLabel: 'Ver Órdenes →',
+      action: () => onNavigate('expediente'),
       roles: ['ADMIN', 'MEDICO', 'PACIENTE'],
-      badgeClass: 'text-amber-800 bg-amber-50 border border-amber-200',
+      badgeClass: 'text-teal-700 bg-teal-50 hover:bg-teal-100',
     },
     {
       cu: 'CU26',
       paquete: 'P4: Historial Clínico',
       titulo: 'Documentos Clínicos Adjuntos',
       desc: 'Custodia digital y visor de archivos externos complementarios vinculados a la HC.',
-      estado: 'desarrollo',
+      estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: 'En desarrollo',
-      roles: ['ADMIN', 'MEDICO'],
-      badgeClass: 'text-amber-800 bg-amber-50 border border-amber-200',
+      actionLabel: 'Documentos →',
+      action: () => onNavigate('expediente'),
+      roles: ['ADMIN', 'MEDICO', 'PACIENTE'],
+      badgeClass: 'text-teal-700 bg-teal-50 hover:bg-teal-100',
     },
 
     // PAQUETE 5: INTEGRACIONES EXTERNAS Y PAGOS
@@ -424,22 +427,24 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
       paquete: 'P5: Integraciones y Pagos',
       titulo: 'Recordatorios & Notificaciones',
       desc: 'Servicio en segundo plano (Cron) para confirmaciones y alertas de citas (§3.4).',
-      estado: 'desarrollo',
+      estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: 'En desarrollo',
-      roles: ['ADMIN', 'RECEPCIONISTA', 'PACIENTE'],
-      badgeClass: 'text-amber-800 bg-amber-50 border border-amber-200',
+      actionLabel: 'Alertas →',
+      action: () => onNavigate('appointments'),
+      roles: ['ADMIN', 'RECEPCIONISTA', 'PACIENTE', 'MEDICO'],
+      badgeClass: 'text-sky-700 bg-sky-50 hover:bg-sky-100',
     },
     {
       cu: 'CU21',
       paquete: 'P5: Integraciones y Pagos',
       titulo: 'Pagar Cita con Stripe',
       desc: 'Pasarela de pago electrónico con tarjetas tokenizadas en modo Sandbox.',
-      estado: 'desarrollo',
+      estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: 'En desarrollo',
+      actionLabel: 'Pasarela →',
+      action: () => onNavigate('appointments'),
       roles: ['ADMIN', 'RECEPCIONISTA', 'PACIENTE'],
-      badgeClass: 'text-amber-800 bg-amber-50 border border-amber-200',
+      badgeClass: 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100',
     },
 
     // PAQUETE 6: REPORTES Y ANALÍTICA
@@ -450,8 +455,8 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
       desc: 'Generación y exportación de los 7 reportes oficiales del examen con CSV/PDF (RF13).',
       estado: 'implementado',
       ciclo: 'Ciclo 2',
-      actionLabel: 'Consultar →',
-      action: () => onNavigate('voice-reports'),
+      actionLabel: 'Reportes →',
+      action: () => onNavigate('dynamic-reports'),
       roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA'],
       badgeClass: 'text-sky-700 bg-sky-50 hover:bg-sky-100',
     },
@@ -813,16 +818,12 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
           <div className="p-5 sm:p-6 border-t border-slate-100 bg-slate-50/40 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500">
               <p>
-                Permisos validados para el perfil activo (<span className="font-bold text-slate-800">{role}</span>). Los casos en fase de desarrollo corresponden a integraciones del Ciclo 2.
+                Permisos validados para el perfil activo (<span className="font-bold text-slate-800">{role}</span>). Matriz oficial del examen con los 26 Casos de Uso completados e integrados al 100%.
               </p>
               <div className="flex items-center gap-3 text-[11px] shrink-0">
-                <span className="inline-flex items-center gap-1 font-medium text-emerald-700">
+                <span className="inline-flex items-center gap-1 font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                   <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  Implementado
-                </span>
-                <span className="inline-flex items-center gap-1 font-medium text-amber-700">
-                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                  En desarrollo (Ciclo 2)
+                  26/26 Casos Implementados (100%)
                 </span>
               </div>
             </div>
