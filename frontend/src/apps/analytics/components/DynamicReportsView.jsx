@@ -536,8 +536,8 @@ export function DynamicReportsView() {
             Distribución de Demanda y Facturación Estimada por Especialidad
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {reportData.resumen_agrupado.map((item) => (
-              <div key={item.id_especialidad} className="p-3 rounded-xl bg-slate-50 border border-slate-100">
+            {reportData.resumen_agrupado.map((item, idx) => (
+              <div key={item.id_especialidad || item.especialidad || idx} className="p-3 rounded-xl bg-slate-50 border border-slate-100">
                 <div className="flex justify-between items-center text-xs font-semibold text-slate-800">
                   <span>{item.especialidad}</span>
                   <span className="text-[#00687a]">{item.participacion_porcentaje}%</span>
@@ -929,8 +929,8 @@ export function DynamicReportsView() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {reportData.resumen_agrupado.map((item) => (
-                  <tr key={item.id_especialidad}>
+                {reportData.resumen_agrupado.map((item, idx) => (
+                  <tr key={item.id_especialidad || item.especialidad || idx}>
                     <td className="py-1 px-3 font-semibold text-slate-800">{item.especialidad}</td>
                     <td className="py-1 px-3 text-center">{item.total_citas}</td>
                     <td className="py-1 px-3 text-center">{item.atendidas}</td>

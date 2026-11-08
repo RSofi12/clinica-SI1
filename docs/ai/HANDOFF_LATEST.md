@@ -1,5 +1,18 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Paginación Interactiva en Gestión de Usuarios y Roles — CU02 / RF01)
+- **Paginación en Gestión de Usuarios (`UsersManager.jsx`):**
+  - **Detección y Causa:** La API `UsersController.php` retornaba paginación por defecto de 15 usuarios por página, pero la vista carecía de controles de paginación y flechas de navegación, dejando inaccesibles las páginas 2, 3 y 4 con el filtro "Todos los Roles" (49 usuarios totales en la base de datos).
+  - **Solución Implementada:**
+    - Se agregaron los estados de paginación `page`, `perPage` y `pagination` sincronizados con la respuesta de `usersService.fetchUsers`.
+    - Barra inferior de paginación profesional idéntica al estándar visual de `AuditLogViewer.jsx`: contador de página actual y total, selector desplegable de registros por página (10, 15, 25, 50), botones interactivos de Anterior / Siguiente (`ChevronLeft` / `ChevronRight`) y botones numéricos de página con elipsis dinámica.
+    - Reseteo automático a página 1 con debounce al buscar por texto o cambiar filtros de rol/estado.
+    - Contador superior del encabezado actualizado para mostrar la cifra real total (`49 operadores registrados`) en lugar de `users.length` (que antes truncaba a 15).
+  - **Ajuste Preventivo Adicional (`DynamicReportsView.jsx`):**
+    - Corregida clave `key` en mapeo de especialidades y desgloses para evitar advertencias de consola React en los reportes dinámicos.
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Plantilla Oficial Imprimible PDF en CU22 y Corrección de Vista de Impresión)
 - **Plantilla Oficial de Reporte Clínico para Impresión y PDF (`DynamicReportsView.jsx`, `App.jsx`, `index.css`):**
   - **Ocultamiento de Controles Web:** Se aislaron todos los controles interactivos de pantalla (header superior, breadcrumbs, sidebar, botones de exportación, selector de pestañas, formulario de filtros y controles de paginación) bajo `print:hidden`.

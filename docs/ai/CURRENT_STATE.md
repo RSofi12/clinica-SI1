@@ -27,7 +27,7 @@
 
 ### 3. Implementación de CU02 (Gestionar Usuarios, Roles y Permisos — RF01)
 - **Backend:** `UsersController.php` (CRUD paginado, filtros, baja lógica `toggle-status`, desbloqueo `unlock`) y `RolesController.php`.
-- **Frontend:** `UsersManager.jsx` y `UserFormModal.jsx` con checklist de contraseña en tiempo real.
+- **Frontend:** `UsersManager.jsx` y `UserFormModal.jsx` con checklist de contraseña en tiempo real, barra inferior interactiva de paginación con navegación entre páginas (Anterior / Siguiente con `ChevronLeft` / `ChevronRight`, selector de 10/15/25/50 registros por página, botones numéricos de página con elipsis y contador total sincronizado de operadores registrados).
 
 ### 4. Implementación de CU03 (Gestionar Bitácora de Auditoría — Inmutable)
 - **Backend:** `AuditController.php` con consulta paginada, filtros multicriterio, KPIs y modelo `Bitacora.php`.
