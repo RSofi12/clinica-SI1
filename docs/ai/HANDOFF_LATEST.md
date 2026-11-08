@@ -1,14 +1,14 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Fix Crítico: Error de Hooks en Activación de Paciente con CI)
-- **Causa Raíz de "Rendered more hooks than during the previous render":**
-  - En [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) existía una salida temprana `if (!isOpen) return null;` previa a la invocación de `useEffect(...)`.
-  - Cuando el modal estaba cerrado, el componente registraba 6 hooks (`useState`). Al hacer clic en "Activar Cuenta CI" en el Homepage, `isOpen` pasaba a `true`, ejecutando el `useEffect` posterior (hook #7), lo que violaba la regla estricta de React sobre orden e invariabilidad en la cuenta de hooks por render.
-- **Solución:**
-  - Se eliminó el early return condicional y el `useEffect` manual, migrando [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) al componente estándar [`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx).
-  - Todos los hooks (`useState`) quedan arriba de forma incondicional, mientras que el portal encapsula el bloqueo de scroll y el listener de `Escape` en un ciclo de vida aislado sin rupturas.
-- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 34.78s).
-- **Commit en Rama `prueba`:** `7d90a0b`: `fix(auth): corregir violacion de reglas de hooks en ActivatePatientModal migrando a ModalPortal`.
+## Estado de Relevo al 07/11/2026 (Transición Fluida de Salida en Modales y Descarga Directa de Reportes IA en PDF)
+- **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx) y [`index.css`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/index.css)):**
+  - **Animación no abrupta al cerrar:** Implementado estado interno `isClosing` de 200ms que aplica `@keyframes modalBackdropOut` y `@keyframes modalPanelOut` al presionar `Escape`, hacer clic en el backdrop exterior o pulsar el botón `X`/Cerrar.
+  - El fondo se desvanece suavemente (`opacity 1 -> 0`, `backdrop-filter 8px -> 0px`) y el panel del modal se escala suavemente (`scale 1 -> 0.96`, `translateY 0 -> 10px`), eliminando cualquier desaparición brusca en todos los modales de la aplicación.
+- **Descarga Directa de Reportes por IA sin Diálogo de Impresión ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js) y [`VoiceReportAssistant.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/VoiceReportAssistant.jsx)):**
+  - **Eliminación del panel de impresión del navegador:** Se sustituyó la apertura de pestaña secundaria con `window.print()` por un generador nativo de documentos PDF estándar (`buildPdfDocument`).
+  - **Descarga instantánea como archivo binario `.pdf`:** Se construye un PDF estándar (PDF-1.4 con membrete institucional Teal `#00687A`, tarjetas KPI formateadas, tablas zebra sanitizadas y paginación) que se descarga automáticamente a la carpeta de descargas del usuario mediante `Blob` y trigger `link.click()`.
+  - Botón de exportación actualizado con icono `Download` e indicación visual de descarga directa.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 1m 28s).
 
 ---
 
@@ -34,15 +34,15 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Fix Crítico: Error de Hooks en Activación de Paciente con CI)
-- **Causa Raíz de "Rendered more hooks than during the previous render":**
-  - En [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) existía una salida temprana `if (!isOpen) return null;` previa a la invocación de `useEffect(...)`.
-  - Cuando el modal estaba cerrado, el componente registraba 6 hooks (`useState`). Al hacer clic en "Activar Cuenta CI" en el Homepage, `isOpen` pasaba a `true`, ejecutando el `useEffect` posterior (hook #7), lo que violaba la regla estricta de React sobre orden e invariabilidad en la cuenta de hooks por render.
-- **Solución:**
-  - Se eliminó el early return condicional y el `useEffect` manual, migrando [`ActivatePatientModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/clinical-resources/components/ActivatePatientModal.jsx) al componente estándar [`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx).
-  - Todos los hooks (`useState`) quedan arriba de forma incondicional, mientras que el portal encapsula el bloqueo de scroll y el listener de `Escape` en un ciclo de vida aislado sin rupturas.
-- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 34.78s).
-- **Commit en Rama `prueba`:** `7d90a0b`: `fix(auth): corregir violacion de reglas de hooks en ActivatePatientModal migrando a ModalPortal`.
+## Estado de Relevo al 07/11/2026 (Transición Fluida de Salida en Modales y Descarga Directa de Reportes IA en PDF)
+- **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx) y [`index.css`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/index.css)):**
+  - **Animación no abrupta al cerrar:** Implementado estado interno `isClosing` de 200ms que aplica `@keyframes modalBackdropOut` y `@keyframes modalPanelOut` al presionar `Escape`, hacer clic en el backdrop exterior o pulsar el botón `X`/Cerrar.
+  - El fondo se desvanece suavemente (`opacity 1 -> 0`, `backdrop-filter 8px -> 0px`) y el panel del modal se escala suavemente (`scale 1 -> 0.96`, `translateY 0 -> 10px`), eliminando cualquier desaparición brusca en todos los modales de la aplicación.
+- **Descarga Directa de Reportes por IA sin Diálogo de Impresión ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js) y [`VoiceReportAssistant.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/VoiceReportAssistant.jsx)):**
+  - **Eliminación del panel de impresión del navegador:** Se sustituyó la apertura de pestaña secundaria con `window.print()` por un generador nativo de documentos PDF estándar (`buildPdfDocument`).
+  - **Descarga instantánea como archivo binario `.pdf`:** Se construye un PDF estándar (PDF-1.4 con membrete institucional Teal `#00687A`, tarjetas KPI formateadas, tablas zebra sanitizadas y paginación) que se descarga automáticamente a la carpeta de descargas del usuario mediante `Blob` y trigger `link.click()`.
+  - Botón de exportación actualizado con icono `Download` e indicación visual de descarga directa.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 1m 28s).
 
 ---
 

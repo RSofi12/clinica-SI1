@@ -204,7 +204,7 @@ export const analyticsService = {
   },
 
   /**
-   * Exportar reporte formal a PDF con membrete institucional listo para imprimir / guardar
+   * Exportar reporte formal a PDF con membrete institucional mediante descarga directa
    */
   exportToPdf(reportData) {
     const registros = reportData?.registros || [];
@@ -213,159 +213,261 @@ export const analyticsService = {
       return;
     }
 
+    const tipoReporte = reportData.tipo_reporte || 'CITAS';
+    const isoDate = new Date().toISOString().split('T')[0];
     const fechaHora = new Date().toLocaleString('es-ES', {
-      dateStyle: 'full',
+      dateStyle: 'medium',
       timeStyle: 'short',
     });
 
     const metricas = reportData.metricas || {};
-    const filtros = reportData.filtros_detectados || {};
+    const kpis = [
+      {
+        label: 'TOTAL EVALUADOS',
+        value: String(metricas.total_citas ?? metricas.total_pacientes ?? registros.length),
+      },
+      {
+        label: 'ATENDIDAS / ACTIVOS',
+        value: String(metricas.atendidas ?? metricas.activos ?? 0),
+      },
+      {
+        label: 'CANCELADAS / INACTIVOS',
+        value: String(metricas.canceladas ?? metricas.inactivos ?? 0),
+      },
+      {
+        label: 'TASA DE EFECTIVIDAD',
+        value: metricas.tasa_asistencia !== undefined ? `${metricas.tasa_asistencia}%` : 'N/A',
+      },
+    ];
 
-    const rowsHtml = registros
-      .map(
-        (item, idx) => `
-        <tr style="background-color: ${idx % 2 === 0 ? '#FFFFFF' : '#F8FAFC'};">
-          <td style="padding: 6px 8px; font-family: monospace; font-weight: bold; color: #00687A; border-bottom: 1px solid #E2E8F0;">
-            ${item.codigo_cita || 'REG-' + (item.id_paciente || idx + 1)}
-          </td>
-          <td style="padding: 6px 8px; border-bottom: 1px solid #E2E8F0;">
-            ${item.fecha_formateada || item.fecha_registro || 'N/A'}
-            ${item.hora_formateada ? `<br><small style="color: #64748B;">${item.hora_formateada}</small>` : ''}
-          </td>
-          <td style="padding: 6px 8px; border-bottom: 1px solid #E2E8F0;">
-            <span style="display: inline-block; padding: 2px 6px; font-size: 9px; font-weight: bold; border-radius: 4px; border: 1px solid #CBD5E1; text-transform: uppercase;">
-              ${item.estado || item.estado_paciente || 'N/A'}
-            </span>
-          </td>
-          <td style="padding: 6px 8px; border-bottom: 1px solid #E2E8F0; font-weight: 500;">
-            ${item.especialidad?.nombre || 'General'}
-          </td>
-          <td style="padding: 6px 8px; border-bottom: 1px solid #E2E8F0; color: #334155;">
-            ${item.medico?.nombre_completo || 'N/A'}
-          </td>
-          <td style="padding: 6px 8px; border-bottom: 1px solid #E2E8F0;">
-            <strong>${item.paciente?.nombre_completo || item.nombre_completo || 'N/A'}</strong>
-            <br><small style="color: #64748B;">CI: ${item.paciente?.numero_documento || item.numero_documento || 'S/D'}</small>
-          </td>
-          <td style="padding: 6px 8px; border-bottom: 1px solid #E2E8F0; color: #64748B; font-size: 10px;">
-            ${item.motivo_consulta || item.motivo_cancelacion || 'Consulta de rutina'}
-          </td>
-        </tr>
-      `
-      )
-      .join('');
+    const headers = ['CODIGO', 'FECHA / HORA', 'ESTADO', 'ESPECIALIDAD', 'MEDICO', 'PACIENTE / CI', 'MOTIVO / DETALLE'];
+    const rows = registros.map((item, idx) => {
+      const codigo = item.codigo_cita || `REG-${item.id_paciente || idx + 1}`;
+      const fecha = `${item.fecha_formateada || item.fecha_registro || 'N/A'}${item.hora_formateada ? ' ' + item.hora_formateada : ''}`;
+      const estado = item.estado || item.estado_paciente || 'N/A';
+      const esp = item.especialidad?.nombre || 'General';
+      const med = item.medico?.nombre_completo || 'N/A';
+      const pac = `${item.paciente?.nombre_completo || item.nombre_completo || 'N/A'}${item.paciente?.numero_documento || item.numero_documento ? ' (CI: ' + (item.paciente?.numero_documento || item.numero_documento) + ')' : ''}`;
+      const mot = item.motivo_consulta || item.motivo_cancelacion || 'Consulta de rutina';
+      return [codigo, fecha, estado, esp, med, pac, mot];
+    });
 
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-      alert('Por favor permita las ventanas emergentes en su navegador para imprimir o guardar como PDF.');
-      return;
-    }
+    const pdfContent = buildPdfDocument({
+      title: 'Centro Medico La Cruz — Clinica Vida Salud',
+      subtitle: `Reporte Asistencial y Estadistico (CU23) · Tipo: ${tipoReporte}`,
+      date: fechaHora,
+      kpis,
+      headers,
+      rows,
+    });
 
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html lang="es">
-      <head>
-        <meta charset="utf-8">
-        <title>Reporte Oficial — Clínica Vida Salud</title>
-        <style>
-          @page { size: A4 landscape; margin: 12mm 15mm; }
-          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 11px; color: #1E293B; line-height: 1.4; margin: 0; }
-          .header { border-bottom: 2px solid #00687A; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-start; }
-          .brand { display: flex; align-items: center; gap: 10px; }
-          .brand h1 { margin: 0; font-size: 18px; color: #004D5A; font-weight: 700; letter-spacing: -0.5px; }
-          .brand p { margin: 2px 0 0; font-size: 11px; color: #64748B; }
-          .badge { display: inline-block; background-color: #E6F4F6; color: #00687A; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 9px; text-transform: uppercase; margin-bottom: 4px; }
-          .meta-box { background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 10px; }
-          .kpis { display: flex; gap: 12px; margin-bottom: 15px; }
-          .kpi-card { flex: 1; border: 1px solid #E2E8F0; border-radius: 6px; padding: 8px 12px; background: #FFFFFF; }
-          .kpi-card .lbl { font-size: 9px; color: #64748B; font-weight: bold; text-transform: uppercase; }
-          .kpi-card .val { font-size: 16px; font-weight: bold; margin-top: 2px; }
-          table { width: 100%; border-collapse: collapse; font-size: 10px; }
-          th { background-color: #F1F5F9; color: #475569; font-weight: bold; text-align: left; padding: 8px; border-bottom: 2px solid #CBD5E1; text-transform: uppercase; font-size: 9px; }
-          .footer { margin-top: 25px; padding-top: 10px; border-top: 1px solid #E2E8F0; font-size: 9px; color: #94A3B8; display: flex; justify-content: space-between; align-items: center; }
-          @media print {
-            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <div class="brand">
-            <div>
-              <span class="badge">Centro Médico La Cruz — Clínica Vida Salud</span>
-              <h1>Reporte Asistencial y Estadístico (CU23 / CU22)</h1>
-              <p>Módulo de Inteligencia de Negocios y Procesamiento de Lenguaje Natural (NLP)</p>
-            </div>
-          </div>
-          <div style="text-align: right; font-size: 10px; color: #64748B;">
-            <strong>Emisión:</strong> ${fechaHora}<br>
-            <strong>Registros:</strong> ${registros.length} encontrados
-          </div>
-        </div>
-
-        <div class="meta-box">
-          <div>
-            <strong>Comando Procesado:</strong> "${reportData.comando_texto || 'Consulta General'}"<br>
-            <strong>Interpretación Semántica:</strong> ${reportData.interpretacion_legible || 'N/A'}
-          </div>
-          <div style="text-align: right;">
-            <strong>Tipo de Reporte:</strong> ${reportData.tipo_reporte || 'CITAS'}<br>
-            <strong>Motor:</strong> ${reportData.motor || 'DETERMINISTIC_NLP'} (${Math.round((reportData.confianza || 1) * 100)}% conf.)
-          </div>
-        </div>
-
-        <div class="kpis">
-          <div class="kpi-card">
-            <div class="lbl">Total Evaluados</div>
-            <div class="val" style="color: #1E293B;">${metricas.total_citas ?? metricas.total_pacientes ?? registros.length}</div>
-          </div>
-          <div class="kpi-card">
-            <div class="lbl">Atendidas / Asistidas</div>
-            <div class="val" style="color: #059669;">${metricas.atendidas ?? metricas.activos ?? 0}</div>
-          </div>
-          <div class="kpi-card">
-            <div class="lbl">Canceladas</div>
-            <div class="val" style="color: #E11D48;">${metricas.canceladas ?? metricas.inactivos ?? 0}</div>
-          </div>
-          <div class="kpi-card">
-            <div class="lbl">Tasa de Efectividad</div>
-            <div class="val" style="color: #00687A;">${metricas.tasa_asistencia !== undefined ? metricas.tasa_asistencia + '%' : 'N/A'}</div>
-          </div>
-        </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 10%;">Código</th>
-              <th style="width: 12%;">Fecha / Hora</th>
-              <th style="width: 11%;">Estado</th>
-              <th style="width: 14%;">Especialidad</th>
-              <th style="width: 18%;">Médico</th>
-              <th style="width: 18%;">Paciente</th>
-              <th style="width: 17%;">Motivo / Detalle</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rowsHtml}
-          </tbody>
-        </table>
-
-        <div class="footer">
-          <span>Clínica Vida Salud — Sistema de Información Médica Integral (PUDS / RUP)</span>
-          <span>Página 1 de 1 — Documento confidencial para uso clínico institucional</span>
-        </div>
-
-        <script>
-          window.onload = function() {
-            setTimeout(function() {
-              window.print();
-            }, 300);
-          };
-        </script>
-      </body>
-      </html>
-    `);
-
-    printWindow.document.close();
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `reporte_${tipoReporte.toLowerCase()}_${isoDate}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   },
 };
+
+/**
+ * Generador nativo de documentos PDF estándar (sin dependencias externas pesadas)
+ * Produce un archivo binario PDF válido que se descarga directamente sin panel de impresión.
+ */
+function buildPdfDocument({ title, subtitle, date, kpis, headers, rows }) {
+  const pages = [];
+  const pageWidth = 842; // A4 horizontal
+  const pageHeight = 595;
+  const margin = 36;
+  const contentWidth = pageWidth - margin * 2; // 770 pt
+
+  let stream = [];
+  let y = pageHeight - margin;
+
+  function sanitizePdfText(str) {
+    if (!str) return '';
+    return String(str)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\\/g, '\\\\')
+      .replace(/\(/g, '\\(')
+      .replace(/\)/g, '\\)')
+      .replace(/[^\x20-\x7E]/g, '?');
+  }
+
+  function startNewPage() {
+    if (stream.length > 0) {
+      pages.push(stream.join('\n'));
+      stream = [];
+    }
+    y = pageHeight - margin;
+
+    // Barra superior institucional en tono Teal (#00687A)
+    stream.push('0.0 0.41 0.48 rg');
+    stream.push(`${margin} ${pageHeight - 24} ${contentWidth} 4 re f`);
+
+    // Título institucional
+    stream.push('BT');
+    stream.push('/F2 15 Tf');
+    stream.push('0.0 0.22 0.27 rg'); // #003844
+    stream.push(`${margin} ${pageHeight - 46} Td (${sanitizePdfText(title)}) Tj`);
+    stream.push('ET');
+
+    // Subtítulo y fecha de emisión
+    stream.push('BT');
+    stream.push('/F1 9 Tf');
+    stream.push('0.35 0.42 0.48 rg');
+    stream.push(`${margin} ${pageHeight - 60} Td (${sanitizePdfText(subtitle)}) Tj`);
+    stream.push(`${pageWidth - margin - 170} ${pageHeight - 46} Td (Emision: ${sanitizePdfText(date)}) Tj`);
+    stream.push('ET');
+
+    y = pageHeight - 82;
+  }
+
+  startNewPage();
+
+  // Tarjetas de Métricas y KPIs
+  if (kpis && kpis.length > 0) {
+    const kpiGap = 8;
+    const kpiWidth = (contentWidth - (kpis.length - 1) * kpiGap) / kpis.length;
+    kpis.forEach((kpi, idx) => {
+      const kpiX = margin + idx * (kpiWidth + kpiGap);
+      // Fondo de tarjeta y borde suave
+      stream.push('0.97 0.98 0.99 rg');
+      stream.push('0.85 0.90 0.92 RG');
+      stream.push('0.75 w');
+      stream.push(`${kpiX} ${y - 36} ${kpiWidth} 36 re b`);
+
+      // Label del KPI
+      stream.push('BT');
+      stream.push('/F1 7.5 Tf');
+      stream.push('0.4 0.48 0.55 rg');
+      stream.push(`${kpiX + 8} ${y - 14} Td (${sanitizePdfText(kpi.label)}) Tj`);
+      stream.push('ET');
+
+      // Valor del KPI
+      stream.push('BT');
+      stream.push('/F2 13 Tf');
+      stream.push('0.0 0.25 0.32 rg');
+      stream.push(`${kpiX + 8} ${y - 30} Td (${sanitizePdfText(kpi.value)}) Tj`);
+      stream.push('ET');
+    });
+    y -= 48;
+  }
+
+  // Columnas de la tabla (Suma = 770)
+  const colWidths = [65, 85, 70, 95, 125, 150, 180];
+
+  function drawTableHeader() {
+    stream.push('0.0 0.22 0.27 rg'); // Cabecera oscura #003844
+    stream.push(`${margin} ${y - 20} ${contentWidth} 20 re f`);
+
+    let curX = margin;
+    headers.forEach((h, i) => {
+      stream.push('BT');
+      stream.push('/F2 8 Tf');
+      stream.push('1 1 1 rg');
+      stream.push(`${curX + 5} ${y - 14} Td (${sanitizePdfText(h)}) Tj`);
+      stream.push('ET');
+      curX += colWidths[i];
+    });
+    y -= 22;
+  }
+
+  drawTableHeader();
+
+  // Filas de datos
+  rows.forEach((row, rIdx) => {
+    if (y < 45) {
+      startNewPage();
+      drawTableHeader();
+    }
+
+    const rowBg = rIdx % 2 === 0 ? '1 1 1 rg' : '0.97 0.98 0.99 rg';
+    stream.push(rowBg);
+    stream.push(`${margin} ${y - 17} ${contentWidth} 17 re f`);
+
+    // Separador inferior sutil
+    stream.push('0.91 0.93 0.95 RG');
+    stream.push('0.5 w');
+    stream.push(`${margin} ${y - 17} m ${pageWidth - margin} ${y - 17} l S`);
+
+    let curX = margin;
+    row.forEach((cell, cIdx) => {
+      const text = sanitizePdfText(String(cell || '—'));
+      const maxLen = cIdx === 6 ? 38 : cIdx === 5 ? 30 : 25;
+      const truncated = text.length > maxLen ? text.substring(0, maxLen - 2) + '..' : text;
+
+      stream.push('BT');
+      if (cIdx === 0) {
+        stream.push('/F2 8 Tf');
+        stream.push('0.0 0.41 0.48 rg'); // Código en Teal
+      } else {
+        stream.push('/F1 7.5 Tf');
+        stream.push('0.15 0.20 0.25 rg');
+      }
+      stream.push(`${curX + 5} ${y - 12} Td (${truncated}) Tj`);
+      stream.push('ET');
+      curX += colWidths[cIdx];
+    });
+
+    y -= 17;
+  });
+
+  pages.push(stream.join('\n'));
+
+  // Construcción de la estructura interna del PDF (PDF-1.4)
+  const encoder = new TextEncoder();
+  const pageObjIds = [];
+  const contentObjIds = [];
+  const objects = [];
+
+  objects.push('1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj');
+  objects.push('3 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj');
+  objects.push('4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>\nendobj');
+
+  pages.forEach((pageContent, idx) => {
+    const pageId = 5 + idx * 2;
+    const contentId = 5 + idx * 2 + 1;
+    pageObjIds.push(pageId);
+    contentObjIds.push(contentId);
+
+    const streamLen = encoder.encode(pageContent).length;
+    objects.push(`${contentId} 0 obj\n<< /Length ${streamLen} >>\nstream\n${pageContent}\nendstream\nendobj`);
+    objects.push(`${pageId} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>\nendobj`);
+  });
+
+  const kidsStr = pageObjIds.map((id) => `${id} 0 R`).join(' ');
+  objects.push(`2 0 obj\n<< /Type /Pages /Kids [${kidsStr}] /Count ${pageObjIds.length} >>\nendobj`);
+
+  let output = '%PDF-1.4\n';
+  const offsets = [];
+
+  objects.sort((a, b) => {
+    const idA = parseInt(a.split(' ')[0], 10);
+    const idB = parseInt(b.split(' ')[0], 10);
+    return idA - idB;
+  });
+
+  objects.forEach((obj) => {
+    const id = parseInt(obj.split(' ')[0], 10);
+    offsets[id] = encoder.encode(output).length;
+    output += obj + '\n';
+  });
+
+  const startXref = encoder.encode(output).length;
+  const maxObjId = Math.max(...objects.map((o) => parseInt(o.split(' ')[0], 10)));
+
+  output += `xref\n0 ${maxObjId + 1}\n0000000000 65535 f \n`;
+  for (let i = 1; i <= maxObjId; i++) {
+    const off = offsets[i] || 0;
+    output += String(off).padStart(10, '0') + ' 00000 n \n';
+  }
+
+  output += `trailer\n<< /Size ${maxObjId + 1} /Root 1 0 R >>\nstartxref\n${startXref}\n%%EOF`;
+
+  return output;
+}
