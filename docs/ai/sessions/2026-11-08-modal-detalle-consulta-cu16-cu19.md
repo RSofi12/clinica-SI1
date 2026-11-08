@@ -36,6 +36,13 @@ El usuario eligió la **Opción A (Recomendada)**: implementar una ventana modal
 - Sustitución de los `alert(...)` por `setSelectedConsulta(c)`.
 - Renderizado condicional del modal al pie del componente.
 - En `RecetaDetailModal.jsx`: sincronizada la clase `printing-modal` y `afterprint` para impresión aislada de prescripciones.
+- **Corrección de Columna Paciente y Badges Diagnósticos en `ConsultasManager.jsx` y `ConsultaMedica.php`:**
+  - En `ConsultaMedica.php`: agregado accesor `getPacienteAttribute` y appends `'paciente'` para exponer directamente el paciente vinculado (`historiaClinica.paciente` / `cita.paciente`).
+  - En `ConsultasManager.jsx`:
+    - Enriquecida la columna Paciente con avatar, nombre completo, CI y número de historia clínica (`HC-XXXX`).
+    - Habilitado el botón interactivo de **"Antecedentes"** (CU17) que antes no se mostraba al no resolver el paciente directo.
+    - Corregida lectura de tipo de diagnóstico (`d.tipo || d.tipo_diagnostico`), resolviendo el badge real (`Definitivo` / `Presuntivo`) y permitiendo que el KPI "Diagnósticos Definitivos" calcule el valor real.
+    - Normalizado título del médico tratante a `Dr(a). Nombre Apellidos` con número de matrícula profesional visible.
 
 ## 4. Verificación y Pruebas
 1. `npm --prefix frontend run build`: Compilación exitosa en 1.11s con **0 errores** (2051 módulos transformados).

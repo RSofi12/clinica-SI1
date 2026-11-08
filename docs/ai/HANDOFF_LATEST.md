@@ -16,6 +16,11 @@
       - El documento impreso cuenta con membrete oficial del *Centro Médico La Cruz — Clínica Vida Salud*, cuadrícula médica de paciente y médico tratante, tabla de signos vitales, cuadro anamnésico, diagnósticos CIE-10, tabla de prescripción farmacológica y cuadro legal para firmas del médico (sello y matrícula) y del paciente (CI).
       - En `index.css`: aislamiento estricto con `body.printing-modal #root, body:has([role="dialog"]) #root { display: none !important; position: absolute; left: -9999px; }`, eliminando cualquier filtración de la tabla del sistema de fondo.
   - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2051 módulos, 1.11s).
+  - **Corrección de Columna Paciente y Badges Diagnósticos en Consultas Médicas:**
+    - Se resolvió la columna de Pacientes en `ConsultasManager.jsx` (antes mostraba solo el icono `User` sin texto debido a que la relación anidada `historia_clinica.paciente` no estaba mapeada directamente a `c.paciente`).
+    - Agregado accesor `$appends = ['paciente']` en `ConsultaMedica.php`.
+    - Enriquecida la celda con avatar teal, nombre completo, CI y badge `HC-XXXX`, habilitando además el botón **Antecedentes (CU17)**.
+    - Corregida lectura de `d.tipo` en diagnósticos para mostrar el badge semántico correcto (`Definitivo` vs `Presuntivo`) y reactivar el contador del KPI superior.
 
 ---
 
