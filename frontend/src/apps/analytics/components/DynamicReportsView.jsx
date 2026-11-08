@@ -84,9 +84,19 @@ export function DynamicReportsView() {
       try {
         const res = await dynamicReportService.fetchReportCatalogs();
         if (res.success && res.data) {
-          setCatalogs(res.data);
-          if (isDoctor && res.data.medicos?.length > 0) {
-            setMedicoSeleccionado(res.data.medicos[0].id_medico);
+          const sortedMedicos = [...(res.data.medicos || [])].sort((a, b) =>
+            (a.nombre_completo || '').localeCompare(b.nombre_completo || '', 'es')
+          );
+          const sortedEspecialidades = [...(res.data.especialidades || [])].sort((a, b) =>
+            (a.nombre || '').localeCompare(b.nombre || '', 'es')
+          );
+          setCatalogs({
+            ...res.data,
+            medicos: sortedMedicos,
+            especialidades: sortedEspecialidades,
+          });
+          if (isDoctor && sortedMedicos.length > 0) {
+            setMedicoSeleccionado(sortedMedicos[0].id_medico);
           }
         }
       } catch (err) {

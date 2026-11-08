@@ -97,7 +97,12 @@ export function AppointmentsManager() {
       try {
         const res = await doctorService.fetchDoctors({ per_page: 100, estado: 'activo' });
         if (res?.data) {
-          setDoctorsList(res.data);
+          const sorted = [...res.data].sort((a, b) => {
+            const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+            const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+            return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+          });
+          setDoctorsList(sorted);
         }
       } catch (err) {
         console.error('Error al cargar médicos para filtro:', err);
@@ -592,7 +597,7 @@ export function AppointmentsManager() {
                   <option value="">Todos los médicos</option>
                   {doctorsList.map((doc) => (
                     <option key={doc.id_medico} value={doc.id_medico}>
-                      Dr. {doc.apellidos} {doc.nombres}
+                      Dr(a). {doc.apellidos}, {doc.nombres}
                     </option>
                   ))}
                 </select>

@@ -87,11 +87,17 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
 
   const loadPatientsList = async () => {
     try {
-      const res = await patientService.fetchPatients({ per_page: 100, estado: 'ACTIVO' });
+      const res = await patientService.fetchPatients({ per_page: 200, estado: 'ACTIVO', sort: 'alfabetico' });
       if (res?.data) {
-        setPatientsList(res.data);
-        if (!selectedPatientId && res.data.length > 0) {
-          setSelectedPatientId(res.data[0].id_paciente);
+        // Ordenar alfabéticamente A-Z de forma estricta (Apellidos, Nombres)
+        const sorted = [...res.data].sort((a, b) => {
+          const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim();
+          const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim();
+          return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+        });
+        setPatientsList(sorted);
+        if (!selectedPatientId && sorted.length > 0) {
+          setSelectedPatientId(sorted[0].id_paciente);
         }
       }
     } catch (err) {
@@ -178,17 +184,24 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
     }));
   };
 
-  // Lista de pacientes filtrados para el selector
+  // Lista de pacientes filtrados para el selector (ordenados A-Z por apellidos y nombres)
   const filteredPatients = useMemo(() => {
-    if (!searchTerm.trim()) return patientsList;
-    const term = searchTerm.toLowerCase();
-    return patientsList.filter(
-      (p) =>
-        p.nombres?.toLowerCase().includes(term) ||
-        p.apellidos?.toLowerCase().includes(term) ||
-        p.numero_documento?.includes(term) ||
-        p.numero_historia?.toLowerCase().includes(term)
-    );
+    let list = patientsList;
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      list = patientsList.filter(
+        (p) =>
+          p.nombres?.toLowerCase().includes(term) ||
+          p.apellidos?.toLowerCase().includes(term) ||
+          p.numero_documento?.includes(term) ||
+          p.numero_historia?.toLowerCase().includes(term)
+      );
+    }
+    return [...list].sort((a, b) => {
+      const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim();
+      const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim();
+      return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+    });
   }, [patientsList, searchTerm]);
 
   // Manejo de impresión

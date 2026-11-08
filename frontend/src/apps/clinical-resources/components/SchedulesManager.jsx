@@ -60,9 +60,14 @@ export function SchedulesManager() {
     try {
       const res = await doctorService.fetchDoctors({ per_page: 100, estado: 'activo' });
       if (res?.data) {
-        setDoctors(res.data);
-        if (res.data.length > 0 && !selectedDoctorId) {
-          setSelectedDoctorId(String(res.data[0].id_medico));
+        const sorted = [...res.data].sort((a, b) => {
+          const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+          const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+          return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+        });
+        setDoctors(sorted);
+        if (sorted.length > 0 && !selectedDoctorId) {
+          setSelectedDoctorId(String(sorted[0].id_medico));
         }
       }
     } catch (err) {

@@ -53,7 +53,18 @@ export function AuditLogViewer() {
           auditService.fetchFiltersData(),
           auditService.fetchStats(),
         ]);
-        if (filtersRes.data) setFilterOptions(filtersRes.data);
+        if (filtersRes.data) {
+          const sortedModulos = [...(filtersRes.data.modulos || [])].sort((a, b) => (a || '').localeCompare(b || '', 'es'));
+          const sortedAcciones = [...(filtersRes.data.acciones || [])].sort((a, b) => (a || '').localeCompare(b || '', 'es'));
+          const sortedUsuarios = [...(filtersRes.data.usuarios || [])].sort((a, b) =>
+            (a.username || '').localeCompare(b.username || '', 'es')
+          );
+          setFilterOptions({
+            modulos: sortedModulos,
+            acciones: sortedAcciones,
+            usuarios: sortedUsuarios,
+          });
+        }
         if (statsRes.data) setStats(statsRes.data);
       } catch (err) {
         console.error('Error cargando metadatos de auditoría:', err);

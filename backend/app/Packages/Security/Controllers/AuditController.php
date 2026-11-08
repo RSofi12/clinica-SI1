@@ -84,10 +84,10 @@ class AuditController extends Controller
      */
     public function filtersData(): JsonResponse
     {
-        $modulos = Bitacora::select('modulo')->distinct()->pluck('modulo')->filter()->values();
-        $acciones = Bitacora::select('accion')->distinct()->pluck('accion')->filter()->values();
+        $modulos = Bitacora::select('modulo')->distinct()->pluck('modulo')->filter()->sort()->values();
+        $acciones = Bitacora::select('accion')->distinct()->pluck('accion')->filter()->sort()->values();
         $usuarios = User::select('id_usuario', 'username', 'email', 'tipo_usuario')
-                        ->orderBy('username')
+                        ->orderBy('username', 'asc')
                         ->get();
 
         return response()->json([

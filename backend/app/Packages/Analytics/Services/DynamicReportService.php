@@ -43,7 +43,9 @@ class DynamicReportService
 
         $medicosQuery = Medico::query()
             ->with(['especialidades:id_especialidad,nombre'])
-            ->where('estado_activo', true);
+            ->where('estado_activo', true)
+            ->orderBy('apellidos', 'asc')
+            ->orderBy('nombres', 'asc');
 
         if ($role === 'MEDICO' && $user) {
             $medicosQuery->where('id_usuario', $user->id_usuario);

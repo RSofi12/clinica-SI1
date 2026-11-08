@@ -266,7 +266,7 @@ class AppointmentsController extends Controller
     {
         $tiposCita = TipoCita::orderBy('nombre')->get();
         $especialidades = Especialidad::activas()->orderBy('nombre')->get();
-        $medicos = Medico::activos()->with(['specialties'])->orderBy('apellidos')->get();
+        $medicos = Medico::activos()->with(['specialties'])->orderBy('apellidos')->orderBy('nombres')->get();
 
         return response()->json([
             'success' => true,

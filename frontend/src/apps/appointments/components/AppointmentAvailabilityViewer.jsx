@@ -60,11 +60,21 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
         ]);
 
         if (isMounted) {
-          if (espRes?.data) setSpecialties(espRes.data);
+          if (espRes?.data) {
+            const sortedEsp = [...espRes.data].sort((a, b) =>
+              (a.nombre || '').localeCompare(b.nombre || '', 'es')
+            );
+            setSpecialties(sortedEsp);
+          }
           if (docRes?.data) {
-            setDoctors(docRes.data);
-            if (docRes.data.length > 0) {
-              setSelectedDoctorId(String(docRes.data[0].id_medico));
+            const sortedDocs = [...docRes.data].sort((a, b) => {
+              const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+              const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+              return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+            });
+            setDoctors(sortedDocs);
+            if (sortedDocs.length > 0) {
+              setSelectedDoctorId(String(sortedDocs[0].id_medico));
             }
           }
         }
@@ -80,13 +90,19 @@ export function AppointmentAvailabilityViewer({ onSelectSlotForBooking = null })
     };
   }, []);
 
-  // 2. Filtrar médicos cuando cambia la especialidad seleccionada
-  const filteredDoctors = doctors.filter((doc) => {
-    if (!selectedSpecialtyId) return true;
-    return (doc.specialties || []).some(
-      (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
-    );
-  });
+  // 2. Filtrar médicos cuando cambia la especialidad seleccionada (ordenados A-Z)
+  const filteredDoctors = doctors
+    .filter((doc) => {
+      if (!selectedSpecialtyId) return true;
+      return (doc.specialties || []).some(
+        (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
+      );
+    })
+    .sort((a, b) => {
+      const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+      const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+      return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+    });
 
   // Ajustar el médico seleccionado si queda fuera del filtro
   useEffect(() => {

@@ -67,8 +67,15 @@ class PatientsController extends Controller
             }
         }
 
+        $sort = strtolower((string) $request->input('sort'));
+        if ($sort === 'nombre' || $sort === 'alfabetico' || $request->boolean('alfabetico')) {
+            $query->orderBy('apellidos', 'asc')->orderBy('nombres', 'asc');
+        } else {
+            $query->orderBy('id_paciente', 'desc');
+        }
+
         $perPage = (int) $request->input('per_page', 10);
-        $patients = $query->orderBy('id_paciente', 'desc')->paginate($perPage);
+        $patients = $query->paginate($perPage);
 
         return response()->json([
             'success' => true,

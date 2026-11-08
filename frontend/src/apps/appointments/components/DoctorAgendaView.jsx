@@ -78,9 +78,14 @@ export function DoctorAgendaView({ onOpenTicket = null, onOpenPatientHistory = n
       try {
         const res = await doctorService.fetchDoctors({ per_page: 100, estado: 'activo' });
         if (res?.data && res.data.length > 0) {
-          setDoctorsList(res.data);
+          const sorted = [...res.data].sort((a, b) => {
+            const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+            const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+            return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+          });
+          setDoctorsList(sorted);
           if (!selectedDoctorId) {
-            setSelectedDoctorId(String(res.data[0].id_medico));
+            setSelectedDoctorId(String(sorted[0].id_medico));
           }
         }
       } catch (err) {

@@ -1,5 +1,18 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Ordenamiento Alfabético Universal en Desplegables de Nombres)
+- **Estandarización Alfabética (A-Z) en Selectores y Catálogos:**
+  - **Expediente Clínico Digital (`ExpedienteClinicoView.jsx`):** El desplegable de pacientes ahora lista a todos los pacientes en orden alfabético estricto de A a Z por `Apellidos, Nombres` (`Aguilera`, `Baldivieso`, `Barbery`... `Zeballos`), eliminando el orden inverso de ID.
+  - **Reserva y Disponibilidad de Citas (`AppointmentBookingModal.jsx` y `AppointmentAvailabilityViewer.jsx`):** Especialidades médicas y médicos del plantel ordenados alfabéticamente A-Z.
+  - **Agenda Médica y Gestión de Citas (`DoctorAgendaView.jsx` y `AppointmentsManager.jsx`):** Selectores y filtros de médicos ordenados A-Z (`Dr(a). Apellidos, Nombres`).
+  - **Configuración de Horarios (`SchedulesManager.jsx`):** Selector de profesionales ordenado alfabéticamente.
+  - **Reportes Dinámicos (`DynamicReportsView.jsx`):** Filtros de "Médico Responsable" y "Especialidad Médica" ordenados alfabéticamente.
+  - **Bitácora de Auditoría (`AuditLogViewer.jsx`):** Filtros de Operadores, Módulos y Acciones ordenados de la A a la Z.
+  - **Soporte Backend:** `PatientsController.php` admite `sort=alfabetico`; consultas de médicos en `DynamicReportService.php`, `AppointmentsController.php` y `AuditController.php` ordenadas por `apellidos`, `nombres` y `username`.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2051 módulos, 1.95s).
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Modal de Detalle Clínico de Consulta Médica, Triaje e Impresión Oficial — CU16 / CU19)
 - **Implementación de ConsultaDetailModal (`ConsultaDetailModal.jsx` y `ConsultasManager.jsx`):**
   - **Reemplazo de Alerta Temporal:** Se eliminó el `alert("Ver detalle de consulta #...")` provisional en las filas de la tabla y tarjetas móviles de `ConsultasManager.jsx`.

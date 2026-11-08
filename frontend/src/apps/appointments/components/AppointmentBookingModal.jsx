@@ -85,7 +85,19 @@ export function AppointmentBookingModal({
       try {
         const res = await appointmentService.fetchBookingFormData();
         if (isMounted && res?.data) {
-          setFormDataCatalogs(res.data);
+          const sortedEspecialidades = [...(res.data.especialidades || [])].sort((a, b) =>
+            (a.nombre || '').localeCompare(b.nombre || '', 'es')
+          );
+          const sortedMedicos = [...(res.data.medicos || [])].sort((a, b) => {
+            const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+            const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+            return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+          });
+          setFormDataCatalogs({
+            ...res.data,
+            especialidades: sortedEspecialidades,
+            medicos: sortedMedicos,
+          });
 
           // Si hay tipo de cita, pre-seleccionar el primero ('PRIMERA CONSULTA')
           if (res.data.tipos_cita?.length > 0 && !selectedTipoCitaId) {
@@ -152,9 +164,14 @@ export function AppointmentBookingModal({
 
     setIsSearchingPatient(true);
     try {
-      const res = await patientService.fetchPatients({ q: term.trim(), per_page: 5 });
+      const res = await patientService.fetchPatients({ q: term.trim(), per_page: 10, sort: 'alfabetico' });
       if (res?.data) {
-        setPatientResults(res.data);
+        const sorted = [...res.data].sort((a, b) => {
+          const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim();
+          const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim();
+          return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+        });
+        setPatientResults(sorted);
       }
     } catch (err) {
       console.error('Error buscando pacientes:', err);
@@ -163,13 +180,19 @@ export function AppointmentBookingModal({
     }
   };
 
-  // 3. Médicos filtrados por la especialidad seleccionada
-  const doctorsForSpecialty = formDataCatalogs.medicos.filter((m) => {
-    if (!selectedSpecialtyId) return true;
-    return (m.specialties || []).some(
-      (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
-    );
-  });
+  // 3. Médicos filtrados por la especialidad seleccionada (ordenados A-Z por apellidos y nombres)
+  const doctorsForSpecialty = formDataCatalogs.medicos
+    .filter((m) => {
+      if (!selectedSpecialtyId) return true;
+      return (m.specialties || []).some(
+        (esp) => String(esp.id_especialidad) === String(selectedSpecialtyId)
+      );
+    })
+    .sort((a, b) => {
+      const nameA = `${a.apellidos || ''} ${a.nombres || ''}`.trim() || a.nombre_completo || '';
+      const nameB = `${b.apellidos || ''} ${b.nombres || ''}`.trim() || b.nombre_completo || '';
+      return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
+    });
 
   // Especialidad seleccionada y validación etaria (RF04 / Prueba P10.4)
   const currentSpecialty = formDataCatalogs.especialidades.find(
