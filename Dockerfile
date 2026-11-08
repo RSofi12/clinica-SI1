@@ -26,7 +26,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Permisos para storage y cache
 RUN chmod -R 777 storage bootstrap/cache
-RUN sed -i 's/\r$//' entrypoint.sh && chmod +x entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 ENV PORT=10000
 EXPOSE 10000
