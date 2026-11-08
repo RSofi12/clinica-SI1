@@ -54,3 +54,4 @@ Se implementó un diseño dual con aislamiento estricto mediante `@media print`:
 # Ninguna migración requerida
 npm --prefix frontend run build
 ```
+

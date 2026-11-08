@@ -1,5 +1,16 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Ajuste Visual del Código de Cita y Columnas en ConsultasManager — CU16)
+- **Corrección de Salto de Línea en Badges (`ConsultasManager.jsx`):**
+  - **Problema:** En la columna "CÓDIGO CITA", el texto `CM-XXXX` se partía por el guion en dos renglones (`CM-` arriba y `0123` abajo) debido a la falta de `whitespace-nowrap` y ausencia de ancho mínimo en la tabla, comprimiendo también los nombres de los médicos.
+  - **Solución:**
+    - Se incorporó `min-w-[980px]` a la tabla de escritorio dentro de su contenedor `overflow-x-auto`.
+    - Se aplicaron clases `whitespace-nowrap` tanto al `<td>` como al `<span>` badge (`inline-flex items-center whitespace-nowrap tracking-wide px-2.5 py-1 text-xs`).
+    - Anchos mínimos por columna (`Código Cita`: `min-w-[110px]`, `Paciente`: `min-w-[210px]`, `Médico`: `min-w-[190px]`, `Diagnóstico`: `min-w-[220px]`, `Acciones`: `min-w-[210px]`).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2051 módulos, 1.58s).
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Documento Oficial Completo de Impresión para Expediente Clínico Digital — CU19 / RF10)
 - **Corrección de Truncamiento en Impresión de Expediente (`ExpedienteClinicoView.jsx`):**
   - **Diagnóstico:** El contenedor de pestañas interactivas tenía aplicada la clase CSS `print:hidden`, provocando que al pulsar "Imprimir Expediente" la vista previa del navegador solo generara 1 página recortada con la ficha demográfica y los signos vitales, omitiendo todo el historial clínico, antecedentes, consultas y recetas.

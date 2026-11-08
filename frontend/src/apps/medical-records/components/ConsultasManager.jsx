@@ -271,15 +271,15 @@ export function ConsultasManager() {
           <>
             {/* Desktop table */}
             <div className="overflow-x-auto hidden sm:block">
-              <table className="w-full text-xs">
+              <table className="w-full text-xs min-w-[980px]">
                 <thead>
-                  <tr className="border-b border-slate-100 text-left">
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Fecha / Hora</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Código Cita</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Paciente</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Médico</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider">Diagnóstico Principal</th>
-                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider text-right">Acciones</th>
+                  <tr className="border-b border-slate-100 text-left bg-slate-50/50">
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider whitespace-nowrap w-[110px] min-w-[110px]">Fecha / Hora</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider whitespace-nowrap w-[110px] min-w-[110px]">Código Cita</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider min-w-[210px]">Paciente</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider min-w-[190px]">Médico</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider min-w-[220px]">Diagnóstico Principal</th>
+                    <th className="px-5 py-3 font-bold text-slate-500 text-[10px] uppercase tracking-wider text-right whitespace-nowrap w-[210px] min-w-[210px]">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -304,8 +304,8 @@ export function ConsultasManager() {
                         </td>
 
                         {/* Código cita */}
-                        <td className="px-5 py-3.5">
-                          <span className="font-mono font-bold text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2 py-0.5">
+                        <td className="px-5 py-3.5 whitespace-nowrap">
+                          <span className="inline-flex items-center font-mono font-bold text-xs text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2.5 py-1 whitespace-nowrap tracking-wide">
                             {c.cita?.codigo_cita || c.codigo_cita || '—'}
                           </span>
                         </td>
@@ -420,7 +420,7 @@ export function ConsultasManager() {
                           )}
                         </div>
                       </div>
-                      <span className="font-mono text-[10px] font-bold text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2 py-0.5">
+                      <span className="inline-flex items-center font-mono text-[10px] font-bold text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 rounded-md px-2 py-0.5 whitespace-nowrap">
                         {c.cita?.codigo_cita || c.codigo_cita || '—'}
                       </span>
                     </div>
