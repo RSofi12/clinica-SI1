@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   FileText,
   AlertTriangle,
@@ -22,7 +22,9 @@ import {
   Info,
   CheckCircle2,
   AlertCircle,
-  Paperclip
+  Paperclip,
+  X,
+  Check
 } from 'lucide-react';
 import { expedienteService } from '../services/expedienteService';
 import { patientService } from '../../clinical-resources/services/patientService';
@@ -46,6 +48,8 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
   const [selectedPatientId, setSelectedPatientId] = useState(initialPatientId);
   const [patientsList, setPatientsList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchContainerRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -158,6 +162,41 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
     );
   }, [patientsList, searchTerm]);
 
+  // Paciente seleccionado actualmente
+  const currentSelectedPatient = useMemo(() => {
+    return patientsList.find((p) => p.id_paciente === selectedPatientId) || null;
+  }, [patientsList, selectedPatientId]);
+
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Seleccionar paciente
+  const handleSelectPatient = (p) => {
+    setSelectedPatientId(p.id_paciente);
+    setSearchTerm('');
+    setIsSearchOpen(false);
+  };
+
+  // Manejo de teclado (Enter para seleccionar el primer resultado, Esc para cerrar)
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (filteredPatients.length > 0) {
+        handleSelectPatient(filteredPatients[0]);
+      }
+    } else if (e.key === 'Escape') {
+      setIsSearchOpen(false);
+    }
+  };
+
   // Manejo de impresión
   const handlePrint = () => {
     window.print();
@@ -217,32 +256,146 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
           </div>
         </div>
 
-        {/* SELECTOR PARA PERSONAL MÉDICO / ADMIN */}
+        {/* SELECTOR PARA PERSONAL MÉDICO / ADMIN (BUSCADOR INTELIGENTE CON AUTOCOMPLETADO) */}
         {isStaff && (
-          <div className="mt-4 pt-2 print:hidden">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <div className="relative flex-1">
-                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Buscar paciente por nombre, CI o N° Historia..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 transition"
-                />
+          <div className="mt-4 pt-2 print:hidden" ref={searchContainerRef}>
+            <div className="relative">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-slate-50/80 p-2 rounded-2xl border border-slate-200/90 shadow-2xs">
+                {/* Input de Búsqueda */}
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Buscar paciente por apellido, nombre, CI o N° Historia..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      if (!isSearchOpen) setIsSearchOpen(true);
+                    }}
+                    onFocus={() => setIsSearchOpen(true)}
+                    onKeyDown={handleKeyDown}
+                    className="w-full pl-10 pr-9 py-2.5 text-xs bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 transition shadow-2xs"
+                  />
+                  {searchTerm && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchTerm('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition"
+                      title="Limpiar búsqueda"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Paciente Activo Badge / Botón Selector Rápido */}
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="inline-flex items-center justify-between sm:justify-start gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition shadow-2xs shrink-0"
+                  title="Cambiar paciente seleccionado"
+                >
+                  <div className="flex items-center gap-2 truncate max-w-[240px] sm:max-w-[280px]">
+                    <span className="w-2 h-2 rounded-full bg-teal-500 shrink-0"></span>
+                    <span className="text-slate-400 text-[11px] font-normal">Expediente:</span>
+                    <span className="font-semibold text-slate-900 truncate">
+                      {currentSelectedPatient
+                        ? `${currentSelectedPatient.apellidos}, ${currentSelectedPatient.nombres}`
+                        : 'Seleccionar paciente...'}
+                    </span>
+                  </div>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isSearchOpen ? 'rotate-180' : ''}`} />
+                </button>
               </div>
 
-              <select
-                value={selectedPatientId || ''}
-                onChange={(e) => setSelectedPatientId(Number(e.target.value))}
-                className="py-2 px-3 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 font-medium text-slate-800 shadow-xs"
-              >
-                {filteredPatients.map((p) => (
-                  <option key={p.id_paciente} value={p.id_paciente}>
-                    {p.apellidos}, {p.nombres} — CI: {p.numero_documento} ({p.numero_historia})
-                  </option>
-                ))}
-              </select>
+              {/* Dropdown flotante con Autocompletado */}
+              {isSearchOpen && (
+                <div className="absolute top-full left-0 right-0 z-50 mt-1.5 bg-white rounded-2xl shadow-xl border border-slate-200/90 overflow-hidden backdrop-blur-md animate-in fade-in zoom-in-98 duration-150">
+                  <div className="px-3.5 py-2 bg-slate-50/90 border-b border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                    <span>
+                      {filteredPatients.length} paciente{filteredPatients.length === 1 ? '' : 's'} encontrado{filteredPatients.length === 1 ? '' : 's'}
+                      {searchTerm ? ` para "${searchTerm}"` : ' en el padrón activo'}
+                    </span>
+                    <span className="text-[10px] text-slate-400">Clic o Enter para cargar expediente</span>
+                  </div>
+
+                  <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                    {filteredPatients.length === 0 ? (
+                      <div className="py-8 text-center px-4">
+                        <User className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                        <p className="text-xs font-semibold text-slate-700">No se encontraron pacientes</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
+                          No hay coincidencias para "{searchTerm}". Intente con otro término o CI.
+                        </p>
+                      </div>
+                    ) : (
+                      filteredPatients.map((p) => {
+                        const isSelected = p.id_paciente === selectedPatientId;
+                        return (
+                          <button
+                            key={p.id_paciente}
+                            type="button"
+                            onClick={() => handleSelectPatient(p)}
+                            className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between gap-3 transition-colors ${
+                              isSelected
+                                ? 'bg-teal-50/90 text-teal-950 font-medium'
+                                : 'hover:bg-slate-50 text-slate-800'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              {/* Avatar */}
+                              <div
+                                className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 ${
+                                  isSelected
+                                    ? 'bg-teal-700 text-white shadow-2xs'
+                                    : 'bg-teal-100 text-teal-800'
+                                }`}
+                              >
+                                {p.nombres?.charAt(0)}
+                                {p.apellidos?.charAt(0)}
+                              </div>
+
+                              {/* Datos del Paciente */}
+                              <div className="truncate">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-xs font-semibold text-slate-900 truncate">
+                                    {p.apellidos}, {p.nombres}
+                                  </span>
+                                  {isSelected && (
+                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-200/80 text-teal-800">
+                                      Cargado
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
+                                  <span className="font-mono text-slate-600">CI: {p.numero_documento}</span>
+                                  <span>•</span>
+                                  <span className="font-mono text-teal-700 font-semibold">{p.numero_historia || `HC-${p.id_paciente}`}</span>
+                                  {p.fecha_nacimiento && (
+                                    <>
+                                      <span>•</span>
+                                      <span>{p.sexo_biologico || p.sexo || ''}</span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Checkmark a la derecha si está seleccionado */}
+                            {isSelected ? (
+                              <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
+                            ) : (
+                              <span className="text-[10px] text-slate-400 hover:text-teal-600 shrink-0">
+                                Seleccionar
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

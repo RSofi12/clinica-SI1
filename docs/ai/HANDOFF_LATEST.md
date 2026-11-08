@@ -1,6 +1,18 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+## Estado de Relevo al 07/11/2026 (Buscador Inteligente con Autocompletado en Expediente Clínico CU19)
+- **Sustitución de Select Nativo por Search Combobox Flotante ([`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx)):**
+  - **Diagnóstico del problema:** Al buscar un paciente en el expediente clínico (por nombre o CI), el filtro reducía las opciones a 1 solo elemento en un `<select>` HTML estándar; como el navegador lo dejaba seleccionado automáticamente por defecto en el índice 0, hacer clic en él no disparaba el evento `onChange`, dejando bloqueado el expediente anterior (ej. Rodrigo Alarcón) e impidiendo cargar al paciente buscado.
+  - **Nuevo Buscador Unificado con Autocompletado y Popover Flotante:**
+    - Campo de búsqueda interactivo con icono `Search`, botón de borrado rápido (`X`) y atajo de teclado (`Enter` para seleccionar el primer resultado, `Escape` para cerrar).
+    - Desplegable flotante (`z-50`, backdrop blur, borde limpio y sombra elevada) con conteo de coincidencias en tiempo real.
+    - Cada fila presenta avatar con iniciales, nombre y apellidos, número de cédula (CI), código de Historia Clínica (`HC-xxxx`), género y edad.
+    - Clic directo en cualquier resultado invoca `handleSelectPatient`, actualiza inmediatamente el expediente del paciente seleccionado, cierra el menú y resalta el paciente activo.
+    - Botón selector y pastilla en cabecera para ver el paciente cargado actualmente o abrir el catálogo rápidamente.
+    - Listener exterior para cerrar automáticamente el desplegable al hacer clic fuera del componente (`handleClickOutside`).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos transformados en 40.26s).
+
+---
 - **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
   - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
   - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
@@ -25,7 +37,19 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+## Estado de Relevo al 07/11/2026 (Buscador Inteligente con Autocompletado en Expediente Clínico CU19)
+- **Sustitución de Select Nativo por Search Combobox Flotante ([`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx)):**
+  - **Diagnóstico del problema:** Al buscar un paciente en el expediente clínico (por nombre o CI), el filtro reducía las opciones a 1 solo elemento en un `<select>` HTML estándar; como el navegador lo dejaba seleccionado automáticamente por defecto en el índice 0, hacer clic en él no disparaba el evento `onChange`, dejando bloqueado el expediente anterior (ej. Rodrigo Alarcón) e impidiendo cargar al paciente buscado.
+  - **Nuevo Buscador Unificado con Autocompletado y Popover Flotante:**
+    - Campo de búsqueda interactivo con icono `Search`, botón de borrado rápido (`X`) y atajo de teclado (`Enter` para seleccionar el primer resultado, `Escape` para cerrar).
+    - Desplegable flotante (`z-50`, backdrop blur, borde limpio y sombra elevada) con conteo de coincidencias en tiempo real.
+    - Cada fila presenta avatar con iniciales, nombre y apellidos, número de cédula (CI), código de Historia Clínica (`HC-xxxx`), género y edad.
+    - Clic directo en cualquier resultado invoca `handleSelectPatient`, actualiza inmediatamente el expediente del paciente seleccionado, cierra el menú y resalta el paciente activo.
+    - Botón selector y pastilla en cabecera para ver el paciente cargado actualmente o abrir el catálogo rápidamente.
+    - Listener exterior para cerrar automáticamente el desplegable al hacer clic fuera del componente (`handleClickOutside`).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos transformados en 40.26s).
+
+---
 - **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
   - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
   - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
@@ -56,7 +80,19 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+## Estado de Relevo al 07/11/2026 (Buscador Inteligente con Autocompletado en Expediente Clínico CU19)
+- **Sustitución de Select Nativo por Search Combobox Flotante ([`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx)):**
+  - **Diagnóstico del problema:** Al buscar un paciente en el expediente clínico (por nombre o CI), el filtro reducía las opciones a 1 solo elemento en un `<select>` HTML estándar; como el navegador lo dejaba seleccionado automáticamente por defecto en el índice 0, hacer clic en él no disparaba el evento `onChange`, dejando bloqueado el expediente anterior (ej. Rodrigo Alarcón) e impidiendo cargar al paciente buscado.
+  - **Nuevo Buscador Unificado con Autocompletado y Popover Flotante:**
+    - Campo de búsqueda interactivo con icono `Search`, botón de borrado rápido (`X`) y atajo de teclado (`Enter` para seleccionar el primer resultado, `Escape` para cerrar).
+    - Desplegable flotante (`z-50`, backdrop blur, borde limpio y sombra elevada) con conteo de coincidencias en tiempo real.
+    - Cada fila presenta avatar con iniciales, nombre y apellidos, número de cédula (CI), código de Historia Clínica (`HC-xxxx`), género y edad.
+    - Clic directo en cualquier resultado invoca `handleSelectPatient`, actualiza inmediatamente el expediente del paciente seleccionado, cierra el menú y resalta el paciente activo.
+    - Botón selector y pastilla en cabecera para ver el paciente cargado actualmente o abrir el catálogo rápidamente.
+    - Listener exterior para cerrar automáticamente el desplegable al hacer clic fuera del componente (`handleClickOutside`).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos transformados en 40.26s).
+
+---
 - **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
   - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
   - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
@@ -81,7 +117,19 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+## Estado de Relevo al 07/11/2026 (Buscador Inteligente con Autocompletado en Expediente Clínico CU19)
+- **Sustitución de Select Nativo por Search Combobox Flotante ([`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx)):**
+  - **Diagnóstico del problema:** Al buscar un paciente en el expediente clínico (por nombre o CI), el filtro reducía las opciones a 1 solo elemento en un `<select>` HTML estándar; como el navegador lo dejaba seleccionado automáticamente por defecto en el índice 0, hacer clic en él no disparaba el evento `onChange`, dejando bloqueado el expediente anterior (ej. Rodrigo Alarcón) e impidiendo cargar al paciente buscado.
+  - **Nuevo Buscador Unificado con Autocompletado y Popover Flotante:**
+    - Campo de búsqueda interactivo con icono `Search`, botón de borrado rápido (`X`) y atajo de teclado (`Enter` para seleccionar el primer resultado, `Escape` para cerrar).
+    - Desplegable flotante (`z-50`, backdrop blur, borde limpio y sombra elevada) con conteo de coincidencias en tiempo real.
+    - Cada fila presenta avatar con iniciales, nombre y apellidos, número de cédula (CI), código de Historia Clínica (`HC-xxxx`), género y edad.
+    - Clic directo en cualquier resultado invoca `handleSelectPatient`, actualiza inmediatamente el expediente del paciente seleccionado, cierra el menú y resalta el paciente activo.
+    - Botón selector y pastilla en cabecera para ver el paciente cargado actualmente o abrir el catálogo rápidamente.
+    - Listener exterior para cerrar automáticamente el desplegable al hacer clic fuera del componente (`handleClickOutside`).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos transformados en 40.26s).
+
+---
 - **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
   - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`MatrÃ­cula:` ➔ `Matrícula:`, `â€¢` ➔ `•`, `Agenda MÃ©dica Personal` ➔ `Agenda Médica Personal`, `dÃ­a` ➔ `día`, `MiÃ©rcoles` ➔ `Miércoles`, `SÃ¡bado` ➔ `Sábado`, `Consulta MÃ©dica` ➔ `Consulta Médica`, etc.).
   - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.

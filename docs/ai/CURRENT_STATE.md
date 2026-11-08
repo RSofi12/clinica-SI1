@@ -395,7 +395,8 @@
 - **Frontend (`frontend/src/apps/medical-records/`):**
   - ✅ **Servicio API (`expedienteService.js`):** Métodos `fetchMiExpediente`, `fetchExpedienteByPaciente`, `fetchTimeline`.
   - ✅ **Componente Principal (`ExpedienteClinicoView.jsx`):**
-    - Construido bajo directrices de `/frontend-design` con identidad visual médica diferenciada, tipografía clínica con números tabulares para signos vitales y transiciones fluidas.
+    - Construido bajo directrices de `/frontend-design` y `/design-taste-frontend` con identidad visual médica diferenciada, tipografía clínica con números tabulares para signos vitales y transiciones fluidas.
+    - **Buscador Inteligente con Autocompletado y Popover Flotante (07/11/2026):** Reemplazo del selector nativo tosco por un buscador integrado con popover (`z-50`, backdrop-blur, avatares con iniciales, badges de CI, HC y edad). Selección instantánea con clic o tecla `Enter`, borrado rápido con `X` y cierre exterior automático.
     - Cabecera con tarjeta de identidad del paciente, N° Historia, CI, grupo sanguíneo y edad.
     - Banner destacado de Alertas Médicas (alergias activas en rose/amber y crónicos).
     - Widget de signos vitales y triaje con semáforo OMS de IMC (Bajo peso, Normal, Sobrepeso, Obesidad).
