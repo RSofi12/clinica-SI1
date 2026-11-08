@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { antecedenteService } from '../services/antecedenteService';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 // Sugerencias clínicas rápidas por categoría
 const SUGERENCIAS_CLINICAS = {
@@ -176,14 +177,12 @@ export function AntecedenteFormModal({
   const sugerencias = SUGERENCIAS_CLINICAS[tipo] || [];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-      role="dialog"
-      aria-modal="true"
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={onClose}
+      panelClassName="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-modal-panel flex flex-col max-h-[92vh] cursor-default"
     >
-      <div className="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-slate-200/90 overflow-hidden my-auto animate-in zoom-in-95 duration-200 flex flex-col max-h-[92vh]">
-        {/* Header */}
+      {/* Header */}
         <div className="bg-gradient-to-r from-[#003d47] via-[#005a69] to-[#00687a] p-5 sm:p-6 text-white relative shrink-0">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -340,7 +339,6 @@ export function AntecedenteFormModal({
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

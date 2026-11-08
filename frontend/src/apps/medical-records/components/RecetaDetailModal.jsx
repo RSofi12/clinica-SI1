@@ -13,6 +13,7 @@ import {
   ShieldAlert, 
   Pill
 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 /**
  * Modal de Detalle y Vista Membretada Imprimible de Receta Médica (CU18)
@@ -56,11 +57,13 @@ export default function RecetaDetailModal({
   const edad = calcularEdad(paciente?.fecha_nacimiento);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto print:p-0 print:bg-white print:static">
-      <div 
-        ref={printRef}
-        className="relative w-full max-w-3xl my-6 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden print:border-none print:shadow-none print:max-w-none print:my-0 print:rounded-none"
-      >
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={onClose}
+      className="print:p-0 print:bg-white print:static"
+      panelClassName="relative w-full max-w-3xl my-auto bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-modal-panel print:border-none print:shadow-none print:max-w-none print:my-0 print:rounded-none"
+    >
+      <div ref={printRef}>
         {/* ENCABEZADO MODAL (Oculto en impresión) */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/80 print:hidden">
           <div className="flex items-center gap-2.5">
@@ -337,6 +340,6 @@ export default function RecetaDetailModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }

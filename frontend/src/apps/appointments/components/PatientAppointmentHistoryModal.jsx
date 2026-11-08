@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   History,
@@ -165,8 +166,13 @@ export function PatientAppointmentHistoryModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-modal-backdrop">
-      <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-modal-panel">
+    <>
+      <ModalPortal
+        isOpen={isOpen}
+        onClose={onClose}
+        maxWidth="max-w-3xl"
+        panelClassName="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col animate-modal-panel my-auto"
+      >
         {/* Cabecera */}
         <div className="px-6 py-4 bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -453,7 +459,7 @@ export function PatientAppointmentHistoryModal({
             Cerrar Historial
           </button>
         </div>
-      </div>
+      </ModalPortal>
 
       {/* Modal de Cancelación (CU12) */}
       <AppointmentCancelModal
@@ -465,6 +471,6 @@ export function PatientAppointmentHistoryModal({
           loadHistory();
         }}
       />
-    </div>
+    </>
   );
 }

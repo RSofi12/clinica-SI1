@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { ModalPortal } from '../../../components/ModalPortal';
 import {
   X,
   Stethoscope,
@@ -258,9 +259,13 @@ export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistr
     contexto?.antecedentes?.algunos?.alergias;
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden w-full max-w-3xl max-h-[90vh] flex flex-col">
-
+    <>
+      <ModalPortal
+        isOpen={true}
+        onClose={onClose}
+        maxWidth="max-w-3xl"
+        panelClassName="bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden w-full max-w-3xl max-h-[90vh] flex flex-col my-auto animate-modal-panel"
+      >
         {/* Header */}
         <div className="px-6 py-4 bg-gradient-to-r from-[#004d5a] to-[#006677] text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -632,7 +637,7 @@ export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistr
             </button>
           </div>
         )}
-      </div>
+      </ModalPortal>
 
       {/* Modal de Gestión de Antecedentes Médicos (CU17) */}
       {isAntecedentesModalOpen && paciente && (
@@ -643,6 +648,6 @@ export function ConsultaRegistroModal({ isOpen, onClose, cita, onConsultaRegistr
           onAntecedentesUpdated={recargarContexto}
         />
       )}
-    </div>
+    </>
   );
 }

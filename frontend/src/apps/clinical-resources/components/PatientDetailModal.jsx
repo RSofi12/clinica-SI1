@@ -12,6 +12,7 @@ import {
   Clock,
   Sparkles,
 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 export function PatientDetailModal({ isOpen, onClose, patient }) {
   if (!isOpen || !patient) return null;
@@ -41,9 +42,8 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200/80 w-full max-w-xl my-8 overflow-hidden transition-all animate-in fade-in zoom-in-95">
-        {/* Cabecera de la Ficha Clínica */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-xl">
+      {/* Cabecera de la Ficha Clínica */}
         <div className="relative bg-gradient-to-r from-[#004d5a] via-[#00687a] to-[#008b9e] p-6 text-white">
           <button
             onClick={onClose}
@@ -189,7 +189,6 @@ export function PatientDetailModal({ isOpen, onClose, patient }) {
             Cerrar Ficha
           </button>
         </div>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

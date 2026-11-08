@@ -12,6 +12,7 @@ import {
   Clock,
   Sparkles,
 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 export function DoctorDetailModal({ isOpen, onClose, doctor, onEdit }) {
   if (!isOpen || !doctor) return null;
@@ -26,15 +27,12 @@ export function DoctorDetailModal({ isOpen, onClose, doctor, onEdit }) {
     ) || [];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in"
-      onClick={onClose}
+    <ModalPortal
+      isOpen={isOpen}
+      onClose={onClose}
+      panelClassName="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] my-auto animate-modal-panel cursor-default"
     >
-      <div
-        className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] animate-scale"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Cabecera con fondo clínico y gradiente */}
+      {/* Cabecera con fondo clínico y gradiente */}
         <div className="relative px-6 py-6 bg-gradient-to-r from-[#003844] via-[#004d5a] to-[#00687a] text-white">
           <button
             type="button"
@@ -228,7 +226,6 @@ export function DoctorDetailModal({ isOpen, onClose, doctor, onEdit }) {
             </button>
           )}
         </div>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usersService } from '../services/usersService';
 import { X, Shield, Lock, Clock, AlertTriangle, CheckCircle2, Loader2 } from 'lucide-react';
+import { ModalPortal } from '../../../components/ModalPortal';
 
 /**
  * Modal para configuración administrativa de políticas de bloqueo temporal (CU01 / CU02)
@@ -63,9 +64,8 @@ export function SecurityPolicyModal({ isOpen, onClose, onPolicyUpdated }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden">
-        {/* Cabecera */}
+    <ModalPortal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md">
+      {/* Cabecera */}
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-amber-500/10 text-amber-700">
@@ -183,7 +183,6 @@ export function SecurityPolicyModal({ isOpen, onClose, onPolicyUpdated }) {
             </>
           )}
         </form>
-      </div>
-    </div>
+    </ModalPortal>
   );
 }
