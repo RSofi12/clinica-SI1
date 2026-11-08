@@ -226,20 +226,20 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
         {
           id: 'stripe-admin',
           title: 'Pagos con Stripe (CU21)',
-          desc: 'Supervisión de transacciones electrónicas en Sandbox',
+          desc: 'Supervisión y cobro de citas con tarjeta tokenizada en Sandbox (CU21)',
           icon: CreditCard,
-          iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
-          badge: 'En desarrollo',
-          action: () => {},
+          iconBg: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+          badge: 'Sandbox',
+          action: () => onNavigate('appointments'),
         },
         {
           id: 'examenes-admin',
           title: 'Órdenes de Exámenes (CU25)',
-          desc: 'Catálogo de pruebas diagnósticas y laboratorio',
+          desc: 'Prescripción y resultados de estudios de laboratorio e imágenes (CU25)',
           icon: Layers,
-          iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
-          badge: 'En desarrollo',
-          action: () => {},
+          iconBg: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+          badge: 'Diagnóstico',
+          action: () => onNavigate('expediente'),
         },
       ];
     }
@@ -312,20 +312,20 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
         {
           id: 'examenes',
           title: 'Órdenes de Exámenes (CU25)',
-          desc: 'Solicitud de pruebas diagnósticas (laboratorio e imágenes)',
+          desc: 'Solicitud y seguimiento de pruebas diagnósticas (laboratorio e imágenes)',
           icon: Layers,
-          iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
-          badge: 'En desarrollo',
-          action: () => {},
+          iconBg: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+          badge: 'Diagnóstico',
+          action: () => onNavigate('expediente'),
         },
         {
           id: 'adjuntos',
-          title: 'Documentos Adjuntos (CU26)',
-          desc: 'Custodia de estudios y archivos clínicos externos',
+          title: 'Documentos y DICOM (CU26)',
+          desc: 'Custodia de estudios DICOM (.dcm) y archivos clínicos externos',
           icon: FolderOpen,
-          iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
-          badge: 'En desarrollo',
-          action: () => {},
+          iconBg: 'bg-sky-50 text-sky-700 border-sky-100',
+          badge: 'DICOM',
+          action: () => onNavigate('expediente'),
         },
       ];
     }
@@ -389,11 +389,20 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
         {
           id: 'asistencia',
           title: 'Control de Asistencia (CU13)',
-          desc: 'Registro presencial de llegada del paciente a la sala',
+          desc: 'Registro presencial de llegada del paciente y check-in a consulta',
           icon: CalendarCheck2,
-          iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
-          badge: 'En desarrollo',
-          action: () => {},
+          iconBg: 'bg-teal-50 text-teal-700 border-teal-100',
+          badge: 'Check-in',
+          action: () => onNavigate('appointments'),
+        },
+        {
+          id: 'stripe-recepcion',
+          title: 'Cobros con Stripe (CU21)',
+          desc: 'Recepción y cobro de citas con tarjeta tokenizada en Sandbox',
+          icon: CreditCard,
+          iconBg: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+          badge: 'Cobro Sandbox',
+          action: () => onNavigate('appointments'),
         },
       ];
     }
@@ -448,20 +457,20 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
       {
         id: 'stripe-paciente',
         title: 'Pago Online con Stripe (CU21)',
-        desc: 'Abonar consulta con tarjeta tokenizada en modo prueba',
+        desc: 'Abonar consulta con tarjeta tokenizada en modo prueba garantizada',
         icon: CreditCard,
-        iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
-        badge: 'En desarrollo',
-        action: () => {},
+        iconBg: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+        badge: 'Garantizada',
+        action: () => onNavigate('appointments'),
       },
       {
         id: 'examenes-paciente',
         title: 'Órdenes de Exámenes (CU25)',
         desc: 'Consultar solicitudes de laboratorio e indicaciones clínicas',
         icon: Layers,
-        iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
-        badge: 'En desarrollo',
-        action: () => {},
+        iconBg: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+        badge: 'Resultados',
+        action: () => onNavigate('expediente'),
       },
     ];
   };
@@ -469,10 +478,6 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
   const quickAccessItems = getQuickAccessItems();
 
   const handleCardClick = (item) => {
-    if (item.badge === 'En desarrollo') {
-      alert(`${item.title}\n\nFuncionalidad en desarrollo para la entrega final del Ciclo 2.`);
-      return;
-    }
     if (item.action) {
       item.action();
     }
@@ -577,17 +582,12 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {quickAccessItems.map((item) => {
             const Icon = item.icon;
-            const isDev = item.badge === 'En desarrollo';
 
             return (
               <button
                 key={item.id}
                 onClick={() => handleCardClick(item)}
-                className={`group p-4 bg-white hover:bg-slate-50/90 rounded-2xl border transition-all duration-200 text-left flex items-start justify-between gap-3 cursor-pointer ${
-                  isDev
-                    ? 'border-amber-200/90 hover:border-amber-300'
-                    : 'border-slate-200/90 hover:border-[#00687a]/30 shadow-xs hover:shadow-md'
-                }`}
+                className="group p-4 bg-white hover:bg-slate-50/90 rounded-2xl border border-slate-200/90 hover:border-[#00687a]/40 shadow-xs hover:shadow-md transition-all duration-200 text-left flex items-start justify-between gap-3 cursor-pointer"
               >
                 <div className="flex items-start gap-3 min-w-0">
                   <div className={`p-2.5 rounded-xl border shrink-0 transition-transform group-hover:scale-105 ${item.iconBg}`}>
@@ -602,9 +602,9 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
                     <p className="text-xs text-slate-500 mt-0.5 leading-snug line-clamp-2">
                       {item.desc}
                     </p>
-                    {isDev && (
-                      <span className="inline-block mt-2 text-[9px] font-semibold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.2 rounded">
-                        En desarrollo
+                    {item.badge && (
+                      <span className="inline-block mt-2 text-[10px] font-bold text-[#00687a] bg-[#00687a]/10 border border-[#00687a]/20 px-2 py-0.5 rounded-md font-mono">
+                        {item.badge}
                       </span>
                     )}
                   </div>
