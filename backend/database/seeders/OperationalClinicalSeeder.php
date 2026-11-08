@@ -357,14 +357,284 @@ class OperationalClinicalSeeder extends Seeder
         }
 
         // =========================================================================
-        // 6. SINCRONIZACIÓN DE SECUENCIAS POSTGRESQL
+        // 6. CITAS DEMOSTRATIVAS PARA EL DÍA DE HOY (CU13, CU14, CU16, CU21)
+        // =========================================================================
+        // Genera citas para la jornada de hoy con estados variados para interactuar de inmediato
+        $docPerez = DB::table('medicos')->where('correo_profesional', 'juan.perez@clinicalacruz.com')->first();
+        $docAlejandro = DB::table('medicos')->where('correo_profesional', 'alejandro.cardiologia@clinicalacruz.com')->first();
+        $pacientesHoy = DB::table('pacientes')->take(6)->get();
+
+        if ($docPerez && $pacientesHoy->count() >= 3) {
+            $hoyStr = $ahora->format('Y-m-d');
+            $maxCitaNum = DB::table('citas')
+                ->where('codigo_cita', 'LIKE', 'CM-%')
+                ->selectRaw("MAX(CAST(SUBSTRING(codigo_cita FROM 4) AS INTEGER)) as max_num")
+                ->value('max_num') ?? 100;
+
+            $citasHoyConfig = [
+                [
+                    'hora_ini' => '08:30:00',
+                    'hora_fin' => '09:00:00',
+                    'estado'   => 'CONFIRMADA', // Lista para CU16: Iniciar Consulta Médica
+                    'pagada'   => true,
+                    'monto'    => 80.00,
+                    'motivo'   => 'Control de hipertensión arterial y ajuste de medicación.',
+                    'paciente' => $pacientesHoy->get(0),
+                    'medico'   => $docPerez,
+                    'esp'      => 1, // Medicina General
+                ],
+                [
+                    'hora_ini' => '09:30:00',
+                    'hora_fin' => '10:00:00',
+                    'estado'   => 'PROGRAMADA', // Lista para CU13: Check-in / Confirmar asistencia
+                    'pagada'   => false,
+                    'monto'    => 80.00,
+                    'motivo'   => 'Consulta general por cuadro de cefalea tensional recurrente.',
+                    'paciente' => $pacientesHoy->get(1),
+                    'medico'   => $docPerez,
+                    'esp'      => 1,
+                ],
+                [
+                    'hora_ini' => '10:30:00',
+                    'hora_fin' => '11:00:00',
+                    'estado'   => 'PROGRAMADA', // Lista para CU21: Pagar con Stripe Sandbox
+                    'pagada'   => false,
+                    'monto'    => 80.00,
+                    'motivo'   => 'Evaluación médica preventiva y chequeo de rutina.',
+                    'paciente' => $pacientesHoy->get(2),
+                    'medico'   => $docPerez,
+                    'esp'      => 1,
+                ],
+            ];
+
+            foreach ($citasHoyConfig as $ch) {
+                $existeCitaHoy = DB::table('citas')
+                    ->where('id_medico', $ch['medico']->id_medico)
+                    ->whereDate('fecha_hora_inicio', $hoyStr)
+                    ->whereTime('fecha_hora_inicio', $ch['hora_ini'])
+                    ->first();
+
+                if (!$existeCitaHoy) {
+                    $maxCitaNum++;
+                    $cod = sprintf('CM-%04d', $maxCitaNum);
+                    $ini = Carbon::parse("{$hoyStr} {$ch['hora_ini']}");
+                    $fin = Carbon::parse("{$hoyStr} {$ch['hora_fin']}");
+
+                    $idCitaNueva = DB::table('citas')->insertGetId([
+                        'codigo_cita'       => $cod,
+                        'id_paciente'       => $ch['paciente']->id_paciente,
+                        'id_medico'         => $ch['medico']->id_medico,
+                        'id_especialidad'   => $ch['esp'],
+                        'id_tipo_cita'      => 1, // Primera vez
+                        'fecha_hora_inicio' => $ini,
+                        'fecha_hora_fin'    => $fin,
+                        'duracion_minutos'  => 30,
+                        'estado'            => $ch['estado'],
+                        'modalidad'         => 'PRESENCIAL',
+                        'motivo_consulta'   => $ch['motivo'],
+                        'pagada'            => $ch['pagada'],
+                        'monto_pago'        => $ch['monto'],
+                        'creada_por'        => $adminId,
+                        'created_at'        => $ahora->copy()->subHours(2),
+                        'updated_at'        => $ahora->copy()->subHours(1),
+                    ], 'id_cita');
+
+                    // Registrar estado en historial
+                    DB::table('cita_estado_historial')->insert([
+                        'id_cita'          => $idCitaNueva,
+                        'estado_anterior'  => null,
+                        'estado_nuevo'     => $ch['estado'],
+                        'id_usuario'       => $adminId,
+                        'observacion'      => 'Reserva demostrativa de cita para el día en curso.',
+                        'fecha_cambio'     => $ahora->copy()->subHours(2),
+                    ]);
+
+                    // Si está pagada, registrar pago
+                    if ($ch['pagada']) {
+                        DB::table('pagos')->insert([
+                            'id_cita'     => $idCitaNueva,
+                            'id_paciente' => $ch['paciente']->id_paciente,
+                            'monto'       => $ch['monto'],
+                            'metodo_pago' => 'EFECTIVO',
+                            'estado'      => 'COMPLETADO',
+                            'fecha_pago'  => $ahora->copy()->subHours(1),
+                            'created_at'  => $ahora->copy()->subHours(1),
+                            'updated_at'  => $ahora->copy()->subHours(1),
+                        ]);
+                    }
+                }
+            }
+        }
+
+        // =========================================================================
+        // 7. NOTIFICACIONES DEL SISTEMA (CU20)
+        // =========================================================================
+        $usersMap = DB::table('usuarios')->pluck('id_usuario', 'username');
+        $citasRecientes = DB::table('citas')->orderBy('id_cita', 'desc')->take(10)->get();
+
+        $notificacionesDemo = [];
+
+        // Notificaciones para Administrador
+        if (isset($usersMap['admin'])) {
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['admin'],
+                'id_cita'     => $citasRecientes->first()?->id_cita,
+                'tipo'        => 'RECORDATORIO_24H',
+                'canal'       => 'EMAIL',
+                'titulo'      => 'Recordatorio de Operaciones Clínicas (24h)',
+                'mensaje'     => 'Se han evaluado las citas preventivas para la jornada de mañana. Planificador de recordatorios activo.',
+                'leida'       => false,
+                'fecha_envio' => $ahora->copy()->subMinutes(15),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['admin'],
+                'id_cita'     => $citasRecientes->get(1)?->id_cita,
+                'tipo'        => 'PAGO_EXITOSO',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Comprobante de Pago Confirmado con Stripe',
+                'mensaje'     => 'Transacción electrónica por $80.00 USD procesada exitosamente en modo prueba.',
+                'leida'       => false,
+                'fecha_envio' => $ahora->copy()->subHours(1),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['admin'],
+                'id_cita'     => $citasRecientes->get(2)?->id_cita,
+                'tipo'        => 'CONFIRMACION',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Cita Médica Reservada en Recepción',
+                'mensaje'     => 'Nueva cita médica agendada para Medicina General en la sede central.',
+                'leida'       => true,
+                'fecha_envio' => $ahora->copy()->subHours(5),
+            ];
+        }
+
+        // Notificaciones para Personal Médico (doctor.perez)
+        if (isset($usersMap['doctor.perez'])) {
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['doctor.perez'],
+                'id_cita'     => $citasRecientes->first()?->id_cita,
+                'tipo'        => 'RECORDATORIO_24H',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Recordatorio de Agenda (24h) — Citas de Mañana',
+                'mensaje'     => 'Estimado Dr. Pérez: Tiene consultas programadas en su agenda a partir de las 08:30 en el Consultorio 101.',
+                'leida'       => false,
+                'fecha_envio' => $ahora->copy()->subMinutes(30),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['doctor.perez'],
+                'id_cita'     => $citasRecientes->get(1)?->id_cita,
+                'tipo'        => 'CONFIRMACION',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Nueva Cita en su Agenda Asistencial',
+                'mensaje'     => 'Se ha reservado un turno para el paciente Carlos Silva en horario de la mañana.',
+                'leida'       => false,
+                'fecha_envio' => $ahora->copy()->subHours(2),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['doctor.perez'],
+                'id_cita'     => $citasRecientes->get(2)?->id_cita,
+                'tipo'        => 'REPROGRAMACION',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Cita Reprogramada en su Agenda',
+                'mensaje'     => 'El control de hipertensión de la paciente Mariana Torrico fue reprogramado para el lunes a las 09:00.',
+                'leida'       => true,
+                'fecha_envio' => $ahora->copy()->subDay(),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['doctor.perez'],
+                'id_cita'     => $citasRecientes->get(3)?->id_cita,
+                'tipo'        => 'CANCELACION',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Cita Cancelada en su Agenda',
+                'mensaje'     => 'El turno de las 11:30 fue cancelado por motivo de viaje imprevisto. El cupo horario ha sido liberado.',
+                'leida'       => true,
+                'fecha_envio' => $ahora->copy()->subDays(2),
+            ];
+        }
+
+        // Notificaciones para Recepcionista (recepcion)
+        if (isset($usersMap['recepcion'])) {
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['recepcion'],
+                'id_cita'     => $citasRecientes->first()?->id_cita,
+                'tipo'        => 'CONFIRMACION',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Nueva Reserva Registrada en Ventanilla',
+                'mensaje'     => 'Se agendó la cita CM-0002 para Medicina General.',
+                'leida'       => false,
+                'fecha_envio' => $ahora->copy()->subMinutes(10),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['recepcion'],
+                'id_cita'     => $citasRecientes->get(1)?->id_cita,
+                'tipo'        => 'PAGO_EXITOSO',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Pago de Consulta Confirmado',
+                'mensaje'     => 'Cobro de $80.00 USD confirmado con tarjeta de crédito en Stripe.',
+                'leida'       => true,
+                'fecha_envio' => $ahora->copy()->subHours(3),
+            ];
+        }
+
+        // Notificaciones para Paciente (paciente.carlos)
+        if (isset($usersMap['paciente.carlos'])) {
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['paciente.carlos'],
+                'id_cita'     => $citasRecientes->first()?->id_cita,
+                'tipo'        => 'RECORDATORIO_24H',
+                'canal'       => 'EMAIL',
+                'titulo'      => 'Recordatorio de Cita Médica (24h) — Centro Médico La Cruz',
+                'mensaje'     => 'Estimado(a) Carlos Silva: Le recordamos su cita con el Dr. Juan Pérez para mañana a las 08:30. Por favor presentarse 15 minutos antes con su cédula de identidad.',
+                'leida'       => false,
+                'fecha_envio' => $ahora->copy()->subMinutes(45),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['paciente.carlos'],
+                'id_cita'     => $citasRecientes->get(1)?->id_cita,
+                'tipo'        => 'PAGO_EXITOSO',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Comprobante de Pago Confirmado',
+                'mensaje'     => 'Hemos recibido tu pago de $80.00 USD para tu cita médica. Tu turno se encuentra garantizado.',
+                'leida'       => false,
+                'fecha_envio' => $ahora->copy()->subHours(4),
+            ];
+            $notificacionesDemo[] = [
+                'id_usuario'  => $usersMap['paciente.carlos'],
+                'id_cita'     => $citasRecientes->get(2)?->id_cita,
+                'tipo'        => 'CONFIRMACION',
+                'canal'       => 'IN_APP',
+                'titulo'      => 'Cita Médica Reservada Exitosamente',
+                'mensaje'     => 'Tu cita con Dr. Juan Pérez ha sido registrada. Código de confirmación asignado.',
+                'leida'       => true,
+                'fecha_envio' => $ahora->copy()->subDays(1),
+            ];
+        }
+
+        foreach ($notificacionesDemo as $n) {
+            $existeNotif = DB::table('notificaciones')
+                ->where('id_usuario', $n['id_usuario'])
+                ->where('titulo', $n['titulo'])
+                ->first();
+
+            if (!$existeNotif) {
+                DB::table('notificaciones')->insert(array_merge($n, [
+                    'created_at' => $n['fecha_envio'],
+                    'updated_at' => $n['fecha_envio'],
+                ]));
+            }
+        }
+
+        // =========================================================================
+        // 8. SINCRONIZACIÓN DE SECUENCIAS POSTGRESQL
         // =========================================================================
         $tablasSeq = [
             'bloqueos_horario' => 'bloqueos_horario_id_bloqueo_seq',
-            'pagos' => 'pagos_id_pago_seq',
+            'citas'            => 'citas_id_cita_seq',
+            'pagos'            => 'pagos_id_pago_seq',
             'ordenes_examenes' => 'ordenes_examenes_id_orden_seq',
             'documentos_clinicos' => 'documentos_clinicos_id_documento_seq',
-            'reportes_ia' => 'reportes_ia_id_reporte_seq',
+            'notificaciones'   => 'notificaciones_id_notificacion_seq',
+            'reportes_ia'      => 'reportes_ia_id_reporte_seq',
         ];
 
         foreach ($tablasSeq as $tabla => $seq) {
