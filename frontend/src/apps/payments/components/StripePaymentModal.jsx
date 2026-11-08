@@ -259,10 +259,10 @@ export default function StripePaymentModal({
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-extrabold text-[#003844] tracking-tight">
-                    ${Number(montoMostrar).toFixed(2)}
+                    Bs. {Number(montoMostrar).toFixed(2)}
                   </div>
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    USD · Tarifa Consulta
+                    Bs · Tarifa Consulta
                   </span>
                 </div>
               </div>
@@ -396,7 +396,7 @@ export default function StripePaymentModal({
                   ) : (
                     <>
                       <ShieldCheck className="w-4 h-4 text-cyan-300" />
-                      Pagar ${Number(montoMostrar).toFixed(2)} USD
+                      Pagar Bs. {Number(montoMostrar).toFixed(2)}
                     </>
                   )}
                 </button>
@@ -444,7 +444,7 @@ export default function StripePaymentModal({
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400 block">Monto Cobrado</span>
                   <span className="font-bold text-emerald-700 text-sm">
-                    ${Number(pagoExitoso.monto).toFixed(2)} {pagoExitoso.moneda?.toUpperCase()}
+                    Bs. {Number(pagoExitoso.monto).toFixed(2)}
                   </span>
                 </div>
                 <div>

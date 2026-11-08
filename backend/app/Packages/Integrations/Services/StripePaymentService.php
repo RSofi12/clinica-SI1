@@ -24,7 +24,7 @@ class StripePaymentService
     public function __construct()
     {
         $this->secretKey = config('services.stripe.secret') ?? env('STRIPE_SECRET', '');
-        $this->currency  = strtolower(config('services.stripe.currency') ?? env('STRIPE_CURRENCY', 'usd'));
+        $this->currency  = strtolower(config('services.stripe.currency') ?? env('STRIPE_CURRENCY', 'bob'));
     }
 
     /**
@@ -268,7 +268,7 @@ class StripePaymentService
                 'PAGO_CITA_STRIPE',
                 'pagos',
                 $pago->id_pago,
-                "Confirmado pago {$pago->codigo_pago} de \${$monto} USD para cita {$cita->codigo_cita} ({$cita->especialidad?->nombre}) vía Stripe Sandbox ({$paymentIntentId}). Tarjeta terminada en {$tarjetaUltimos4}.",
+                "Confirmado pago {$pago->codigo_pago} de Bs. {$monto} para cita {$cita->codigo_cita} ({$cita->especialidad?->nombre}) vía Stripe Sandbox ({$paymentIntentId}). Tarjeta terminada en {$tarjetaUltimos4}.",
                 request() ? request()->ip() : '127.0.0.1'
             );
 

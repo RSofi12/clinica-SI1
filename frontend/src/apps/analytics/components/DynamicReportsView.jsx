@@ -448,7 +448,7 @@ export function DynamicReportsView() {
                 <option value="TODOS">Todas las Especialidades</option>
                 {catalogs.especialidades?.map((esp) => (
                   <option key={esp.id_especialidad} value={esp.id_especialidad}>
-                    {esp.nombre} (${Number(esp.precio_consulta || 70).toFixed(2)})
+                    {esp.nombre} (Bs. {Number(esp.precio_consulta || 70).toFixed(2)})
                   </option>
                 ))}
               </select>
@@ -513,7 +513,7 @@ export function DynamicReportsView() {
                 </span>
                 <div className="mt-2 flex items-baseline gap-1">
                   <span className="text-xl sm:text-2xl font-bold font-sans-clinical text-slate-900">
-                    {esDinero ? `$${Number(valor).toFixed(2)}` : valor}
+                    {esDinero ? `Bs. ${Number(valor).toFixed(2)}` : valor}
                   </span>
                   {esPorcentaje && <span className="text-xs font-semibold text-[#00687a]">%</span>}
                 </div>
@@ -546,7 +546,7 @@ export function DynamicReportsView() {
                 </div>
                 <div className="flex justify-between text-[11px] text-slate-500 mt-2">
                   <span>{item.total_citas} citas ({item.atendidas} atendidas)</span>
-                  <span className="font-semibold text-slate-700">${item.ingresos_estimados} USD</span>
+                  <span className="font-semibold text-slate-700">Bs. {Number(item.ingresos_estimados).toFixed(2)}</span>
                 </div>
               </div>
             ))}
@@ -762,7 +762,7 @@ export function DynamicReportsView() {
                           )}
                         </td>
                         <td className="px-4 py-3 text-right font-semibold text-slate-900">
-                          ${Number(row.monto_pago || 70).toFixed(2)}
+                          Bs. {Number(row.monto_pago || 70).toFixed(2)}
                         </td>
                       </>
                     )}
