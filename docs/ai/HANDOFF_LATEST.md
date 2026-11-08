@@ -1,5 +1,26 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
+- **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
+  - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`Matrícula:`, `•`, `Agenda Médica Personal`, `día`, `Miércoles`, `Sábado`, `Consulta Médica`, etc.).
+  - **Tratamiento inclusivo de médicos:** Estandarizado `Dr(a).` en títulos y cabeceras de médicos para dar cobertura coherente a doctoras y doctores del plantel.
+  - **Auditoría global:** Verificado con escaneo recursivo que el 100% de los archivos `.jsx` y `.js` del frontend y `.php` del backend tienen 0 caracteres corruptos.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 16.43s).
+
+---
+
+## Estado de Relevo al 07/11/2026 (Transición Fluida de Salida en Modales y Descarga Directa de Reportes IA en PDF)
+- **Transición Fluida de Salida en Modales ([`ModalPortal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/components/ModalPortal.jsx) y [`index.css`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/index.css)):**
+  - **Animación no abrupta al cerrar:** Implementado estado interno `isClosing` de 200ms que aplica `@keyframes modalBackdropOut` y `@keyframes modalPanelOut` al presionar `Escape`, hacer clic en el backdrop exterior o pulsar el botón `X`/Cerrar.
+  - El fondo se desvanece suavemente (`opacity 1 -> 0`, `backdrop-filter 8px -> 0px`) y el panel del modal se escala suavemente (`scale 1 -> 0.96`, `translateY 0 -> 10px`), eliminando cualquier desaparición brusca en todos los modales de la aplicación.
+- **Descarga Directa de Reportes por IA sin Diálogo de Impresión ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js) y [`VoiceReportAssistant.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/components/VoiceReportAssistant.jsx)):**
+  - **Eliminación del panel de impresión del navegador:** Se sustituyó la apertura de pestaña secundaria con `window.print()` por un generador nativo de documentos PDF estándar (`buildPdfDocument`).
+  - **Descarga instantánea como archivo binario `.pdf`:** Se construye un PDF estándar (PDF-1.4 con membrete institucional Teal `#00687A`, tarjetas KPI formateadas, tablas zebra sanitizadas y paginación) que se descarga automáticamente a la carpeta de descargas del usuario mediante `Blob` y trigger `link.click()`.
+  - Botón de exportación actualizado con icono `Download` e indicación visual de descarga directa.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos, 1m 28s).
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Paginación Interactiva en Gestión de Usuarios y Roles — CU02 / RF01)
 - **Paginación en Gestión de Usuarios (`UsersManager.jsx`):**
   - **Detección y Causa:** La API `UsersController.php` retornaba paginación por defecto de 15 usuarios por página, pero la vista carecía de controles de paginación y flechas de navegación, dejando inaccesibles las páginas 2, 3 y 4 con el filtro "Todos los Roles" (49 usuarios totales en la base de datos).

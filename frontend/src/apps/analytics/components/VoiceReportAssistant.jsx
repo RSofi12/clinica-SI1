@@ -507,14 +507,14 @@ export function VoiceReportAssistant() {
                   <span>Excel</span>
                 </button>
 
-                {/* 2. Exportar PDF */}
+                {/* 2. Exportar PDF (Descarga Directa) */}
                 <button
                   onClick={() => analyticsService.exportToPdf(reportData)}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-150 cursor-pointer"
-                  title="Generar e imprimir documento formal en formato PDF"
+                  title="Descargar reporte formal en formato PDF (sin panel de impresión)"
                 >
-                  <Printer className="w-4 h-4 text-cyan-300" />
-                  <span>PDF</span>
+                  <Download className="w-4 h-4 text-cyan-300" />
+                  <span>Descargar PDF</span>
                 </button>
 
                 {/* 3. Exportar CSV */}
