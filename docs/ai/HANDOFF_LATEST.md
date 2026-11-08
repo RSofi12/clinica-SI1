@@ -1,6 +1,14 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+- **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
+  - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
+  - **Solución implementada:**
+    - Se reemplazaron explícitamente las cadenas estáticas de título y subtítulo por guiones ASCII estándar `-` (`Centro Medico La Cruz - Clinica Vida Salud` y `Reporte Asistencial y Estadistico (CU23) - Tipo: ...`).
+    - Se mejoró la función `sanitizePdfText` con un pre-mapeo universal de caracteres tipográficos extendidos (`[—–]` ➔ `-`, `[·•]` ➔ `-`, `[“”]` ➔ `"`, `[‘’]` ➔ `'`, `[º°]` ➔ `o`, `[ª]` ➔ `a`), sustituyendo cualquier remanente por espacio en lugar de `?`.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2m 16s).
+
+---
 - **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
   - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
   - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
@@ -69,7 +77,15 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+- **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
+  - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
+  - **Solución implementada:**
+    - Se reemplazaron explícitamente las cadenas estáticas de título y subtítulo por guiones ASCII estándar `-` (`Centro Medico La Cruz - Clinica Vida Salud` y `Reporte Asistencial y Estadistico (CU23) - Tipo: ...`).
+    - Se mejoró la función `sanitizePdfText` con un pre-mapeo universal de caracteres tipográficos extendidos (`[—–]` ➔ `-`, `[·•]` ➔ `-`, `[“”]` ➔ `"`, `[‘’]` ➔ `'`, `[º°]` ➔ `o`, `[ª]` ➔ `a`), sustituyendo cualquier remanente por espacio en lugar de `?`.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2m 16s).
+
+---
 - **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
   - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
   - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
@@ -144,7 +160,15 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+- **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
+  - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
+  - **Solución implementada:**
+    - Se reemplazaron explícitamente las cadenas estáticas de título y subtítulo por guiones ASCII estándar `-` (`Centro Medico La Cruz - Clinica Vida Salud` y `Reporte Asistencial y Estadistico (CU23) - Tipo: ...`).
+    - Se mejoró la función `sanitizePdfText` con un pre-mapeo universal de caracteres tipográficos extendidos (`[—–]` ➔ `-`, `[·•]` ➔ `-`, `[“”]` ➔ `"`, `[‘’]` ➔ `'`, `[º°]` ➔ `o`, `[ª]` ➔ `a`), sustituyendo cualquier remanente por espacio en lugar de `?`.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2m 16s).
+
+---
 - **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
   - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
   - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
@@ -213,7 +237,15 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+- **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
+  - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
+  - **Solución implementada:**
+    - Se reemplazaron explícitamente las cadenas estáticas de título y subtítulo por guiones ASCII estándar `-` (`Centro Medico La Cruz - Clinica Vida Salud` y `Reporte Asistencial y Estadistico (CU23) - Tipo: ...`).
+    - Se mejoró la función `sanitizePdfText` con un pre-mapeo universal de caracteres tipográficos extendidos (`[—–]` ➔ `-`, `[·•]` ➔ `-`, `[“”]` ➔ `"`, `[‘’]` ➔ `'`, `[º°]` ➔ `o`, `[ª]` ➔ `a`), sustituyendo cualquier remanente por espacio en lugar de `?`.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2m 16s).
+
+---
 - **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
   - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
   - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.

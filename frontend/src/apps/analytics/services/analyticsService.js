@@ -253,8 +253,8 @@ export const analyticsService = {
     });
 
     const pdfContent = buildPdfDocument({
-      title: 'Centro Medico La Cruz — Clinica Vida Salud',
-      subtitle: `Reporte Asistencial y Estadistico (CU23) · Tipo: ${tipoReporte}`,
+      title: 'Centro Medico La Cruz - Clinica Vida Salud',
+      subtitle: `Reporte Asistencial y Estadistico (CU23) - Tipo: ${tipoReporte}`,
       date: fechaHora,
       kpis,
       headers,
@@ -290,12 +290,19 @@ function buildPdfDocument({ title, subtitle, date, kpis, headers, rows }) {
   function sanitizePdfText(str) {
     if (!str) return '';
     return String(str)
+      // Mapeo seguro de caracteres tipográficos a ASCII
+      .replace(/[—–]/g, '-')
+      .replace(/[·•]/g, '-')
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'")
+      .replace(/[º°]/g, 'o')
+      .replace(/[ª]/g, 'a')
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/\\/g, '\\\\')
       .replace(/\(/g, '\\(')
       .replace(/\)/g, '\\)')
-      .replace(/[^\x20-\x7E]/g, '?');
+      .replace(/[^\x20-\x7E]/g, ' ');
   }
 
   function startNewPage() {
