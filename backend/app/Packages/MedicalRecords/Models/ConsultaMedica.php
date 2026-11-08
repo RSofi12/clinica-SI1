@@ -107,7 +107,7 @@ class ConsultaMedica extends Model
 
     public function receta(): HasOne
     {
-        return $this->hasOne(Receta::class, 'id_consulta', 'id_consulta')->latestOfMany();
+        return $this->hasOne(Receta::class, 'id_consulta', 'id_consulta')->latestOfMany('id_receta');
     }
 
     public function recetas(): HasMany
