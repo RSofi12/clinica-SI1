@@ -46,3 +46,4 @@
 # Ninguna migración requerida
 npm --prefix frontend run build
 ```
+
