@@ -10,8 +10,8 @@ El usuario eligió la **Opción A (Recomendada)**: implementar una ventana modal
 
 ## 3. Cambios Implementados
 
-### Nuevo Componente: `ConsultaDetailModal.jsx`
-- **Ubicación:** `frontend/src/apps/medical-records/components/ConsultaDetailModal.jsx`.
+### Nuevo Componente: `ConsultaDetailModal.jsx` y Estilos de Impresión Oficial (@media print)
+- **Ubicación:** `frontend/src/apps/medical-records/components/ConsultaDetailModal.jsx` y `frontend/src/index.css`.
 - **Estructura y Capacidades:**
   - Integrado con `ModalPortal` (`maxWidth="max-w-3xl"`, scroll locking en body y cierre suave con Esc o clic en backdrop).
   - Cabecera clínica Deep Aqua con número correlativo de consulta, código de cita médica (`CM-XXXX`), modalidad y fecha/hora.
@@ -25,20 +25,26 @@ El usuario eligió la **Opción A (Recomendada)**: implementar una ventana modal
   - Sección de Diagnósticos CIE-10: Badges semánticos de Presuntivo / Definitivo, código CIE-10 y descripción de la patología.
   - Prescripción Farmacológica (CU18) y Órdenes de Exámenes (CU25) asociadas a la atención.
   - Acciones: Botón para imprimir la ficha médica completa y botón de cierre.
+  - **Aislamiento de Impresión y Hoja Clínica Oficial:**
+    - Se dividió el componente en dos capas: capa interactiva de pantalla (`print:hidden`) y capa de documento médico impreso (`hidden print:block`).
+    - Al pulsar "Imprimir Ficha", se activa la clase `printing-modal` con retardo asíncrono de 80ms para garantizar el reflow del motor Chromium y captura del diálogo de impresión.
+    - En `index.css`: `body.printing-modal #root, body:has([role="dialog"]) #root` oculta al 100% la tabla del sistema de fondo (`display: none !important; position: absolute; left: -9999px`), asegurando que Chrome/Edge imprima exclusivamente la Ficha Clínica Oficial con membrete, constantes, CIE-10, prescripción y líneas de firma/sello profesional.
 
-### Actualización en `ConsultasManager.jsx`
+### Actualización en `ConsultasManager.jsx` y `RecetaDetailModal.jsx`
 - Importación de `ConsultaDetailModal`.
 - Nuevo estado reactivo: `const [selectedConsulta, setSelectedConsulta] = useState(null)`.
 - Sustitución de los `alert(...)` por `setSelectedConsulta(c)`.
 - Renderizado condicional del modal al pie del componente.
+- En `RecetaDetailModal.jsx`: sincronizada la clase `printing-modal` y `afterprint` para impresión aislada de prescripciones.
 
 ## 4. Verificación y Pruebas
-1. `npm --prefix frontend run build`: Compilación exitosa en 731ms con **0 errores** (2051 módulos transformados).
+1. `npm --prefix frontend run build`: Compilación exitosa en 1.11s con **0 errores** (2051 módulos transformados).
 2. Servidor Vite HMR: Actualización en caliente aplicada sin interrupciones en `http://localhost:5173`.
-3. Verificación de flujo: Al hacer clic en "Ver Detalle" de cualquier consulta (incluyendo la #76), se despliega de inmediato la ficha médica completa sin alertas del navegador.
+3. Verificación de flujo: Al hacer clic en "Ver Detalle" de cualquier consulta (incluyendo la #76), se despliega de inmediato la ficha médica completa sin alertas del navegador, y al pulsar "Imprimir Ficha" se genera la ficha clínica oficial sin la tabla de fondo.
 
 ## 5. Comandos a Ejecutar tras Pull
 ```bash
 # Ninguna migración nueva requerida
 npm --prefix frontend run build
 ```
+

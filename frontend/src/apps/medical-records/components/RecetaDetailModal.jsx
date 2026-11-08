@@ -44,8 +44,22 @@ export default function RecetaDetailModal({
   );
 
   const handlePrint = () => {
-    window.print();
+    document.body.classList.add('printing-modal');
+    setTimeout(() => {
+      window.print();
+    }, 80);
   };
+
+  React.useEffect(() => {
+    const cleanup = () => {
+      document.body.classList.remove('printing-modal');
+    };
+    window.addEventListener('afterprint', cleanup);
+    return () => {
+      window.removeEventListener('afterprint', cleanup);
+      cleanup();
+    };
+  }, []);
 
   const calcularEdad = (fechaNacimiento) => {
     if (!fechaNacimiento) return null;

@@ -1,6 +1,6 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 08/11/2026 (Modal de Detalle Clínico de Consulta Médica y Triaje — CU16 / CU19)
+## Estado de Relevo al 08/11/2026 (Modal de Detalle Clínico de Consulta Médica, Triaje e Impresión Oficial — CU16 / CU19)
 - **Implementación de ConsultaDetailModal (`ConsultaDetailModal.jsx` y `ConsultasManager.jsx`):**
   - **Reemplazo de Alerta Temporal:** Se eliminó el `alert("Ver detalle de consulta #...")` provisional en las filas de la tabla y tarjetas móviles de `ConsultasManager.jsx`.
   - **Componente `ConsultaDetailModal.jsx`:**
@@ -11,8 +11,11 @@
     - Desglose clínico de motivo de consulta, observaciones y examen físico.
     - Diagnósticos codificados CIE-10 con badges presuntivo/definitivo y código oficial.
     - Prescripción médica asociada (fármacos, posología y duración) y órdenes de exámenes auxiliares (CU25).
-    - Botón de impresión directa con formato médico limpio (`window.print()`).
-  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2051 módulos, 731ms).
+    - **Aislamiento de Impresión y Hoja Clínica Oficial:**
+      - Se implementó una estructura dual: pantalla interactiva con gradiente (`print:hidden`) y Ficha Clínica Oficial impresa (`hidden print:block`).
+      - El documento impreso cuenta con membrete oficial del *Centro Médico La Cruz — Clínica Vida Salud*, cuadrícula médica de paciente y médico tratante, tabla de signos vitales, cuadro anamnésico, diagnósticos CIE-10, tabla de prescripción farmacológica y cuadro legal para firmas del médico (sello y matrícula) y del paciente (CI).
+      - En `index.css`: aislamiento estricto con `body.printing-modal #root, body:has([role="dialog"]) #root { display: none !important; position: absolute; left: -9999px; }`, eliminando cualquier filtración de la tabla del sistema de fondo.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2051 módulos, 1.11s).
 
 ---
 
