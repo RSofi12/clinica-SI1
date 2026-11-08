@@ -15,6 +15,7 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { AntecedentesPatientModal } from './AntecedentesPatientModal';
+import { ConsultaDetailModal } from './ConsultaDetailModal';
 import { consultaService } from '../services/consultaService';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -73,6 +74,7 @@ export function ConsultasManager() {
   const [fecha, setFecha] = useState('');
   const [page, setPage] = useState(1);
   const [selectedPatientForAntecedentes, setSelectedPatientForAntecedentes] = useState(null);
+  const [selectedConsulta, setSelectedConsulta] = useState(null);
 
   const debounceRef = useRef(null);
 
@@ -369,7 +371,7 @@ export function ConsultasManager() {
                             )}
                             <button
                               type="button"
-                              onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
+                              onClick={() => setSelectedConsulta(c)}
                               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
                               title="Ver detalle de la consulta"
                             >
@@ -423,7 +425,7 @@ export function ConsultasManager() {
                       )}
                       <button
                         type="button"
-                        onClick={() => alert(`Ver detalle de consulta #${c.id_consulta || c.id}`)}
+                        onClick={() => setSelectedConsulta(c)}
                         className="flex items-center justify-center gap-1 px-2.5 py-1.5 text-[11px] font-bold text-[#00687a] bg-[#00687a]/10 hover:bg-[#00687a]/20 border border-[#00687a]/20 rounded-lg transition cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -471,6 +473,16 @@ export function ConsultasManager() {
           isOpen={Boolean(selectedPatientForAntecedentes)}
           patient={selectedPatientForAntecedentes}
           onClose={() => setSelectedPatientForAntecedentes(null)}
+        />
+      )}
+
+      {/* Modal de Detalle de Consulta Médica (CU16 / CU19) */}
+      {selectedConsulta && (
+        <ConsultaDetailModal
+          isOpen={Boolean(selectedConsulta)}
+          consulta={selectedConsulta}
+          consultaId={selectedConsulta?.id_consulta || selectedConsulta?.id}
+          onClose={() => setSelectedConsulta(null)}
         />
       )}
     </div>

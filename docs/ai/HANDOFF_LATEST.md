@@ -1,5 +1,21 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Modal de Detalle Clínico de Consulta Médica y Triaje — CU16 / CU19)
+- **Implementación de ConsultaDetailModal (`ConsultaDetailModal.jsx` y `ConsultasManager.jsx`):**
+  - **Reemplazo de Alerta Temporal:** Se eliminó el `alert("Ver detalle de consulta #...")` provisional en las filas de la tabla y tarjetas móviles de `ConsultasManager.jsx`.
+  - **Componente `ConsultaDetailModal.jsx`:**
+    - Diseñado con `ModalPortal` (`maxWidth="max-w-3xl"`, scroll-lock y transiciones suaves de entrada y salida).
+    - Cabecera Deep Aqua con código de consulta, código de cita vinculada (`CM-XXXX`), modalidad y fecha formateada.
+    - Tarjeta integrada con datos del paciente (nombre, CI, N° Historia Clínica `HC-XXXX`, edad, sexo) y médico tratante (matrícula profesional).
+    - Cuadrícula de constantes vitales y triaje clínico: presión arterial (PA), frecuencia cardíaca (FC), temperatura (°C), peso/talla e IMC con badge semántico de clasificación OMS.
+    - Desglose clínico de motivo de consulta, observaciones y examen físico.
+    - Diagnósticos codificados CIE-10 con badges presuntivo/definitivo y código oficial.
+    - Prescripción médica asociada (fármacos, posología y duración) y órdenes de exámenes auxiliares (CU25).
+    - Botón de impresión directa con formato médico limpio (`window.print()`).
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2051 módulos, 731ms).
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Pantalla de Confirmación y Alerta de Pago Realizado en Stripe — CU21)
 - **Confirmación Visual y Alerta de Pago Realizado (`StripePaymentModal.jsx` y `AppointmentsManager.jsx`):**
   - **Causa del Cierre Abrupto:** `AppointmentsManager.jsx` invocaba `setPayingAppointment(null)` inmediatamente dentro del callback `onSuccess`, desmontando el modal antes de que el usuario pudiera ver el comprobante y confirmación de pago (`step === 'SUCCESS'`).
