@@ -1,6 +1,19 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Gestión Integral de Antecedentes Médicos CU17 y Visualización Clínica en Expediente CU19)
+## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+- **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
+  - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
+  - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
+  - **Frontend actualizado:** [`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx) formatea el registrador de forma segura: `Dr(a). ${a.registrador.medico.nombres} ...` si tiene médico vinculado o `@${a.registrador.username}` si es usuario administrador del sistema.
+  - **Prueba de integración exitosa:** Ejecutado script de prueba en backend con el usuario `doctor.aguilera` cargando expedientes y antecedentes de pacientes sin ningún error SQL (100% de éxito).
+- **Modelo de Permisos y Autorizaciones Oficiales (CU17 / CU19):**
+  - **Médicos (`MEDICO`):** Tienen acceso de lectura y escritura para **cualquier paciente** en el sistema. Los antecedentes clínicos (alergias a fármacos, enfermedades crónicas, cirugías previas) forman parte de la historia clínica universal y permanente del centro médico, necesaria para cualquier acto médico asistencial seguro.
+  - **Administrador (`ADMIN`):** Acceso total para supervisión y auditoría clínica.
+  - **Pacientes (`PACIENTE`):** Acceso de **solo lectura estricta** (CU19 / §3.4) exclusivamente a su propio expediente (blindado por control Anti-IDOR).
+  - **Recepcionistas (`RECEPCIONISTA`):** Bloqueo total con `HTTP 403 Forbidden` por secreto médico.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (transformados 2046 módulos en 40.91s).
+
+---
 - **Diagnóstico y Corrección en Backend ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php)):**
   - **Inconsistencia de Atributos Resuelta:** El servicio filtraba antecedentes con propiedades inexistentes (`$a->tipo`, `$a->nombre`, `$a->severidad`, `$a->observaciones`), provocando que las alertas de alergias en cabecera quedaran vacías y que la pestaña de antecedentes no desplegara información válida.
   - **Mapeo Estricto al Esquema Relacional de `antecedentes`:** Se corrigió a `tipo_antecedente`, `descripcion`, `fecha_registro`, `estado` y relación Eloquent `registrador:id_usuario,username,nombres,apellidos,rol` tanto en la síntesis clínica como en el timeline cronológico.
@@ -56,7 +69,20 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Gestión Integral de Antecedentes Médicos CU17 y Visualización Clínica en Expediente CU19)
+## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+- **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
+  - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
+  - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
+  - **Frontend actualizado:** [`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx) formatea el registrador de forma segura: `Dr(a). ${a.registrador.medico.nombres} ...` si tiene médico vinculado o `@${a.registrador.username}` si es usuario administrador del sistema.
+  - **Prueba de integración exitosa:** Ejecutado script de prueba en backend con el usuario `doctor.aguilera` cargando expedientes y antecedentes de pacientes sin ningún error SQL (100% de éxito).
+- **Modelo de Permisos y Autorizaciones Oficiales (CU17 / CU19):**
+  - **Médicos (`MEDICO`):** Tienen acceso de lectura y escritura para **cualquier paciente** en el sistema. Los antecedentes clínicos (alergias a fármacos, enfermedades crónicas, cirugías previas) forman parte de la historia clínica universal y permanente del centro médico, necesaria para cualquier acto médico asistencial seguro.
+  - **Administrador (`ADMIN`):** Acceso total para supervisión y auditoría clínica.
+  - **Pacientes (`PACIENTE`):** Acceso de **solo lectura estricta** (CU19 / §3.4) exclusivamente a su propio expediente (blindado por control Anti-IDOR).
+  - **Recepcionistas (`RECEPCIONISTA`):** Bloqueo total con `HTTP 403 Forbidden` por secreto médico.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (transformados 2046 módulos en 40.91s).
+
+---
 - **Diagnóstico y Corrección en Backend ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php)):**
   - **Inconsistencia de Atributos Resuelta:** El servicio filtraba antecedentes con propiedades inexistentes (`$a->tipo`, `$a->nombre`, `$a->severidad`, `$a->observaciones`), provocando que las alertas de alergias en cabecera quedaran vacías y que la pestaña de antecedentes no desplegara información válida.
   - **Mapeo Estricto al Esquema Relacional de `antecedentes`:** Se corrigió a `tipo_antecedente`, `descripcion`, `fecha_registro`, `estado` y relación Eloquent `registrador:id_usuario,username,nombres,apellidos,rol` tanto en la síntesis clínica como en el timeline cronológico.
@@ -118,7 +144,20 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Gestión Integral de Antecedentes Médicos CU17 y Visualización Clínica en Expediente CU19)
+## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+- **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
+  - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
+  - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
+  - **Frontend actualizado:** [`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx) formatea el registrador de forma segura: `Dr(a). ${a.registrador.medico.nombres} ...` si tiene médico vinculado o `@${a.registrador.username}` si es usuario administrador del sistema.
+  - **Prueba de integración exitosa:** Ejecutado script de prueba en backend con el usuario `doctor.aguilera` cargando expedientes y antecedentes de pacientes sin ningún error SQL (100% de éxito).
+- **Modelo de Permisos y Autorizaciones Oficiales (CU17 / CU19):**
+  - **Médicos (`MEDICO`):** Tienen acceso de lectura y escritura para **cualquier paciente** en el sistema. Los antecedentes clínicos (alergias a fármacos, enfermedades crónicas, cirugías previas) forman parte de la historia clínica universal y permanente del centro médico, necesaria para cualquier acto médico asistencial seguro.
+  - **Administrador (`ADMIN`):** Acceso total para supervisión y auditoría clínica.
+  - **Pacientes (`PACIENTE`):** Acceso de **solo lectura estricta** (CU19 / §3.4) exclusivamente a su propio expediente (blindado por control Anti-IDOR).
+  - **Recepcionistas (`RECEPCIONISTA`):** Bloqueo total con `HTTP 403 Forbidden` por secreto médico.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (transformados 2046 módulos en 40.91s).
+
+---
 - **Diagnóstico y Corrección en Backend ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php)):**
   - **Inconsistencia de Atributos Resuelta:** El servicio filtraba antecedentes con propiedades inexistentes (`$a->tipo`, `$a->nombre`, `$a->severidad`, `$a->observaciones`), provocando que las alertas de alergias en cabecera quedaran vacías y que la pestaña de antecedentes no desplegara información válida.
   - **Mapeo Estricto al Esquema Relacional de `antecedentes`:** Se corrigió a `tipo_antecedente`, `descripcion`, `fecha_registro`, `estado` y relación Eloquent `registrador:id_usuario,username,nombres,apellidos,rol` tanto en la síntesis clínica como en el timeline cronológico.
@@ -174,7 +213,20 @@
 
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
-## Estado de Relevo al 07/11/2026 (Gestión Integral de Antecedentes Médicos CU17 y Visualización Clínica en Expediente CU19)
+## Estado de Relevo al 08/11/2026 (Corrección de Schema SQL en Relación de Usuarios y Blindaje RBAC CU17/CU19)
+- **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
+  - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
+  - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
+  - **Frontend actualizado:** [`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx) formatea el registrador de forma segura: `Dr(a). ${a.registrador.medico.nombres} ...` si tiene médico vinculado o `@${a.registrador.username}` si es usuario administrador del sistema.
+  - **Prueba de integración exitosa:** Ejecutado script de prueba en backend con el usuario `doctor.aguilera` cargando expedientes y antecedentes de pacientes sin ningún error SQL (100% de éxito).
+- **Modelo de Permisos y Autorizaciones Oficiales (CU17 / CU19):**
+  - **Médicos (`MEDICO`):** Tienen acceso de lectura y escritura para **cualquier paciente** en el sistema. Los antecedentes clínicos (alergias a fármacos, enfermedades crónicas, cirugías previas) forman parte de la historia clínica universal y permanente del centro médico, necesaria para cualquier acto médico asistencial seguro.
+  - **Administrador (`ADMIN`):** Acceso total para supervisión y auditoría clínica.
+  - **Pacientes (`PACIENTE`):** Acceso de **solo lectura estricta** (CU19 / §3.4) exclusivamente a su propio expediente (blindado por control Anti-IDOR).
+  - **Recepcionistas (`RECEPCIONISTA`):** Bloqueo total con `HTTP 403 Forbidden` por secreto médico.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (transformados 2046 módulos en 40.91s).
+
+---
 - **Diagnóstico y Corrección en Backend ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php)):**
   - **Inconsistencia de Atributos Resuelta:** El servicio filtraba antecedentes con propiedades inexistentes (`$a->tipo`, `$a->nombre`, `$a->severidad`, `$a->observaciones`), provocando que las alertas de alergias en cabecera quedaran vacías y que la pestaña de antecedentes no desplegara información válida.
   - **Mapeo Estricto al Esquema Relacional de `antecedentes`:** Se corrigió a `tipo_antecedente`, `descripcion`, `fecha_registro`, `estado` y relación Eloquent `registrador:id_usuario,username,nombres,apellidos,rol` tanto en la síntesis clínica como en el timeline cronológico.

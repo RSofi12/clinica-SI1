@@ -1196,9 +1196,11 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                           : (a.created_at ? new Date(a.created_at).toLocaleDateString('es-BO') : 'Fecha no registrada');
 
                         const registradorNombre = a.registrador
-                          ? (a.registrador.nombres
-                              ? `Dr(a). ${a.registrador.nombres} ${a.registrador.apellidos || ''}`.trim()
-                              : `@${a.registrador.username}`)
+                          ? (a.registrador.medico
+                              ? `Dr(a). ${a.registrador.medico.nombres} ${a.registrador.medico.apellidos || ''}`.trim()
+                              : (a.registrador.nombres
+                                  ? `Dr(a). ${a.registrador.nombres} ${a.registrador.apellidos || ''}`.trim()
+                                  : `@${a.registrador.username}`))
                           : 'Personal Clínico';
 
                         return (

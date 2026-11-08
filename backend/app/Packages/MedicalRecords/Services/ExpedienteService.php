@@ -44,7 +44,10 @@ class ExpedienteService
         );
 
         // 4. Cargar Antecedentes (CU17)
-        $antecedentes = Antecedente::with('registrador:id_usuario,username,nombres,apellidos,rol')
+        $antecedentes = Antecedente::with([
+                'registrador:id_usuario,username,tipo_usuario',
+                'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+            ])
             ->where('id_historia_clinica', $historia->id_historia_clinica)
             ->orderBy('id_antecedente', 'desc')
             ->get();
@@ -216,12 +219,22 @@ class ExpedienteService
         }
 
         // Antecedentes (CU17)
-        $antecedentes = Antecedente::with('registrador:id_usuario,username,nombres,apellidos,rol')
+        $antecedentes = Antecedente::with([
+                'registrador:id_usuario,username,tipo_usuario',
+                'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+            ])
             ->where('id_historia_clinica', $historia->id_historia_clinica)
             ->get();
         foreach ($antecedentes as $a) {
             $fecha = $a->fecha_registro ?: $a->created_at ?: now();
-            $registradorNombre = $a->registrador ? "{$a->registrador->nombres} {$a->registrador->apellidos}" : 'Personal Médico';
+            $registradorNombre = 'Personal Clínico';
+            if ($a->registrador) {
+                if ($a->registrador->medico) {
+                    $registradorNombre = "Dr(a). {$a->registrador->medico->nombres} {$a->registrador->medico->apellidos}";
+                } else {
+                    $registradorNombre = "@{$a->registrador->username}";
+                }
+            }
             $eventos[] = [
                 'tipo' => 'ANTECEDENTE',
                 'icono' => 'clipboard-document-list',
