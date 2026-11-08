@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   FileText,
   AlertTriangle,
@@ -24,14 +24,23 @@ import {
   AlertCircle,
   Paperclip,
   FlaskConical,
-  Trash2
+  Trash2,
+  X,
+  Check,
+  Edit2,
+  Plus,
+  Power,
+  Scissors,
+  Users
 } from 'lucide-react';
 import { expedienteService } from '../services/expedienteService';
 import { ordenExamenService } from '../services/ordenExamenService';
+import { antecedenteService } from '../services/antecedenteService';
 import { patientService } from '../../clinical-resources/services/patientService';
 import { useAuth } from '../../../context/AuthContext';
 import RecetaDetailModal from './RecetaDetailModal';
 import { AntecedentesPatientModal } from './AntecedentesPatientModal';
+import { AntecedenteFormModal } from './AntecedenteFormModal';
 import ClinicalDocumentsSection from './ClinicalDocumentsSection';
 import OrdenExamenFormModal from './OrdenExamenFormModal';
 
@@ -50,6 +59,8 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
   const [selectedPatientId, setSelectedPatientId] = useState(initialPatientId);
   const [patientsList, setPatientsList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchContainerRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -77,6 +88,13 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
   const [motivoCancelacion, setMotivoCancelacion] = useState('');
   const [isSubmittingCancel, setIsSubmittingCancel] = useState(false);
   const [cancelError, setCancelError] = useState(null);
+
+  // Estados de Gestión de Antecedentes Médicos (CU17)
+  const [isAntecedenteFormOpen, setIsAntecedenteFormOpen] = useState(false);
+  const [antecedenteToEdit, setAntecedenteToEdit] = useState(null);
+  const [antecedenteFilterType, setAntecedenteFilterType] = useState('TODOS');
+  const [showInactiveAntecedentes, setShowInactiveAntecedentes] = useState(false);
+  const [isTogglingAntecedente, setIsTogglingAntecedente] = useState({});
 
   // 1. Cargar lista de pacientes si es Personal Médico / Admin
   useEffect(() => {
@@ -184,6 +202,101 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
     }));
   };
 
+  // Configuración de Categorías de Antecedentes (CU17)
+  const CATEGORIA_CONFIG = useMemo(() => ({
+    ALERGICO: {
+      label: 'Alérgico',
+      icon: AlertTriangle,
+      badge: 'bg-rose-100 text-rose-800 border-rose-200',
+      iconBg: 'bg-rose-50 text-rose-600 border-rose-200/80',
+      borderCard: 'border-l-4 border-l-rose-500',
+    },
+    PATOLOGICO: {
+      label: 'Patológico',
+      icon: Activity,
+      badge: 'bg-blue-100 text-blue-800 border-blue-200',
+      iconBg: 'bg-blue-50 text-blue-600 border-blue-200/80',
+      borderCard: 'border-l-4 border-l-blue-500',
+    },
+    QUIRURGICO: {
+      label: 'Quirúrgico',
+      icon: Scissors,
+      badge: 'bg-purple-100 text-purple-800 border-purple-200',
+      iconBg: 'bg-purple-50 text-purple-600 border-purple-200/80',
+      borderCard: 'border-l-4 border-l-purple-500',
+    },
+    FARMACOLOGICO: {
+      label: 'Farmacológico',
+      icon: Pill,
+      badge: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      iconBg: 'bg-emerald-50 text-emerald-600 border-emerald-200/80',
+      borderCard: 'border-l-4 border-l-emerald-500',
+    },
+    FAMILIAR: {
+      label: 'Familiar',
+      icon: Users,
+      badge: 'bg-amber-100 text-amber-800 border-amber-200',
+      iconBg: 'bg-amber-50 text-amber-600 border-amber-200/80',
+      borderCard: 'border-l-4 border-l-amber-500',
+    },
+  }), []);
+
+  // Filtrado de Antecedentes por Tipo y Estado (CU17)
+  const visibleAntecedentes = useMemo(() => {
+    return antecedentes.filter((a) => {
+      const tipo = (a.tipo_antecedente || a.tipo || '').toUpperCase();
+      if (antecedenteFilterType !== 'TODOS' && tipo !== antecedenteFilterType) {
+        return false;
+      }
+      if (!showInactiveAntecedentes && a.estado === 'INACTIVO') {
+        return false;
+      }
+      return true;
+    });
+  }, [antecedentes, antecedenteFilterType, showInactiveAntecedentes]);
+
+  // Contadores de antecedentes por tipo
+  const conteosAntecedentes = useMemo(() => {
+    const counts = { TODOS: antecedentes.length, ALERGICO: 0, PATOLOGICO: 0, QUIRURGICO: 0, FARMACOLOGICO: 0, FAMILIAR: 0, INACTIVOS: 0 };
+    antecedentes.forEach((a) => {
+      const tipo = (a.tipo_antecedente || a.tipo || '').toUpperCase();
+      if (counts[tipo] !== undefined) counts[tipo]++;
+      if (a.estado === 'INACTIVO') counts.INACTIVOS++;
+    });
+    return counts;
+  }, [antecedentes]);
+
+  // Handlers de Antecedentes (CU17)
+  const handleCreateAntecedente = () => {
+    setAntecedenteToEdit(null);
+    setIsAntecedenteFormOpen(true);
+  };
+
+  const handleEditAntecedente = (a) => {
+    setAntecedenteToEdit(a);
+    setIsAntecedenteFormOpen(true);
+  };
+
+  const handleToggleAntecedenteStatus = async (a) => {
+    try {
+      setIsTogglingAntecedente((prev) => ({ ...prev, [a.id_antecedente]: true }));
+      const res = await antecedenteService.toggleAntecedenteStatus(a.id_antecedente);
+      if (res && res.success) {
+        await loadExpedienteData();
+      }
+    } catch (err) {
+      console.error('Error al alternar estado de antecedente:', err);
+    } finally {
+      setIsTogglingAntecedente((prev) => ({ ...prev, [a.id_antecedente]: false }));
+    }
+  };
+
+  const handleAntecedenteSaved = async () => {
+    setIsAntecedenteFormOpen(false);
+    setAntecedenteToEdit(null);
+    await loadExpedienteData();
+  };
+
   // Lista de pacientes filtrados para el selector (ordenados A-Z por apellidos y nombres)
   const filteredPatients = useMemo(() => {
     let list = patientsList;
@@ -203,6 +316,41 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
       return nameA.localeCompare(nameB, 'es', { sensitivity: 'base' });
     });
   }, [patientsList, searchTerm]);
+
+  // Paciente seleccionado actualmente
+  const currentSelectedPatient = useMemo(() => {
+    return patientsList.find((p) => p.id_paciente === selectedPatientId) || null;
+  }, [patientsList, selectedPatientId]);
+
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setIsSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Seleccionar paciente
+  const handleSelectPatient = (p) => {
+    setSelectedPatientId(p.id_paciente);
+    setSearchTerm('');
+    setIsSearchOpen(false);
+  };
+
+  // Manejo de teclado (Enter para seleccionar el primer resultado, Esc para cerrar)
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (filteredPatients.length > 0) {
+        handleSelectPatient(filteredPatients[0]);
+      }
+    } else if (e.key === 'Escape') {
+      setIsSearchOpen(false);
+    }
+  };
 
   // Manejo de impresión
   const handlePrint = () => {
@@ -273,32 +421,146 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
           </div>
         </div>
 
-        {/* SELECTOR PARA PERSONAL MÉDICO / ADMIN */}
+        {/* SELECTOR PARA PERSONAL MÉDICO / ADMIN (BUSCADOR INTELIGENTE CON AUTOCOMPLETADO) */}
         {isStaff && (
-          <div className="mt-4 pt-2 print:hidden">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <div className="relative flex-1">
-                <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Buscar paciente por nombre, CI o N° Historia..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 transition"
-                />
+          <div className="mt-4 pt-2 print:hidden" ref={searchContainerRef}>
+            <div className="relative">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 bg-slate-50/80 p-2 rounded-2xl border border-slate-200/90 shadow-2xs">
+                {/* Input de Búsqueda */}
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Buscar paciente por apellido, nombre, CI o N° Historia..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      if (!isSearchOpen) setIsSearchOpen(true);
+                    }}
+                    onFocus={() => setIsSearchOpen(true)}
+                    onKeyDown={handleKeyDown}
+                    className="w-full pl-10 pr-9 py-2.5 text-xs bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 transition shadow-2xs"
+                  />
+                  {searchTerm && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchTerm('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition"
+                      title="Limpiar búsqueda"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Paciente Activo Badge / Botón Selector Rápido */}
+                <button
+                  type="button"
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="inline-flex items-center justify-between sm:justify-start gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition shadow-2xs shrink-0"
+                  title="Cambiar paciente seleccionado"
+                >
+                  <div className="flex items-center gap-2 truncate max-w-[240px] sm:max-w-[280px]">
+                    <span className="w-2 h-2 rounded-full bg-teal-500 shrink-0"></span>
+                    <span className="text-slate-400 text-[11px] font-normal">Expediente:</span>
+                    <span className="font-semibold text-slate-900 truncate">
+                      {currentSelectedPatient
+                        ? `${currentSelectedPatient.apellidos}, ${currentSelectedPatient.nombres}`
+                        : 'Seleccionar paciente...'}
+                    </span>
+                  </div>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isSearchOpen ? 'rotate-180' : ''}`} />
+                </button>
               </div>
 
-              <select
-                value={selectedPatientId || ''}
-                onChange={(e) => setSelectedPatientId(Number(e.target.value))}
-                className="py-2 px-3 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600/20 focus:border-teal-600 font-medium text-slate-800 shadow-xs"
-              >
-                {filteredPatients.map((p) => (
-                  <option key={p.id_paciente} value={p.id_paciente}>
-                    {p.apellidos}, {p.nombres} — CI: {p.numero_documento} ({p.numero_historia})
-                  </option>
-                ))}
-              </select>
+              {/* Dropdown flotante con Autocompletado */}
+              {isSearchOpen && (
+                <div className="absolute top-full left-0 right-0 z-50 mt-1.5 bg-white rounded-2xl shadow-xl border border-slate-200/90 overflow-hidden backdrop-blur-md animate-in fade-in zoom-in-98 duration-150">
+                  <div className="px-3.5 py-2 bg-slate-50/90 border-b border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+                    <span>
+                      {filteredPatients.length} paciente{filteredPatients.length === 1 ? '' : 's'} encontrado{filteredPatients.length === 1 ? '' : 's'}
+                      {searchTerm ? ` para "${searchTerm}"` : ' en el padrón activo'}
+                    </span>
+                    <span className="text-[10px] text-slate-400">Clic o Enter para cargar expediente</span>
+                  </div>
+
+                  <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                    {filteredPatients.length === 0 ? (
+                      <div className="py-8 text-center px-4">
+                        <User className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                        <p className="text-xs font-semibold text-slate-700">No se encontraron pacientes</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
+                          No hay coincidencias para "{searchTerm}". Intente con otro término o CI.
+                        </p>
+                      </div>
+                    ) : (
+                      filteredPatients.map((p) => {
+                        const isSelected = p.id_paciente === selectedPatientId;
+                        return (
+                          <button
+                            key={p.id_paciente}
+                            type="button"
+                            onClick={() => handleSelectPatient(p)}
+                            className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between gap-3 transition-colors ${
+                              isSelected
+                                ? 'bg-teal-50/90 text-teal-950 font-medium'
+                                : 'hover:bg-slate-50 text-slate-800'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              {/* Avatar */}
+                              <div
+                                className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 ${
+                                  isSelected
+                                    ? 'bg-teal-700 text-white shadow-2xs'
+                                    : 'bg-teal-100 text-teal-800'
+                                }`}
+                              >
+                                {p.nombres?.charAt(0)}
+                                {p.apellidos?.charAt(0)}
+                              </div>
+
+                              {/* Datos del Paciente */}
+                              <div className="truncate">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-xs font-semibold text-slate-900 truncate">
+                                    {p.apellidos}, {p.nombres}
+                                  </span>
+                                  {isSelected && (
+                                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-teal-200/80 text-teal-800">
+                                      Cargado
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
+                                  <span className="font-mono text-slate-600">CI: {p.numero_documento}</span>
+                                  <span>•</span>
+                                  <span className="font-mono text-teal-700 font-semibold">{p.numero_historia || `HC-${p.id_paciente}`}</span>
+                                  {p.fecha_nacimiento && (
+                                    <>
+                                      <span>•</span>
+                                      <span>{p.sexo_biologico || p.sexo || ''}</span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Checkmark a la derecha si está seleccionado */}
+                            {isSelected ? (
+                              <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
+                            ) : (
+                              <span className="text-[10px] text-slate-400 hover:text-teal-600 shrink-0">
+                                Seleccionar
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -377,9 +639,9 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                           className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-rose-700 border border-rose-300 shadow-2xs"
                         >
                           <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                          {alergia.nombre}
+                          {alergia.descripcion || alergia.nombre}
                           <span className="text-[10px] font-medium text-rose-500">
-                            ({alergia.severidad || 'ALTA'})
+                            (ALERTA MÉDICA)
                           </span>
                         </span>
                       ))}
@@ -902,49 +1164,233 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
                 </div>
               )}
 
-              {/* 4. PESTAÑA: ANTECEDENTES MÉDICOS */}
+              {/* 4. PESTAÑA: GESTIÓN DE ANTECEDENTES MÉDICOS (CU17) */}
               {activeTab === 'antecedentes' && (
-                <div className="space-y-4">
-                  {antecedentes.length === 0 ? (
-                    <div className="py-12 text-center text-slate-500">
-                      <FolderOpen className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                      <p className="text-xs font-medium">No se han registrado antecedentes clínicos todavía.</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {antecedentes.map((a) => (
-                        <div
-                          key={a.id_antecedente}
-                          className="p-3.5 rounded-xl border border-slate-200 bg-white shadow-2xs"
+                <div className="space-y-6">
+                  {/* BARRA DE HERRAMIENTAS Y ACCIONES DE CU17 */}
+                  <div className="bg-slate-50/80 rounded-2xl border border-slate-200/90 p-4 shadow-2xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200/70">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-bold text-slate-900 tracking-tight">
+                            Antecedentes Clínicos del Paciente
+                          </h3>
+                          <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-teal-100 text-teal-800 border border-teal-200">
+                            {antecedentes.length} {antecedentes.length === 1 ? 'registro' : 'registros'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          Trazabilidad de alergias, patologías crónicas, intervenciones quirúrgicas y medicación habitual (CU17).
+                        </p>
+                      </div>
+
+                      {isStaff && (
+                        <button
+                          type="button"
+                          onClick={handleCreateAntecedente}
+                          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 rounded-xl transition shadow-xs shrink-0"
                         >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="text-xs font-bold text-slate-900">{a.nombre}</span>
-                            <span
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                                a.tipo === 'ALERGICO'
-                                  ? 'bg-rose-100 text-rose-800'
-                                  : a.tipo === 'PATOLOGICO'
-                                  ? 'bg-amber-100 text-amber-800'
-                                  : 'bg-slate-100 text-slate-700'
+                          <Plus className="w-4 h-4" />
+                          Registrar Antecedente
+                        </button>
+                      )}
+                    </div>
+
+                    {/* FILTROS POR TIPO Y SWITCH DE INACTIVOS */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setAntecedenteFilterType('TODOS')}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
+                            antecedenteFilterType === 'TODOS'
+                              ? 'bg-slate-800 text-white shadow-2xs'
+                              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                          }`}
+                        >
+                          Todos ({conteosAntecedentes.TODOS})
+                        </button>
+
+                        {Object.entries(CATEGORIA_CONFIG).map(([key, config]) => {
+                          const Icon = config.icon;
+                          const isActive = antecedenteFilterType === key;
+                          const count = conteosAntecedentes[key] || 0;
+                          return (
+                            <button
+                              key={key}
+                              type="button"
+                              onClick={() => setAntecedenteFilterType(key)}
+                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition border ${
+                                isActive
+                                  ? `${config.badge} font-bold ring-2 ring-teal-600/20`
+                                  : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200'
                               }`}
                             >
-                              {a.tipo}
-                            </span>
-                          </div>
+                              <Icon className="w-3.5 h-3.5 shrink-0" />
+                              <span>{config.label}</span>
+                              <span className="text-[10px] opacity-75 font-mono">({count})</span>
+                            </button>
+                          );
+                        })}
+                      </div>
 
-                          <div className="mt-1 text-xs text-slate-600 space-y-0.5">
-                            <p>
-                              <strong>Severidad:</strong> {a.severidad || 'No especificada'} •{' '}
-                              <strong>Estado:</strong> {a.estado || 'ACTIVO'}
+                      {/* Switch de Inactivos (Baja lógica RN11) */}
+                      {conteosAntecedentes.INACTIVOS > 0 && (
+                        <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-600 hover:text-slate-900 transition select-none">
+                          <input
+                            type="checkbox"
+                            checked={showInactiveAntecedentes}
+                            onChange={(e) => setShowInactiveAntecedentes(e.target.checked)}
+                            className="w-3.5 h-3.5 rounded text-teal-600 focus:ring-teal-500 border-slate-300"
+                          />
+                          <span>Mostrar inactivos ({conteosAntecedentes.INACTIVOS})</span>
+                        </label>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* LISTADO DE ANTECEDENTES */}
+                  {visibleAntecedentes.length === 0 ? (
+                    <div className="py-12 px-4 text-center bg-white rounded-2xl border border-slate-200/80 shadow-2xs">
+                      <FolderOpen className="w-10 h-10 text-slate-300 mx-auto mb-2.5" />
+                      <h4 className="text-sm font-bold text-slate-800">
+                        {antecedenteFilterType !== 'TODOS'
+                          ? `Sin antecedentes de tipo ${CATEGORIA_CONFIG[antecedenteFilterType]?.label || antecedenteFilterType}`
+                          : 'No se han registrado antecedentes clínicos todavía'}
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                        {isStaff
+                          ? 'Agregue antecedentes para construir el perfil clínico preventivo y de seguridad del paciente.'
+                          : 'No figuran registros en esta categoría.'}
+                      </p>
+                      {isStaff && (
+                        <button
+                          type="button"
+                          onClick={handleCreateAntecedente}
+                          className="mt-4 inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 hover:bg-teal-100 rounded-xl transition shadow-2xs"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          Registrar antecedente ahora
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {visibleAntecedentes.map((a) => {
+                        const tipo = (a.tipo_antecedente || a.tipo || 'PATOLOGICO').toUpperCase();
+                        const config = CATEGORIA_CONFIG[tipo] || CATEGORIA_CONFIG.PATOLOGICO;
+                        const Icon = config.icon;
+                        const isActivo = a.estado === 'ACTIVO';
+                        const isToggling = Boolean(isTogglingAntecedente[a.id_antecedente]);
+
+                        // Formateo de fecha de registro
+                        const fechaStr = a.fecha_registro
+                          ? new Date(a.fecha_registro).toLocaleDateString('es-BO', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            })
+                          : (a.created_at ? new Date(a.created_at).toLocaleDateString('es-BO') : 'Fecha no registrada');
+
+                        const registradorNombre = a.registrador
+                          ? (a.registrador.medico
+                              ? `Dr(a). ${a.registrador.medico.nombres} ${a.registrador.medico.apellidos || ''}`.trim()
+                              : (a.registrador.nombres
+                                  ? `Dr(a). ${a.registrador.nombres} ${a.registrador.apellidos || ''}`.trim()
+                                  : `@${a.registrador.username}`))
+                          : 'Personal Clínico';
+
+                        return (
+                          <div
+                            key={a.id_antecedente}
+                            className={`p-4 rounded-2xl border transition-all duration-200 shadow-2xs hover:shadow-xs bg-white ${
+                              isActivo
+                                ? `${config.borderCard} border-slate-200/90`
+                                : 'border-slate-200 bg-slate-50/70 opacity-75 border-l-4 border-l-slate-300'
+                            }`}
+                          >
+                            {/* Cabecera de la Tarjeta */}
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${config.iconBg}`}>
+                                  <Icon className="w-4 h-4" />
+                                </div>
+                                <div>
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${config.badge}`}>
+                                      {config.label}
+                                    </span>
+                                    {tipo === 'ALERGICO' && isActivo && (
+                                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200">
+                                        Alerta Prioritaria
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Badge de Estado */}
+                              <span
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 border ${
+                                  isActivo
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                    : 'bg-slate-100 text-slate-500 border-slate-200'
+                                }`}
+                              >
+                                {isActivo ? 'ACTIVO' : 'INACTIVO'}
+                              </span>
+                            </div>
+
+                            {/* Descripción Clínica */}
+                            <p className="mt-3 text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">
+                              {a.descripcion || 'Sin descripción clínica registrada'}
                             </p>
-                            {a.observaciones && (
-                              <p className="text-slate-500 text-[11px] italic mt-1">
-                                {a.observaciones}
-                              </p>
-                            )}
+
+                            {/* Pie de Auditoría y Acciones */}
+                            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
+                              <div className="flex items-center gap-3 text-[11px] text-slate-500 font-medium truncate">
+                                <div className="flex items-center gap-1 shrink-0">
+                                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                                  <span>{fechaStr}</span>
+                                </div>
+                                <span className="text-slate-300">•</span>
+                                <div className="flex items-center gap-1 truncate" title={registradorNombre}>
+                                  <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                  <span className="truncate">{registradorNombre}</span>
+                                </div>
+                              </div>
+
+                              {/* Acciones para Personal Médico / Admin */}
+                              {isStaff && (
+                                <div className="flex items-center gap-1 shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleEditAntecedente(a)}
+                                    className="p-1.5 text-slate-500 hover:text-teal-700 hover:bg-slate-100 rounded-lg transition"
+                                    title="Editar antecedente"
+                                  >
+                                    <Edit2 className="w-3.5 h-3.5" />
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    disabled={isToggling}
+                                    onClick={() => handleToggleAntecedenteStatus(a)}
+                                    className={`p-1.5 rounded-lg transition ${
+                                      isActivo
+                                        ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
+                                        : 'text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50'
+                                    }`}
+                                    title={isActivo ? 'Desactivar antecedente (baja lógica RN11)' : 'Reactivar antecedente'}
+                                  >
+                                    <Power className={`w-3.5 h-3.5 ${isToggling ? 'animate-spin' : ''}`} />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -1183,6 +1629,19 @@ export function ExpedienteClinicoView({ initialPatientId = null, defaultTab = 't
         onClose={() => setIsAntecedentesModalOpen(false)}
         patient={paciente}
         onUpdated={() => loadExpedienteData()}
+      />
+
+      {/* MODAL DE REGISTRO / EDICIÓN DE ANTECEDENTE (CU17) */}
+      <AntecedenteFormModal
+        isOpen={isAntecedenteFormOpen}
+        onClose={() => {
+          setIsAntecedenteFormOpen(false);
+          setAntecedenteToEdit(null);
+        }}
+        patientId={paciente?.id_paciente}
+        patientName={`${paciente?.nombres || ''} ${paciente?.apellidos || ''}`.trim()}
+        antecedenteToEdit={antecedenteToEdit}
+        onAntecedenteSaved={handleAntecedenteSaved}
       />
 
       {/* MODAL EMISIÓN DE ORDEN DE EXAMEN AUXILIAR (CU25) */}

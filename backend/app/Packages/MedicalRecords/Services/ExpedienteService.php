@@ -45,7 +45,11 @@ class ExpedienteService
         );
 
         // 4. Cargar Antecedentes (CU17)
-        $antecedentes = Antecedente::where('id_historia_clinica', $historia->id_historia_clinica)
+        $antecedentes = Antecedente::with([
+                'registrador:id_usuario,username,tipo_usuario',
+                'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+            ])
+            ->where('id_historia_clinica', $historia->id_historia_clinica)
             ->orderBy('id_antecedente', 'desc')
             ->get();
 
@@ -64,19 +68,22 @@ class ExpedienteService
             ->get();
 
         // 7. Síntesis y Métricas Clínicas de Alto Valor
-        $alertasAlergicas = $antecedentes->filter(fn($a) => $a->tipo === 'ALERGICO' && $a->estado === 'ACTIVO')
+        $alertasAlergicas = $antecedentes->filter(fn($a) => $a->tipo_antecedente === 'ALERGICO' && $a->estado === 'ACTIVO')
             ->map(fn($a) => [
                 'id_antecedente' => $a->id_antecedente,
-                'nombre' => $a->nombre,
-                'severidad' => $a->severidad,
-                'observaciones' => $a->observaciones,
+                'tipo_antecedente' => $a->tipo_antecedente,
+                'descripcion' => $a->descripcion,
+                'fecha_registro' => $a->fecha_registro,
+                'registrador' => $a->registrador,
             ])->values();
 
-        $patologicosCronicos = $antecedentes->filter(fn($a) => $a->tipo === 'PATOLOGICO' && $a->estado === 'ACTIVO')
+        $patologicosCronicos = $antecedentes->filter(fn($a) => $a->tipo_antecedente === 'PATOLOGICO' && $a->estado === 'ACTIVO')
             ->map(fn($a) => [
                 'id_antecedente' => $a->id_antecedente,
-                'nombre' => $a->nombre,
-                'observaciones' => $a->observaciones,
+                'tipo_antecedente' => $a->tipo_antecedente,
+                'descripcion' => $a->descripcion,
+                'fecha_registro' => $a->fecha_registro,
+                'registrador' => $a->registrador,
             ])->values();
 
         $ultimaConsulta = $consultas->first();
@@ -224,21 +231,35 @@ class ExpedienteService
             ];
         }
 
-        // Antecedentes
-        $antecedentes = Antecedente::where('id_historia_clinica', $historia->id_historia_clinica)->get();
+        // Antecedentes (CU17)
+        $antecedentes = Antecedente::with([
+                'registrador:id_usuario,username,tipo_usuario',
+                'registrador.medico:id_medico,id_usuario,nombres,apellidos',
+            ])
+            ->where('id_historia_clinica', $historia->id_historia_clinica)
+            ->get();
         foreach ($antecedentes as $a) {
+            $fecha = $a->fecha_registro ?: $a->created_at ?: now();
+            $registradorNombre = 'Personal Clínico';
+            if ($a->registrador) {
+                if ($a->registrador->medico) {
+                    $registradorNombre = "Dr(a). {$a->registrador->medico->nombres} {$a->registrador->medico->apellidos}";
+                } else {
+                    $registradorNombre = "@{$a->registrador->username}";
+                }
+            }
             $eventos[] = [
                 'tipo' => 'ANTECEDENTE',
                 'icono' => 'clipboard-document-list',
-                'fecha' => $a->fecha_diagnostico ? $a->fecha_diagnostico->format('Y-m-d') : ($a->created_at ? $a->created_at->format('Y-m-d') : now()->format('Y-m-d')),
-                'timestamp' => $a->fecha_diagnostico ? $a->fecha_diagnostico->timestamp : ($a->created_at ? $a->created_at->timestamp : 0),
-                'titulo' => "Antecedente: {$a->nombre}",
-                'subtitulo' => "Tipo: {$a->tipo} • Severidad: {$a->severidad} • Estado: {$a->estado}",
-                'descripcion' => $a->observaciones ?: 'Sin observaciones adicionales',
+                'fecha' => $fecha->format('Y-m-d H:i'),
+                'timestamp' => $fecha->timestamp,
+                'titulo' => "Antecedente: {$a->tipo_antecedente}",
+                'subtitulo' => "Registrado por: {$registradorNombre} • Estado: {$a->estado}",
+                'descripcion' => $a->descripcion,
                 'detalles' => [
-                    'tipo' => $a->tipo,
-                    'severidad' => $a->severidad,
+                    'tipo_antecedente' => $a->tipo_antecedente,
                     'estado' => $a->estado,
+                    'descripcion' => $a->descripcion,
                 ],
                 'id_referencia' => $a->id_antecedente,
             ];

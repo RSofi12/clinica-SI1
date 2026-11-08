@@ -100,6 +100,60 @@
 
 ---
 
+## Estado de Relevo al 08/11/2026 (Saneamiento de Guiones y Caracteres Tipográficos en Generador PDF CU23)
+- **Corrección de Carácter `?` en Encabezado de Reportes PDF ([`analyticsService.js`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/analytics/services/analyticsService.js)):**
+  - **Causa raíz:** En la función `buildPdfDocument`, el título institucional y el subtítulo utilizaban caracteres tipográficos no ASCII (em-dash `—` U+2014 y punto medio `·` U+00B7). La expresión regular de sanitización para fuentes estándar de PDF (`replace(/[^\x20-\x7E]/g, '?')`) transformaba cualquier carácter fuera del rango ASCII imprimible en un signo de interrogación `?`.
+  - **Solución implementada:**
+    - Se reemplazaron explícitamente las cadenas estáticas de título y subtítulo por guiones ASCII estándar `-` (`Centro Medico La Cruz - Clinica Vida Salud` y `Reporte Asistencial y Estadistico (CU23) - Tipo: ...`).
+    - Se mejoró la función `sanitizePdfText` con un pre-mapeo universal de caracteres tipográficos extendidos (`[—–]` ➔ `-`, `[·•]` ➔ `-`, `[“”]` ➔ `"`, `[‘’]` ➔ `'`, `[º°]` ➔ `o`, `[ª]` ➔ `a`), sustituyendo cualquier remanente por espacio en lugar de `?`.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2m 16s).
+
+---
+- **Corrección de Error SQLSTATE[42703] Undefined column «nombres» ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php) y [`AntecedenteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/AntecedenteService.php)):**
+  - **Causa raíz:** Se intentaba hacer eager loading de `registrador:id_usuario,username,nombres,apellidos,rol` sobre la tabla `usuarios`. En la base de datos de PostgreSQL, la tabla `usuarios` únicamente cuenta con `id_usuario`, `username`, `email`, `tipo_usuario` y `estado` (los nombres y apellidos de los médicos residen en la tabla relacional `medicos`).
+  - **Solución implementada:** Se reestructuró la relación eager a `['registrador:id_usuario,username,tipo_usuario', 'registrador.medico:id_medico,id_usuario,nombres,apellidos']`.
+  - **Frontend actualizado:** [`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx) formatea el registrador de forma segura: `Dr(a). ${a.registrador.medico.nombres} ...` si tiene médico vinculado o `@${a.registrador.username}` si es usuario administrador del sistema.
+  - **Prueba de integración exitosa:** Ejecutado script de prueba en backend con el usuario `doctor.aguilera` cargando expedientes y antecedentes de pacientes sin ningún error SQL (100% de éxito).
+- **Modelo de Permisos y Autorizaciones Oficiales (CU17 / CU19):**
+  - **Médicos (`MEDICO`):** Tienen acceso de lectura y escritura para **cualquier paciente** en el sistema. Los antecedentes clínicos (alergias a fármacos, enfermedades crónicas, cirugías previas) forman parte de la historia clínica universal y permanente del centro médico, necesaria para cualquier acto médico asistencial seguro.
+  - **Administrador (`ADMIN`):** Acceso total para supervisión y auditoría clínica.
+  - **Pacientes (`PACIENTE`):** Acceso de **solo lectura estricta** (CU19 / §3.4) exclusivamente a su propio expediente (blindado por control Anti-IDOR).
+  - **Recepcionistas (`RECEPCIONISTA`):** Bloqueo total con `HTTP 403 Forbidden` por secreto médico.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (transformados 2046 módulos en 40.91s).
+
+---
+- **Diagnóstico y Corrección en Backend ([`ExpedienteService.php`](file:///c:/Users/PERSONAL/clinica-SI1/backend/app/Packages/MedicalRecords/Services/ExpedienteService.php)):**
+  - **Inconsistencia de Atributos Resuelta:** El servicio filtraba antecedentes con propiedades inexistentes (`$a->tipo`, `$a->nombre`, `$a->severidad`, `$a->observaciones`), provocando que las alertas de alergias en cabecera quedaran vacías y que la pestaña de antecedentes no desplegara información válida.
+  - **Mapeo Estricto al Esquema Relacional de `antecedentes`:** Se corrigió a `tipo_antecedente`, `descripcion`, `fecha_registro`, `estado` y relación Eloquent `registrador:id_usuario,username,nombres,apellidos,rol` tanto en la síntesis clínica como en el timeline cronológico.
+- **Transformación de Frontend en Pestaña de Antecedentes ([`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx)):**
+  - **Barra de Herramientas y Acciones de CU17:**
+    - Título descriptivo con badge de conteo total de antecedentes.
+    - Botón de acción asistencial **`+ Registrar Antecedente`** (`Plus`) para médicos y administradores que abre [`AntecedenteFormModal.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/AntecedenteFormModal.jsx).
+    - Barra de chips/filtros con iconos por categoría oficial (`Todos`, `Alérgicos`, `Patológicos`, `Quirúrgicos`, `Farmacológicos`, `Familiares`) con contadores en tiempo real.
+    - Switch interactivo para auditar antecedentes dados de baja lógica (`Ver inactivos (RN11)`).
+  - **Tarjetas Clínicas Enriquecidas por Antecedente:**
+    - Identificación visual con iconos temáticos y paleta diferenciada (`AlertTriangle` en rose para alergias prioritarias, `Activity` en blue para patologías, `Scissors` en purple para cirugías, `Pill` en emerald para fármacos, `Users` en amber para antecedentes familiares).
+    - Badge de vigencia (`ACTIVO` en verde / `INACTIVO` en gris con opacidad atenuada).
+    - Descripción clínica completa y nítida (`a.descripcion`).
+    - Pie de trazabilidad: fecha de registro (`Calendar`) y profesional que registró (`User`, `Dr(a). ...`).
+    - Acciones asistenciales directas en cada tarjeta: botón **`Editar`** (`Edit2`) para abrir el formulario de actualización y botón **`Desactivar / Reactivar`** (`Power`) para alternar la baja lógica RN11 con recarga reactiva instantánea.
+  - **Banner Superior de Alergias Corregido:** Ahora detecta y muestra de forma reactiva las alergias activas del paciente con texto de advertencia roja pulsante.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (20.66s).
+
+---
+- **Sustitución de Select Nativo por Search Combobox Flotante ([`ExpedienteClinicoView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/medical-records/components/ExpedienteClinicoView.jsx)):**
+  - **Diagnóstico del problema:** Al buscar un paciente en el expediente clínico (por nombre o CI), el filtro reducía las opciones a 1 solo elemento en un `<select>` HTML estándar; como el navegador lo dejaba seleccionado automáticamente por defecto en el índice 0, hacer clic en él no disparaba el evento `onChange`, dejando bloqueado el expediente anterior (ej. Rodrigo Alarcón) e impidiendo cargar al paciente buscado.
+  - **Nuevo Buscador Unificado con Autocompletado y Popover Flotante:**
+    - Campo de búsqueda interactivo con icono `Search`, botón de borrado rápido (`X`) y atajo de teclado (`Enter` para seleccionar el primer resultado, `Escape` para cerrar).
+    - Desplegable flotante (`z-50`, backdrop blur, borde limpio y sombra elevada) con conteo de coincidencias en tiempo real.
+    - Cada fila presenta avatar con iniciales, nombre y apellidos, número de cédula (CI), código de Historia Clínica (`HC-xxxx`), género y edad.
+    - Clic directo en cualquier resultado invoca `handleSelectPatient`, actualiza inmediatamente el expediente del paciente seleccionado, cierra el menú y resalta el paciente activo.
+    - Botón selector y pastilla en cabecera para ver el paciente cargado actualmente o abrir el catálogo rápidamente.
+    - Listener exterior para cerrar automáticamente el desplegable al hacer clic fuera del componente (`handleClickOutside`).
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos transformados en 40.26s).
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Corrección de Encoding UTF-8 en Agenda Médica Diaria CU14)
 - **Corrección de Mojibake en [`DoctorAgendaView.jsx`](file:///c:/Users/PERSONAL/clinica-SI1/frontend/src/apps/appointments/components/DoctorAgendaView.jsx):**
   - **Saneamiento integral de caracteres especiales:** Se corrigieron todas las cadenas con doble codificación/mojibake UTF-8 (`Matrícula:`, `•`, `Agenda Médica Personal`, `día`, `Miércoles`, `Sábado`, `Consulta Médica`, etc.).

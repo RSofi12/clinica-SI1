@@ -395,7 +395,14 @@
 - **Frontend (`frontend/src/apps/medical-records/`):**
   - ✅ **Servicio API (`expedienteService.js`):** Métodos `fetchMiExpediente`, `fetchExpedienteByPaciente`, `fetchTimeline`.
   - ✅ **Componente Principal (`ExpedienteClinicoView.jsx`):**
-    - Construido bajo directrices de `/frontend-design` con identidad visual médica diferenciada, tipografía clínica con números tabulares para signos vitales y transiciones fluidas.
+    - Construido bajo directrices de `/frontend-design` y `/design-taste-frontend` con identidad visual médica diferenciada, tipografía clínica con números tabulares para signos vitales y transiciones fluidas.
+    - **Buscador Inteligente con Autocompletado y Popover Flotante (07/11/2026):** Reemplazo del selector nativo tosco por un buscador integrado con popover (`z-50`, backdrop-blur, avatares con iniciales, badges de CI, HC y edad). Selección instantánea con clic o tecla `Enter`, borrado rápido con `X` y cierre exterior automático.
+    - **Gestión Integral de Antecedentes Médicos (CU17) en Pestaña (07/11/2026):**
+      - Corrección en backend de nombres de columnas en `ExpedienteService.php` (`tipo_antecedente`, `descripcion`, `fecha_registro`, relación `registrador`).
+      - Barra de herramientas con botón `+ Registrar Antecedente`, filtros por categoría (`Alérgico`, `Patológico`, `Quirúrgico`, `Farmacológico`, `Familiar`) y switch de inactivos (RN11).
+      - Tarjetas clínicas con paleta diferenciada e iconos específicos, badge de estado, descripción completa y auditoría de registro.
+      - Acciones directas por tarjeta: botón `Editar` (`AntecedenteFormModal`) y alternancia de baja lógica (`Power`).
+      - Detección reactiva en banner superior de alertas alérgicas.
     - Cabecera con tarjeta de identidad del paciente, N° Historia, CI, grupo sanguíneo y edad.
     - Banner destacado de Alertas Médicas (alergias activas en rose/amber y crónicos).
     - Widget de signos vitales y triaje con semáforo OMS de IMC (Bajo peso, Normal, Sobrepeso, Obesidad).

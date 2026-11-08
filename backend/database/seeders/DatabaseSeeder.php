@@ -203,5 +203,8 @@ class DatabaseSeeder extends Seeder
 
         // 13. Poblar histórico profundo de 4 a 6 meses hacia atrás (CU22, CU24, CU15, CU19)
         $this->call(HistoricalMultiMonthPopulationSeeder::class);
+
+        // 14. Poblar historial clínico extenso y antecedentes para 10 pacientes en rango de 4 meses (IDs 41 al 50)
+        $this->call(ExtendedClinicalHistorySeeder::class);
     }
 }
