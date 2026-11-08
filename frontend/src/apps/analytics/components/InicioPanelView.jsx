@@ -301,15 +301,6 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
           action: () => onNavigate('voice-reports'),
         },
         {
-          id: 'overview',
-          title: 'Dashboard de Rendimiento',
-          desc: 'Resumen táctico de consultas atendidas y programación (CU24)',
-          icon: BarChart3,
-          iconBg: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-          badge: 'Métricas',
-          action: () => onNavigate('overview'),
-        },
-        {
           id: 'examenes',
           title: 'Órdenes de Exámenes (CU25)',
           desc: 'Solicitud y seguimiento de pruebas diagnósticas (laboratorio e imágenes)',
@@ -439,15 +430,6 @@ export default function InicioPanelView({ user, role, onNavigate, onOpenSecurity
           iconBg: 'bg-teal-50 text-teal-700 border-teal-100',
           badge: 'RF13',
           action: () => onNavigate('dynamic-reports'),
-        },
-        {
-          id: 'overview',
-          title: 'Dashboard Clínico',
-          desc: 'Operativo diario y flujo de citas de la jornada (CU24)',
-          icon: BarChart3,
-          iconBg: 'bg-indigo-50 text-indigo-700 border-indigo-100',
-          badge: 'Operativo',
-          action: () => onNavigate('overview'),
         },
       ];
     }

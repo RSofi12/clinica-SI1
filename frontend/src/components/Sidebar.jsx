@@ -52,7 +52,7 @@ export function Sidebar({
           label: 'Dashboard Clínico',
           subtitle: 'Métricas, KPIs y operativo',
           icon: LayoutDashboard,
-          requiredRole: null, // Visible para todos
+          requiredRole: 'ADMIN',
         },
       ],
     },

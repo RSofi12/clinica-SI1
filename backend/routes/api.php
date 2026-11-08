@@ -201,7 +201,7 @@ Route::prefix('analytics')->middleware('web')->group(function () {
     Route::post('/voice-report', [VoiceReportController::class, 'processVoiceCommand'])->middleware('role:ADMIN,MEDICO');
     Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN,MEDICO');
     Route::get('/voice-stats', [VoiceReportController::class, 'stats'])->middleware('role:ADMIN');
-    Route::get('/dashboard-kpis', [DashboardController::class, 'getKpis'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::get('/dashboard-kpis', [DashboardController::class, 'getKpis'])->middleware('role:ADMIN');
 });
 
 // CU21: Pasarela de Pagos Stripe Sandbox (Paquete 5: Integraciones Externas y Pagos)

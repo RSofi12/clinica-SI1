@@ -333,8 +333,15 @@ export default function App() {
               <VoiceReportAssistant />
             ) : dashboardTab === 'patient-profile' && role === 'PACIENTE' ? (
               <PatientProfileView />
-            ) : (
+            ) : dashboardTab === 'overview' && role === 'ADMIN' ? (
               <ClinicalDashboardView
+                role={role}
+                onNavigate={setDashboardTab}
+                onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}
+              />
+            ) : (
+              <InicioPanelView
+                user={user}
                 role={role}
                 onNavigate={setDashboardTab}
                 onOpenSecurityPolicies={() => setIsPolicyModalOpen(true)}

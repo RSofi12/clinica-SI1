@@ -481,7 +481,7 @@ export default function ClinicalDashboardView({ role, onNavigate, onOpenSecurity
       ciclo: 'Ciclo 2',
       actionLabel: 'Activo',
       action: () => {},
-      roles: ['ADMIN', 'MEDICO', 'RECEPCIONISTA', 'PACIENTE'],
+      roles: ['ADMIN'],
       badgeClass: 'text-emerald-700 bg-emerald-50 border border-emerald-200',
     },
   ];

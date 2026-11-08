@@ -130,7 +130,7 @@ class DashboardController extends Controller
             ->with([
                 'paciente:id_paciente,nombres,apellidos,numero_documento,numero_historia',
                 'medico:id_medico,nombres,apellidos',
-                'especialidad:id_especialidad,nombre_especialidad'
+                'especialidad:id_especialidad,nombre'
             ])
             ->orderBy('fecha_hora_inicio', 'asc')
             ->limit(10)
@@ -144,7 +144,7 @@ class DashboardController extends Controller
                     'paciente_nombre'   => $cita->paciente ? ($cita->paciente->nombres . ' ' . $cita->paciente->apellidos) : 'Paciente no asignado',
                     'numero_historia'   => $cita->paciente?->numero_historia ?? '—',
                     'medico_nombre'     => $cita->medico ? ($cita->medico->nombres . ' ' . $cita->medico->apellidos) : 'Médico institucional',
-                    'especialidad'      => $cita->especialidad?->nombre_especialidad ?? 'Medicina General',
+                    'especialidad'      => $cita->especialidad?->nombre ?? 'Medicina General',
                 ];
             });
 

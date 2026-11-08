@@ -1,5 +1,17 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 08/11/2026 (Exclusividad Estricta de CU24 para Administrador)
+- **Aislamiento de CU24 (Dashboard Administrativo y KPIs) — Cumplimiento 100% con Documento Oficial:**
+  - **Backend (`routes/api.php`):** Ruta `/analytics/dashboard-kpis` restringida exclusivamente a `role:ADMIN`. Recepción, Médicos y Pacientes reciben `403 Forbidden` (probado y verificado).
+  - **Sidebar (`Sidebar.jsx`):** Ítem "Dashboard Clínico" configurado con `requiredRole: 'ADMIN'`. Solo es visible para el Administrador; Recepcionista, Médico y Paciente acceden a su respectivo espacio operativo en "Inicio".
+  - **Navegación (`App.jsx`):** `dashboardTab === 'overview' && role === 'ADMIN'`. Si un usuario no administrador intenta ingresar por URL o estado, el sistema redirecciona fluidamente a `InicioPanelView`.
+  - **Portal de Inicio (`InicioPanelView.jsx`):** Removido el acceso rápido "Dashboard Clínico" de los roles de Recepción y Médicos.
+  - **Matriz de Trazabilidad (`ClinicalDashboardView.jsx`):** CU24 configurado con `roles: ['ADMIN']`.
+  - **Corrección en `DashboardController.php`:** Se corrigió el nombre de la columna en la relación `'especialidad:id_especialidad,nombre'` (anteriormente `nombre_especialidad`), restaurando la respuesta 200 OK con métricas e historial de atenciones del día.
+- **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2052 módulos, 514ms) generando bundle `index-ln2Bikvr.js`.
+
+---
+
 ## Estado de Relevo al 08/11/2026 (Exclusión Estricta de CU18 para Recepcionista y Filtrado Directo de Casos de Uso)
 - **Filtrado Dinámico en Matriz de Trazabilidad (`ClinicalDashboardView.jsx`):**
   - Se eliminó el renderizado de tarjetas con etiquetas "No autorizado" o deshabilitadas.
