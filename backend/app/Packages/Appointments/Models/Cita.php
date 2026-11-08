@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Packages\ClinicalResources\Models\Paciente;
 use App\Packages\ClinicalResources\Models\Medico;
 use App\Packages\ClinicalResources\Models\Especialidad;
+use App\Packages\Integrations\Models\Pago;
 use App\Packages\Security\Models\User;
 use Carbon\Carbon;
 
@@ -41,6 +42,8 @@ class Cita extends Model
         'reprogramada_en',
         'motivo_reprogramacion',
         'creada_por',
+        'pagada',
+        'monto_pago',
     ];
 
     protected $casts = [
@@ -49,6 +52,8 @@ class Cita extends Model
         'cancelada_en' => 'datetime',
         'reprogramada_en' => 'datetime',
         'duracion_minutos' => 'integer',
+        'pagada' => 'boolean',
+        'monto_pago' => 'decimal:2',
     ];
 
     protected $appends = [
@@ -96,6 +101,16 @@ class Cita extends Model
     public function historialEstados(): HasMany
     {
         return $this->hasMany(CitaEstadoHistorial::class, 'id_cita', 'id_cita')->orderBy('fecha_cambio', 'desc');
+    }
+
+    public function pagos(): HasMany
+    {
+        return $this->hasMany(Pago::class, 'id_cita', 'id_cita')->orderBy('created_at', 'desc');
+    }
+
+    public function pago(): BelongsTo
+    {
+        return $this->belongsTo(Pago::class, 'id_cita', 'id_cita');
     }
 
     // =========================================================================

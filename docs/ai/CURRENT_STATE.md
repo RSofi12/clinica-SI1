@@ -12,7 +12,7 @@
 - ✅ **Nombres de Modelos y Tablas en Español:** Tablas en español (`medicos`, `especialidades`, `pacientes`, `usuarios`, `bitacora`, etc.) y modelos de dominio primarios en español (`Medico.php`, `Especialidad.php`, `Bitacora.php`) con alias retroactivos para máxima compatibilidad.
 - ✅ **Distribución Oficial por Ciclos PUDS:**
   - **Ciclo 1 (Base Operativa y Citas — 13 CUs):** `CU01, CU02, CU03, CU04, CU05, CU06, CU07, CU08, CU09, CU10, CU12, CU14, CU15` (Seguridad, Auditoría inmutable, Padrón/Perfil de Pacientes, Médicos, Especialidades, Horarios, Reserva, Cancelación, Agenda Médica Diaria e Historial de Citas). Estado: **13 completados de 13 (100% de ejecución)**. Cubre al 100% las 10 pruebas mínimas del examen.
-  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **3 completados de 13 (+2) (CU11, CU23, CU24)**. Total Global: **16 de 26 (+2) completados (61.5%)**.
+  - **Ciclo 2 (Clínico, Ciclo de Vida Avanzado, Pagos y Analítica — 13 CUs + 2 Reservas):** `CU11, CU13, CU16, CU17, CU18, CU19, CU20, CU21, CU22, CU23, CU24, CU25, CU26` (Reprogramación, asistencia detallada, expediente clínico, triaje, recetas, recordatorios, Stripe, reportes con voz, dashboard KPIs, órdenes de exámenes y documentos adjuntos) + reservas `CU27-RES` (Exportar PDF) y `CU28-OPC` (IA Diagnóstica). Estado: **9 completados de 13 (+2) (CU11, CU13, CU16, CU17, CU18, CU19, CU21, CU23, CU24, CU25, CU26)**. Total Global: **22 de 26 (+2) completados (84.6%)**.
 
 ### 2. Implementación de CU01 (Autenticar Usuario — RF01) y Políticas de Seguridad
 - **Backend (`backend/app/Packages/Security/`):**
@@ -441,3 +441,64 @@
     - `App.jsx`: Enrutamiento y breadcrumbs para `documentos-clinicos`.
   - ✅ **Compilación:** `npm run build` exitoso con 0 errores (13.77s).
 - **Pruebas:** 8 casos de prueba de caja negra documentados en `docs/informes/PRUEBAS_CAJA_NEGRA.md` (`CN-CU26-01` a `CN-CU26-08`).
+
+### 26. Implementación Full-Stack de CU25 (Emitir Órdenes de Exámenes Auxiliares) (07/11/2026)
+- **Backend (`backend/app/Packages/MedicalRecords/`):**
+  - ✅ **Migración Incremental (`2026_11_07_000003_add_motivo_cancelacion_to_ordenes_examenes_table.php`):**
+    - Incorpora `motivo_cancelacion` (varchar 255) y `cancelado_en` (timestampTz) a `ordenes_examenes` garantizando baja lógica inmutable (RN11).
+  - ✅ **Modelo Enriquecido (`OrdenExamen.php`):** Constantes oficiales para tipos (`LABORATORIO, IMAGENOLOGIA, CARDIOLOGIA, OTROS`) y estados (`PENDIENTE, CON_RESULTADOS, CANCELADA`), métodos de dominio `puedeCancelarse()`, `cancelar()` y `marcarConResultados()`, y relaciones foráneas.
+  - ✅ **FormRequests Tipados:**
+    - `OrdenExamenCreateRequest.php`: Validación estricta de consulta, tipo de estudio y límites de longitud.
+    - `OrdenExamenAnularRequest.php`: Motivo de cancelación obligatorio (mín. 5 chars) conforme a RN11.
+  - ✅ **Servicio Transaccional (`OrdenExamenService.php`):**
+    - Generador atómico de código correlativo `ORD-XXXX`.
+    - Validación Anti-IDOR para facultativos y pacientes.
+    - Transacciones `DB::transaction()` con auditoría inmutable en `Bitacora.php` (`EMITIR_ORDEN_EXAMEN`, `ANULAR_ORDEN_EXAMEN`).
+  - ✅ **Controlador REST (`OrdenesExamenesController.php`):** Endpoints `index`, `show`, `byConsulta`, `byHistoria`, `store` y `anular`.
+  - ✅ **Rutas API (`backend/routes/api.php`):** 6 endpoints registrados bajo `/api/medical-records/ordenes-examenes` protegidos por roles RBAC.
+  - ✅ **Integración en Expediente (`ExpedienteService.php`):** Carga unificada en expediente integral y eventos cronológicos `ORDEN_EXAMEN` con icono temático en el timeline de atenciones.
+
+- **Frontend (`frontend/src/apps/medical-records/`):**
+  - ✅ **Servicio API (`ordenExamenService.js`):** Métodos `fetchOrdenes`, `fetchOrdenById`, `fetchOrdenesByConsulta`, `fetchOrdenesByHistoria`, `emitirOrden` y `anularOrden`.
+  - ✅ **Componente Modal (`OrdenExamenFormModal.jsx`):**
+    - Diseñado según `/design-taste-frontend` con cabecera en Deep Aqua (`#003844`), selector de 4 categorías clínicas (`Laboratorio, Imagenología, Cardiología, Otros`) e iconos distintivos.
+    - Chips interactivos de estudios frecuentes por categoría (Hemograma, TAC, ECG, etc.) y atajos de preparación previa (ayuno, vejiga llena, ropa cómoda).
+    - Renderizado con `createPortal`, scroll-lock de fondo y cierre por backdrop o tecla `Escape`.
+  - ✅ **Pestaña Oficial en Expediente (`ExpedienteClinicoView.jsx`):**
+    - Nueva pestaña "Órdenes de Exámenes" con contador dinámico en vivo.
+    - Tarjetas clínicas con badges por categoría y estado (`PENDIENTE`, `CON_RESULTADOS`, `CANCELADA`).
+    - Enlace directo bidireccional hacia CU26 para "Adjuntar Resultados".
+    - Modal de anulación con motivo obligatorio (mínimo 5 caracteres) para el personal médico.
+  - ✅ **Timeline de Paciente:** Representación visual con icono `FlaskConical`, distintivos de estado y conteo de archivos vinculados.
+  - ✅ **Compilación Exitosa:** `npm run build` verificado con **0 errores** (2044 módulos transformados).
+
+### 27. Implementación Full-Stack de CU21 (Pagar Cita Médica con Pasarela Stripe Sandbox) (07/11/2026)
+- **Backend (`backend/app/Packages/Integrations/`):**
+  - ✅ **Migración Incremental (`2026_11_07_000004_add_details_to_pagos_and_citas_table.php`):**
+    - Agrega columnas `codigo_pago` (varchar 30), `moneda` (varchar 10), `tarjeta_marca` (varchar 50), `tarjeta_ultimos4` (varchar 4), `descripcion` (varchar 255) y `recibo_url` (varchar 500) a la tabla `pagos`.
+    - Agrega columnas `pagada` (boolean, default false) y `monto_pago` (decimal 10,2 nullable) a la tabla `citas`.
+  - ✅ **Modelo Enriquecido (`Pago.php`):** Constantes (`COMPLETADO`, `FALLIDO`, `REEMBOLSADO`, `PENDIENTE`), relaciones foráneas (`cita`, `paciente`, `usuario`) y casts tipados para montos y metadatos.
+  - ✅ **Modelo Actualizado (`Cita.php`):** Propiedades `pagada`, `monto_pago`, relación uno a muchos `pagos()` y relación uno a uno `pago()`.
+  - ✅ **Servicio Transaccional (`StripePaymentService.php`):**
+    - Generador atómico del código correlativo `PAG-XXXX` con consulta indexada.
+    - Llamadas nativas HTTP hacia Stripe API (`https://api.stripe.com/v1/payment_intents` y confirmación).
+    - Creación de intenciones de pago (`crearPaymentIntent`), cobro inmediato con tarjeta de prueba sandbox (`pm_card_visa`), y fallback inteligente si no se dispone de conexión exterior.
+    - Confirmación transaccional `DB::transaction()` atómica: actualiza `citas.pagada = true`, fija `citas.monto_pago` y registra auditoría inmutable en `Bitacora.php` (`PROCESAR_PAGO_STRIPE`).
+    - Emisión estructurada de comprobante digital (`obtenerComprobante`).
+  - ✅ **FormRequest (`ProcessPaymentRequest.php`):** Validación de `payment_method_id`, `monto` (mínimo 1.00 USD), `email` y `descripcion`.
+  - ✅ **Controlador REST (`PaymentsController.php`):** Endpoints `index`, `createIntent`, `process` y `receipt`.
+  - ✅ **Rutas API (`backend/routes/api.php`):** 4 endpoints bajo `/api/payments/` protegidos por autenticación y permisos de roles (`ADMIN`, `RECEPCIONISTA`, `PACIENTE`).
+
+- **Frontend (`frontend/src/apps/payments/`):**
+  - ✅ **Servicio API (`paymentService.js`):** Integración completa para `createPaymentIntent`, `processPayment`, `getReceipt` y `listPayments`.
+  - ✅ **Modal de Pago Stripe (`StripePaymentModal.jsx`):**
+    - Diseñado según `/design-taste-frontend` en Deep Aqua (`#003844`) y violeta Stripe (`#635BFF`).
+    - Flujo en dos pasos:
+      1. *Paso 1 (Pago):* Formulario de tarjeta con validación de expiración, CVC, botón de auto-llenado para tarjeta demo oficial (`4242...`), desglose claro de especialidad, médico y monto en USD.
+      2. *Paso 2 (Comprobante):* Ticket oficial de pago con sello verde de éxito, ID de transacción Stripe (`pi_...`), código correlativo `PAG-XXXX`, marca y últimos 4 dígitos (`Visa •••• 4242`), botón para imprimir y confirmación de cita garantizada.
+    - Renderizado con `createPortal`, scroll-lock y cierre accesible por backdrop / Escape.
+  - ✅ **Integración en Gestión de Citas (`AppointmentsManager.jsx`):**
+    - Badge de estado de pago en columna de horario/estado ("Pagada" en esmeralda o "Pendiente de Pago" en ámbar).
+    - Botón de acción contextual "Pagar" para citas pendientes, accesible por Recepción y Paciente.
+    - Visualización del estatus de pago en el modal de Ticket oficial de la cita.
+  - ✅ **Compilación Exitosa:** `npm run build` verificado con **0 errores** (2046 módulos transformados).

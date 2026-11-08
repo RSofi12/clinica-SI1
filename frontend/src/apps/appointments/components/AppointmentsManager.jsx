@@ -28,6 +28,8 @@ import {
   History,
   UserCheck,
   UserX,
+  CreditCard,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { appointmentService } from '../services/appointmentService';
@@ -40,6 +42,7 @@ import { AppointmentRescheduleModal } from './AppointmentRescheduleModal';
 import { PatientAppointmentHistoryModal } from './PatientAppointmentHistoryModal';
 import { AppointmentStatusModal } from './AppointmentStatusModal';
 import { patientProfileService } from '../../clinical-resources/services/patientProfileService';
+import StripePaymentModal from '../../payments/components/StripePaymentModal';
 
 /**
  * Gestor Integral de Citas Médicas y Agenda (CU09, CU10, CU12, CU14, CU15 / RF05-RF12)
@@ -76,6 +79,7 @@ export function AppointmentsManager() {
   const [selectedPatientForHistory, setSelectedPatientForHistory] = useState(null);
   const [statusModalAppointment, setStatusModalAppointment] = useState(null);
   const [statusModalAction, setStatusModalAction] = useState(null);
+  const [payingAppointment, setPayingAppointment] = useState(null);
 
   // Cargar lista de médicos para filtro
   useEffect(() => {
@@ -725,7 +729,21 @@ export function AppointmentsManager() {
 
                           {/* Estado */}
                           <td className="px-5 py-4 whitespace-nowrap align-middle">
-                            {getStatusBadge(cita.estado)}
+                            <div className="flex flex-col gap-1 items-start">
+                              {getStatusBadge(cita.estado)}
+                              {cita.pagada ? (
+                                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200" title="Cita pagada y garantizada con Stripe (CU21)">
+                                  <ShieldCheck className="w-2.5 h-2.5" />
+                                  Pagada
+                                </span>
+                              ) : (
+                                !['CANCELADA', 'ATENDIDA', 'INASISTENCIA'].includes(cita.estado) && (
+                                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                    Pendiente pago
+                                  </span>
+                                )
+                              )}
+                            </div>
                           </td>
 
                           {/* Acciones (Apiladas en 2 filas compactas) */}
@@ -794,6 +812,18 @@ export function AppointmentsManager() {
                               {/* Fila 2: Modificaciones de Agenda (Reprogramar, Cancelar) */}
                               {(['PROGRAMADA', 'PENDIENTE', 'CONFIRMADA'].includes(cita.estado)) && (
                                 <div className="flex items-center justify-end gap-1.5">
+                                  {!cita.pagada && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setPayingAppointment(cita)}
+                                      className="px-2 py-0.5 text-[10.5px] font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-lg transition inline-flex items-center gap-1 cursor-pointer shadow-2xs active:scale-95"
+                                      title="Pagar cita médica con tarjeta vía Stripe Sandbox (CU21)"
+                                    >
+                                      <CreditCard className="w-3 h-3 text-emerald-600" />
+                                      <span>Pagar</span>
+                                    </button>
+                                  )}
+
                                   {role !== 'MEDICO' && (
                                     <button
                                       type="button"
@@ -942,6 +972,20 @@ export function AppointmentsManager() {
                   <span className="text-slate-500">Estado:</span>
                   <div>{getStatusBadge(ticketModalAppointment.estado)}</div>
                 </div>
+                <div className="flex justify-between border-b border-slate-100 pb-1.5">
+                  <span className="text-slate-500">Estado de Pago:</span>
+                  <div>
+                    {ticketModalAppointment.pagada ? (
+                      <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        PAGADA (Garantizada con Stripe)
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200">
+                        PENDIENTE DE PAGO
+                      </span>
+                    )}
+                  </div>
+                </div>
                 {ticketModalAppointment.motivo_consulta && (
                   <div className="pt-1">
                     <span className="text-slate-500 block mb-1">Motivo de Consulta:</span>
@@ -1018,6 +1062,17 @@ export function AppointmentsManager() {
         onStatusUpdated={() => {
           setStatusModalAppointment(null);
           setStatusModalAction(null);
+          loadAppointments(pagination.current_page);
+        }}
+      />
+
+      {/* Modal de Pago con Pasarela Stripe Sandbox (CU21) */}
+      <StripePaymentModal
+        isOpen={Boolean(payingAppointment)}
+        cita={payingAppointment}
+        onClose={() => setPayingAppointment(null)}
+        onSuccess={() => {
+          setPayingAppointment(null);
           loadAppointments(pagination.current_page);
         }}
       />

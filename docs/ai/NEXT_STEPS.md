@@ -84,6 +84,7 @@
 6. [ ] **CU22:** Generar Reportes con Filtros Dinámicos (RF13 — Requisito Obligatorio del Examen Oficial) con los 7 reportes gerenciales, filtros y exportación CSV/PDF.
 7. [x] **CU19:** Consultar Expediente Médico y Antecedentes Clínicos (§3.4) — Full-Stack 100% operativo con Anti-IDOR, timeline cronológico, visor clínico con `/frontend-design` e impresión `@media print` (Completado — 07/11/2026).
 8. [x] **CU26:** Gestionar Documentos Clínicos Adjuntos (Extra) — Full-Stack 100% operativo (Cloudinary, soporte para DICOM, enlace opcional con órdenes de CU25, modal asistido IMAIOS, carga multipart y visor de imágenes/PDF) (Completado — 07/11/2026).
-9. [ ] **CU25:** Emitir Órdenes de Exámenes Auxiliares.
-8. [ ] **CU20 - CU21:** Notificaciones/Recordatorios automáticos y Pagos con Stripe Sandbox.
-10. [x] **CU24:** Dashboard Ejecutivo de KPIs Clínicos y Financieros (Completado con DashboardController.php, ClinicalDashboardView.jsx e InicioPanelView.jsx).
+9. [x] **CU25:** Emitir Órdenes de Exámenes Auxiliares (Extra) — Full-Stack 100% operativo (generación atómica `ORD-XXXX`, modelo con tipos/estados, `OrdenExamenFormModal.jsx` con scroll-lock y `createPortal`, pestaña dedicada en `ExpedienteClinicoView.jsx`, baja lógica RN11 y enlace a Cloudinary CU26) (Completado — 07/11/2026).
+10. [x] **CU21:** Pagar Cita Médica con Stripe Sandbox (Extra) — Full-Stack 100% operativo (API Keys Stripe Sandbox conectadas, generación atómica `PAG-XXXX`, cobro de citas, confirmación atómica transaccional, modelo `Pago.php`, `StripePaymentModal.jsx` con auto-fill `4242...`, comprobante digital oficial de pago y visualización de estatus en citas y ticket) (Completado — 07/11/2026).
+11. [ ] **CU22:** Generar Reportes con Filtros Dinámicos (RF13 — Requisito Obligatorio del Examen Oficial) con los 7 reportes gerenciales, filtros y exportación CSV/PDF.
+12. [ ] **CU20:** Notificaciones y Recordatorios automáticos en background (Cron / Laravel Schedule 24h previas).

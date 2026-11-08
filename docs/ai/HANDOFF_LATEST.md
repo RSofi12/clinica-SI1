@@ -1,5 +1,44 @@
 # HANDOFF LATEST — CLÍNICA VIDA SALUD
 
+## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU21: Pagar Cita Médica con Pasarela Stripe Sandbox)
+- **Implementación Full-Stack de CU21 (Pagar Cita Médica con Pasarela Stripe Sandbox):**
+  - **Backend (`backend/app/Packages/Integrations/`):**
+    - Migración `2026_11_07_000004_add_details_to_pagos_and_citas_table.php` ejecutada exitosamente (`codigo_pago`, `moneda`, `tarjeta_marca`, `tarjeta_ultimos4`, `descripcion`, `recibo_url` en `pagos`; `pagada`, `monto_pago` en `citas`).
+    - Configuración en `config/services.php` para credenciales Stripe Sandbox (`key`, `secret`, `currency`).
+    - Modelo `Pago.php` con constantes de estado, relaciones foráneas con `Cita`, `Paciente` y `User`, y métodos de consulta.
+    - Modelo `Cita.php` con propiedades `pagada`, `monto_pago` y relaciones `pagos()` y `pago()`.
+    - `StripePaymentService.php`: Correlativo atómico `PAG-XXXX`, integración REST nativa con API de Stripe (`/v1/payment_intents`), soporte directo para tarjeta de pruebas `pm_card_visa`, confirmación atómica en `DB::transaction()`, actualización de estado de cita y auditoría inmutable en `Bitacora.php`.
+    - `ProcessPaymentRequest.php`: Validación de método de pago, monto mínimo y correo electrónico.
+    - `PaymentsController.php`: CRUD REST (`index`, `createIntent`, `process`, `receipt`) protegido por autenticación y roles.
+    - 4 rutas registradas en `routes/api.php` bajo `/api/payments`.
+  - **Frontend (`frontend/src/apps/payments/`):**
+    - `paymentService.js`: Cliente API para intenciones de pago, transacciones y emisión de comprobantes.
+    - `StripePaymentModal.jsx`: Modal interactivo en 2 pasos con diseño Deep Aqua (`#003844`) y violeta Stripe (`#635BFF`), formulario de tarjeta con atajo de auto-llenado demo (`4242...`), y comprobante digital oficial de pago con opción de impresión directa.
+    - `AppointmentsManager.jsx`: Botón contextual "Pagar" para recepcionistas y pacientes, badges de estado de pago en tabla ("Pagada" / "Pendiente") y visualización en el ticket oficial de cita.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2046 módulos transformados).
+  - **Avance General:** 22 de 26 CUs completados (**84.6% de avance global**). Paquete 5 (Integraciones y Pagos) cubierto con Stripe Sandbox activo.
+
+---
+
+## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU25: Emitir Órdenes de Exámenes Auxiliares)
+- **Implementación Full-Stack de CU25 (Emitir Órdenes de Exámenes Auxiliares):**
+  - **Backend (`backend/app/Packages/MedicalRecords/`):**
+    - Migración `2026_11_07_000003_add_motivo_cancelacion_to_ordenes_examenes_table.php` ejecutada exitosamente.
+    - `OrdenExamen.php`: Modelo con constantes (`LABORATORIO`, `IMAGENOLOGIA`, `CARDIOLOGIA`, `OTROS`, `PENDIENTE`, `CON_RESULTADOS`, `CANCELADA`), relaciones Eloquent y métodos `puedeCancelarse()`, `cancelar()` y `marcarConResultados()`.
+    - FormRequests `OrdenExamenCreateRequest.php` y `OrdenExamenAnularRequest.php` (motivo mínimo 5 caracteres según RN11).
+    - `OrdenExamenService.php`: Generador secuencial de código correlativo atómico `ORD-XXXX`, control Anti-IDOR, transacciones `DB::transaction()` y auditoría inmutable en `Bitacora.php`.
+    - `OrdenesExamenesController.php`: CRUD completo (`index`, `show`, `byConsulta`, `byHistoria`, `store`, `anular`) con respuestas JSON tipadas.
+    - 6 rutas registradas en `routes/api.php` bajo `/api/medical-records/ordenes-examenes`.
+    - `ExpedienteService.php`: Integración de órdenes auxiliares en el expediente clínico y eventos `ORDEN_EXAMEN` en el timeline cronológico.
+  - **Frontend (`frontend/src/apps/medical-records/`):**
+    - `ordenExamenService.js`: Cliente API para consumo de los endpoints REST.
+    - `OrdenExamenFormModal.jsx`: Modal interactivo con cabecera Deep Aqua (`#003844`), selector de tipo de estudio con iconos temáticos, chips de estudios frecuentes y preparación especial, scroll-lock y `createPortal`.
+    - `ExpedienteClinicoView.jsx`: Pestaña dedicada "Órdenes de Exámenes" con tarjetas informativas, badges de estado, conexión directa para adjuntar resultados en Cloudinary (CU26), modal de anulación lógica y visualización de nodos `FlaskConical` en la línea de tiempo.
+  - **Compilación Exitosa:** `npm --prefix frontend run build` verificado con **0 errores** (2044 módulos transformados).
+  - **Avance General:** 20 de 26 CUs completados (**76.9% de avance global**). Paquete 4 (Historial Clínico y Consultas) completado al 100%.
+
+---
+
 ## Estado de Relevo al 07/11/2026 (Implementación Full-Stack de CU26: Gestionar Documentos Clínicos Adjuntos con Cloudinary y Visor DICOM)
 - **Implementación Full-Stack de CU26 (Gestionar Documentos Clínicos Adjuntos):**
   - **Backend (`backend/app/Packages/MedicalRecords/`):**

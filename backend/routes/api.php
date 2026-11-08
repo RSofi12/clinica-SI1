@@ -18,6 +18,8 @@ use App\Packages\MedicalRecords\Controllers\AntecedentesController;
 use App\Packages\MedicalRecords\Controllers\RecetasController;
 use App\Packages\MedicalRecords\Controllers\ExpedienteController;
 use App\Packages\MedicalRecords\Controllers\DocumentosClinicosController;
+use App\Packages\MedicalRecords\Controllers\OrdenesExamenesController;
+use App\Packages\Integrations\Controllers\PaymentsController;
 use App\Packages\Analytics\Controllers\VoiceReportController;
 use App\Packages\Analytics\Controllers\DashboardController;
 
@@ -175,6 +177,14 @@ Route::prefix('medical-records')->middleware('web')->group(function () {
     Route::post('/historias/{idHistoria}/documentos', [DocumentosClinicosController::class, 'store'])->middleware('role:ADMIN,MEDICO');
     Route::get('/historias/{idHistoria}/ordenes-pendientes', [DocumentosClinicosController::class, 'ordenesPendientes'])->middleware('role:ADMIN,MEDICO');
     Route::delete('/documentos/{id}', [DocumentosClinicosController::class, 'destroy'])->middleware('role:ADMIN,MEDICO');
+
+    // CU25: Emitir Órdenes de Exámenes Auxiliares (Laboratorio e Imagenología)
+    Route::get('/ordenes-examenes', [OrdenesExamenesController::class, 'index'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/ordenes-examenes/{id}', [OrdenesExamenesController::class, 'show'])->middleware('role:ADMIN,MEDICO,PACIENTE,RECEPCIONISTA');
+    Route::get('/consultas/{idConsulta}/ordenes-examenes', [OrdenesExamenesController::class, 'byConsulta'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::get('/historias/{idHistoria}/ordenes-examenes', [OrdenesExamenesController::class, 'byHistoria'])->middleware('role:ADMIN,MEDICO,PACIENTE');
+    Route::post('/ordenes-examenes', [OrdenesExamenesController::class, 'store'])->middleware('role:ADMIN,MEDICO');
+    Route::patch('/ordenes-examenes/{id}/anular', [OrdenesExamenesController::class, 'anular'])->middleware('role:ADMIN,MEDICO');
 });
 
 // CU23 / CU24: Reportes, Analítica y Dashboard de KPIs (Paquete 6: Reportes y Analítica)
@@ -183,6 +193,14 @@ Route::prefix('analytics')->middleware('web')->group(function () {
     Route::get('/voice-history', [VoiceReportController::class, 'history'])->middleware('role:ADMIN,MEDICO');
     Route::get('/voice-stats', [VoiceReportController::class, 'stats'])->middleware('role:ADMIN');
     Route::get('/dashboard-kpis', [DashboardController::class, 'getKpis'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+});
+
+// CU21: Pasarela de Pagos Stripe Sandbox (Paquete 5: Integraciones Externas y Pagos)
+Route::prefix('payments')->middleware('web')->group(function () {
+    Route::get('/', [PaymentsController::class, 'index'])->middleware('role:ADMIN,RECEPCIONISTA,MEDICO,PACIENTE');
+    Route::post('/create-intent', [PaymentsController::class, 'createIntent'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
+    Route::post('/process', [PaymentsController::class, 'process'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
+    Route::get('/receipt/{id}', [PaymentsController::class, 'receipt'])->middleware('role:ADMIN,RECEPCIONISTA,PACIENTE');
 });
 
 

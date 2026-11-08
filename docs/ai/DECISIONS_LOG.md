@@ -160,4 +160,24 @@
   3. Preservar la trazabilidad de los 24 Casos de Uso del examen en un cajón colapsable para auditoría docente sin saturar la vista operativa.
 * **Impacto:** Creación de `InicioPanelView.jsx`, `ClinicalDashboardView.jsx` y `DashboardController.php` con ruta `/api/analytics/dashboard-kpis`. Incorporación de `Inicio` y `Dashboard Clínico` en la navegación principal del `Sidebar.jsx`.
 
+### Registro 23: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU25: Emitir Órdenes de Exámenes Auxiliares** con correlativo atómico `ORD-XXXX`, integración nativa con el expediente clínico (CU19), baja lógica (RN11) y enlace bidireccional a la custodia de resultados en Cloudinary (CU26).
+* **Motivo:**
+  1. Completar al 100% el Paquete 4 (Historial Clínico y Consultas) de la arquitectura PUDS.
+  2. Proveer al médico la capacidad de prescribir estudios diagnósticos (Laboratorio, Imagenología, Cardiología, Otros) con indicaciones específicas de preparación (ayuno, vestimenta, líquidos).
+  3. Establecer el vínculo relacional con CU26: al adjuntar los informes o placas tomográficas DICOM en Cloudinary, la orden cambia automáticamente su estado de `PENDIENTE` a `CON_RESULTADOS`.
+  4. Aplicar la regla de baja lógica RN11: las órdenes solo pueden cancelarse lógicamente con justificación obligatoria (mínimo 5 caracteres) registrada en la bitácora inmutable.
+* **Impacto:** Creación de `OrdenExamenService.php`, `OrdenesExamenesController.php`, `OrdenExamenFormModal.jsx` y actualización de `ExpedienteClinicoView.jsx` y `ExpedienteService.php`. Avance global alcanza el 76.9% (20 de 26 CUs).
+
+### Registro 24: 2026-11-07
+* **Decisión:** Implementación del Caso de Uso **CU21: Pagar Cita Médica con Pasarela Stripe Sandbox** con correlativo atómico `PAG-XXXX`, cobro seguro vía REST API nativa contra Stripe Sandbox, actualización transaccional de citas a `pagada = true` y emisión de comprobante digital imprimible.
+* **Motivo:**
+  1. Habilitar la pasarela de pagos electrónicos en modo prueba (Stripe Sandbox) con tarjetas de prueba autorizadas (`pm_card_visa` / `4242...`), cumpliendo con el Paquete 5 (Integraciones Externas y Pagos).
+  2. Implementar llamadas directas HTTP hacia la API de Stripe (`https://api.stripe.com/v1/payment_intents`) con autenticación Bearer y manejo resiliente ante inconsistencias de red o claves locales.
+  3. Evitar colisiones y mantener consistencia financiera: el cobro se confirma dentro de una transacción `DB::transaction()` que actualiza el flag `pagada = true` y el `monto_pago` de la cita, crea el registro en la tabla `pagos` y registra la auditoría inmutable en `Bitacora.php`.
+  4. Proveer una experiencia de usuario distinguida mediante `StripePaymentModal.jsx` con botón de auto-llenado demo, confirmación visual con sello digital verde y comprobante oficial de pago imprimible.
+* **Impacto:** Creación de `StripePaymentService.php`, `PaymentsController.php`, `ProcessPaymentRequest.php`, `StripePaymentModal.jsx`, `paymentService.js`, migración `2026_11_07_000004_add_details_to_pagos_and_citas_table.php`, y enriquecimiento de `Cita.php` y `Pago.php`. El avance global del sistema alcanza el **84.6% (22 de 26 CUs completados)**.
+
+
+
 

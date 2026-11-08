@@ -11,8 +11,8 @@
 | Ciclo | Total CUs | CUs Completados | CUs Pendientes | Estado de Entrega |
 |:---|:---:|:---:|:---:|:---|
 | **Ciclo 1: Base Operativa y Cita de Punta a Punta** | 13 | 13 | 0 | 🟢 **100% Completado** (Meta superada anticipadamente) |
-| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 6 | 7 (+1) | 🟡 **En Progreso Avanzado** (Meta: Domingo 08/11/2026) |
-| **TOTAL GENERAL** | **26 (+1)** | **19** | **7 (+1)** | **Progreso Global: 73.1% (19 de 26 CUs)** |
+| **Ciclo 2: Clínico, Pagos y Analítica** | 13 (+1) | 9 | 4 (+1) | 🟡 **En Progreso Avanzado** (Meta: Domingo 08/11/2026) |
+| **TOTAL GENERAL** | **26 (+1)** | **22** | **4 (+1)** | **Progreso Global: 84.6% (22 de 26 CUs)** |
 
 ---
 
@@ -352,10 +352,23 @@ pm run build exitoso).
 - [x] **Frontend:** Vista de expediente en solo lectura para portal de pacientes y visor clínico integral para personal médico/admin (`ExpedienteClinicoView.jsx` con transiciones fluidas, timeline cronológico y `@media print`).
 - [x] **Fase de Pruebas:** Scoping RBAC / Anti-IDOR validado (HTTP 403 Forbidden para pacientes consultando expedientes ajenos o recepcionistas) y compilación limpia en producción (`npm run build` en 27.44s, 0 errores).
 
-#### ⏳ CU25: Emitir Órdenes de Exámenes Auxiliares (Extra)
-- [ ] **Backend:** Modelo `ordenes_examenes`, generación de código correlativo `ORD-XXXX`, validación de tipo de estudio (laboratorio/imagen) e indicaciones.
-- [ ] **Frontend:** Formulario médico de prescripción de estudios dentro de la consulta médica y vista de órdenes pendientes.
-- [ ] **Fase de Pruebas:** Emisión exitosa de orden y enlace relacional con la consulta y el paciente.
+#### ✅ CU25: Emitir Órdenes de Exámenes Auxiliares (Extra)
+- [x] **Backend:**
+  - [x] Migración `2026_11_07_000003_add_motivo_cancelacion_to_ordenes_examenes_table.php` (baja lógica RN11).
+  - [x] Modelo `OrdenExamen.php` con constantes, métodos de negocio (`puedeCancelarse()`, `cancelar()`, `marcarConResultados()`) y relaciones.
+  - [x] FormRequests: `OrdenExamenCreateRequest.php` y `OrdenExamenAnularRequest.php` (motivo min:5).
+  - [x] Servicio transaccional `OrdenExamenService.php` con generador atómico `ORD-XXXX`, control Anti-IDOR y auditoría inmutable en `Bitacora.php`.
+  - [x] Controlador REST `OrdenesExamenesController.php` con 6 endpoints en `routes/api.php` bajo `/api/medical-records/ordenes-examenes`.
+  - [x] Integración en `ExpedienteService.php` para listado unificado y eventos en línea de tiempo (timeline).
+- [x] **Frontend:**
+  - [x] Servicio API `ordenExamenService.js` (`fetchOrdenes`, `fetchOrdenById`, `fetchOrdenesByConsulta`, `fetchOrdenesByHistoria`, `emitirOrden`, `anularOrden`).
+  - [x] Modal interactivo `OrdenExamenFormModal.jsx` con diseño institucional Deep Aqua, chips de estudios predefinidos, atajos de preparación, scroll-lock y `createPortal`.
+  - [x] Pestaña oficial "Órdenes de Exámenes" integrada en `ExpedienteClinicoView.jsx` con tarjetas informativas, badges de estado (`PENDIENTE`, `CON_RESULTADOS`, `CANCELADA`), modal de cancelación con motivo justificado (RN11) y conexión bidireccional hacia CU26 para subir resultados.
+- [x] **Fase de Pruebas:**
+  - [x] Emisión exitosa de orden con correlativo secuencial `ORD-0001` y validación de tipos válidos.
+  - [x] Enlace relacional con la consulta médica, el médico y la historia clínica del paciente.
+  - [x] Cancelación lógica con motivo obligatorio (RN11) bloqueando cancelaciones sobre órdenes ya procesadas.
+  - [x] Compilación limpia de producción en React + Vite (`npm run build` sin errores en 2044 módulos).
 
 #### ✅ CU26: Gestionar Documentos Clínicos Adjuntos (Extra)
 - [x] **Backend:** Endpoint de subida segura de archivos (PDF, JPG, PNG, DICOM) con Cloudinary, Anti-IDOR y enlace opcional a órdenes auxiliares CU25 (DocumentoClinicoService + DocumentosClinicosController).
@@ -371,10 +384,24 @@ pm run build exitoso).
 - [ ] **Frontend:** Notificaciones en interfaz y panel de configuración de avisos.
 - [ ] **Fase de Pruebas:** Ejecución de tarea programada sin duplicar recordatorios.
 
-#### ⏳ CU21: Pagar Cita Médica con Stripe Sandbox (Extra)
-- [ ] **Backend:** Integración con Stripe SDK (modo de pruebas con tarjetas demo `4242...`).
-- [ ] **Frontend:** Formulario con Stripe Elements o Checkout simulado.
-- [ ] **Fase de Pruebas:** Cobro exitoso y confirmación garantizada de cita.
+#### ✅ CU21: Pagar Cita Médica con Stripe Sandbox (Extra)
+- [x] **Backend:**
+  - [x] Migración `2026_11_07_000004_add_details_to_pagos_and_citas_table.php` ejecutada (`codigo_pago`, `moneda`, `tarjeta_marca`, `tarjeta_ultimos4`, `descripcion`, `recibo_url` en `pagos`; `pagada`, `monto_pago` en `citas`).
+  - [x] Configuración en `config/services.php` para credenciales Stripe (`key`, `secret`, `currency`).
+  - [x] `Pago.php`: Modelo con constantes (`COMPLETADO`, `FALLIDO`, `REEMBOLSADO`, `PENDIENTE`), relaciones Eloquent foráneas y casts numéricos.
+  - [x] `Cita.php`: Actualizado con campos `pagada`, `monto_pago` y relaciones `pagos()` y `pago()`.
+  - [x] `StripePaymentService.php`: Correlativo atómico `PAG-XXXX`, integración REST nativa con Stripe API (`PaymentIntents`, `charges`), manejo seguro con tarjeta de pruebas `pm_card_visa`, confirmación transaccional `DB::transaction()` y auditoría inmutable en `Bitacora.php`.
+  - [x] `ProcessPaymentRequest.php`: Validación estricta de monto, método de pago y correo electrónico.
+  - [x] `PaymentsController.php`: Endpoints REST (`index`, `createIntent`, `process`, `receipt`).
+  - [x] 4 rutas registradas en `routes/api.php` bajo `/api/payments`.
+- [x] **Frontend:**
+  - [x] `paymentService.js`: Cliente API para crear intenciones de pago, procesar transacciones y emitir comprobantes.
+  - [x] `StripePaymentModal.jsx`: Modal interactivo en dos pasos (formulario de tarjeta con botón de auto-llenado demo `4242...` y pantalla de comprobante digital emitido con soporte de impresión).
+  - [x] Integración en `AppointmentsManager.jsx`: Botón contextual "Pagar", badge de estado "Pagada" / "Pendiente de Pago" y visualización de estatus de cobro en modal de Ticket oficial.
+- [x] **Fase de Pruebas:**
+  - [x] Cobro exitoso con tarjeta de prueba en Stripe Sandbox (balance y cargo verificados contra API de Stripe).
+  - [x] Actualización atómica de `citas.pagada = true` y creación de registro `PAG-XXXX` en PostgreSQL.
+  - [x] Generación de comprobante digital de pago imprimible.
 
 ---
 
